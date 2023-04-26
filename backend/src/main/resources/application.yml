@@ -8,7 +8,7 @@ logging:
 
 spring:
   datasource:
-    url: jdbc:h2:file:./database/db;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1
+    url: jdbc:h2:file:./database/db;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM 'classpath:sql/createSchema.sql'
     driver-class-name: org.h2.Driver
     username: admin
     password: password
@@ -21,6 +21,9 @@ spring:
     # is disabled since it breaks the principle of least astonishment and leads to bad performance. To learn more,
     # follow this link: https://bit.ly/2LaX9ku
     open-in-view: false
+  h2:
+    console:
+      enabled: true
 
 security:
   auth:
