@@ -63,4 +63,6 @@ public class MessageEndpoint {
         return messageMapper.messageToDetailedMessageDto(
             messageService.publishMessage(messageMapper.messageInquiryDtoToMessage(messageDto)));
     }
+
+
 }

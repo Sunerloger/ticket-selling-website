@@ -1,10 +1,16 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanSectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanSectionMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
+import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSection;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSectionRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanService;
+import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,9 +27,15 @@ public class HallPlanServiceImpl implements HallPlanService {
 
     private final HallPlanMapper hallPlanMapper;
 
-    public HallPlanServiceImpl(HallPlanRepository hallPlanRepository, HallPlanMapper hallPlanMapper) {
+    private final HallPlanSectionMapper hallPlanSectionMapper;
+
+    private final HallPlanSectionRepository hallPlanSectionRepository;
+
+    public HallPlanServiceImpl(HallPlanRepository hallPlanRepository, HallPlanMapper hallPlanMapper, HallPlanSectionMapper hallPlanSectionMapper, HallPlanSectionRepository hallPlanSectionRepository) {
         this.hallPlanRepository = hallPlanRepository;
         this.hallPlanMapper = hallPlanMapper;
+        this.hallPlanSectionMapper = hallPlanSectionMapper;
+        this.hallPlanSectionRepository = hallPlanSectionRepository;
     }
 
     @Override
@@ -61,5 +73,51 @@ public class HallPlanServiceImpl implements HallPlanService {
             return hallPlanMapper.hallPlanToHallPlanDto(updatedHallPlan);
         }
         return null;
+    }
+    @Override
+    public HallPlanSection createSection(HallPlanSectionDto sectionDto) {
+        HallPlanSection section = new HallPlanSection();
+        section.setName(sectionDto.getName());
+        section.setColor(sectionDto.getColor());
+        section.setPrice(sectionDto.getPrice());
+        section.setHallPlanId(sectionDto.getHallplan_id());
+        return hallPlanSectionRepository.save(section);
+    }
+
+    @Override
+    public HallPlanSection updateSection(Long id, HallPlanSectionDto sectionDto) {
+        HallPlanSection section = getSectionById(id);
+        section.setName(sectionDto.getName());
+        section.setColor(sectionDto.getColor());
+        section.setPrice(sectionDto.getPrice());
+        section.setHallPlanId(sectionDto.getHallplan_id());
+        return hallPlanSectionRepository.save(section);
+    }
+
+    @Override
+    public void deleteSection(Long id) {
+        HallPlanSection section = getSectionById(id);
+        hallPlanSectionRepository.delete(section);
+    }
+
+    @Override
+    public HallPlanSection getSection(Long id) {
+        return getSectionById(id);
+    }
+
+    @Override
+    public List<HallPlanSection> getAllSections() {
+        return hallPlanSectionRepository.findAll();
+    }
+
+    @Override
+    public List<HallPlanSection> findAllByHallPlanId(Long id) {
+        List<HallPlanSection> testList = hallPlanSectionRepository.findByHallPlanId(id);
+        return testList;
+    }
+
+    private HallPlanSection getSectionById(Long id) {
+        return hallPlanSectionRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("Hall Plan Section with id " + id + " not found"));
     }
 }
