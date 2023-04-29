@@ -15,4 +15,7 @@ public interface HallPlanMapper {
 
     @IterableMapping(qualifiedByName = "hallPlan")
     List<HallPlanDto> hallPlanToHallPlanDto(List<HallPlan> hallPlan);
+
+    @IterableMapping(qualifiedByName = "hallPlan")
+    HallPlan hallPlanDtoToHallPlan(HallPlanDto hallPlanDto);
 }

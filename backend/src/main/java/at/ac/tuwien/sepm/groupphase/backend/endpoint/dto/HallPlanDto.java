@@ -7,7 +7,6 @@ public class HallPlanDto {
     @NotNull(message = "name must be specified")
     private String name;
     private String description;
-
     public String getName() {
         return name;
     }
