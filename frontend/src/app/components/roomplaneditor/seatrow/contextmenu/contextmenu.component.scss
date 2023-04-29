@@ -1,0 +1,30 @@
+.contextmenu {
+    display: flex;
+    gap: 1rem;
+
+    background-color: rgb(241, 241, 241);
+    border-radius: 10px;
+
+    align-items: center;
+    padding: 0.2rem;
+
+    box-shadow: -1px 1px 27px -8px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: -1px 1px 27px -8px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: -1px 1px 27px -8px rgba(0, 0, 0, 0.75);
+
+    span {
+        font-size: 1.3rem;
+    }
+}
+
+.seat_icon,
+.blank_space_icon {
+    border-radius: 10px;
+    padding: 0.3rem;
+    cursor: pointer;
+}
+
+.seat_icon:hover,
+.blank_space_icon:hover {
+    background-color: lightgrey;
+}

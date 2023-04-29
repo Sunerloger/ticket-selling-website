@@ -1,0 +1,64 @@
+.editor_container {
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.venue_template {
+    background-color: lightgrey;
+    width: 80%;
+    border-radius: 10px;
+    padding: 0.4rem;
+    text-align: center;
+}
+
+/*
+    Seat Layout Template
+*/
+
+.seat_layout_template {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+
+/*
+    Add Row
+*/
+.line {
+    height: 2px;
+    width: 100%;
+    background-color: black;
+}
+
+.add_row_button {
+    display: flex;
+    outline: none;
+    border: none;
+    white-space: nowrap;
+    align-items: center;
+    gap: 1rem;
+    background-color: transparent;
+}
+
+.button_context {
+    display: flex;
+    gap: 0.6rem;
+    border-radius: 10px;
+    padding: 0.5rem;
+}
+
+.add_row_button:hover .button_context {
+    background-color: #00BA8B;
+    color: white;
+}
+
+.add_row_button:hover .line {
+    background-color: #00BA8B;
+}

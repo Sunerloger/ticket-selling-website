@@ -1,0 +1,49 @@
+/*
+    Seat Row
+*/
+.seat_row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.add_seat_btn {
+    outline: none;
+    border: none;
+    background-color: transparent;
+    border-radius: 10px;
+    padding: 0.2rem;
+    padding-left: 0.4rem;
+    padding-right: 0.4rem;
+}
+
+.add_seat_btn:hover,
+.add_seat_btn:hover svg {
+    background-color: #00BA8B;
+    fill: white;
+}
+
+/*
+    Seat
+*/
+.seat {
+    position: relative;
+    display: inline-block;
+}
+
+.hover_overlay {
+    display: none;
+}
+
+.seat:hover {
+    fill: #DD2D2D;
+    cursor: pointer;
+}
+
+.seat:hover .hover_overlay {
+    position: absolute;
+    display: block;
+    bottom: 2.7rem;
+    color: #DD2D2D;
+    font-weight: 500;
+}
