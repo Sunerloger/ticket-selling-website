@@ -1,0 +1,71 @@
+package at.ac.tuwien.sepm.groupphase.backend.entity;
+
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.HallPlanEndpoint;
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "hallplan")
+public class HallPlan {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, name = "name")
+    private String name;
+
+    @Column(name = "description")
+    private String description;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public static final class HallPlanBuilder {
+        private String name;
+        private String description;
+
+        public static HallPlanBuilder aHallPlan() {
+            return new HallPlanBuilder();
+        }
+
+        public HallPlanBuilder withName() {
+            this.name = name;
+            return this;
+        }
+        public HallPlanBuilder withDescription() {
+            this.description = description;
+            return this;
+        }
+
+        public HallPlan build() {
+            HallPlan hallPlan = new HallPlan();
+            hallPlan.setName(name);
+            hallPlan.setDescription(description);
+            return hallPlan;
+        }
+
+
+
+    }
+}
