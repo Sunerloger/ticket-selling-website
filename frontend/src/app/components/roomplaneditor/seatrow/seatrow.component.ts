@@ -1,10 +1,16 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { SeatType } from 'src/app/dtos/roomplan';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { PersistedSeatRow, SeatType } from 'src/app/dtos/roomplan';
 
 
 export enum CreationMenuDirection {
   LEFT,
   RIGHT
+}
+
+export interface SeatCreationEvent {
+  direction: CreationMenuDirection,
+  type: SeatType,
+  rowNr: number,
 }
 
 @Component({
@@ -21,9 +27,16 @@ export class SeatrowComponent {
   showCreationMenuRight: boolean = false;
   showCreationMenuLeft: boolean = false;
 
-  //events
-  @Output() seatCreationEvent = new EventEmitter<{ direction: CreationMenuDirection, type: SeatType }>()
+  //props
+  @Input() seatRow: PersistedSeatRow;
 
+  //events
+  @Output() onSeatCreationEvent = new EventEmitter<SeatCreationEvent>()
+
+  /**
+   * Handles click outside of context menu
+   * @param from 
+   */
   handleContextMenuOutsideClick(from: CreationMenuDirection) {
     switch (from) {
       case CreationMenuDirection.LEFT:
@@ -35,6 +48,9 @@ export class SeatrowComponent {
     }
   }
 
+  /**
+   * Close Context Menu
+   */
   closeActiveContextMenu() {
     this.showCreationMenuLeft = false;
     this.showCreationMenuRight = false;
@@ -45,10 +61,10 @@ export class SeatrowComponent {
    * @param direction 
    * @param type 
    */
-  handleAddSeat(direction: CreationMenuDirection, type: SeatType) {
+  handleAddSeat(rowNr: number, direction: CreationMenuDirection, type: SeatType) {
     console.log(direction, type);
 
-    this.seatCreationEvent.emit({ direction, type });
+    this.onSeatCreationEvent.emit({ rowNr, direction, type });
 
     this.closeActiveContextMenu();
   }

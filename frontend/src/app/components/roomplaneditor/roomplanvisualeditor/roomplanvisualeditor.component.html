@@ -5,10 +5,24 @@
     <!-- Seat Layout -->
     <div class="seat_layout_template">
         <!-- Seat Row -->
-        <app-seatrow />
-
+        <div class="seatrow_container">
+            <div 
+                class="seat_row_mapper"
+                *ngFor="let seatrow of roomplan.seatrows"
+            >
+                <app-seatrow 
+                    [seatRow]="seatrow"
+                    (onSeatCreationEvent)="handleAddSeat($event)"
+                />
+            </div>
+        </div>
+       
+      
         <!-- Add Row -->
-        <button class="add_row_button">
+        <button 
+            (click)="handleAddRow()"
+            class="add_row_button"
+        >
 
             <div class="line"></div>
             <div class="button_context">

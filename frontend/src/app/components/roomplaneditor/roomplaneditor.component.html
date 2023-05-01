@@ -11,7 +11,11 @@
     </div>
 
     <div class="interactive_section">
-        <app-roomplanvisualeditor></app-roomplanvisualeditor>
+        <app-roomplanvisualeditor
+            [roomplan]="this.roomplan"
+            (onAddRowEvent)="handleAddRow($event.rowNr)"  
+            (onAddSeatEvent)="handleAddSeat($event)"  
+        />
         <span>Section Manager</span>
     </div>
 </div>

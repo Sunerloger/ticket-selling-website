@@ -1,25 +1,66 @@
+
+/*
+    Section
+*/
+
 export interface Roomplan {
-    id: number,
     name: string,
     description: string,
-    sections: Section[]
+    seatrows: SeatRow[]
 }
 
-export interface Section {
+export interface PersistedRoomplan extends Roomplan {
     id: number,
-    color: string,
-    name: string,
-    price: number,
+    seatrows: PersistedSeatRow[]
+}
+
+/*
+    Seat Row
+*/
+
+export interface SeatRow {
+    rowNr: number,
     seats: Seat[]
 }
 
-export interface Seat {
+export interface PersistedSeatRow extends SeatRow {
     id: number
+    seats: PersistedSeat[]
+}
+
+/*
+    Seat
+*/
+
+export interface Seat {
     type: SeatType
-    rowNr: number,
     seatNr: number,
     status: SeatStatus,
+    section: Section,
 }
+
+export interface PersistedSeat extends Seat {
+    id: number,
+    section: PersistedSection
+}
+
+/*
+    Section
+*/
+
+export interface Section {
+    color: string,
+    name: string,
+    price: number
+}
+
+export interface PersistedSection extends Section {
+    id: number
+}
+
+/*
+    Enum
+*/
 
 export enum SeatStatus {
     RESERVED = "RESERVED",
