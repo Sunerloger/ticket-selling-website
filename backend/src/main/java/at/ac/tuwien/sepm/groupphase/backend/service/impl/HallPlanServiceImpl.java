@@ -6,11 +6,13 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanSectionMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSection;
+import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSectionRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.xml.bind.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -46,8 +48,12 @@ public class HallPlanServiceImpl implements HallPlanService {
     }
 
     @Override
-    public HallPlan createHallplan(HallPlanDto hallplan) {
+    public HallPlan createHallplan(HallPlanDto hallplan) throws ValidationException {
         LOGGER.debug("Create new hall plan");
+        Optional<HallPlan> existingHallPlan = hallPlanRepository.findHallPlanById(hallplan.getId());
+        if (existingHallPlan.isPresent()) {
+            throw new ValidationException("Hallplan with id:" + hallplan.getId() + " already exists");
+        }
         return hallPlanRepository.save(hallPlanMapper.hallPlanDtoToHallPlan(hallplan));
     }
 
@@ -64,23 +70,24 @@ public class HallPlanServiceImpl implements HallPlanService {
 
     @Override
     public HallPlanDto updateHallPlanById(Long id, HallPlanDto hallPlanDto) {
-        Optional<HallPlan> HallPlanOptional = hallPlanRepository.findById(id);
-        if (HallPlanOptional.isPresent()) {
-            HallPlan HallPlan = HallPlanOptional.get();
-            HallPlan.setName(hallPlanDto.getName());
-            HallPlan.setDescription(hallPlanDto.getDescription());
-            HallPlan updatedHallPlan = hallPlanRepository.save(HallPlan);
-            return hallPlanMapper.hallPlanToHallPlanDto(updatedHallPlan);
+        Optional<HallPlan> hallPlanOptional = hallPlanRepository.findById(id);
+        if (hallPlanOptional.isPresent()) {
+            HallPlan hallPlan = hallPlanOptional.get();
+            hallPlan.setName(hallPlanDto.getName());
+            hallPlan.setDescription(hallPlanDto.getDescription());
+            HallPlan updatedhallPlan = hallPlanRepository.save(hallPlan);
+            return hallPlanMapper.hallPlanToHallPlanDto(updatedhallPlan);
         }
         return null;
     }
+
     @Override
     public HallPlanSection createSection(HallPlanSectionDto sectionDto) {
         HallPlanSection section = new HallPlanSection();
         section.setName(sectionDto.getName());
         section.setColor(sectionDto.getColor());
         section.setPrice(sectionDto.getPrice());
-        section.setHallPlanId(sectionDto.getHallplan_id());
+        section.setHallPlanId(sectionDto.gethallplanId());
         return hallPlanSectionRepository.save(section);
     }
 
@@ -90,7 +97,7 @@ public class HallPlanServiceImpl implements HallPlanService {
         section.setName(sectionDto.getName());
         section.setColor(sectionDto.getColor());
         section.setPrice(sectionDto.getPrice());
-        section.setHallPlanId(sectionDto.getHallplan_id());
+        section.setHallPlanId(sectionDto.gethallplanId());
         return hallPlanSectionRepository.save(section);
     }
 

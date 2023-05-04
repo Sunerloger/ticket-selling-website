@@ -5,7 +5,7 @@ public class HallPlanSectionDto {
     private String name;
     private String color;
     private Long price;
-    private Long hallplan_id;
+    private Long hallplanId;
 
     public Long getId() {
         return id;
@@ -39,12 +39,12 @@ public class HallPlanSectionDto {
         this.price = price;
     }
 
-    public Long getHallplan_id() {
-        return hallplan_id;
+    public Long gethallplanId() {
+        return hallplanId;
     }
 
-    public void setHallplan_id(Long hallplan_id) {
-        this.hallplan_id = hallplan_id;
+    public void sethallplanId(Long hallplanId) {
+        this.hallplanId = hallplanId;
     }
 
     public static final class HallPlanSectionDtoBuilder {
@@ -53,7 +53,7 @@ public class HallPlanSectionDto {
         private String name;
         private String color;
         private Long price;
-        private Long hallplan_id;
+        private Long hallplanId;
 
         private HallPlanSectionDtoBuilder() {
 
@@ -83,8 +83,8 @@ public class HallPlanSectionDto {
             return this;
         }
 
-        public HallPlanSectionDtoBuilder withHallPlanId(Long hallplan_id) {
-            this.hallplan_id = hallplan_id;
+        public HallPlanSectionDtoBuilder withHallPlanId(Long hallplanId) {
+            this.hallplanId = hallplanId;
             return this;
         }
 
@@ -94,7 +94,7 @@ public class HallPlanSectionDto {
             hallPlanSectionDto.setName(name);
             hallPlanSectionDto.setColor(color);
             hallPlanSectionDto.setPrice(price);
-            hallPlanSectionDto.setHallplan_id(hallplan_id);
+            hallPlanSectionDto.sethallplanId(hallplanId);
             return hallPlanSectionDto;
         }
 

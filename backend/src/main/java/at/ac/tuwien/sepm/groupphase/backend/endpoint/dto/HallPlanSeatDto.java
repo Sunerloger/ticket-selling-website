@@ -7,7 +7,7 @@ public class HallPlanSeatDto {
     private HallPlanSeatStatus status;
     private Long rowNr;
     private Long seatNr;
-    private Long section_id;
+    private Long sectionId;
 
     public Long getId() {
         return id;
@@ -41,12 +41,12 @@ public class HallPlanSeatDto {
         this.seatNr = seatNr;
     }
 
-    public Long getSection_id() {
-        return section_id;
+    public Long getsectionId() {
+        return sectionId;
     }
 
-    public void setSection_id(Long section_id) {
-        this.section_id = section_id;
+    public void setsectionId(Long sectionId) {
+        this.sectionId = sectionId;
     }
 
     public static final class HallPlanSeatDtoBuilder {
@@ -54,7 +54,7 @@ public class HallPlanSeatDto {
         private HallPlanSeatStatus status;
         private Long rowNr;
         private Long seatNr;
-        private Long section_id;
+        private Long sectionId;
 
         private HallPlanSeatDtoBuilder() {
 
@@ -84,8 +84,8 @@ public class HallPlanSeatDto {
             return this;
         }
 
-        public HallPlanSeatDtoBuilder withSectionId(Long section_id) {
-            this.section_id = section_id;
+        public HallPlanSeatDtoBuilder withSectionId(Long sectionId) {
+            this.sectionId = sectionId;
             return this;
         }
 
@@ -95,7 +95,7 @@ public class HallPlanSeatDto {
             hallPlanSeatDto.setStatus(status);
             hallPlanSeatDto.setRowNr(rowNr);
             hallPlanSeatDto.setSeatNr(seatNr);
-            hallPlanSeatDto.setSection_id(section_id);
+            hallPlanSeatDto.setsectionId(sectionId);
             return hallPlanSeatDto;
         }
     }

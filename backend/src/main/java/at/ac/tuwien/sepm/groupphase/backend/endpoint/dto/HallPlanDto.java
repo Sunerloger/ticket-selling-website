@@ -4,9 +4,11 @@ import jakarta.validation.constraints.NotNull;
 
 public class HallPlanDto {
 
+    private Long id;
     @NotNull(message = "name must be specified")
     private String name;
     private String description;
+
     public String getName() {
         return name;
     }
@@ -22,19 +24,33 @@ public class HallPlanDto {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public static final class HallPlanDtoBuilder {
 
         private String name;
         private String description;
+
         private HallPlanDtoBuilder() {
 
         }
-        public static HallPlanDtoBuilder aHallPlanDto() { return new HallPlanDtoBuilder(); }
+
+        public static HallPlanDtoBuilder aHallPlanDto() {
+            return new HallPlanDtoBuilder();
+        }
 
         public HallPlanDtoBuilder withName(String name) {
             this.name = name;
             return this;
         }
+
         public HallPlanDtoBuilder withDescription(String description) {
             this.description = description;
             return this;

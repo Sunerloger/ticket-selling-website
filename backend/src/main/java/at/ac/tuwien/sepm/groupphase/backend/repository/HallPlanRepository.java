@@ -10,12 +10,15 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface HallPlanRepository extends JpaRepository<HallPlan, Long> {
 
     @Query("SELECT c FROM HallPlan c")
     List<HallPlan> findAllHallPlans();
+
+    Optional<HallPlan> findHallPlanById(Long id);
 
     HallPlan save(HallPlan hallPlan);
 
