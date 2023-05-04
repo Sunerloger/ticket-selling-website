@@ -17,7 +17,7 @@ public class SeatRow {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="rowNr")
+    @Column(name = "rowNr")
     private Long rowNr;
     @ManyToOne
     @JoinColumn(name = "hallplan_id")

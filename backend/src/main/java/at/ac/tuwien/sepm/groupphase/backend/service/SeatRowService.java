@@ -7,8 +7,12 @@ import java.util.List;
 
 public interface SeatRowService {
     List<SeatRowDto> findAllSeatRows();
+
     SeatRowDto createSeatRow(SeatRowDto seatRowDto) throws ValidationException;
+
     SeatRowDto getSeatRowById(Long id);
+
     SeatRowDto updateSeatRow(SeatRowDto seatRowDto);
+
     boolean deleteSeatRowById(Long id);
 }

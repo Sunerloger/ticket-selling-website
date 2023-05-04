@@ -104,6 +104,7 @@ public class HallPlanEndpoint {
         }
         return ResponseEntity.ok(updatedHallPlanDto);
     }
+
     //Seat Rows
     @Secured("ROLE_ADMIN")
     @PostMapping("/seatrows")

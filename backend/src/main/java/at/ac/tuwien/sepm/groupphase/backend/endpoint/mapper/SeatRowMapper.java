@@ -14,10 +14,6 @@ public interface SeatRowMapper {
 
     @Named("seatRow")
     @Mapping(target = "hallPlan", source = "hallPlan")
-    SeatRow toEntity(SeatRowDto seatRowDto);
-
-    @Named("seatRow")
-    @Mapping(target = "hallPlan", source = "hallPlan")
     SeatRowDto toDto(SeatRow seatRow);
 
     @IterableMapping(qualifiedByName = "seatRow")
@@ -25,5 +21,9 @@ public interface SeatRowMapper {
 
     @IterableMapping(qualifiedByName = "seatRow")
     List<SeatRow> toEntity(List<SeatRowDto> seatRows);
+
+    @Named("seatRow")
+    @Mapping(target = "hallPlan", source = "hallPlan")
+    SeatRow toEntity(SeatRowDto seatRowDto);
 
 }

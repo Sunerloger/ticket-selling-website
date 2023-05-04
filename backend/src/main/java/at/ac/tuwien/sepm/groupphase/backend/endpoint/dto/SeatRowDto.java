@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
 import jakarta.validation.constraints.NotNull;
+
 public class SeatRowDto {
 
     private Long id;
@@ -42,7 +43,8 @@ public class SeatRowDto {
         private Long rowNr;
         private HallPlan hallPlan;
 
-        private SeatRowDtoBuilder() {}
+        private SeatRowDtoBuilder() {
+        }
 
         public static SeatRowDtoBuilder aSeatRowDto() {
             return new SeatRowDtoBuilder();
@@ -62,6 +64,7 @@ public class SeatRowDto {
             this.hallPlan = hallPlan;
             return this;
         }
+
         public SeatRowDto build() {
             SeatRowDto seatRowDto = new SeatRowDto();
             seatRowDto.setId(id);
