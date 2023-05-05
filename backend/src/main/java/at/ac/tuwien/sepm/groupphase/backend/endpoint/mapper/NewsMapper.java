@@ -2,7 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.AbbreviatedNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.DetailedNewsDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.ImageDataDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ImageDataDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.NewsInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import org.mapstruct.Mapper;

@@ -1,6 +1,16 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Lob;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.FetchType;
 import jakarta.validation.constraints.NotEmpty;
 import org.hibernate.annotations.CreationTimestamp;
 

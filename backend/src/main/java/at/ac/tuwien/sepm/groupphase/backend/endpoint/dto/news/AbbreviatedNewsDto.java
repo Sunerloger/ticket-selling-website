@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ImageDataDto;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
