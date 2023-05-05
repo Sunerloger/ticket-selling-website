@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PersistedRoomplan } from 'src/app/dtos/roomplan';
 import { SeatCreationEvent } from '../seatrow/seatrow.component';
+import { ToolbarItem } from '../toolbar/toolbar.component';
 
 @Component({
   selector: 'app-roomplanvisualeditor',
@@ -8,12 +9,20 @@ import { SeatCreationEvent } from '../seatrow/seatrow.component';
   styleUrls: ['./roomplanvisualeditor.component.scss']
 })
 export class RoomplanvisualeditorComponent {
+  isDetailedView = false;
+
   //props
   @Input() roomplan: PersistedRoomplan;
 
   //events
   @Output() onAddRowEvent = new EventEmitter<{ rowNr: number }>();
   @Output() onAddSeatEvent = new EventEmitter<SeatCreationEvent>();
+
+  handleToolbarItemClick(clickedItem: ToolbarItem) {
+    if (clickedItem === ToolbarItem.DETAILED_VIEW) {
+      this.isDetailedView = !this.isDetailedView;
+    }
+  }
 
 
   /**

@@ -29,6 +29,8 @@ export class SeatrowComponent {
 
   //props
   @Input() seatRow: PersistedSeatRow;
+  @Input() showDeleteRowBtn: boolean = false;
+  @Input() showAddRowBtn: boolean = false;
 
   //events
   @Output() onSeatCreationEvent = new EventEmitter<SeatCreationEvent>()

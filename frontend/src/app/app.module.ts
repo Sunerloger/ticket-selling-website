@@ -16,6 +16,8 @@ import { RoomplaneditorComponent } from './components/roomplaneditor/roomplanedi
 import { RoomplanvisualeditorComponent } from './components/roomplaneditor/roomplanvisualeditor/roomplanvisualeditor.component';
 import { SeatrowComponent } from './components/roomplaneditor/seatrow/seatrow.component';
 import { ContextmenuComponent } from './components/roomplaneditor/seatrow/contextmenu/contextmenu.component';
+import { ToolbarComponent } from './components/roomplaneditor/toolbar/toolbar.component';
+import { AddrowbtnComponent } from './components/roomplaneditor/seatrow/addrowbtn/addrowbtn.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,8 @@ import { ContextmenuComponent } from './components/roomplaneditor/seatrow/contex
     RoomplanvisualeditorComponent,
     SeatrowComponent,
     ContextmenuComponent,
+    ToolbarComponent,
+    AddrowbtnComponent,
   ],
   imports: [
     BrowserModule,

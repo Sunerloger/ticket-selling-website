@@ -6,7 +6,7 @@
     align-items: center;
     gap: 0.5rem;
 
-    max-height: 3rem;
+    max-height: 2rem;
 }
 
 .add_seat_btn {
@@ -44,7 +44,14 @@
 }
 
 .hover_overlay {
-    display: none;
+    position: absolute;
+    left: -0.5rem;
+
+    bottom: 1.5rem;
+    color: #DD2D2D;
+    font-weight: 500;
+
+    visibility: hidden;
 }
 
 .seat:hover {
@@ -53,9 +60,22 @@
 }
 
 .seat:hover .hover_overlay {
-    position: absolute;
-    display: block;
-    bottom: 2.7rem;
-    color: #DD2D2D;
-    font-weight: 500;
+    visibility: visible;
+}
+
+/*
+    Delete Row
+*/
+.delete_row{
+    background-color: #DD2D2D;
+    border-radius: 10px;
+    border: none;
+    padding: 0.3rem;
+    color: white;
+}
+
+.delete_row:hover{
+    box-shadow: -1px 1px 27px -8px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: -1px 1px 27px -8px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: -1px 1px 27px -8px rgba(0, 0, 0, 0.75);
 }

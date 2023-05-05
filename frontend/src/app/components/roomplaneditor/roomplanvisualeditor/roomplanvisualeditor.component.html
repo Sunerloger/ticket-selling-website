@@ -1,3 +1,10 @@
+<div class="editor">
+
+<!-- Toolbar -->      
+<app-toolbar
+       (toolbarClick)="handleToolbarItemClick($event)"    
+/>
+
 <div class="editor_container">
     <div class="venue_template">
         <span>Venue</span>
@@ -11,6 +18,7 @@
                 *ngFor="let seatrow of roomplan.seatrows"
             >
                 <app-seatrow 
+                    [showDeleteRowBtn]="isDetailedView"
                     [seatRow]="seatrow"
                     (onSeatCreationEvent)="handleAddSeat($event)"
                 />
@@ -38,4 +46,5 @@
         </button>
     </div>
 
+</div>
 </div>
