@@ -22,7 +22,7 @@ export class EventsComponent implements OnInit{
   };
   base64Image = '';
   eventForm: FormGroup;
-  token = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzZWN1cmUtYmFja2VuZCIsImF1ZCI6InNlY3VyZS1hcHAiLCJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJleHAiOjE2ODM0Mjg5MTksInJvbCI6WyJST0xFX0FETUlOIiwiUk9MRV9VU0VSIl19.wqswe__snIL6UyR8XqjS2ifoT-dfL9RjbjTclRZZwe7Y9l3zaC08dt62wNFwfqegUO8K1FUGgcJPCSuYhm4wWw';
+
 
   constructor(private fb: FormBuilder,
               private service: EventService,
@@ -55,7 +55,7 @@ export class EventsComponent implements OnInit{
   onSubmit() {
     console.log(this.event);
     console.log(this.base64Image);
-    const observable = this.service.create(this.event, this.token);
+    const observable = this.service.create(this.event);
     observable.subscribe({
       next: data => {
         this.notification.success(`Event ${this.event.title} successfully created.`);
