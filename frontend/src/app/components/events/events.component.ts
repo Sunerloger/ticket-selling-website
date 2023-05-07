@@ -21,12 +21,15 @@ export class EventsComponent implements OnInit{
     description: '',
     image: '',
   };
+  today: string;
   eventForm: FormGroup;
 
 
   constructor(private fb: FormBuilder,
               private service: EventService,
-              private notification: ToastrService) { }
+              private notification: ToastrService) {
+    this.today = new Date().toISOString().split('T')[0];
+  }
 
   ngOnInit(): void {
     this.eventForm = this.fb.group({
