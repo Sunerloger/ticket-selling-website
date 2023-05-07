@@ -23,21 +23,10 @@ export class EventService {
       'iJhZG1pbkBlbWFpbC5jb20iLCJleHAiOjE2ODM1MDA1OTcsInJvbCI6WyJST0xFX0FETUlOIiwiUk9MRV9VU0VSIl19.4TolSBIgN1QcA2PADS-OOMe' +
       'Vn7gmSDP8hMa221Rul1enb5GI_5C5HuKqQm37-1WJQyKJchBl2zv0qB4fPFApoA';
     console.log(token);
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': ` ${token}`,
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-      })
-    };
-    console.log(httpOptions);
     console.log(event);
     return this.http.post<Event>(
       baseUri,
-      event,
-      httpOptions
+      event
     );
   }
 }
