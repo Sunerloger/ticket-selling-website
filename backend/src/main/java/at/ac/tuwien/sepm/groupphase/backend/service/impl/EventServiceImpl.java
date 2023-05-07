@@ -16,10 +16,12 @@ public class EventServiceImpl implements EventService {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
-    public EventServiceImpl(EventRepository eventRepository, EventMapper eventMapper){
+
+    public EventServiceImpl(EventRepository eventRepository, EventMapper eventMapper) {
         this.eventRepository = eventRepository;
         this.eventMapper = eventMapper;
     }
+
     @Override
     public Event create(EventDetailDto event) {
         LOG.trace("create({})", event);

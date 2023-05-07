@@ -13,11 +13,6 @@ import java.util.Optional;
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
 
-    @Query("SELECT c FROM Event c")
-    List<Event> findAllHallPlans();
-
-    Optional<Event> findHallPlanById(Long id);
-
     Event save(Event hallPlan);
 
     @Transactional

@@ -3,7 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public record EventDetailDto (
+public record EventDetailDto(
     Long id,
     String title,
     LocalDate date,
@@ -13,7 +13,8 @@ public record EventDetailDto (
     double duration,
     String category,
     String address,
-    String description
+    String description,
+    String image
 ) {
 
 }

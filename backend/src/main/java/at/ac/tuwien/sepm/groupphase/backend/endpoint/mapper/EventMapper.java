@@ -19,7 +19,7 @@ public interface EventMapper {
     @Mapping(target = "id", source = "id")
     List<EventDetailDto> eventToEventDetailDto(List<Event> events);
 
-    @IterableMapping(qualifiedByName = "hallPlan")
+    @IterableMapping(qualifiedByName = "event")
     @Mapping(target = "id", source = "id")
     Event eventDetailDtoToEvent(EventDetailDto event);
 

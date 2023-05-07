@@ -1,7 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import jakarta.persistence.*;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -31,6 +35,9 @@ public class Event {
 
     private String description;
 
+    @Column(columnDefinition = "TEXT")
+    private String image;
+
     public Event() {}
 
     public Event(
@@ -43,7 +50,8 @@ public class Event {
         double duration,
         String category,
         String address,
-        String description) {
+        String description,
+        String image) {
         this.id = id;
         this.title = title;
         this.date = date;
@@ -54,6 +62,7 @@ public class Event {
         this.category = category;
         this.address = address;
         this.description = description;
+        this.image = image;
     }
 
     // getters and setters
@@ -136,5 +145,13 @@ public class Event {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

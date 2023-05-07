@@ -18,9 +18,9 @@ export class EventsComponent implements OnInit{
     duration: 0,
     category: '',
     address: '',
-    description: ''
+    description: '',
+    image: '',
   };
-  base64Image = '';
   eventForm: FormGroup;
 
 
@@ -47,14 +47,13 @@ export class EventsComponent implements OnInit{
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
-        this.base64Image = reader.result as string;
+        this.event.image = reader.result as string;
       };
     }
   }
 
   onSubmit() {
     console.log(this.event);
-    console.log(this.base64Image);
     const observable = this.service.create(this.event);
     observable.subscribe({
       next: data => {

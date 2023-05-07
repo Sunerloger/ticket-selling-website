@@ -9,4 +9,5 @@ export interface Event {
   category: string;
   address: string;
   description?: string;
+  image?: string;
 }
