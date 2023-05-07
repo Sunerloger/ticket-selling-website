@@ -20,7 +20,8 @@
                 <app-seatrow 
                     [showDeleteRowBtn]="isDetailedView"
                     [seatRow]="seatrow"
-                    (onSeatCreationEvent)="handleAddSeat($event)"
+                    (onSeatRowDeletion)="this.onSeatRowDeletionEvent.emit($event)"
+                    (onSeatCreationEvent)="onAddSeat($event)"
                 />
             </div>
         </div>

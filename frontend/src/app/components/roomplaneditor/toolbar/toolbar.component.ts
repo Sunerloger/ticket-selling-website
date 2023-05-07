@@ -16,7 +16,6 @@ export class ToolbarComponent {
   @Output() toolbarClick = new EventEmitter<ToolbarItem>();
 
   handleToolbarItemClick(clickedItem: ToolbarItem) {
-    console.log(clickedItem);
     this.toolbarClick.emit(clickedItem);
   }
 }

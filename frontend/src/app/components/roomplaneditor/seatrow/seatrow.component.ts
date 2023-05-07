@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PersistedSeatRow, SeatType } from 'src/app/dtos/roomplan';
+import { SeatCreationEventPayload } from './contextmenu/contextmenu.component';
 
 
 export enum CreationMenuDirection {
@@ -10,6 +11,7 @@ export enum CreationMenuDirection {
 export interface SeatCreationEvent {
   direction: CreationMenuDirection,
   type: SeatType,
+  amountSeat: number,
   rowNr: number,
 }
 
@@ -34,6 +36,7 @@ export class SeatrowComponent {
 
   //events
   @Output() onSeatCreationEvent = new EventEmitter<SeatCreationEvent>()
+  @Output() onSeatRowDeletion = new EventEmitter<number>()
 
   /**
    * Handles click outside of context menu
@@ -63,10 +66,10 @@ export class SeatrowComponent {
    * @param direction 
    * @param type 
    */
-  handleAddSeat(rowNr: number, direction: CreationMenuDirection, type: SeatType) {
-    console.log(direction, type);
+  handleAddSeat(rowNr: number, direction: CreationMenuDirection, payload: SeatCreationEventPayload) {
+    const { amount, type } = payload;
 
-    this.onSeatCreationEvent.emit({ rowNr, direction, type });
+    this.onSeatCreationEvent.emit({ rowNr, direction, type, amountSeat: amount });
 
     this.closeActiveContextMenu();
   }

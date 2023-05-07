@@ -1,4 +1,13 @@
 <div class="seat_row">
+    <!-- (Optional) Delete Row Button -->
+    <button 
+        *ngIf="showDeleteRowBtn === true" 
+        class="delete_row"
+        (click)="this.onSeatRowDeletion.emit(this.seatRow.rowNr)"
+    >
+        Delete Row
+    </button>
+
     <!-- Plus Btn -->
     <button 
         class="add_seat_btn" 
@@ -49,12 +58,4 @@
         (seatCreationEvent)="handleAddSeat(this.seatRow.rowNr, CreationMenuDirection.RIGHT, $event)"
         *ngIf="showCreationMenuRight === true" 
     />
-
-    <!-- (Optional) Delete Row Button -->
-    <button 
-        *ngIf="showDeleteRowBtn === true"
-        class="delete_row"
-    >
-        Delete Row
-    </button>
 </div>

@@ -17,6 +17,7 @@ export class RoomplanvisualeditorComponent {
   //events
   @Output() onAddRowEvent = new EventEmitter<{ rowNr: number }>();
   @Output() onAddSeatEvent = new EventEmitter<SeatCreationEvent>();
+  @Output() onSeatRowDeletionEvent = new EventEmitter<number>();
 
   handleToolbarItemClick(clickedItem: ToolbarItem) {
     if (clickedItem === ToolbarItem.DETAILED_VIEW) {
@@ -48,7 +49,7 @@ export class RoomplanvisualeditorComponent {
    * Emits onAddSeatEvent event with given event payload
    * @param seatCreationEvent payload of event
    */
-  handleAddSeat(seatCreationEvent: SeatCreationEvent) {
+  onAddSeat(seatCreationEvent: SeatCreationEvent) {
     this.onAddSeatEvent.emit(seatCreationEvent);
   }
 }

@@ -11,10 +11,8 @@ import { CreationMenuDirection, SeatCreationEvent } from './seatrow/seatrow.comp
 })
 export class RoomplaneditorComponent implements OnInit {
   roomplan: PersistedRoomplan;
-  seatrowMap: Map<SeatRow["rowNr"], SeatRow>;
 
   ngOnInit(): void {
-    this.seatrowMap = new Map();
     this.fetchRoomplan();
   }
 
@@ -56,21 +54,11 @@ export class RoomplaneditorComponent implements OnInit {
       seatrows: [seatRow1, seatRow2]
     }
 
-
-
-
     //fetch roomplan
     const fetchedRoomplan = roomplan;
 
     //set state
     this.roomplan = fetchedRoomplan;
-
-
-    //add all seatrows to seatrowMap
-    for (const seatrow of this.roomplan.seatrows) {
-      this.seatrowMap.set(seatrow.rowNr, seatrow);
-    }
-    console.log(this.seatrowMap)
   }
 
   /**
@@ -87,48 +75,71 @@ export class RoomplaneditorComponent implements OnInit {
       id: 0
     }
 
-    //update seatRowMap
-    this.seatrowMap.set(persistedEmptySeatRow.rowNr, persistedEmptySeatRow);
-
     //update state
     const clonedRoomplan = structuredClone(this.roomplan);
     clonedRoomplan.seatrows.splice(rowNr - 1, 0, persistedEmptySeatRow);
     this.roomplan = clonedRoomplan;
   }
 
+  handleRemoveRow(deletedRowNr: number) {
+    //update state
+    const roomplanCloned = structuredClone(this.roomplan);
+    roomplanCloned.seatrows.splice(
+      deletedRowNr - 1,
+      1
+    );
+
+    //update other row nr
+    for (const seatrow of roomplanCloned.seatrows) {
+      if (seatrow.rowNr >= deletedRowNr) {
+        seatrow.rowNr--;
+      }
+    }
+    this.roomplan = roomplanCloned;
+
+    //persist roomplan with seatrows
+  }
+
   handleAddSeat(payload: SeatCreationEvent) {
     console.log("addSeat rowNr=", payload.rowNr, ",type=", payload.type, ",direction=", payload.type);
-    const { rowNr, type, direction } = payload;
+    const { rowNr, type, direction, amountSeat } = payload;
 
+    const newSeats = [];
+    const initialSeatNr = this.getLatestSeatNrFromDirectionAndRowNr(direction, rowNr);
+    let searNr = initialSeatNr;
 
-
-    //persist new seat
     //TO-DO: add row nr to empty seat or call correct endpoint
+    for (let i = 0; i < amountSeat; i++) {
+      newSeats.push(
+        this.createEmptySeat(type, searNr) //persist new seat
+      );
+      searNr++;
+    }
+
+    //TO-DO: update seatNr of other seats when direction was left
+
+    //update state
+    this.roomplan.seatrows[rowNr - 1].seats =
+      this.roomplan.seatrows[rowNr - 1].seats.concat(newSeats);
+  }
+
+  createEmptySeat(type: SeatType, seatNr: number): PersistedSeat {
     const persistedNewSeat: PersistedSeat = {
       id: 1,
       type: type,
-      seatNr: this.getSeatNrFromDirectionAndRowNr(direction, rowNr),
+      seatNr: seatNr,
       status: SeatStatus.FREE,
       section: null
     };
-
-    //TO-DO: update seatNr of other seats when direction was left
-    console.log(persistedNewSeat)
-    //update state
-    this.roomplan.seatrows[rowNr - 1].seats.splice(
-      persistedNewSeat.seatNr,
-      0,
-      persistedNewSeat
-    );
-
+    return persistedNewSeat;
   }
 
-  getSeatNrFromDirectionAndRowNr(direction: CreationMenuDirection, rowNr: number) {
+  getLatestSeatNrFromDirectionAndRowNr(direction: CreationMenuDirection, rowNr: number) {
     switch (direction) {
       case CreationMenuDirection.LEFT:
         return 0;
       case CreationMenuDirection.RIGHT:
-        const totalSeats = this.seatrowMap.get(rowNr).seats.length;
+        const totalSeats = this.roomplan.seatrows[rowNr - 1].seats.length;
         return totalSeats + 1;
     }
   }

@@ -1,8 +1,9 @@
 import { Component, ElementRef, EventEmitter, HostListener, Output } from '@angular/core';
+import { SeatType } from 'src/app/dtos/roomplan';
 
-export enum SeatType {
-  VACANT,
-  FILLED
+export interface SeatCreationEventPayload {
+  type: SeatType,
+  amount: number,
 }
 
 @Component({
@@ -11,15 +12,25 @@ export enum SeatType {
   styleUrls: ['./contextmenu.component.scss']
 })
 export class ContextmenuComponent {
-  @Output() seatCreationEvent = new EventEmitter<SeatType>();
-  @Output() outsideCreationClickEvent = new EventEmitter<void>();
-  SeatType = SeatType
+  //state
+  seatAmount: number = 1;
 
+  //events
+  @Output() seatCreationEvent = new EventEmitter<SeatCreationEventPayload>();
+  @Output() outsideCreationClickEvent = new EventEmitter<void>();
+
+  SeatType = SeatType
   private isComponentShown = false;
 
 
   constructor(private elementRef: ElementRef) {
 
+  }
+
+  handleSeatAmountChange(amount: number) {
+    if (amount >= 1) {
+      this.seatAmount = amount;
+    }
   }
 
   /**
@@ -28,7 +39,10 @@ export class ContextmenuComponent {
  * @param type of seat
  */
   onAdd(type: SeatType) {
-    this.seatCreationEvent.emit(type)
+    this.seatCreationEvent.emit({
+      type: type,
+      amount: this.seatAmount
+    })
   }
 
   @HostListener('document:click', ['$event'])
