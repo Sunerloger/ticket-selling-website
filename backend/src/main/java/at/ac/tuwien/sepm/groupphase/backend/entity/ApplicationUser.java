@@ -23,7 +23,7 @@ public class ApplicationUser {
 
     private String lastName;
 
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthdate;
 
     private String address;
