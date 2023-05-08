@@ -8,7 +8,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.List;
 
 @Entity
 @Table(name = "seatrow")
@@ -23,6 +26,17 @@ public class SeatRow {
     @JoinColumn(name = "hallplan_id")
     private HallPlan hallPlan;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name ="seatrow_id")
+    private List<HallPlanSeat> seats;
+
+    public List<HallPlanSeat> getSeats() {
+        return seats;
+    }
+
+    public void setSeats(List<HallPlanSeat> seats) {
+        this.seats = seats;
+    }
 
     public Long getId() {
         return id;

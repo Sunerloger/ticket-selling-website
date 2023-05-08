@@ -1,21 +1,25 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanSectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanSectionMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SeatRowMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSection;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSectionRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRowRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.xml.bind.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -32,12 +36,16 @@ public class HallPlanServiceImpl implements HallPlanService {
     private final HallPlanSectionMapper hallPlanSectionMapper;
 
     private final HallPlanSectionRepository hallPlanSectionRepository;
+    private final SeatRowRepository seatRowRepository;
+    private final SeatRowMapper seatRowMapper;
 
-    public HallPlanServiceImpl(HallPlanRepository hallPlanRepository, HallPlanMapper hallPlanMapper, HallPlanSectionMapper hallPlanSectionMapper, HallPlanSectionRepository hallPlanSectionRepository) {
+    public HallPlanServiceImpl(HallPlanRepository hallPlanRepository, HallPlanMapper hallPlanMapper, HallPlanSectionMapper hallPlanSectionMapper, HallPlanSectionRepository hallPlanSectionRepository, SeatRowRepository seatRowRepository, SeatRowMapper seatRowMapper) {
         this.hallPlanRepository = hallPlanRepository;
         this.hallPlanMapper = hallPlanMapper;
         this.hallPlanSectionMapper = hallPlanSectionMapper;
         this.hallPlanSectionRepository = hallPlanSectionRepository;
+        this.seatRowRepository = seatRowRepository;
+        this.seatRowMapper = seatRowMapper;
     }
 
     @Override
@@ -56,11 +64,13 @@ public class HallPlanServiceImpl implements HallPlanService {
         }
         return hallPlanRepository.save(hallPlanMapper.hallPlanDtoToHallPlan(hallplan));
     }
-
+    @Transactional
     @Override
-    public HallPlanDto getHallPlanById(Long id) {
-        Optional<HallPlan> hallPlanEntity = hallPlanRepository.findById(id);
-        return hallPlanEntity.map(hallPlanMapper::hallPlanToHallPlanDto).orElse(null);
+    public DetailedHallPlanDto getHallPlanById(Long id) {
+        Optional<HallPlan> hallPlanEntityWithoutSeats = hallPlanRepository.findHallPlanById(id);
+        List<SeatRow> seatRows = seatRowRepository.findAllByHallplanIdWithSeats(id);
+        if(hallPlanEntityWithoutSeats.isPresent()) hallPlanEntityWithoutSeats.get().setSeatRows(seatRows);
+        return hallPlanEntityWithoutSeats.map(hallPlanMapper::mapToDetailedHallPlanDto).orElse(null);
     }
 
     @Override

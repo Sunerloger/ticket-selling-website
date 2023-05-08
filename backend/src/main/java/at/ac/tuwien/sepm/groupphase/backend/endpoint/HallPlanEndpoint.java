@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanSectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanSeatDto;
@@ -77,9 +78,9 @@ public class HallPlanEndpoint {
     @Secured("ROLE_USER")
     @GetMapping("/{id}")
     @Operation(summary = "Get a hall plan by id", security = @SecurityRequirement(name = "apiKey"))
-    public ResponseEntity<HallPlanDto> getHallPlanById(@PathVariable Long id) {
+    public ResponseEntity<DetailedHallPlanDto> getHallPlanById(@PathVariable Long id) {
         LOGGER.info("GET /api/v1/hallplans/{}", id);
-        HallPlanDto hallPlanDto = hallPlanService.getHallPlanById(id);
+        DetailedHallPlanDto hallPlanDto = hallPlanService.getHallPlanById(id);
         if (hallPlanDto == null) {
             return ResponseEntity.notFound().build();
         }
@@ -107,7 +108,9 @@ public class HallPlanEndpoint {
         return ResponseEntity.ok(updatedHallPlanDto);
     }
 
-    //Seat Rows
+    //*******************************************************
+    //*                  SeatRow Mappings                   *
+    //*******************************************************
     @Secured("ROLE_ADMIN")
     @PostMapping("{hallPlanId}/seatrows")
     @Operation(summary = "Create a new seat row in the system", security = @SecurityRequirement(name = "apiKey"))
@@ -222,7 +225,10 @@ public class HallPlanEndpoint {
             .collect(Collectors.toList());
     }
 
-    //Seat Mappings
+    //*******************************************************
+    //*                     Seat Mappings                   *
+    //*******************************************************
+
     @Secured("ROLE_ADMIN")
     @PostMapping("/{hallPlanId}/seatrows/{seatRowId}/seats")
     @Operation(summary = "Add a new seat to a seat row")
@@ -264,19 +270,4 @@ public class HallPlanEndpoint {
         HallPlanSeatDto seatDto = hallPlanSeatService.getSeatById(id);
         return ResponseEntity.ok(seatDto);
     }
-    /*
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
-    @GetMapping("/hallplans/{hallPlanId}/seatrows/{seatRowId}/seats")
-    @Operation(summary = "Get all seats from a seat row")
-    @Override
-    public List<SeatDto> getAllSeatsBySeatRowId(Long hallPlanId, Long seatRowId) {
-        List<Seat> seats = seatRepository.findBySeatRowId(seatRowId);
-        if (seats.isEmpty()) {
-            throw new NotFoundException("No seats found for seat row with ID " + seatRowId);
-        }
-        return seats.stream()
-            .map(hallPlanSeatMapper::toDto)
-            .collect(Collectors.toList());
-    }
-    */
 }

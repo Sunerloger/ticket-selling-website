@@ -2,10 +2,15 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.List;
 
 @Entity
 @Table(name = "hallplan")
@@ -20,6 +25,18 @@ public class HallPlan {
 
     @Column(name = "description")
     private String description;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name="hallplan_id")
+    private List<SeatRow> seatRows;
+
+    public List<SeatRow> getSeatRows() {
+        return seatRows;
+    }
+
+    public void setSeatRows(List<SeatRow> seatRows) {
+        this.seatRows = seatRows;
+    }
 
     public Long getId() {
         return id;

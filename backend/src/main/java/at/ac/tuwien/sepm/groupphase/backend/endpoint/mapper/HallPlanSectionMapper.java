@@ -13,6 +13,5 @@ public interface HallPlanSectionMapper {
     @Named("hallPlanSection")
     HallPlanSectionDto toDto(HallPlanSection section);
 
-    @IterableMapping(qualifiedByName = "hallPlanSection")
     HallPlanSection toEntity(HallPlanSectionDto sectionDto);
 }

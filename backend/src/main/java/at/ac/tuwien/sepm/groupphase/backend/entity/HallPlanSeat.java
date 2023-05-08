@@ -44,6 +44,14 @@ public class HallPlanSeat {
     @JoinColumn(name = "section_id", nullable = false)
     private HallPlanSection section;
 
+    public Long getSeatNr() {
+        return seatNr;
+    }
+
+    public void setSeatNr(Long seatNr) {
+        this.seatNr = seatNr;
+    }
+
     public Long getId() {
         return id;
     }
@@ -92,12 +100,6 @@ public class HallPlanSeat {
         this.seatrow = seatrow;
     }
 
-    public Long getSeatNr() {
-        return seatNr;
-    }
 
-    public void setSeatNr(Long seatNr) {
-        this.seatNr = seatNr;
-    }
 }
 

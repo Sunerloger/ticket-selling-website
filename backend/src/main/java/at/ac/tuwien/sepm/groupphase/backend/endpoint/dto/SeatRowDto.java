@@ -3,6 +3,8 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.List;
+
 public class SeatRowDto {
 
     private Long id;
@@ -11,6 +13,16 @@ public class SeatRowDto {
     private Long rowNr;
 
     private HallPlanDto hallPlan;
+
+    private List<HallPlanSeatDto> seats;
+
+    public List<HallPlanSeatDto> getSeats() {
+        return seats;
+    }
+
+    public void setSeats(List<HallPlanSeatDto> seats) {
+        this.seats = seats;
+    }
 
     public HallPlanDto getHallPlan() {
         return hallPlan;

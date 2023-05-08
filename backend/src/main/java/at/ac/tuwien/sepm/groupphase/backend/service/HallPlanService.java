@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanSectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
@@ -19,7 +20,7 @@ public interface HallPlanService {
 
     HallPlan createHallplan(HallPlanDto hallPlanDto) throws ValidationException;
 
-    HallPlanDto getHallPlanById(Long id);
+    DetailedHallPlanDto getHallPlanById(Long id);
 
     void deleteHallPlanById(Long id);
 
