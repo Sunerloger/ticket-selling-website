@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.FetchType;
-import java.util.Arrays;
 import java.util.Objects;
 
 @Entity
@@ -21,7 +20,7 @@ public class NewsImage {
 
     @Lob
     @Column(name = "image_data", columnDefinition = "BLOB")
-    private byte[] imageData;
+    private String imageData;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "news_id", nullable = false)
@@ -36,11 +35,11 @@ public class NewsImage {
         this.id = id;
     }
 
-    public byte[] getImageData() {
+    public String getImageData() {
         return imageData;
     }
 
-    public void setImageData(byte[] imageData) {
+    public void setImageData(String imageData) {
         this.imageData = imageData;
     }
 
@@ -61,27 +60,26 @@ public class NewsImage {
             return false;
         }
         return Objects.equals(id, newsImage.id)
-            && Arrays.equals(imageData, newsImage.imageData)
+            && Objects.equals(imageData, newsImage.imageData)
             && Objects.equals(news, newsImage.news);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, Arrays.hashCode(imageData)/*, news*/);
+        return Objects.hash(id, imageData);
     }
 
     @Override
     public String toString() {
         return "NewsImage{"
             + "id=" + id
-            //+ ", news=" + news
             + '}';
     }
 
 
     public static final class NewsImageBuilder {
         private Long id;
-        private byte[] imageData;
+        private String imageData;
         private News news;
 
         private NewsImageBuilder() {
@@ -96,7 +94,7 @@ public class NewsImage {
             return this;
         }
 
-        public at.ac.tuwien.sepm.groupphase.backend.entity.NewsImage.NewsImageBuilder withImageData(byte[] imageData) {
+        public at.ac.tuwien.sepm.groupphase.backend.entity.NewsImage.NewsImageBuilder withImageData(String imageData) {
             this.imageData = imageData;
             return this;
         }

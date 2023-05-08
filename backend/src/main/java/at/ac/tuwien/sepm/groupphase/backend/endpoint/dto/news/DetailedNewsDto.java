@@ -1,7 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ImageDataDto;
-
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,9 +15,9 @@ public class DetailedNewsDto {
 
     private LocalDateTime createdAt;
 
-    private ImageDataDto coverImage;
+    private String coverImage;
 
-    private List<ImageDataDto> images = new LinkedList<>();
+    private List<String> images = new LinkedList<>();
 
     public Long getId() {
         return id;
@@ -53,23 +51,23 @@ public class DetailedNewsDto {
         this.createdAt = createdAt;
     }
 
-    public ImageDataDto getCoverImage() {
+    public String getCoverImage() {
         return coverImage;
     }
 
-    public void setCoverImage(ImageDataDto coverImage) {
+    public void setCoverImage(String coverImage) {
         this.coverImage = coverImage;
     }
 
-    public List<ImageDataDto> getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(List<ImageDataDto> images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 
-    public void addImage(ImageDataDto image) {
+    public void addImage(String image) {
         this.images.add(image);
     }
 
@@ -109,8 +107,8 @@ public class DetailedNewsDto {
         private String title;
         private String fullText;
         private LocalDateTime createdAt;
-        private ImageDataDto coverImage;
-        private List<ImageDataDto> images;
+        private String coverImage;
+        private List<String> images;
 
         private DetailedNewsDtoBuilder() {
         }
@@ -139,12 +137,12 @@ public class DetailedNewsDto {
             return this;
         }
 
-        public DetailedNewsDto.DetailedNewsDtoBuilder withCoverImage(ImageDataDto coverImage) {
+        public DetailedNewsDto.DetailedNewsDtoBuilder withCoverImage(String coverImage) {
             this.coverImage = coverImage;
             return this;
         }
 
-        public DetailedNewsDto.DetailedNewsDtoBuilder withImages(List<ImageDataDto> images) {
+        public DetailedNewsDto.DetailedNewsDtoBuilder withImages(List<String> images) {
             this.images = images;
             return this;
         }

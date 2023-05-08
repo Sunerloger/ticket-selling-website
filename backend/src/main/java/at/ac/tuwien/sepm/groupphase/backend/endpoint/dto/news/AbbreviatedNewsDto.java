@@ -1,7 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ImageDataDto;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -15,7 +13,7 @@ public class AbbreviatedNewsDto {
 
     private LocalDateTime createdAt;
 
-    private ImageDataDto coverImage;
+    private String coverImage;
 
     public Long getId() {
         return id;
@@ -49,11 +47,11 @@ public class AbbreviatedNewsDto {
         this.createdAt = createdAt;
     }
 
-    public ImageDataDto getCoverImage() {
+    public String getCoverImage() {
         return coverImage;
     }
 
-    public void setCoverImage(ImageDataDto coverImage) {
+    public void setCoverImage(String coverImage) {
         this.coverImage = coverImage;
     }
 
@@ -93,7 +91,7 @@ public class AbbreviatedNewsDto {
         private String title;
         private String shortText;
         private LocalDateTime createdAt;
-        private ImageDataDto coverImage;
+        private String coverImage;
 
         private AbbreviatedNewsDtoBuilder() {
         }
@@ -122,7 +120,7 @@ public class AbbreviatedNewsDto {
             return this;
         }
 
-        public AbbreviatedNewsDto.AbbreviatedNewsDtoBuilder withCoverImage(ImageDataDto coverImage) {
+        public AbbreviatedNewsDto.AbbreviatedNewsDtoBuilder withCoverImage(String coverImage) {
             this.coverImage = coverImage;
             return this;
         }

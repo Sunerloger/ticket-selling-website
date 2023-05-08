@@ -15,7 +15,6 @@ import jakarta.validation.constraints.NotEmpty;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -45,7 +44,7 @@ public class News {
     // TODO: store images in filesystem?
     @Lob
     @Column(name = "cover_image", columnDefinition = "BLOB")
-    private byte[] coverImage;
+    private String coverImage;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "news")
     private List<NewsImage> images = new LinkedList<>();
@@ -90,11 +89,11 @@ public class News {
         this.createdAt = createdAt;
     }
 
-    public byte[] getCoverImage() {
+    public String getCoverImage() {
         return coverImage;
     }
 
-    public void setCoverImage(byte[] coverImage) {
+    public void setCoverImage(String coverImage) {
         this.coverImage = coverImage;
     }
 
@@ -119,12 +118,12 @@ public class News {
             && Objects.equals(shortText, news.shortText)
             && Objects.equals(fullText, news.fullText)
             && Objects.equals(createdAt, news.createdAt)
-            && Arrays.equals(coverImage, news.coverImage);
+            && Objects.equals(coverImage, news.coverImage);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, shortText, fullText, createdAt, Arrays.hashCode(coverImage));
+        return Objects.hash(id, title, shortText, fullText, createdAt, coverImage);
     }
 
     @Override
@@ -145,7 +144,7 @@ public class News {
         private String shortText;
         private String fullText;
         private LocalDateTime createdAt;
-        private byte[] coverImage;
+        private String coverImage;
         private List<NewsImage> images;
 
         private NewsBuilder() {
@@ -180,7 +179,7 @@ public class News {
             return this;
         }
 
-        public NewsBuilder withCoverImage(byte[] coverImage) {
+        public NewsBuilder withCoverImage(String coverImage) {
             this.coverImage = coverImage;
             return this;
         }

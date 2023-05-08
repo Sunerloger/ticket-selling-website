@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ImageDataDto;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -27,10 +26,10 @@ public class NewsInquiryDto {
 
     // TODO: test for real picture format
 
-    private ImageDataDto coverImage;
+    private String coverImage;
 
     @NotNull
-    private List<ImageDataDto> images = new LinkedList<>();
+    private List<String> images = new LinkedList<>();
 
 
     public String getTitle() {
@@ -57,19 +56,19 @@ public class NewsInquiryDto {
         this.fullText = fullText;
     }
 
-    public ImageDataDto getCoverImage() {
+    public String getCoverImage() {
         return coverImage;
     }
 
-    public void setCoverImage(ImageDataDto coverImage) {
+    public void setCoverImage(String coverImage) {
         this.coverImage = coverImage;
     }
 
-    public List<ImageDataDto> getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(List<ImageDataDto> images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 
@@ -106,8 +105,8 @@ public class NewsInquiryDto {
         private String title;
         private String shortText;
         private String fullText;
-        private ImageDataDto coverImage;
-        private List<ImageDataDto> images;
+        private String coverImage;
+        private List<String> images;
 
         private NewsInquiryDtoBuilder() {
         }
@@ -131,12 +130,12 @@ public class NewsInquiryDto {
             return this;
         }
 
-        public NewsInquiryDto.NewsInquiryDtoBuilder withCoverImage(ImageDataDto coverImage) {
+        public NewsInquiryDto.NewsInquiryDtoBuilder withCoverImage(String coverImage) {
             this.coverImage = coverImage;
             return this;
         }
 
-        public NewsInquiryDto.NewsInquiryDtoBuilder withImages(List<ImageDataDto> images) {
+        public NewsInquiryDto.NewsInquiryDtoBuilder withImages(List<String> images) {
             this.images = images;
             return this;
         }
