@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-addrowbtn',
@@ -6,7 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./addrowbtn.component.scss']
 })
 export class AddrowbtnComponent {
-  handleAddRow() {
-
-  }
+  @Input() onClick: Function
 }

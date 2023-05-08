@@ -44,6 +44,13 @@ export class RoomplaneditorComponent implements OnInit {
         seatNr: 1,
         status: SeatStatus.FREE,
         section: section
+      },
+      {
+        id: 2,
+        type: SeatType.SEAT,
+        seatNr: 2,
+        status: SeatStatus.FREE,
+        section: section
       }]
     }
 
@@ -68,15 +75,25 @@ export class RoomplaneditorComponent implements OnInit {
   handleAddRow(rowNr: number) {
     console.log("handleAddRow rowNr=", rowNr);
 
-    //persist new Seat Row
+    //-- persist new Seat Row
     const persistedEmptySeatRow: PersistedSeatRow = {
       rowNr: rowNr,
       seats: [],
       id: 0
+    };
+
+
+    //-- update state
+    const clonedRoomplan = structuredClone(this.roomplan);
+
+    //update seatrow numbers of other seatrows
+    for (const seatrow of clonedRoomplan.seatrows) {
+      if (seatrow.rowNr >= rowNr) {
+        seatrow.rowNr++; //TO-DO: persist new seatrow
+      }
     }
 
-    //update state
-    const clonedRoomplan = structuredClone(this.roomplan);
+    //add seat
     clonedRoomplan.seatrows.splice(rowNr - 1, 0, persistedEmptySeatRow);
     this.roomplan = clonedRoomplan;
   }

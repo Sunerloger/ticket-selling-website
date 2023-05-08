@@ -41,7 +41,7 @@
     </div>
     <!-- Plus Btn -->
     <button 
-        *ngIf="showCreationMenuRight === false" 
+        *ngIf="showCreationMenuRight === false && this.seatRow.seats.length !== 0" 
         class="add_seat_btn" 
         (click)="showCreationMenuRight = true"
     >
