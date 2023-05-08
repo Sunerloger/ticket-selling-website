@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface HallPlanSectionRepository extends JpaRepository<HallPlanSection, Long> {
 
-    List<HallPlanSection> findByHallPlanId(Long hallPlanId);
 }

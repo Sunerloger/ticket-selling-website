@@ -1,13 +1,30 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatStatus;
+
+import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSection;
+import jakarta.validation.constraints.NotNull;
 
 public class HallPlanSeatDto {
+
     private Long id;
-    private HallPlanSeatStatus status;
-    private Long rowNr;
+    private Long hallPlanId;
+
+    @NotNull(message = "status must be specified")
+    private String status;
+
+    @NotNull(message = "type must be specified")
+    private String type;
+
+    @NotNull(message = "capacity must be specified")
+    private Long capacity;
+
+    @NotNull(message = "seatNr must be specified")
     private Long seatNr;
-    private Long sectionId;
+    @NotNull(message = "section_id must be specified")
+    private HallPlanSectionDto section;
+
+    @NotNull(message = "seatRow must be specified")
+    private SeatRowDto seatrow;
 
     public Long getId() {
         return id;
@@ -17,20 +34,28 @@ public class HallPlanSeatDto {
         this.id = id;
     }
 
-    public HallPlanSeatStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(HallPlanSeatStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public Long getRowNr() {
-        return rowNr;
+    public String getType() {
+        return type;
     }
 
-    public void setRowNr(Long rowNr) {
-        this.rowNr = rowNr;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Long getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(Long capacity) {
+        this.capacity = capacity;
     }
 
     public Long getSeatNr() {
@@ -41,62 +66,86 @@ public class HallPlanSeatDto {
         this.seatNr = seatNr;
     }
 
-    public Long getsectionId() {
-        return sectionId;
+    public Long getHallPlanId() {
+        return hallPlanId;
     }
 
-    public void setsectionId(Long sectionId) {
-        this.sectionId = sectionId;
+    public void setHallPlanId(Long hallPlanId) {
+        this.hallPlanId = hallPlanId;
     }
 
-    public static final class HallPlanSeatDtoBuilder {
+    public HallPlanSectionDto getSection() {
+        return section;
+    }
+
+    public void setSection(HallPlanSectionDto section) {
+        this.section = section;
+    }
+
+    public SeatRowDto getSeatrow() {
+        return seatrow;
+    }
+
+    public void setSeatrow(SeatRowDto seatrow) {
+        this.seatrow = seatrow;
+    }
+
+    public static final class SeatDtoBuilder {
+
         private Long id;
-        private HallPlanSeatStatus status;
-        private Long rowNr;
+        private String status;
+        private String type;
+        private Long capacity;
         private Long seatNr;
         private Long sectionId;
 
-        private HallPlanSeatDtoBuilder() {
-
+        private SeatDtoBuilder() {
         }
 
-        public static HallPlanSeatDtoBuilder aHallPlanSeatDto() {
-            return new HallPlanSeatDtoBuilder();
+        public static SeatDtoBuilder aSeatDto() {
+            return new SeatDtoBuilder();
         }
 
-        public HallPlanSeatDtoBuilder withId(Long id) {
+        public SeatDtoBuilder withId(Long id) {
             this.id = id;
             return this;
         }
 
-        public HallPlanSeatDtoBuilder withStatus(HallPlanSeatStatus status) {
+        public SeatDtoBuilder withStatus(String status) {
             this.status = status;
             return this;
         }
 
-        public HallPlanSeatDtoBuilder withRowNr(Long rowNr) {
-            this.rowNr = rowNr;
+        public SeatDtoBuilder withType(String type) {
+            this.type = type;
             return this;
         }
 
-        public HallPlanSeatDtoBuilder withSeatNr(Long seatNr) {
+        public SeatDtoBuilder withCapacity(Long capacity) {
+            this.capacity = capacity;
+            return this;
+        }
+
+        public SeatDtoBuilder withSeatNr(Long seatNr) {
             this.seatNr = seatNr;
             return this;
         }
 
-        public HallPlanSeatDtoBuilder withSectionId(Long sectionId) {
+        public SeatDtoBuilder withSectionId(Long sectionId) {
             this.sectionId = sectionId;
             return this;
         }
 
         public HallPlanSeatDto build() {
-            HallPlanSeatDto hallPlanSeatDto = new HallPlanSeatDto();
-            hallPlanSeatDto.setId(id);
-            hallPlanSeatDto.setStatus(status);
-            hallPlanSeatDto.setRowNr(rowNr);
-            hallPlanSeatDto.setSeatNr(seatNr);
-            hallPlanSeatDto.setsectionId(sectionId);
-            return hallPlanSeatDto;
+            HallPlanSeatDto seatDto = new HallPlanSeatDto();
+            seatDto.setId(id);
+            seatDto.setStatus(status);
+            seatDto.setType(type);
+            seatDto.setCapacity(capacity);
+            seatDto.setSeatNr(seatNr);
+            //seatDto.setHa
+            return seatDto;
         }
     }
 }
+

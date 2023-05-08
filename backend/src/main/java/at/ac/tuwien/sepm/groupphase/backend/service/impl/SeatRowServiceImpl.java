@@ -37,6 +37,12 @@ public class SeatRowServiceImpl implements SeatRowService {
     }
 
     @Override
+    public List<SeatRowDto> findAllSeatRowsOfHallPlan(Long id) {
+        List<SeatRow> seatRowEntities = seatRowRepository.findAllByHallplanId(id);
+        return seatRowMapper.toDto(seatRowEntities);
+    }
+
+    @Override
     public SeatRowDto createSeatRow(SeatRowDto seatRowDto) throws ValidationException {
         Long hallPlanId = seatRowDto.getHallPlan().getId();
         HallPlan hallPlan = hallPlanRepository.findById(hallPlanId)

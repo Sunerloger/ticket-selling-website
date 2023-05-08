@@ -87,7 +87,6 @@ public class HallPlanServiceImpl implements HallPlanService {
         section.setName(sectionDto.getName());
         section.setColor(sectionDto.getColor());
         section.setPrice(sectionDto.getPrice());
-        section.setHallPlanId(sectionDto.gethallplanId());
         return hallPlanSectionRepository.save(section);
     }
 
@@ -97,7 +96,6 @@ public class HallPlanServiceImpl implements HallPlanService {
         section.setName(sectionDto.getName());
         section.setColor(sectionDto.getColor());
         section.setPrice(sectionDto.getPrice());
-        section.setHallPlanId(sectionDto.gethallplanId());
         return hallPlanSectionRepository.save(section);
     }
 
@@ -119,8 +117,8 @@ public class HallPlanServiceImpl implements HallPlanService {
 
     @Override
     public List<HallPlanSection> findAllByHallPlanId(Long id) {
-        List<HallPlanSection> testList = hallPlanSectionRepository.findByHallPlanId(id);
-        return testList;
+        //List<HallPlanSection> testList = hallPlanSectionRepository.findByHallPlanId(id);
+        return null;
     }
 
     private HallPlanSection getSectionById(Long id) {

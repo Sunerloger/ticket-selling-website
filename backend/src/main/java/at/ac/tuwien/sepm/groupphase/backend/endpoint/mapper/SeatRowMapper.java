@@ -17,9 +17,11 @@ public interface SeatRowMapper {
     SeatRowDto toDto(SeatRow seatRow);
 
     @IterableMapping(qualifiedByName = "seatRow")
+    @Mapping(target = "hallPlan", source = "hallPlan")
     List<SeatRowDto> toDto(List<SeatRow> seatRows);
 
     @IterableMapping(qualifiedByName = "seatRow")
+    @Mapping(target = "hallPlan", source = "hallPlan")
     List<SeatRow> toEntity(List<SeatRowDto> seatRows);
 
     @Named("seatRow")

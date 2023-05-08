@@ -8,6 +8,8 @@ import java.util.List;
 public interface SeatRowService {
     List<SeatRowDto> findAllSeatRows();
 
+    List<SeatRowDto> findAllSeatRowsOfHallPlan(Long id);
+
     SeatRowDto createSeatRow(SeatRowDto seatRowDto) throws ValidationException;
 
     SeatRowDto getSeatRowById(Long id);

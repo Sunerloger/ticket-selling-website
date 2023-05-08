@@ -10,13 +10,13 @@ public class SeatRowDto {
     @NotNull(message = "rowNr must be specified")
     private Long rowNr;
 
-    private HallPlan hallPlan;
+    private HallPlanDto hallPlan;
 
-    public HallPlan getHallPlan() {
+    public HallPlanDto getHallPlan() {
         return hallPlan;
     }
 
-    public void setHallPlan(HallPlan hallPlan) {
+    public void setHallPlan(HallPlanDto hallPlan) {
         this.hallPlan = hallPlan;
     }
 
@@ -36,12 +36,11 @@ public class SeatRowDto {
         this.rowNr = rowNr;
     }
 
-
     public static final class SeatRowDtoBuilder {
 
         private Long id;
         private Long rowNr;
-        private HallPlan hallPlan;
+        private HallPlanDto hallPlan;
 
         private SeatRowDtoBuilder() {
         }
@@ -60,7 +59,7 @@ public class SeatRowDto {
             return this;
         }
 
-        public SeatRowDtoBuilder withHallPlanId(HallPlan hallPlan) {
+        public SeatRowDtoBuilder withHallPlanId(HallPlanDto hallPlan) {
             this.hallPlan = hallPlan;
             return this;
         }

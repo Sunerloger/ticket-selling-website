@@ -35,6 +35,7 @@ public class HallPlanDto {
 
     public static final class HallPlanDtoBuilder {
 
+        private Long id;
         private String name;
         private String description;
 
@@ -56,10 +57,16 @@ public class HallPlanDto {
             return this;
         }
 
+        public HallPlanDtoBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
         public HallPlanDto build() {
             HallPlanDto hallPlanDto = new HallPlanDto();
             hallPlanDto.setName(name);
             hallPlanDto.setDescription(description);
+            hallPlanDto.setId(id);
             return hallPlanDto;
         }
 
