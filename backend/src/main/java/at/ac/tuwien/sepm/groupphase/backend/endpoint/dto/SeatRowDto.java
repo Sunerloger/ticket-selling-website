@@ -12,7 +12,7 @@ public class SeatRowDto {
     @NotNull(message = "rowNr must be specified")
     private Long rowNr;
 
-    private HallPlanDto hallPlan;
+    private Long hallPlanId;
 
     private List<HallPlanSeatDto> seats;
 
@@ -22,14 +22,6 @@ public class SeatRowDto {
 
     public void setSeats(List<HallPlanSeatDto> seats) {
         this.seats = seats;
-    }
-
-    public HallPlanDto getHallPlan() {
-        return hallPlan;
-    }
-
-    public void setHallPlan(HallPlanDto hallPlan) {
-        this.hallPlan = hallPlan;
     }
 
     public Long getId() {
@@ -46,6 +38,14 @@ public class SeatRowDto {
 
     public void setRowNr(Long rowNr) {
         this.rowNr = rowNr;
+    }
+
+    public Long getHallPlanId() {
+        return hallPlanId;
+    }
+
+    public void setHallPlanId(Long hallPlanId) {
+        this.hallPlanId = hallPlanId;
     }
 
     public static final class SeatRowDtoBuilder {
@@ -80,7 +80,6 @@ public class SeatRowDto {
             SeatRowDto seatRowDto = new SeatRowDto();
             seatRowDto.setId(id);
             seatRowDto.setRowNr(rowNr);
-            seatRowDto.setHallPlan(hallPlan);
             return seatRowDto;
         }
     }

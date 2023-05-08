@@ -5,7 +5,6 @@ public class HallPlanSectionDto {
     private String name;
     private String color;
     private Long price;
-    private Long hallplanId;
 
     public Long getId() {
         return id;
@@ -39,13 +38,6 @@ public class HallPlanSectionDto {
         this.price = price;
     }
 
-    public Long gethallplanId() {
-        return hallplanId;
-    }
-
-    public void sethallplanId(Long hallplanId) {
-        this.hallplanId = hallplanId;
-    }
 
     public static final class HallPlanSectionDtoBuilder {
 
@@ -94,7 +86,6 @@ public class HallPlanSectionDto {
             hallPlanSectionDto.setName(name);
             hallPlanSectionDto.setColor(color);
             hallPlanSectionDto.setPrice(price);
-            hallPlanSectionDto.sethallplanId(hallplanId);
             return hallPlanSectionDto;
         }
 

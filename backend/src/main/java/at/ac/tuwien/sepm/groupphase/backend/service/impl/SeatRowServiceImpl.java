@@ -44,17 +44,17 @@ public class SeatRowServiceImpl implements SeatRowService {
 
     @Override
     public SeatRowDto createSeatRow(SeatRowDto seatRowDto) throws ValidationException {
-        Long hallPlanId = seatRowDto.getHallPlan().getId();
+        Long hallPlanId = seatRowDto.getHallPlanId();
         HallPlan hallPlan = hallPlanRepository.findById(hallPlanId)
             .orElseThrow(() -> new EntityNotFoundException("HallPlan with id " + hallPlanId + " not found"));
 
-        Optional<SeatRow> existingSeatRow = seatRowRepository.findByRowNrAndHallPlan(seatRowDto.getRowNr(), hallPlan);
+        Optional<SeatRow> existingSeatRow = seatRowRepository.findByRowNrAndHallPlanId(seatRowDto.getRowNr(), hallPlan.getId());
         if (existingSeatRow.isPresent()) {
             throw new ValidationException("SeatRow with rowNr " + seatRowDto.getRowNr() + " and hallPlanId " + hallPlanId + " already exists");
         }
 
         SeatRow seatRow = seatRowMapper.toEntity(seatRowDto);
-        seatRow.setHallPlan(hallPlan);
+        seatRow.setId(null); //Create method shall not overwrite id
 
         SeatRow savedSeatRow = seatRowRepository.save(seatRow);
 

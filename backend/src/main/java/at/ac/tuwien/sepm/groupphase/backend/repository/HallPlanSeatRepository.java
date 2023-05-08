@@ -12,10 +12,10 @@ import java.util.Optional;
 @Repository
 public interface HallPlanSeatRepository extends JpaRepository<HallPlanSeat, Long> {
 
-    List<HallPlanSeat> findAllBySeatrow(Long seatRow);
+    List<HallPlanSeat> findAllBySeatrowId(Long seatRow);
 
     List<HallPlanSeat> findAllBySection(Long section);
 
-    @Query("SELECT s FROM HallPlanSeat s JOIN FETCH s.section JOIN FETCH s.seatrow WHERE s.id = :id")
+    @Query("SELECT s FROM HallPlanSeat s JOIN FETCH s.section WHERE s.id = :id")
     Optional<HallPlanSeat> getSeatById(@Param("id") Long id);
 }

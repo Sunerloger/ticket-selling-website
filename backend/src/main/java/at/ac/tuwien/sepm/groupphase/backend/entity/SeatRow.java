@@ -22,9 +22,9 @@ public class SeatRow {
 
     @Column(name = "rowNr")
     private Long rowNr;
-    @ManyToOne
-    @JoinColumn(name = "hallplan_id")
-    private HallPlan hallPlan;
+
+    @Column(name = "hallplan_id")
+    private Long hallPlanId;
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name ="seatrow_id")
@@ -54,11 +54,19 @@ public class SeatRow {
         this.rowNr = rowNr;
     }
 
-    public HallPlan getHallPlan() {
-        return hallPlan;
+    public Long getHallPlanId() {
+        return hallPlanId;
     }
 
-    public void setHallPlan(HallPlan hallPlan) {
-        this.hallPlan = hallPlan;
+    public void setHallPlanId(Long hallPlanId) {
+        this.hallPlanId = hallPlanId;
     }
+
+//    public HallPlan getHallPlan() {
+//        return hallPlan;
+//    }
+//
+//    public void setHallPlan(HallPlan hallPlan) {
+//        this.hallPlan = hallPlan;
+//    }
 }

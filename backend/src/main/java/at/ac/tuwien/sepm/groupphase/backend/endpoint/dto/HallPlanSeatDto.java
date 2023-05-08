@@ -23,8 +23,7 @@ public class HallPlanSeatDto {
     @NotNull(message = "section_id must be specified")
     private HallPlanSectionDto section;
 
-    @NotNull(message = "seatRow must be specified")
-    private SeatRowDto seatrow;
+    private Long seatrowId;
 
     public Long getId() {
         return id;
@@ -82,12 +81,12 @@ public class HallPlanSeatDto {
         this.section = section;
     }
 
-    public SeatRowDto getSeatrow() {
-        return seatrow;
+    public Long getSeatrowId() {
+        return seatrowId;
     }
 
-    public void setSeatrow(SeatRowDto seatrow) {
-        this.seatrow = seatrow;
+    public void setSeatrowId(Long seatrowId) {
+        this.seatrowId = seatrowId;
     }
 
     public static final class SeatDtoBuilder {

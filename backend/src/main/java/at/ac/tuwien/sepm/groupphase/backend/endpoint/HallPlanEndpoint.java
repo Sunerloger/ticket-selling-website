@@ -116,7 +116,7 @@ public class HallPlanEndpoint {
     @Operation(summary = "Create a new seat row in the system", security = @SecurityRequirement(name = "apiKey"))
     public SeatRowDto createSeatRow(@PathVariable Long hallPlanId, @RequestBody SeatRowDto seatRowDto) {
         LOGGER.info("POST /api/v1/{hallPlanId}/seatrows", hallPlanId);
-        seatRowDto.getHallPlan().setId(hallPlanId);
+        seatRowDto.setHallPlanId(hallPlanId);
         try {
             seatRowService.createSeatRow(seatRowDto);
         } catch (ValidationException e) {
@@ -236,8 +236,9 @@ public class HallPlanEndpoint {
         LOGGER.info("POST /api/v1/hallplans/{}/seatrows/{}/seats", hallPlanId, seatRowId);
         seatDto.setHallPlanId(hallPlanId);
         SeatRowDto seatRowDto = new SeatRowDto();
+        seatRowDto.setHallPlanId(hallPlanId);
         seatRowDto.setId(seatRowId);
-        seatDto.setSeatrow(seatRowDto);
+        seatDto.setSeatrowId(seatRowId);
         HallPlanSeatDto savedSeat = hallPlanSeatService.addSeat(seatDto);
         return ResponseEntity.created(URI.create("/api/v1/hallplans/" + hallPlanId + "/seatrows/" + seatRowId + "/seats/" + seatDto.getId())).body(savedSeat);
     }
@@ -257,7 +258,7 @@ public class HallPlanEndpoint {
     public ResponseEntity<HallPlanSeatDto> updateSeat(@PathVariable Long hallPlanId, @PathVariable Long seatRowId, @PathVariable Long id, @Valid @RequestBody HallPlanSeatDto seatDto) {
         LOGGER.info("PUT /api/v1/hallplans/{}/seatrows/{}/seats/{}", hallPlanId, seatRowId, id);
         seatDto.setId(id);
-        seatDto.getSeatrow().setId(seatRowId);
+        seatDto.setSeatrowId(seatRowId);
         hallPlanSeatService.updateSeat(seatDto);
         return ResponseEntity.ok(seatDto);
     }

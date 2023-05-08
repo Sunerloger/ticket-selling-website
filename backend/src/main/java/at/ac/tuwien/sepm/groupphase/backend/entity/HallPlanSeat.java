@@ -36,11 +36,14 @@ public class HallPlanSeat {
     @Column(name = "seat_nr", nullable = false)
     private Long seatNr;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seatrow_id", nullable = false)
-    private SeatRow seatrow;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "seatrow_id", nullable = false)
+//    private SeatRow seatrow;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "seatrow_id")
+    private Long seatrowId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "section_id", nullable = false)
     private HallPlanSection section;
 
@@ -92,14 +95,12 @@ public class HallPlanSeat {
         this.section = section;
     }
 
-    public SeatRow getSeatrow() {
-        return seatrow;
+    public Long getSeatrowId() {
+        return seatrowId;
     }
 
-    public void setSeatrow(SeatRow seatrow) {
-        this.seatrow = seatrow;
+    public void setSeatrowId(Long seatrowId) {
+        this.seatrowId = seatrowId;
     }
-
-
 }
 

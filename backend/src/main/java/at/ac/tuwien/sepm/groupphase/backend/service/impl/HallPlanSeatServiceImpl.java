@@ -32,11 +32,11 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
 
     @Override
     public HallPlanSeatDto addSeat(HallPlanSeatDto seatDto) {
-        Optional<SeatRow> seatRow = seatRowRepository.findById(seatDto.getSeatrow().getId());
+        Optional<SeatRow> seatRow = seatRowRepository.findById(seatDto.getSeatrowId());
         if (seatRow.isEmpty()) {
-            throw new EntityNotFoundException("Seat row not found with id: " + seatDto.getSeatrow().getId());
+            throw new EntityNotFoundException("Seat row not found with id: " + seatDto.getSeatrowId());
         }
-        seatRow = seatRowRepository.findByIdAndHallPlanId(seatDto.getSeatrow().getId(), seatDto.getHallPlanId());
+        seatRow = seatRowRepository.findByIdAndHallPlanId(seatDto.getSeatrowId(), seatDto.getHallPlanId());
         if (seatRow.isEmpty()) {
             throw new EntityNotFoundException("Seat row does not exist in hallplan with id: " + seatDto.getHallPlanId());
         }

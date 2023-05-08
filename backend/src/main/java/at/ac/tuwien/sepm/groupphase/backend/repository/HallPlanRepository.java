@@ -25,7 +25,7 @@ public interface HallPlanRepository extends JpaRepository<HallPlan, Long> {
 
     @Query("SELECT r FROM SeatRow r " +
         "LEFT JOIN FETCH r.seats " +
-        "WHERE r.hallPlan.id = :hallplanId")
+        "WHERE r.hallPlanId = :hallplanId")
     Optional<HallPlan> findHallPlanByIdWithSeats(@Param("hallplanId") Long id);
 
     HallPlan save(HallPlan hallPlan);
