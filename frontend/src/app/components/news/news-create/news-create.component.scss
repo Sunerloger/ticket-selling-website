@@ -1,0 +1,21 @@
+.dropzone {
+  min-height: 150px;
+  height: fit-content;
+  min-width: 300px;
+  width: fit-content;
+  border: dashed 1px #aaa;
+  border-radius: 10px;
+  display: table;
+  background-color: aliceblue;
+  margin-left: auto;
+  margin-right: auto;
+  &:hover {
+    background-color: deepskyblue;
+  }
+}
+
+.drag-and-drop-text {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}

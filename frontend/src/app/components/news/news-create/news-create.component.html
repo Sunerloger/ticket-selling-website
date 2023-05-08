@@ -1,0 +1,26 @@
+<form #form="ngForm" (ngSubmit)="onSubmit(form)">
+  <div class="form-group">
+    <label for="title">Title:</label>
+    <input type="text" class="form-control" id="title" name="title" [(ngModel)]="news.title" required>
+  </div>
+  <div class="form-group">
+    <label for="shortText">Short Description:</label>
+    <textarea class="form-control" id="shortText" name="shortText" rows="1" [(ngModel)]="news.shortText" required></textarea>
+  </div>
+  <div class="form-group">
+    <label for="fullText">Full Description:</label>
+    <textarea class="form-control" id="fullText" name="fullText" rows="5" [(ngModel)]="news.fullText" required></textarea>
+  </div>
+  <div class="form-group">
+    <label for="coverImage">Cover Image:</label>
+    <input type="file" #selectedFile value = "select" class="form-control-file" id="coverImage" (change)="onCoverImageSelected($event)">
+  </div>
+  <div class="form-group">
+    <label for="additionalImages">Additional Images:</label>
+    <div (click)="selectImages.click()" class="dropzone">
+      <div class="drag-and-drop-text">Drag and drop or click to <br>pick images</div>
+    </div>
+    <input multiple #selectImages type="file" value = "select" class="form-control-file" id="additionalImages" (change)="onAdditionalImagesSelected($event)">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
