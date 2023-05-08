@@ -9,7 +9,7 @@ public record UserRegisterDto(
     String email,
     String firstName,
     String lastName,
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate birthdate,
     String address,
     Long areaCode,
