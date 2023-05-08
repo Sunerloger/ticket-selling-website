@@ -30,7 +30,7 @@ export class RoomplanvisualeditorComponent {
    * Emits addRowEvent event with given rowNr.
    * When rowNr is omitted largest rowNr in roomplan incremented by one is used
    */
-  handleAddRow(rowNr?: number) {
+  handleAddRowEvent(rowNr?: number) {
     if (rowNr) {
       this.onAddRowEvent.emit({ rowNr: rowNr });
     } else {
