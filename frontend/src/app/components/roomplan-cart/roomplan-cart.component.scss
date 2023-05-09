@@ -1,0 +1,22 @@
+.roomplan-cart-item {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid black;
+}
+
+.roomplan-cart-item-info p {
+  display: inline-block;
+  padding-right: 1rem;
+}
+
+.roomplan-cart-item-price-info p {
+  display: inline-block;
+}
+
+.roomplan-cart-price {
+  font-size: 1.25rem;
+}
+.roomplan-cart-price-mst {
+  font-size: 0.8rem;
+  padding-left: 0.2rem;
+}

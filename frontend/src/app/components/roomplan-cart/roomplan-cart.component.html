@@ -1,0 +1,13 @@
+{{ items.length }} Tickets selected!
+<div *ngFor="let item of items" class="roomplan-cart-item">
+  <span class="roomplan-cart-item-info">
+    <p>Section: {{ item.section.name }}</p>
+    <p>Row: {{ item.rowNr }}</p>
+    <p>Seat: {{ item.seatNr }}</p>
+  </span>
+
+  <span class="roomplan-cart-item-price-info">
+    <p class="roomplan-cart-price">€ {{ item.section.price }}</p>
+    <p class="roomplan-cart-price-mst">inkl. Mst.</p>
+  </span>
+</div>
