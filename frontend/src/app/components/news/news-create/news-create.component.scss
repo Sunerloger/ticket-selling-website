@@ -31,15 +31,31 @@ mat-grid-tile {
   cursor: pointer;
   top: 0;
   right: 0;
+  background-color: var(--secondary-color);
   color: white; // text color
   border-radius: 50%;
   width: 20px;
   height: 20px;
   text-align: center;
+  &:hover {
+    background-color: var(--split-secondary-color-2);
+  }
 }
 
 .square-image {
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.primary {
+  color: var(--primary-color);
+}
+
+mat-form-field {
+  width: 100%;
 }

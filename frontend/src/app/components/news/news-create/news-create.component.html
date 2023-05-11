@@ -1,15 +1,18 @@
 <div class="mt-3">
   <form #form="ngForm" (ngSubmit)="onSubmit(form)">
-    <div class="form-group">
-      <mat-form-field appearance="fill" floatLabel="auto">
+    <h1 class="mt-3 d-flex flex-row w-auto primary">
+      News Creation
+    </h1>
+    <div class="form-group mt-3">
+      <mat-form-field appearance="outline" floatLabel="auto">
         <mat-label>Title</mat-label>
         <input matInput #title type="text" class="form-control" id="title" name="title" [(ngModel)]="news.title"
-               maxLength="20" required>
-        <mat-hint align="end">{{title.value.length}}/20</mat-hint>
+               maxLength="50" required>
+        <mat-hint align="end">{{title.value.length}}/50</mat-hint>
       </mat-form-field>
     </div>
-    <div class="form-group">
-      <mat-form-field appearance="fill" floatLabel="auto">
+    <div class="form-group mt-3">
+      <mat-form-field appearance="outline" floatLabel="auto">
         <mat-label>Short Description</mat-label>
         <textarea matInput #shortText cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
                   class="form-control"
@@ -18,8 +21,8 @@
         <mat-hint align="end">{{shortText.value.length}}/100</mat-hint>
       </mat-form-field>
     </div>
-    <div class="form-group">
-      <mat-form-field appearance="fill" floatLabel="auto">
+    <div class="form-group mt-3">
+      <mat-form-field appearance="outline" floatLabel="auto">
         <mat-label>Full Description</mat-label>
         <textarea matInput #fullText cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2"
                   class="form-control" id="fullText" name="fullText" [(ngModel)]="news.fullText"
