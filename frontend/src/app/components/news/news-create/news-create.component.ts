@@ -66,7 +66,17 @@ export class NewsCreateComponent implements OnInit {
           this.notification.error('Could not create news. Errorcode: ' + error.status + ', Errortext: ' + error.error.errors);
         }
       });
+    } else {
+      this.notification.warning('The form is not valid', 'Validity Error');
     }
+  }
+
+  public removeCoverImage() {
+    this.news.coverImage = null;
+  }
+
+  public removeImages(i: number) {
+    this.news.images.splice(i,1);
   }
 
   private convertToBase64(file: File) {
@@ -77,6 +87,7 @@ export class NewsCreateComponent implements OnInit {
       this.news.images.push(base64String);
     };
     reader.onerror = (error) => {
+      this.notification.error('Could not process Image');
       console.error('Error converting file to base64:', error);
     };
   }

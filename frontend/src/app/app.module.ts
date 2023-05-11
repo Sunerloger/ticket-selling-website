@@ -16,6 +16,9 @@ import { NewsCreateComponent } from './components/news/news-create/news-create.c
 import { NewsComponent } from './components/news/news.component';
 import {ToastrModule} from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {NgOptimizedImage} from '@angular/common';
+import {MatInputModule} from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -26,7 +29,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     LoginComponent,
     MessageComponent,
     NewsCreateComponent,
-    NewsComponent
+    NewsComponent,
   ],
   imports: [
     BrowserModule,
@@ -37,6 +40,9 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     FormsModule,
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
+    MatGridListModule,
+    NgOptimizedImage,
+    MatInputModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
