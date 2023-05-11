@@ -13,11 +13,11 @@ public class NewsInquiryDto {
 
     @NotNull(message = "Title must not be null")
     @NotEmpty(message = "Title must not be empty")
-    @Size(max = 100)
+    @Size(max = 20)
     private String title;
 
     @NotEmpty(message = "Short Text must not be empty")
-    @Size(max = 500)
+    @Size(max = 100)
     private String shortText;
 
     @NotEmpty(message = "Full Text must not be empty")

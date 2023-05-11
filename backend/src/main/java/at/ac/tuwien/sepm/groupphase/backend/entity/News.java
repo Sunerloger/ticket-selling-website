@@ -27,10 +27,10 @@ public class News {
     private Long id;
 
     @NotEmpty
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private String title;
 
-    @Column(nullable = false, name = "abbreviated_text", length = 500)
+    @Column(nullable = false, name = "abbreviated_text", length = 100)
     private String shortText;
 
     @Column(nullable = false, name = "full_text", length = 10000)
