@@ -5,7 +5,11 @@
   </div>
   <div class="form-group">
     <label for="date">Date:</label>
-    <input type="date" class="form-control" id="date" name="date" [(ngModel)]="event.date" [min]="today" required>
+    <div *ngFor="let date of event.date; let i = index">
+      <label>Date {{i + 1}}:</label>
+      <input type="date" class="form-control" id="date" name="date" [(ngModel)]="event.date[i]" [min]="today" required>
+    </div>
+    <button type="button" (click)="addDate()">Add another Date</button>
   </div>
   <div class="form-group">
     <label for="start-time">Starting Time:</label>

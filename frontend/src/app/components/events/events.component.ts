@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import {FormGroup, FormBuilder, Validators, FormControl, FormArray } from '@angular/forms';
 import {Event} from 'src/app/dtos/event';
 import {EventService} from '../../services/event.service';
 import {ToastrService} from 'ngx-toastr';
@@ -11,7 +11,7 @@ import {ToastrService} from 'ngx-toastr';
 export class EventsComponent implements OnInit{
   event: Event = {
     title: '',
-    date: new Date(),
+    date: Date[100] = [new Date()],
     startTime: '00:00',
     cityname: '',
     areaCode: 0,
@@ -34,7 +34,7 @@ export class EventsComponent implements OnInit{
   ngOnInit(): void {
     this.eventForm = this.fb.group({
       title: ['', Validators.required],
-      date: ['', Validators.required],
+      //dates: ['', Validators.required],
       startingTime: ['', Validators.required],
       cityName: ['', Validators.required],
       areaCode: ['', Validators.required],
@@ -44,6 +44,8 @@ export class EventsComponent implements OnInit{
       description: ['', Validators.required]
     });
   }
+
+
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
@@ -53,6 +55,10 @@ export class EventsComponent implements OnInit{
         this.event.image = reader.result as string;
       };
     }
+  }
+
+  addDate() {
+    this.event.date.push(new Date());
   }
 
   onSubmit() {

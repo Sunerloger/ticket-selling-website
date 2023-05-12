@@ -1,7 +1,8 @@
+
 export interface Event {
   id?: number;
   title: string;
-  date: Date;
+  date: Date[];
   startTime: string;
   cityname: string;
   areaCode: number;
