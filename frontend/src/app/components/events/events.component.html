@@ -19,7 +19,7 @@
     <div *ngIf="eventForm.submitted && eventForm.controls['start-time'].invalid" class="text-danger">Starting time is required.</div>
   </div>
   <div class="form-group">
-    <label for="cityname">City Name: <span class="text-danger">*</span></label>
+    <label for="cityname">City: <span class="text-danger">*</span></label>
     <input type="text" class="form-control" id="cityname" name="cityname" [(ngModel)]="event.cityname" required>
     <div *ngIf="eventForm.submitted && eventForm.controls['cityname'].invalid" class="text-danger">City name is required.</div>
   </div>
@@ -51,5 +51,5 @@
     <label for="image">Image:</label>
     <input type="file" class="form-control" id="image" (change)="onFileSelected($event)">
   </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <button type="submit" class="btn btn-primary">Create</button>
 </form>
