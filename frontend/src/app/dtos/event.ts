@@ -5,7 +5,7 @@ export interface Event {
   date: Date[];
   startTime: string;
   cityname: string;
-  areaCode: number;
+  areaCode: string;
   duration: string;
   category: string;
   address: string;
