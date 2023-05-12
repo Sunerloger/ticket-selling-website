@@ -39,7 +39,8 @@ public class HallPlanServiceImpl implements HallPlanService {
     private final SeatRowRepository seatRowRepository;
     private final SeatRowMapper seatRowMapper;
 
-    public HallPlanServiceImpl(HallPlanRepository hallPlanRepository, HallPlanMapper hallPlanMapper, HallPlanSectionMapper hallPlanSectionMapper, HallPlanSectionRepository hallPlanSectionRepository, SeatRowRepository seatRowRepository, SeatRowMapper seatRowMapper) {
+    public HallPlanServiceImpl(HallPlanRepository hallPlanRepository, HallPlanMapper hallPlanMapper, HallPlanSectionMapper hallPlanSectionMapper, HallPlanSectionRepository hallPlanSectionRepository, SeatRowRepository seatRowRepository,
+                               SeatRowMapper seatRowMapper) {
         this.hallPlanRepository = hallPlanRepository;
         this.hallPlanMapper = hallPlanMapper;
         this.hallPlanSectionMapper = hallPlanSectionMapper;
@@ -64,12 +65,15 @@ public class HallPlanServiceImpl implements HallPlanService {
         }
         return hallPlanRepository.save(hallPlanMapper.hallPlanDtoToHallPlan(hallplan));
     }
+
     @Transactional
     @Override
     public DetailedHallPlanDto getHallPlanById(Long id) {
         Optional<HallPlan> hallPlanEntityWithoutSeats = hallPlanRepository.findHallPlanById(id);
         List<SeatRow> seatRows = seatRowRepository.findAllByHallplanIdWithSeats(id);
-        if(hallPlanEntityWithoutSeats.isPresent()) hallPlanEntityWithoutSeats.get().setSeatRows(seatRows);
+        if (hallPlanEntityWithoutSeats.isPresent()) {
+            hallPlanEntityWithoutSeats.get().setSeatRows(seatRows);
+        }
         return hallPlanEntityWithoutSeats.map(hallPlanMapper::mapToDetailedHallPlanDto).orElse(null);
     }
 

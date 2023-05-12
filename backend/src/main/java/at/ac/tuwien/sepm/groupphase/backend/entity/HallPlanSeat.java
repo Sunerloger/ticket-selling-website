@@ -36,10 +36,6 @@ public class HallPlanSeat {
     @Column(name = "seat_nr", nullable = false)
     private Long seatNr;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "seatrow_id", nullable = false)
-//    private SeatRow seatrow;
-
     @Column(name = "seatrow_id")
     private Long seatrowId;
 

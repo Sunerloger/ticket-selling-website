@@ -27,7 +27,7 @@ public class HallPlan {
     private String description;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name="hallplan_id")
+    @JoinColumn(name = "hallplan_id")
     private List<SeatRow> seatRows;
 
     public List<SeatRow> getSeatRows() {

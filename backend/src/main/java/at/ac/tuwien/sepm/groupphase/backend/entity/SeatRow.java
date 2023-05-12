@@ -27,7 +27,7 @@ public class SeatRow {
     private Long hallPlanId;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name ="seatrow_id")
+    @JoinColumn(name = "seatrow_id")
     private List<HallPlanSeat> seats;
 
     public List<HallPlanSeat> getSeats() {
@@ -62,11 +62,4 @@ public class SeatRow {
         this.hallPlanId = hallPlanId;
     }
 
-//    public HallPlan getHallPlan() {
-//        return hallPlan;
-//    }
-//
-//    public void setHallPlan(HallPlan hallPlan) {
-//        this.hallPlan = hallPlan;
-//    }
 }
