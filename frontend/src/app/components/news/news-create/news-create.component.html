@@ -16,8 +16,7 @@
         <mat-label>Short Description</mat-label>
         <textarea matInput #shortText cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
                   class="form-control"
-                  id="shortText" name="shortText" [(ngModel)]="news.shortText" maxlength="100"
-                  required></textarea>
+                  id="shortText" name="shortText" [(ngModel)]="news.shortText" maxlength="100"></textarea>
         <mat-hint align="end">{{shortText.value.length}}/100</mat-hint>
       </mat-form-field>
     </div>
@@ -26,7 +25,7 @@
         <mat-label>Full Description</mat-label>
         <textarea matInput #fullText cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2"
                   class="form-control" id="fullText" name="fullText" [(ngModel)]="news.fullText"
-                  maxlength="10000" required></textarea>
+                  maxlength="10000"></textarea>
         <mat-hint align="end">{{fullText.value.length}}/10000</mat-hint>
       </mat-form-field>
     </div>

@@ -52,7 +52,13 @@ export class NewsCreateComponent implements OnInit {
 
   public onSubmit(form: NgForm): void {
     console.log('is form valid?', form.valid, this.news);
+
     if (form.valid) {
+
+      if (this.news.title.trim().length === 0) {
+        this.notification.warning('The title is blank', 'The form is not valid');
+        return;
+      }
 
       const observable: Observable<News> = this.service.create(this.news);
 
@@ -67,7 +73,7 @@ export class NewsCreateComponent implements OnInit {
         }
       });
     } else {
-      this.notification.warning('The form is not valid', 'Validity Error');
+      this.notification.warning('Please fill out the title', 'The form is not valid');
     }
   }
 
