@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news;
 
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -12,15 +12,15 @@ public class NewsInquiryDto {
 
 
     @NotNull(message = "Title must not be null")
-    @NotEmpty(message = "Title must not be empty")
-    @Size(max = 20)
+    @NotBlank(message = "Title must not be blank")
+    @Size(max = 50)
     private String title;
 
-    @NotEmpty(message = "Short Text must not be empty")
+    @NotNull(message = "Short Text must not be null")
     @Size(max = 100)
     private String shortText;
 
-    @NotEmpty(message = "Full Text must not be empty")
+    @NotNull(message = "Full Text must not be null")
     @Size(max = 10000)
     private String fullText;
 

@@ -11,7 +11,7 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.FetchType;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -26,8 +26,8 @@ public class News {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty
-    @Column(nullable = false, length = 20)
+    @NotBlank
+    @Column(nullable = false, length = 50)
     private String title;
 
     @Column(nullable = false, name = "abbreviated_text", length = 100)

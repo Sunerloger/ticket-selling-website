@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.DetailedNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.NewsInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.entity.NewsImage;
+import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -39,11 +40,18 @@ public interface NewsMapper {
         return stringImages;
     }
 
+    @Named("abbreviatedNews")
     AbbreviatedNewsDto newsToAbbreviatedNewsDto(News news);
+
+    @IterableMapping(qualifiedByName = "abbreviatedNews")
+    List<AbbreviatedNewsDto> newsToAbbreviatedNewsDto(List<News> news);
 
     @Mapping(source = "images", target = "images", qualifiedByName = "newsImageListToStringList")
     DetailedNewsDto newsToDetailedNewsDto(News news);
 
     @Mapping(source = "images", target = "images", qualifiedByName = "stringListToNewsImageList")
     News newsInquiryDtoWithImagesToNews(NewsInquiryDto newsInquiryDto);
+
+    @Mapping(source = "images", target = "images", qualifiedByName = "newsImageListToStringList")
+    NewsInquiryDto newsToNewsInquiryDto(News news);
 }
