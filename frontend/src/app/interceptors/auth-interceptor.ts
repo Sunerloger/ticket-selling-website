@@ -6,9 +6,9 @@ import {Globals} from '../global/globals';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzZWN1cmUtYmFja2VuZCIsImF1ZCI6InNlY3VyZS1hcHAiLCJzdWIiO' +
-    'iJhZG1pbkBlbWFpbC5jb20iLCJleHAiOjE2ODM1MDA1OTcsInJvbCI6WyJST0xFX0FETUlOIiwiUk9MRV9VU0VSIl19.4TolSBIgN1QcA2PADS-OOMe' +
-    'Vn7gmSDP8hMa221Rul1enb5GI_5C5HuKqQm37-1WJQyKJchBl2zv0qB4fPFApoA';
+  token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzZWN1cmUtYmFja2VuZCIsImF1ZCI6InNlY3VyZS1hcHAiLCJzdWIiOiJhZG1' +
+    'pbkBlbWFpbC5jb20iLCJleHAiOjE2ODM5MzkzODAsInJvbCI6WyJST0xFX0FETUlOIiwiUk9MRV9VU0VSIl19.fFpyGPZn1vYPV8LC9dbnBaT' +
+    '9HSnN-bZDUBsbQcFkmA786PIr41pc0hTEA0euHodmZBpVwDQ0uqSrcx9FlDS5nw';
   constructor(private authService: AuthService, private globals: Globals) {
   }
 

@@ -10,7 +10,7 @@ public record EventDetailDto(
     LocalTime startTime,
     String cityname,
     int areaCode,
-    double duration,
+    LocalTime duration,
     String category,
     String address,
     String description,

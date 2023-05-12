@@ -27,7 +27,7 @@ public class Event {
 
     private int areaCode;
 
-    private double duration;
+    private LocalTime duration;
 
     private String category;
 
@@ -47,7 +47,7 @@ public class Event {
         LocalTime startTime,
         String cityname,
         int areaCode,
-        double duration,
+        LocalTime duration,
         String category,
         String address,
         String description,
@@ -115,11 +115,11 @@ public class Event {
         this.areaCode = areaCode;
     }
 
-    public double getDuration() {
+    public LocalTime getDuration() {
         return duration;
     }
 
-    public void setDuration(double duration) {
+    public void setDuration(LocalTime duration) {
         this.duration = duration;
     }
 

@@ -12,10 +12,10 @@ export class EventsComponent implements OnInit{
   event: Event = {
     title: '',
     date: new Date(),
-    startTime: new Date(),
+    startTime: '00:00',
     cityname: '',
     areaCode: 0,
-    duration: 0,
+    duration: '00:00',
     category: '',
     address: '',
     description: '',
