@@ -1,13 +1,20 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import java.time.LocalDate;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Table(name = "event")
@@ -19,7 +26,10 @@ public class Event {
 
     private String title;
 
-    private LocalDate date;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "event_id")
+    private List<EventDate> date;
+
 
     private LocalTime startTime;
 
@@ -43,7 +53,7 @@ public class Event {
     public Event(
         Long id,
         String title,
-        LocalDate date,
+        List<EventDate> date,
         LocalTime startTime,
         String cityname,
         int areaCode,
@@ -83,11 +93,11 @@ public class Event {
         this.title = title;
     }
 
-    public LocalDate getDate() {
+    public List<EventDate> getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(List<EventDate> date) {
         this.date = date;
     }
 
