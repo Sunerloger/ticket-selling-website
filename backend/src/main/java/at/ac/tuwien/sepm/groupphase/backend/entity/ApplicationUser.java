@@ -37,9 +37,15 @@ public class ApplicationUser {
     public ApplicationUser() {
     }
 
-    public ApplicationUser(Long id, String email, String firstName, String lastName, LocalDate birthdate, String address, Long areaCode, String cityName,
+
+    public ApplicationUser(String email, String password, Boolean admin) {
+        this.email = email;
+        this.password = password;
+        this.admin = admin;
+    }
+
+    public ApplicationUser(String email, String firstName, String lastName, LocalDate birthdate, String address, Long areaCode, String cityName,
                            String password) {
-        this.id = id;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -48,12 +54,6 @@ public class ApplicationUser {
         this.areaCode = areaCode;
         this.cityName = cityName;
         this.password = password;
-    }
-
-    public ApplicationUser(String email, String password, Boolean admin) {
-        this.email = email;
-        this.password = password;
-        this.admin = admin;
     }
 
     public String getEmail() {
