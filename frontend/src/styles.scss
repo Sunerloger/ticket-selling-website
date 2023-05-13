@@ -25,5 +25,6 @@ button.btn.btn-secondary {
   }
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.primary {
+  color: var(--primary-color);
+}

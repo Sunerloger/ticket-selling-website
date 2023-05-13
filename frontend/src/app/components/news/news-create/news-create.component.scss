@@ -32,7 +32,6 @@ mat-grid-tile {
   top: 0;
   right: 0;
   background-color: var(--secondary-color);
-  color: white; // text color
   border-radius: 50%;
   width: 20px;
   height: 20px;
@@ -50,10 +49,6 @@ mat-grid-tile {
 
 .mat-form-field {
   width: 100%;
-}
-
-.primary {
-  color: var(--primary-color);
 }
 
 mat-form-field {

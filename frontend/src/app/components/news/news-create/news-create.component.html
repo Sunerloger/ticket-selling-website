@@ -4,30 +4,36 @@
       News Creation
     </h1>
     <div class="form-group mt-3">
-      <mat-form-field appearance="outline" floatLabel="auto">
-        <mat-label>Title</mat-label>
-        <input matInput #title type="text" class="form-control" id="title" name="title" [(ngModel)]="news.title"
-               maxLength="50" required>
-        <mat-hint align="end">{{title.value.length}}/50</mat-hint>
-      </mat-form-field>
+      <label for="title">Title: <span class="text-danger">*</span></label>
+      <input type="text" #title class="form-control" id="title" name="title" [(ngModel)]="news.title" maxLength="50" required>
+      <div *ngIf="form.submitted && form.controls['title'].invalid" class="text-danger">Title is required.</div>
+      <div class="text-end small">{{title.value.length}}/50</div>
     </div>
     <div class="form-group mt-3">
-      <mat-form-field appearance="outline" floatLabel="auto">
+      <label for="shortText">Short Description: </label>
+      <textarea #shortText style="resize: none" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
+                class="form-control" id="shortText" name="shortText" [(ngModel)]="news.shortText" maxLength="100"></textarea>
+      <div class="text-end small">{{shortText.value.length}}/100</div>
+      <!--<mat-form-field appearance="outline" floatLabel="auto">
         <mat-label>Short Description</mat-label>
         <textarea matInput #shortText cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
                   class="form-control"
                   id="shortText" name="shortText" [(ngModel)]="news.shortText" maxlength="100"></textarea>
         <mat-hint align="end">{{shortText.value.length}}/100</mat-hint>
-      </mat-form-field>
+      </mat-form-field>-->
     </div>
     <div class="form-group mt-3">
-      <mat-form-field appearance="outline" floatLabel="auto">
+      <label for="fullText">Full Description: </label>
+      <textarea #fullText style="resize: none" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2"
+                class="form-control" id="fullText" name="fullText" [(ngModel)]="news.fullText" maxLength="10000"></textarea>
+      <div class="text-end small">{{fullText.value.length}}/10000</div>
+      <!--<mat-form-field appearance="outline" floatLabel="auto">
         <mat-label>Full Description</mat-label>
         <textarea matInput #fullText cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2"
                   class="form-control" id="fullText" name="fullText" [(ngModel)]="news.fullText"
                   maxlength="10000"></textarea>
         <mat-hint align="end">{{fullText.value.length}}/10000</mat-hint>
-      </mat-form-field>
+      </mat-form-field>-->
     </div>
     <div class="form-group">
       <div class="container">
@@ -47,7 +53,9 @@
           <mat-grid-list cols="4" rowHeight="1:1">
             <mat-grid-tile>
               <div>
-                <span class="btn-remove-image" (click)="removeCoverImage()">x</span>
+                <span class="btn-remove-image" (click)="removeCoverImage()">
+                  <i class="btn-close btn-close-white"></i>
+                </span>
               </div>
               <img class="square-image" [src]="news.coverImage" alt="Cover Image">
             </mat-grid-tile>
@@ -70,7 +78,9 @@
           <div style="position: relative">
             <mat-grid-tile *ngFor="let file of news.images; let i = index;">
               <div>
-                <span class="btn-remove-image" (click)="removeImages(i)">x</span>
+                <span class="btn-remove-image" (click)="removeImages(i)">
+                  <i class="btn-close btn-close-white"></i>
+                </span>
               </div>
               <img class="square-image" [src]="file" alt="Image {{i}}">
             </mat-grid-tile>
