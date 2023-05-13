@@ -266,6 +266,34 @@ public class NewsEndpointTest implements TestData {
         );
     }
 
+    @Test
+    public void givenNothing_whenPostStringsTooLong_then400() throws Exception {
+        news.setTitle("a".repeat(51));
+        news.setShortText("a".repeat(101));
+        news.setFullText("a".repeat(10001));
+        NewsInquiryDto newsInquiryDto = newsMapper.newsToNewsInquiryDto(news);
+        String body = objectMapper.writeValueAsString(newsInquiryDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(post(NEWS_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertAll(
+            () -> assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus()),
+            () -> {
+                //Reads the errors from the body
+                String content = response.getContentAsString();
+                content = content.substring(content.indexOf('[') + 1, content.indexOf(']'));
+                String[] errors = content.split(",");
+                assertEquals(3, errors.length);
+            }
+        );
+    }
+
     // bad if test is run between two hours
     private boolean isNow(LocalDateTime date) {
         LocalDateTime today = LocalDateTime.now();
