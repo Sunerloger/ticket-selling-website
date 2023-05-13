@@ -1,5 +1,5 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
-  <a class="navbar-brand ml-lg-5" href="">SEPM Group Phase</a>
+<nav class="navbar navbar-expand-lg">
+  <a class="navbar-brand ml-lg-5" href="">Ticketline</a>
   <button class="navbar-toggler ml-5" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -13,7 +13,8 @@
     </ul>
     <ul class="navbar-nav mr-5">
       <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/login" routerLinkActive="active">Login</a>
-      <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/register" routerLinkActive="active">Register</a>
+      <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/register"
+         routerLinkActive="active">Register</a>
       <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/" (click)="authService.logoutUser()">Logout</a>
     </ul>
   </div>
