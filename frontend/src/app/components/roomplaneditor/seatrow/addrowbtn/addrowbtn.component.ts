@@ -6,5 +6,5 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./addrowbtn.component.scss']
 })
 export class AddrowbtnComponent {
-  @Input() onClick: Function
+  @Input() onClick: () => any;
 }

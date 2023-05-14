@@ -2,8 +2,8 @@ import { Component, ElementRef, EventEmitter, HostListener, Output } from '@angu
 import { SeatType } from 'src/app/dtos/roomplan';
 
 export interface SeatCreationEventPayload {
-  type: SeatType,
-  amount: number,
+  type: SeatType;
+  amount: number;
 }
 
 @Component({
@@ -12,19 +12,22 @@ export interface SeatCreationEventPayload {
   styleUrls: ['./contextmenu.component.scss']
 })
 export class ContextmenuComponent {
-  //state
-  seatAmount: number = 1;
-
-  //events
   @Output() seatCreationEvent = new EventEmitter<SeatCreationEventPayload>();
   @Output() outsideCreationClickEvent = new EventEmitter<void>();
 
-  SeatType = SeatType
+  seatTypeEnum = SeatType;
+  seatAmount = 1;
   private isComponentShown = false;
 
+  constructor(private elementRef: ElementRef) { }
 
-  constructor(private elementRef: ElementRef) {
-
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    if (this.isComponentShown && !this.elementRef.nativeElement.contains(event.target)) {
+      this.outsideCreationClickEvent.emit();
+    } else {
+      this.isComponentShown = true;
+    }
   }
 
   handleSeatAmountChange(amount: number) {
@@ -34,23 +37,15 @@ export class ContextmenuComponent {
   }
 
   /**
- * Emits seatCreationEvent
- * @param direction where to add seat
- * @param type of seat
- */
+   * Emits seatCreationEvent
+   *
+   * @param direction where to add seat
+   * @param type of seat
+   */
   onAdd(type: SeatType) {
     this.seatCreationEvent.emit({
-      type: type,
+      type,
       amount: this.seatAmount
-    })
-  }
-
-  @HostListener('document:click', ['$event'])
-  onClick(event: MouseEvent) {
-    if (this.isComponentShown && !this.elementRef.nativeElement.contains(event.target)) {
-      this.outsideCreationClickEvent.emit();
-    } else {
-      this.isComponentShown = true;
-    }
+    });
   }
 }

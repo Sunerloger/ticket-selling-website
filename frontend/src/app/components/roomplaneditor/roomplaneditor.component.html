@@ -14,9 +14,10 @@
     <div class="interactive_section">
         <app-roomplanvisualeditor
             [roomplan]="this.roomplan"
-            (onAddRowEvent)="handleAddRow($event.rowNr)"  
-            (onAddSeatEvent)="handleAddSeat($event)" 
-            (onSeatRowDeletionEvent)="handleRemoveRow($event)" 
+            (seatRemovalEvent)="handleSeatRemoval($event)"
+            (addRowEvent)="handleAddRow($event.rowNr)"  
+            (addSeatEvent)="handleAddSeat($event)" 
+            (seatRowDeletionEvent)="handleRemoveRow($event)" 
         />
         <span>Section Manager</span>
     </div>

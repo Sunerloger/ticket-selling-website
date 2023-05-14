@@ -4,14 +4,14 @@
 */
 
 export interface Roomplan {
-    name: string,
-    description: string,
-    seatrows: SeatRow[]
+    name: string;
+    description: string;
+    seatrows: SeatRow[];
 }
 
 export interface PersistedRoomplan extends Roomplan {
-    id: number,
-    seatrows: PersistedSeatRow[]
+    id: number;
+    seatrows: PersistedSeatRow[];
 }
 
 /*
@@ -19,13 +19,13 @@ export interface PersistedRoomplan extends Roomplan {
 */
 
 export interface SeatRow {
-    rowNr: number,
-    seats: Seat[]
+    rowNr: number;
+    seats: Seat[];
 }
 
 export interface PersistedSeatRow extends SeatRow {
-    id: number
-    seats: PersistedSeat[]
+    id: number;
+    seats: PersistedSeat[];
 }
 
 /*
@@ -33,15 +33,15 @@ export interface PersistedSeatRow extends SeatRow {
 */
 
 export interface Seat {
-    type: SeatType
-    seatNr: number,
-    status: SeatStatus,
-    section: Section,
+    type: SeatType;
+    seatNr: number;
+    status: SeatStatus;
+    section: Section;
 }
 
 export interface PersistedSeat extends Seat {
-    id: number,
-    section: PersistedSection
+    id: number;
+    section: PersistedSection;
 }
 
 /*
@@ -49,13 +49,13 @@ export interface PersistedSeat extends Seat {
 */
 
 export interface Section {
-    color: string,
-    name: string,
-    price: number
+    color: string;
+    name: string;
+    price: number;
 }
 
 export interface PersistedSection extends Section {
-    id: number
+    id: number;
 }
 
 /*
@@ -63,12 +63,12 @@ export interface PersistedSection extends Section {
 */
 
 export enum SeatStatus {
-    RESERVED = "RESERVED",
-    OCCUPIED = "OCCUPIED",
-    FREE = "FREE"
+    reserved = 'RESERVED',
+    occupied = 'OCCUPIED',
+    free = 'FREE'
 }
 
 export enum SeatType {
-    SEAT,
-    VACANT_SEAT,
+    seat,
+    vacantSeat,
 }

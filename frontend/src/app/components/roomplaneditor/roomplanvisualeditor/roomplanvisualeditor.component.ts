@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PersistedRoomplan } from 'src/app/dtos/roomplan';
-import { SeatCreationEvent } from '../seatrow/seatrow.component';
+import { SeatCreationEvent, SeatRemovalPayload } from '../seatrow/seatrow.component';
 import { ToolbarItem } from '../toolbar/toolbar.component';
 
 @Component({
@@ -9,18 +9,17 @@ import { ToolbarItem } from '../toolbar/toolbar.component';
   styleUrls: ['./roomplanvisualeditor.component.scss']
 })
 export class RoomplanvisualeditorComponent {
-  isDetailedView = false;
-
-  //props
   @Input() roomplan: PersistedRoomplan;
 
-  //events
-  @Output() onAddRowEvent = new EventEmitter<{ rowNr: number }>();
-  @Output() onAddSeatEvent = new EventEmitter<SeatCreationEvent>();
-  @Output() onSeatRowDeletionEvent = new EventEmitter<number>();
+  @Output() addRowEvent = new EventEmitter<{ rowNr: number }>();
+  @Output() addSeatEvent = new EventEmitter<SeatCreationEvent>();
+  @Output() seatRowDeletionEvent = new EventEmitter<number>();
+  @Output() seatRemovalEvent = new EventEmitter<SeatRemovalPayload>();
+
+  isDetailedView = false;
 
   handleToolbarItemClick(clickedItem: ToolbarItem) {
-    if (clickedItem === ToolbarItem.DETAILED_VIEW) {
+    if (clickedItem === ToolbarItem.detailedView) {
       this.isDetailedView = !this.isDetailedView;
     }
   }
@@ -32,7 +31,7 @@ export class RoomplanvisualeditorComponent {
    */
   handleAddRowEvent(rowNr?: number) {
     if (rowNr) {
-      this.onAddRowEvent.emit({ rowNr: rowNr });
+      this.addRowEvent.emit({ rowNr });
     } else {
       let largestRowNr = 0;
       for (const seatrow of this.roomplan.seatrows) {
@@ -41,15 +40,16 @@ export class RoomplanvisualeditorComponent {
         }
       }
       largestRowNr++;
-      this.onAddRowEvent.emit({ rowNr: largestRowNr });
+      this.addRowEvent.emit({ rowNr: largestRowNr });
     }
   }
 
   /**
    * Emits onAddSeatEvent event with given event payload
+   *
    * @param seatCreationEvent payload of event
    */
   onAddSeat(seatCreationEvent: SeatCreationEvent) {
-    this.onAddSeatEvent.emit(seatCreationEvent);
+    this.addSeatEvent.emit(seatCreationEvent);
   }
 }

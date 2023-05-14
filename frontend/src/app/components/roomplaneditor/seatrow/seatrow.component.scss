@@ -36,34 +36,6 @@
 }
 
 /*
-    Seat
-*/
-.seat {
-    position: relative;
-    display: inline-block;
-}
-
-.hover_overlay {
-    position: absolute;
-    left: -0.5rem;
-
-    bottom: 1.5rem;
-    color: #DD2D2D;
-    font-weight: 500;
-
-    visibility: hidden;
-}
-
-.seat:hover {
-    fill: #DD2D2D;
-    cursor: pointer;
-}
-
-.seat:hover .hover_overlay {
-    visibility: visible;
-}
-
-/*
     Delete Row
 */
 .delete_row{

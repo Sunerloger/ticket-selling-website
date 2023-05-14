@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { PersistedRoomplan, PersistedSeat, PersistedSeatRow, PersistedSection, Roomplan, Seat, SeatRow, SeatStatus, SeatType } from 'src/app/dtos/roomplan';
-import { CreationMenuDirection, SeatCreationEvent } from './seatrow/seatrow.component';
+import { PersistedRoomplan, PersistedSeat, PersistedSeatRow, PersistedSection, SeatStatus, SeatType } from 'src/app/dtos/roomplan';
+import { CreationMenuDirection, SeatCreationEvent, SeatRemovalPayload } from './seatrow/seatrow.component';
 /**
  * Parent Component of all roomplan related components
  */
@@ -23,43 +23,43 @@ export class RoomplaneditorComponent implements OnInit {
       color: 'red',
       name: 'Premium Seat',
       price: 30
-    }
+    };
     const seatRow1: PersistedSeatRow = {
       id: 1,
       rowNr: 1,
       seats: [{
         id: 1,
-        type: SeatType.SEAT,
+        type: SeatType.seat,
         seatNr: 1,
-        status: SeatStatus.FREE,
-        section: section
+        status: SeatStatus.free,
+        section
       }]
-    }
+    };
     const seatRow2: PersistedSeatRow = {
       id: 1,
       rowNr: 2,
       seats: [{
         id: 1,
-        type: SeatType.SEAT,
+        type: SeatType.seat,
         seatNr: 1,
-        status: SeatStatus.FREE,
-        section: section
+        status: SeatStatus.free,
+        section
       },
       {
         id: 2,
-        type: SeatType.SEAT,
+        type: SeatType.seat,
         seatNr: 2,
-        status: SeatStatus.FREE,
-        section: section
+        status: SeatStatus.free,
+        section
       }]
-    }
+    };
 
     const roomplan: PersistedRoomplan = {
       id: 1,
-      name: "Room 01",
-      description: "A room",
+      name: 'Room 01',
+      description: 'A room',
       seatrows: [seatRow1, seatRow2]
-    }
+    };
 
     //fetch roomplan
     const fetchedRoomplan = roomplan;
@@ -70,14 +70,15 @@ export class RoomplaneditorComponent implements OnInit {
 
   /**
    * Add an empty seatrow to roomplan and persists
+   *
    * @param rowNr begins with 1
    */
   handleAddRow(rowNr: number) {
-    console.log("handleAddRow rowNr=", rowNr);
+    console.log('handleAddRow rowNr=', rowNr);
 
     //-- persist new Seat Row
     const persistedEmptySeatRow: PersistedSeatRow = {
-      rowNr: rowNr,
+      rowNr,
       seats: [],
       id: 0
     };
@@ -118,7 +119,7 @@ export class RoomplaneditorComponent implements OnInit {
   }
 
   handleAddSeat(payload: SeatCreationEvent) {
-    console.log("addSeat rowNr=", payload.rowNr, ",type=", payload.type, ",direction=", payload.type);
+    console.log('addSeat rowNr=', payload.rowNr, ',type=', payload.type, ',direction=', payload.type);
     const { rowNr, type, direction, amountSeat } = payload;
 
     const newSeats = [];
@@ -140,12 +141,33 @@ export class RoomplaneditorComponent implements OnInit {
       this.roomplan.seatrows[rowNr - 1].seats.concat(newSeats);
   }
 
+  handleSeatRemoval(payload: SeatRemovalPayload) {
+    console.log(payload);
+    const { id, rowNr } = payload;
+
+    const clonedRoomplan = structuredClone(this.roomplan);
+    const clonedSeatRow = clonedRoomplan.seatrows[rowNr - 1];
+    const clonedSeats = clonedSeatRow.seats;
+
+    for (let i = 0; i < clonedSeats.length; i++) {
+      if (clonedSeats[i].id === id) {
+        clonedSeats.splice(i, 1);
+        break;
+      }
+    };
+
+    this.roomplan = clonedRoomplan;
+
+    //TO-DO: persist new seatrow
+
+  }
+
   createEmptySeat(type: SeatType, seatNr: number): PersistedSeat {
     const persistedNewSeat: PersistedSeat = {
       id: 1,
-      type: type,
-      seatNr: seatNr,
-      status: SeatStatus.FREE,
+      type,
+      seatNr,
+      status: SeatStatus.free,
       section: null
     };
     return persistedNewSeat;
@@ -153,9 +175,9 @@ export class RoomplaneditorComponent implements OnInit {
 
   getLatestSeatNrFromDirectionAndRowNr(direction: CreationMenuDirection, rowNr: number) {
     switch (direction) {
-      case CreationMenuDirection.LEFT:
+      case CreationMenuDirection.left:
         return 0;
-      case CreationMenuDirection.RIGHT:
+      case CreationMenuDirection.right:
         const totalSeats = this.roomplan.seatrows[rowNr - 1].seats.length;
         return totalSeats + 1;
     }

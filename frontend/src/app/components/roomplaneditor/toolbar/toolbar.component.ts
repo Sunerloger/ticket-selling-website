@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 
 export enum ToolbarItem {
-  DETAILED_VIEW,
+  detailedView,
 }
 
 @Component({
@@ -10,10 +10,9 @@ export enum ToolbarItem {
   styleUrls: ['./toolbar.component.scss']
 })
 export class ToolbarComponent {
-  ToolbarItem = ToolbarItem;
-
-  //events
   @Output() toolbarClick = new EventEmitter<ToolbarItem>();
+
+  toolbarItemEnum = ToolbarItem;
 
   handleToolbarItemClick(clickedItem: ToolbarItem) {
     this.toolbarClick.emit(clickedItem);

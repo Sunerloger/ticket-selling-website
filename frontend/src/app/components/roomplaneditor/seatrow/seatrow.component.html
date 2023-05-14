@@ -3,7 +3,7 @@
     <button 
         *ngIf="showDeleteRowBtn === true" 
         class="delete_row"
-        (click)="this.onSeatRowDeletion.emit(this.seatRow.rowNr)"
+        (click)="this.seatRowDeletion.emit(this.seatRow.rowNr)"
     >
         Delete Row
     </button>
@@ -22,8 +22,8 @@
         </svg>
     </button>
     <app-contextmenu 
-        (outsideCreationClickEvent)="handleContextMenuOutsideClick(CreationMenuDirection.LEFT)" 
-        (seatCreationEvent)="handleAddSeat(this.seatRow.rowNr, CreationMenuDirection.LEFT, $event)"
+        (outsideCreationClickEvent)="handleContextMenuOutsideClick(creationMenuDirectionEnum.left)" 
+        (seatCreationEvent)="handleAddSeat(this.seatRow.rowNr, creationMenuDirectionEnum.left, $event)"
         *ngIf="showCreationMenuLeft === true" 
     />
     <!-- Seat -->
@@ -32,11 +32,11 @@
             class="seat"
             *ngFor="let seat of seatRow.seats"
         >
-            <span class="hover_overlay">Delete</span>
-            <svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 96 960 960" width="30">
-                <path
-                    d="M193 936q-12 0-21-9t-9-21v-42h-13q-45.833 0-77.917-32.083Q40 799.833 40 754V510q0-51 31-77.5t73-26.5v-86q0-46 29-75t75-29h465q46 0 74.5 29t28.5 75v86q42 0 73 26.5t31 77.5v244q0 45.833-32.083 77.917Q855.833 864 810 864h-13v42q0 12-9 21t-21 9q-12 0-21-9t-9-21v-42H223v42q0 12-9 21t-21 9Zm-43-132h660q20 0 35-15t15-35V510q0-20-12-32t-32-12q-20 0-32 12t-12 32v176H188V510q0-20-12-32t-32-12q-20 0-32 12t-12 32v244q0 20 15 35t35 15Zm98-178h464V510q0-31 14-51.5t30-32.5V320q0-20-12-32t-31.742-12H247.742Q228 276 216 288t-12 32v106q16 12 30 32.5t14 51.5v116Zm232 0Zm0 178Zm0-118Z" />
-            </svg>
+           <app-seat
+                (seatRemoval)="handleSeatRemoval($event)"
+                [type]="seat.type"
+                [id]="seat.id"
+           />
         </div>
     </div>
     <!-- Plus Btn -->
@@ -54,8 +54,8 @@
     </button>
  
     <app-contextmenu 
-        (outsideCreationClickEvent)="handleContextMenuOutsideClick(CreationMenuDirection.RIGHT)"
-        (seatCreationEvent)="handleAddSeat(this.seatRow.rowNr, CreationMenuDirection.RIGHT, $event)"
+        (outsideCreationClickEvent)="handleContextMenuOutsideClick(creationMenuDirectionEnum.right)"
+        (seatCreationEvent)="handleAddSeat(this.seatRow.rowNr, creationMenuDirectionEnum.right, $event)"
         *ngIf="showCreationMenuRight === true" 
     />
 </div>
