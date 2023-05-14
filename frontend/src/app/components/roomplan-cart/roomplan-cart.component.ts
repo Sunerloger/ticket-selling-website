@@ -31,5 +31,15 @@ export class RoomplanCartComponent {
       price: 20.10
     }
   };
-  items = [this.item1, this.item2];
+  items = [this.item1, this.item2,this.item2,this.item2];
+
+  selectedSeats(): string {
+    return this.items.length === 0
+      ? 'no'
+      : this.items.length.toString();
+  }
+
+
+
+
 }

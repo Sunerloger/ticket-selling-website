@@ -1,16 +1,49 @@
+#roomplan-cart-header {
+  margin: 0;
+  padding-left: 0.5rem;
+  font-size: 1.25rem;
+}
+
 .roomplan-cart-item {
   display: flex;
   justify-content: space-between;
-  border-top: 1px solid black;
+  align-items: center;
+  background-color: #b8dfd3;
+  margin: 0.2rem;
+  border-radius: 5px
 }
 
-.roomplan-cart-item-info p {
+hr {
+  margin: 0;
+}
+
+.roomplan-cart-item-infobox {
+  margin-left: 0.5rem;
+}
+
+.roomplan-cart-item-infobox p {
   display: inline-block;
-  padding-right: 1rem;
+  margin: 0.1rem;
+}
+
+.roomplan-cart-item-extrainfo {
+  font-size: 0.7rem;
+  padding-right: 0.2rem;
+}
+
+.roomplan-cart-item-info {
+  padding-right: 2rem;
+}
+
+
+.roomplan-cart-item-price-info {
+  display: inline-block;
+  margin: 0.3rem;
 }
 
 .roomplan-cart-item-price-info p {
   display: inline-block;
+  margin: 0;
 }
 
 .roomplan-cart-price {
@@ -19,4 +52,13 @@
 .roomplan-cart-price-mst {
   font-size: 0.8rem;
   padding-left: 0.2rem;
+}
+
+#roomplan-cart-buttons{
+  display: flex;
+  justify-content: space-between;
+}
+
+#roomplan-cart-buttons button{
+  margin: 0.2rem;
 }
