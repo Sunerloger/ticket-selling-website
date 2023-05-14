@@ -1,10 +1,18 @@
 .validation-info {
   color: #D63301;
 }
-.card-header{
+
+.card-header {
   background-color: #63A5B6;
 }
 
-.btn-primary{
+.btn-primary {
   background-color: #00BA8B;
+  border-color: transparent;
+  margin-top: 10px;
 }
+
+.card-border {
+  border-color: transparent;
+}
+
