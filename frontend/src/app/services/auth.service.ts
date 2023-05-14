@@ -62,6 +62,20 @@ export class AuthService {
     return 'UNDEFINED';
   }
 
+  /**
+   * Checks if the user is an admin
+   */
+  isAdmin() {
+    if (this.getToken() != null) {
+      const decoded: any = jwt_decode(this.getToken());
+      const authInfo: string[] = decoded.rol;
+      if (authInfo.includes('ROLE_ADMIN')) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   private setToken(authResponse: string) {
     localStorage.setItem('authToken', authResponse);
   }
