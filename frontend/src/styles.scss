@@ -1,4 +1,30 @@
+@import "ngx-toastr/toastr";
+
 /* You can add global styles to this file, and also import other style files */
 body {
   background-color: whitesmoke;
+}
+
+:root {
+  --primary-color: #63A5B6;
+  --monochromatic: #36889D;
+  --secondary-color: #B67C63;
+  --split-secondary-color-1: #B69163;
+  --split-secondary-color-2: #B66763;
+  --analog-1: #6B63B6;
+  --analog-2: #63B674;
+  --triade-1: #B6A563;
+  --triade-2: #B66384;
+}
+
+button.btn.btn-secondary {
+  background-color: var(--secondary-color);
+  color: white; // text color
+  &:hover {
+    background-color: var(--split-secondary-color-2);
+  }
+}
+
+.primary {
+  color: var(--primary-color);
 }

@@ -1,0 +1,95 @@
+<div class="mt-3">
+  <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+    <h1 class="mt-3 d-flex flex-row w-auto primary">
+      News Creation
+    </h1>
+    <div class="form-group mt-3">
+      <label for="title">Title: <span class="text-danger">*</span></label>
+      <input type="text" #title class="form-control" id="title" name="title" [(ngModel)]="news.title" maxLength="50" required>
+      <div *ngIf="form.submitted && form.controls['title'].invalid" class="text-danger">Title is required.</div>
+      <div class="text-end small">{{title.value.length}}/50</div>
+    </div>
+    <div class="form-group mt-3">
+      <label for="shortText">Short Description: </label>
+      <textarea #shortText style="resize: none" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
+                class="form-control" id="shortText" name="shortText" [(ngModel)]="news.shortText" maxLength="100"></textarea>
+      <div class="text-end small">{{shortText.value.length}}/100</div>
+      <!--<mat-form-field appearance="outline" floatLabel="auto">
+        <mat-label>Short Description</mat-label>
+        <textarea matInput #shortText cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
+                  class="form-control"
+                  id="shortText" name="shortText" [(ngModel)]="news.shortText" maxlength="100"></textarea>
+        <mat-hint align="end">{{shortText.value.length}}/100</mat-hint>
+      </mat-form-field>-->
+    </div>
+    <div class="form-group mt-3">
+      <label for="fullText">Full Description: </label>
+      <textarea #fullText style="resize: none" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2"
+                class="form-control" id="fullText" name="fullText" [(ngModel)]="news.fullText" maxLength="10000"></textarea>
+      <div class="text-end small">{{fullText.value.length}}/10000</div>
+      <!--<mat-form-field appearance="outline" floatLabel="auto">
+        <mat-label>Full Description</mat-label>
+        <textarea matInput #fullText cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2"
+                  class="form-control" id="fullText" name="fullText" [(ngModel)]="news.fullText"
+                  maxlength="10000"></textarea>
+        <mat-hint align="end">{{fullText.value.length}}/10000</mat-hint>
+      </mat-form-field>-->
+    </div>
+    <div class="form-group">
+      <div class="container">
+        <div class="select-button" (click)="selectCoverImage.click()">
+          <div class="images-text">
+            Pick Cover Image
+          </div>
+        </div>
+        <input type="file" style="display: none" #selectCoverImage accept=".png, .jpg, .jpeg, .svg" #selectedFile
+               value="select"
+               class="form-control-file"
+               id="coverImage"
+               (change)="onCoverImageSelected($event)">
+      </div>
+      <div class="mt-5 row" *ngIf="news.coverImage">
+        <div style="position: relative">
+          <mat-grid-list cols="4" rowHeight="1:1">
+            <mat-grid-tile>
+              <div>
+                <span class="btn-remove-image" (click)="removeCoverImage()">
+                  <i class="btn-close btn-close-white"></i>
+                </span>
+              </div>
+              <img class="square-image" [src]="news.coverImage" alt="Cover Image">
+            </mat-grid-tile>
+          </mat-grid-list>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="container">
+        <div class="select-button" (click)="selectImages.click()">
+          <div class="images-text">
+            Pick Additional Images
+          </div>
+        </div>
+        <input multiple style="display: none" #selectImages type="file" accept=".png, .jpg, .jpeg, .svg" value="select"
+               class="form-control-file" id="additionalImages" (change)="onAdditionalImagesSelected($event)">
+      </div>
+      <div class="mt-5 row" *ngIf="news.images.length > 0">
+        <mat-grid-list cols="4" rowHeight="1:1">
+          <div style="position: relative">
+            <mat-grid-tile *ngFor="let file of news.images; let i = index;">
+              <div>
+                <span class="btn-remove-image" (click)="removeImages(i)">
+                  <i class="btn-close btn-close-white"></i>
+                </span>
+              </div>
+              <img class="square-image" [src]="file" alt="Image {{i}}">
+            </mat-grid-tile>
+          </div>
+        </mat-grid-list>
+      </div>
+    </div>
+    <div class="mt-5 mb-5">
+      <button type="submit" class="btn btn-secondary">Submit</button>
+    </div>
+  </form>
+</div>
