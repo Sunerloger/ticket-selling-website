@@ -1,8 +1,8 @@
-import {ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ViewChildren} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, TemplateRef} from '@angular/core';
 import {MessageService} from '../../services/message.service';
 import {Message} from '../../dtos/message';
 import {NgbModal, NgbPaginationConfig} from '@ng-bootstrap/ng-bootstrap';
-import {UntypedFormBuilder, NgForm} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {AuthService} from '../../services/auth.service';
 
 @Component({
@@ -37,7 +37,7 @@ export class MessageComponent implements OnInit {
    * Returns true if the authenticated user is an admin
    */
   isAdmin(): boolean {
-    return this.authService.getUserRole() === 'ADMIN';
+    return this.authService.isAdmin();
   }
 
   openAddModal(messageAddModal: TemplateRef<any>) {

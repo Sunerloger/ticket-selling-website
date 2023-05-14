@@ -1,0 +1,56 @@
+.select-button {
+  min-height: 10px;
+  height: fit-content;
+  min-width: 200px;
+  width: fit-content;
+  border: dashed 1px #aaa;
+  border-radius: 10px;
+  display: table;
+  background-color: var(--primary-color);
+  margin-top: 30px;
+  &:hover {
+    background-color: var(--monochromatic);
+  }
+}
+
+.images-text {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  cursor: pointer;
+  color: black;
+}
+
+mat-grid-tile {
+  border: 1px solid var(--primary-color);
+  background-color: black;
+}
+
+.btn-remove-image {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  right: 0;
+  background-color: var(--secondary-color);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  &:hover {
+    background-color: var(--split-secondary-color-2);
+  }
+}
+
+.square-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}

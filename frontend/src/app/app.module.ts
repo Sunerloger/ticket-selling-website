@@ -13,8 +13,13 @@ import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import { EventsComponent } from './components/events/events.component';
-import { ToastrModule } from 'ngx-toastr';
+import { NewsCreateComponent } from './components/news/news-create/news-create.component';
+import { NewsComponent } from './components/news/news.component';
+import {ToastrModule} from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {NgOptimizedImage} from '@angular/common';
+import {MatInputModule} from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -25,6 +30,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     LoginComponent,
     MessageComponent,
     EventsComponent,
+    NewsCreateComponent,
+    NewsComponent,
   ],
   imports: [
     BrowserModule,
@@ -35,6 +42,9 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     FormsModule,
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
+    MatGridListModule,
+    NgOptimizedImage,
+    MatInputModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
