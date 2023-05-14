@@ -144,7 +144,6 @@ public class HallPlanEndpoint {
         return seatRowDto;
     }
 
-    // HALLPLAN/SEATROWS        GETTERS
     @Secured("ROLE_USER")
     @GetMapping("/seatrows/{id}")
     @Operation(summary = "Get a seat row by id", security = @SecurityRequirement(name = "apiKey"))
@@ -172,7 +171,9 @@ public class HallPlanEndpoint {
         return seatRows;
     }
 
-    //Section Deletion/Creation/Update/Getter
+    //*******************************************************
+    //*                   Section Mappings                  *
+    //*******************************************************
     @Secured("ROLE_ADMIN")
     @PostMapping("/sections")
     @Operation(summary = "Create a new section in the system", security = @SecurityRequirement(name = "apiKey"))
@@ -234,7 +235,7 @@ public class HallPlanEndpoint {
     @Operation(summary = "Add a new seat to a seat row")
     public ResponseEntity<HallPlanSeatDto> addSeat(@PathVariable Long hallPlanId, @PathVariable Long seatRowId, @Valid @RequestBody HallPlanSeatDto seatDto) {
         LOGGER.info("POST /api/v1/hallplans/{}/seatrows/{}/seats", hallPlanId, seatRowId);
-        seatDto.setHallPlanId(hallPlanId);
+        //seatDto.setHallPlanId(hallPlanId);
         SeatRowDto seatRowDto = new SeatRowDto();
         seatRowDto.setHallPlanId(hallPlanId);
         seatRowDto.setId(seatRowId);

@@ -2,23 +2,25 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanSeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanSeatMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSeatRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRowRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanSeatService;
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class HallPlanSeatServiceImpl implements HallPlanSeatService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final HallPlanSeatRepository seatRepository;
     private final HallPlanSeatMapper seatMapper;
     private final SeatRowRepository seatRowRepository;
@@ -32,33 +34,36 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
 
     @Override
     public HallPlanSeatDto addSeat(HallPlanSeatDto seatDto) {
+        LOGGER.debug("Add new seat");
         Optional<SeatRow> seatRow = seatRowRepository.findById(seatDto.getSeatrowId());
         if (seatRow.isEmpty()) {
             throw new EntityNotFoundException("Seat row not found with id: " + seatDto.getSeatrowId());
         }
-        seatRow = seatRowRepository.findByIdAndHallPlanId(seatDto.getSeatrowId(), seatDto.getHallPlanId());
-        if (seatRow.isEmpty()) {
-            throw new EntityNotFoundException("Seat row does not exist in hallplan with id: " + seatDto.getHallPlanId());
+        //seatRow = seatRowRepository.findByIdAndHallPlanId(seatDto.getSeatrowId(), seatDto.getHallPlanId());
+        if(seatDto.getId() != null) {
+            seatDto.setId(null);
         }
         HallPlanSeat seat = seatMapper.toEntity(seatDto);
         seat = seatRepository.save(seat);
         return seatMapper.toDto(seat);
     }
 
-
     @Override
     public HallPlanSeatDto getSeatById(Long seatId) {
+        LOGGER.debug("Get seat by ID");
         Optional<HallPlanSeat> seat = seatRepository.getSeatById(seatId);
         return seat.map(seatMapper::toDto).orElse(null);
     }
 
     @Override
     public List<HallPlanSeatDto> getAllSeatsBySeatRow(Long hallPlanId, Long seatRowId) {
+        LOGGER.debug("Get all seats by seat row");
         return null;
     }
 
     @Override
     public HallPlanSeatDto updateSeat(HallPlanSeatDto seatDto) {
+        LOGGER.debug("Update seat by ID");
         HallPlanSeat seat = seatMapper.toEntity(seatDto);
         seatRepository.save(seat);
         return seatMapper.toDto(seat);
@@ -66,38 +71,9 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
 
     @Override
     public void deleteSeat(Long seatId) {
+        LOGGER.debug("Delete seat by ID");
         seatRepository.deleteById(seatId);
     }
-    /*
-    @Override
-    public HallPlanSeatDto getSeat(Long hallPlanId, Long seatRowId, Long seatId) {
-        HallPlanSeat seat = seatRepository.findByIdAndSeatRow_HallPlan_IdAndSeatRow_Id(seatId, hallPlanId, seatRowId)
-            .orElseThrow(() -> new EntityNotFoundException("Seat not found with id: " + seatId));
-        return seatMapper.toDto(seat);
-    }
 
-    @Override
-    public List<HallPlanSeatDto> getAllSeatsBySeatRow(Long hallPlanId, Long seatRowId) {
-        List<HallPlanSeat> seats = seatRepository.findAllBySeatRow_HallPlan_IdAndSeatRow_Id(hallPlanId, seatRowId);
-        return seats.stream().map(seatMapper::toDto).collect(Collectors.toList());
-    }
-
-    @Override
-    public HallPlanSeatDto updateSeat(Long hallPlanId, Long seatRowId, Long seatId, SeatDto seatDto) {
-        HallPlanSeat seat = seatRepository.findByIdAndSeatRow_HallPlan_IdAndSeatRow_Id(seatId, hallPlanId, seatRowId)
-            .orElseThrow(() -> new EntityNotFoundException("Seat not found with id: " + seatId));
-        seatMapper.updateFromDto(seatDto, seat);
-        seat = seatRepository.save(seat);
-        return seatMapper.toDto(seat);
-    }
-
-    @Override
-    public void deleteSeat(Long hallPlanId, Long seatRowId, Long seatId) {
-        HallPlanSeat seat = seatRepository.findByIdAndSeatRow_HallPlan_IdAndSeatRow_Id(seatId, hallPlanId, seatRowId)
-            .orElseThrow(() -> new EntityNotFoundException("Seat not found with id: " + seatId));
-        seatRepository.delete(seat);
-    }
-
-    */
 }
 

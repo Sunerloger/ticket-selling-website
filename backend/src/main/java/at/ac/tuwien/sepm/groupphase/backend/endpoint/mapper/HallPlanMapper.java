@@ -53,7 +53,7 @@ public interface HallPlanMapper {
         SeatRowDto seatRowDto = new SeatRowDto();
         seatRowDto.setId(seatRow.getId());
         seatRowDto.setRowNr(seatRow.getRowNr());
-        seatRowDto.setHallPlanId(seatRowDto.getHallPlanId());
+        seatRowDto.setHallPlanId(seatRow.getHallPlanId());
         seatRowDto.setSeats(mapSeats(seatRow.getSeats()));
         return seatRowDto;
     }
@@ -79,11 +79,12 @@ public interface HallPlanMapper {
     default HallPlanSeatDto mapSeat(HallPlanSeat seat) {
         HallPlanSeatDto seatDto = new HallPlanSeatDto();
         seatDto.setId(seat.getId());
-        seatDto.setStatus(seat.getStatus().toString());
-        seatDto.setType(seat.getType().toString());
+        seatDto.setStatus(seat.getStatus());
+        seatDto.setType(seat.getType());
         seatDto.setCapacity(seat.getCapacity());
         seatDto.setSeatNr(seat.getSeatNr());
         seatDto.setSection(mapHallPlanSection(seat.getSection()));
+        seatDto.setSeatrowId(seat.getSeatrowId());
         return seatDto;
     }
 

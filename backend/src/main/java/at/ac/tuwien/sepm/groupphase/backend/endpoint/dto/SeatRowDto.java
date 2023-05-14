@@ -12,6 +12,7 @@ public class SeatRowDto {
     @NotNull(message = "rowNr must be specified")
     private Long rowNr;
 
+    @NotNull(message = "hallPlanId must be specified")
     private Long hallPlanId;
 
     private List<HallPlanSeatDto> seats;

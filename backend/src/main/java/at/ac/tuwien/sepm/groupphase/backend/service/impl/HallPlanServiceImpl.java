@@ -69,21 +69,29 @@ public class HallPlanServiceImpl implements HallPlanService {
     @Transactional
     @Override
     public DetailedHallPlanDto getHallPlanById(Long id) {
+        LOGGER.debug("Get hall plan by id: {}", id);
         Optional<HallPlan> hallPlanEntityWithoutSeats = hallPlanRepository.findHallPlanById(id);
         List<SeatRow> seatRows = seatRowRepository.findAllByHallplanIdWithSeats(id);
         if (hallPlanEntityWithoutSeats.isPresent()) {
             hallPlanEntityWithoutSeats.get().setSeatRows(seatRows);
+        } else {
+            throw new EntityNotFoundException("Hall Plan with id " + id + " was not found in the system");
         }
         return hallPlanEntityWithoutSeats.map(hallPlanMapper::mapToDetailedHallPlanDto).orElse(null);
     }
 
     @Override
     public void deleteHallPlanById(Long id) {
+        LOGGER.debug("Delete hall plan by id: {}", id);
+        if (!hallPlanRepository.existsById(id)) {
+            throw new NotFoundException("Hall Plan not found with id: " + id);
+        }
         hallPlanRepository.deleteById(id);
     }
 
     @Override
     public HallPlanDto updateHallPlanById(Long id, HallPlanDto hallPlanDto) {
+        LOGGER.debug("Update hall plan by id: {}", id);
         Optional<HallPlan> hallPlanOptional = hallPlanRepository.findById(id);
         if (hallPlanOptional.isPresent()) {
             HallPlan hallPlan = hallPlanOptional.get();
@@ -91,12 +99,14 @@ public class HallPlanServiceImpl implements HallPlanService {
             hallPlan.setDescription(hallPlanDto.getDescription());
             HallPlan updatedhallPlan = hallPlanRepository.save(hallPlan);
             return hallPlanMapper.hallPlanToHallPlanDto(updatedhallPlan);
+        } else {
+            throw new EntityNotFoundException("Hall Plan with id " + id + " was not found in the system");
         }
-        return null;
     }
 
     @Override
     public HallPlanSection createSection(HallPlanSectionDto sectionDto) {
+        LOGGER.debug("Create new hall plan section");
         HallPlanSection section = new HallPlanSection();
         section.setName(sectionDto.getName());
         section.setColor(sectionDto.getColor());
@@ -106,6 +116,7 @@ public class HallPlanServiceImpl implements HallPlanService {
 
     @Override
     public HallPlanSection updateSection(Long id, HallPlanSectionDto sectionDto) {
+        LOGGER.debug("Update hall plan section by id: {}", id);
         HallPlanSection section = getSectionById(id);
         section.setName(sectionDto.getName());
         section.setColor(sectionDto.getColor());
@@ -115,27 +126,33 @@ public class HallPlanServiceImpl implements HallPlanService {
 
     @Override
     public void deleteSection(Long id) {
+        LOGGER.debug("Delete hall plan section by id: {}", id);
         HallPlanSection section = getSectionById(id);
         hallPlanSectionRepository.delete(section);
     }
 
     @Override
     public HallPlanSection getSection(Long id) {
+        LOGGER.debug("Get hall plan section by id: {}", id);
         return getSectionById(id);
     }
 
     @Override
     public List<HallPlanSection> getAllSections() {
+        LOGGER.debug("Get all hall plan sections");
         return hallPlanSectionRepository.findAll();
     }
 
     @Override
     public List<HallPlanSection> findAllByHallPlanId(Long id) {
+        LOGGER.debug("Find all hall plan sections by hall plan id: {}", id);
         //List<HallPlanSection> testList = hallPlanSectionRepository.findByHallPlanId(id);
         return null;
     }
 
+
     private HallPlanSection getSectionById(Long id) {
+        LOGGER.debug("Find section by id: {}", id);
         return hallPlanSectionRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Hall Plan Section with id " + id + " not found"));
     }

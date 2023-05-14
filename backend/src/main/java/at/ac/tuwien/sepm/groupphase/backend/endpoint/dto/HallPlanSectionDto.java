@@ -1,9 +1,23 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
+
 public class HallPlanSectionDto {
     private Long id;
+
+    @NotBlank(message = "Name is mandatory")
+    @Size(max = 255, message = "Name must be at most {max} characters long")
     private String name;
+
+    @NotBlank(message = "Color is mandatory")
+    @Size(max = 50, message = "Color must be at most {max} characters long")
     private String color;
+
+    @NotNull(message = "Price is mandatory")
+    @PositiveOrZero(message = "Price must be a positive number or zero")
     private Long price;
 
     public Long getId() {

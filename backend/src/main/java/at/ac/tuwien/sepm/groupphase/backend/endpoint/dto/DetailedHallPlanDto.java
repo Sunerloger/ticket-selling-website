@@ -1,14 +1,19 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
 public class DetailedHallPlanDto {
     private Long id;
+    @NotBlank(message = "name must not be blank")
+    @Size(max = 255, message = "name must be less than or equal to {max} characters")
     @NotNull(message = "name must be specified")
     private String name;
+    @Size(max = 255, message = "description must be less than or equal to {max} characters")
     private String description;
 
     private List<SeatRowDto> seatRows;

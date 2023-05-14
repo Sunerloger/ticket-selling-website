@@ -60,11 +60,12 @@ public interface SeatRowMapper {
     default HallPlanSeatDto mapSeat(HallPlanSeat seat) {
         HallPlanSeatDto seatDto = new HallPlanSeatDto();
         seatDto.setId(seat.getId());
-        seatDto.setStatus(seat.getStatus().toString());
-        seatDto.setType(seat.getType().toString());
+        seatDto.setStatus(seat.getStatus());
+        seatDto.setType(seat.getType());
         seatDto.setCapacity(seat.getCapacity());
         seatDto.setSeatNr(seat.getSeatNr());
         seatDto.setSection(mapHallPlanSection(seat.getSection()));
+        seatDto.setSeatrowId(seat.getSeatrowId());
         return seatDto;
     }
 

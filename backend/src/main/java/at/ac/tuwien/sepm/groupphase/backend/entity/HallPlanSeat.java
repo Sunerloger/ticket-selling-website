@@ -40,7 +40,7 @@ public class HallPlanSeat {
     private Long seatrowId;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "section_id", nullable = false)
+    @JoinColumn(name = "section_id")
     private HallPlanSection section;
 
     public Long getSeatNr() {
