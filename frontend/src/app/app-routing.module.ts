@@ -4,6 +4,7 @@ import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
 import {AuthGuard} from './guards/auth.guard';
 import {MessageComponent} from './components/message/message.component';
+import {RegisterComponent} from './components/register/register.component';
 import {NewsCreateComponent} from './components/news/news-create/news-create.component';
 import {NewsComponent} from './components/news/news.component';
 import {RouteGuard} from './guards/route.guard';
@@ -11,6 +12,8 @@ import {RouteGuard} from './guards/route.guard';
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
+  {path: 'register', component: RegisterComponent},
+  {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'news', canActivate: [AuthGuard], component: NewsComponent},
   {path: 'news/create', canActivate: [RouteGuard], component: NewsCreateComponent}
