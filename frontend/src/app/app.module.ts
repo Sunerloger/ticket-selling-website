@@ -13,6 +13,7 @@ import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import { EventsComponent } from './components/events/events.component';
+import { RegisterComponent } from './components/register/register.component';
 import { NewsCreateComponent } from './components/news/news-create/news-create.component';
 import { NewsComponent } from './components/news/news.component';
 import {ToastrModule} from 'ngx-toastr';
@@ -30,6 +31,7 @@ import {MatInputModule} from '@angular/material/input';
     LoginComponent,
     MessageComponent,
     EventsComponent,
+    RegisterComponent,
     NewsCreateComponent,
     NewsComponent,
   ],

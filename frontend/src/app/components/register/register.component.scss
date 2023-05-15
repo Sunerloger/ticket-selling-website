@@ -1,6 +1,17 @@
+.validation-info {
+  color: #D63301;
+}
+
 .card-header {
-  background-color: #63A5B6;
   padding-bottom: 5px;
+  background-color: #63A5B6;
+
+}
+
+.btn-primary {
+  background-color: #00BA8B;
+  border-color: transparent;
+  margin-top: 10px;
 }
 
 .card-border {
@@ -8,16 +19,7 @@
   border-color: transparent;
 }
 
-.btn-primary {
-  background-color: #00BA8B;
-  border-color: transparent;
-  margin-top: 10px;
-
-}
-
-
-.form-group {
+.form-group{
   color: black;
 }
-
 
