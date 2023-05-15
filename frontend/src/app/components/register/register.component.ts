@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {UserService} from '../../services/user.service';
 import {User} from '../../dtos/user';
 import {ToastrService} from 'ngx-toastr';
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-register',
@@ -12,6 +13,7 @@ import {ToastrService} from 'ngx-toastr';
 })
 export class RegisterComponent implements OnInit {
   user: User = {
+    admin: false,
     email: '',
     firstName: '',
     lastName: '',
@@ -30,12 +32,14 @@ export class RegisterComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
+              public authService: AuthService,
               private router: Router) {
 
   }
 
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
+      admin:[''],
       email: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -43,11 +47,12 @@ export class RegisterComponent implements OnInit {
       address: ['', Validators.required],
       areaCode: ['', Validators.required],
       cityName: ['', Validators.required],
-      password: ['', [Validators.required,Validators.minLength(8)]]
+      password: ['', [Validators.required, Validators.minLength(8)]]
     });
   }
 
   registerUser(): void {
+    this.registerForm.controls['admin'].setValue(this.user.admin);
     this.registerForm.controls['email'].setValue(this.user.email);
     this.registerForm.controls['firstName'].setValue(this.user.firstName);
     this.registerForm.controls['lastName'].setValue(this.user.lastName);

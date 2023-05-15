@@ -150,6 +150,11 @@
                 </div>
               </div>
             </div>
+
+            <div *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'ADMIN'" class="form-group">
+              <label for="admin">Admin</label>
+              <input type="checkbox" class="checkbox" id="admin" name="admin" [(ngModel)]="user.admin">
+            </div>
             <button type="submit" class="btn btn-primary">Register</button>
           </div>
         </form>
