@@ -126,29 +126,29 @@ public class HallPlanEndpoint {
     }
 
     @Secured("ROLE_ADMIN")
-    @DeleteMapping("/seatrows/{id}")
+    @DeleteMapping("{hallplanId}/seatrows/{id}")
     @Operation(summary = "Delete a seat row from the system", security = @SecurityRequirement(name = "apiKey"))
-    public ResponseEntity<Void> deleteSeatRow(@PathVariable Long id) {
-        LOGGER.info("DELETE /api/v1/seatrows/{}", id);
+    public ResponseEntity<Void> deleteSeatRow(@PathVariable Long hallplanId, @PathVariable Long id) {
+        LOGGER.info("DELETE /api/v1/hallplans/seatrows/{}", id);
         boolean deleted = seatRowService.deleteSeatRowById(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
     @Secured("ROLE_ADMIN")
-    @PutMapping("/seatrows/{id}")
+    @PutMapping("{hallplanId}/seatrows/{id}")
     @Operation(summary = "Update an existing seat row in the system", security = @SecurityRequirement(name = "apiKey"))
-    public SeatRowDto updateSeatRow(@PathVariable Long id, @RequestBody SeatRowDto seatRowDto) {
-        LOGGER.info("PUT /api/v1/seatrows/{}", id);
+    public SeatRowDto updateSeatRow(@PathVariable Long hallplanId, @PathVariable Long id, @RequestBody SeatRowDto seatRowDto) {
+        LOGGER.info("PUT /api/v1/hallplans/seatrows/{}", id);
         seatRowDto.setId(id);
         seatRowService.updateSeatRow(seatRowDto);
         return seatRowDto;
     }
 
     @Secured("ROLE_USER")
-    @GetMapping("/seatrows/{id}")
+    @GetMapping("{hallplanId}/seatrows/{id}")
     @Operation(summary = "Get a seat row by id", security = @SecurityRequirement(name = "apiKey"))
-    public ResponseEntity<SeatRowDto> getSeatRowById(@PathVariable Long id) {
-        LOGGER.info("GET /api/v1/{}/seatrows/{}", id);
+    public ResponseEntity<SeatRowDto> getSeatRowById(@PathVariable Long hallplanId, @PathVariable Long id) {
+        LOGGER.info("GET /api/v1/hallplans/{}/seatrows/{}", id);
         SeatRowDto seatRowDto = seatRowService.getSeatRowById(id);
         return seatRowDto == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(seatRowDto);
     }
@@ -202,7 +202,7 @@ public class HallPlanEndpoint {
     @GetMapping("/sections/{id}")
     @Operation(summary = "Get a section from the system")
     public HallPlanSectionDto getSection(@PathVariable Long id) {
-        LOGGER.info("GET /api/v1/sections/{}", id);
+        LOGGER.info("GET /api/v1/hallplans/sections/{}", id);
         return hallPlanSectionMapper.toDto(hallPlanService.getSection(id));
     }
 
@@ -210,7 +210,7 @@ public class HallPlanEndpoint {
     @GetMapping("/sections")
     @Operation(summary = "Get all sections from the system")
     public List<HallPlanSectionDto> getAllSections() {
-        LOGGER.info("GET /api/v1/sections");
+        LOGGER.info("GET /api/v1/hallplans/sections");
         return hallPlanService.getAllSections().stream()
             .map(hallPlanSectionMapper::toDto)
             .collect(Collectors.toList());
@@ -220,7 +220,7 @@ public class HallPlanEndpoint {
     @GetMapping("{id}/sections")
     @Operation(summary = "Get all sections from the system")
     public List<HallPlanSectionDto> getAllSectionsByHallRoomId(@PathVariable Long id) {
-        LOGGER.info("GET /api/v1/sections");
+        LOGGER.info("GET /api/v1/hallplans/{}/sections", id);
         return hallPlanService.findAllByHallPlanId(id).stream()
             .map(hallPlanSectionMapper::toDto)
             .collect(Collectors.toList());

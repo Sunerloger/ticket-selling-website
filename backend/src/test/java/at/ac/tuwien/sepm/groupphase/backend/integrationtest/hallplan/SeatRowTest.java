@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepm.groupphase.backend.unittests.hallplan;
+package at.ac.tuwien.sepm.groupphase.backend.integrationtest.hallplan;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatRowDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
@@ -14,6 +14,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -29,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @EnableWebMvc
 @Transactional
+@ActiveProfiles({"test", "datagen"})
 public class SeatRowTest {
 
     @Autowired
@@ -75,7 +77,7 @@ public class SeatRowTest {
         seatRowRepository.save(seatRow);
 
         // Perform DELETE request
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/hallplans/seatrows/1")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/hallplans/1/seatrows/1")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
@@ -98,7 +100,7 @@ public class SeatRowTest {
         seatRowDto.setRowNr(2L);
 
         // Perform PUT request
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/hallplans/seatrows/1")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/hallplans/1/seatrows/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(seatRowDto)))
             .andExpect(status().isOk());
