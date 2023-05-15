@@ -13,6 +13,11 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
+        <a class="nav-link" *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'ADMIN'"
+           routerLink="/register">Create User</a>
+      </li>
+
+      <li class="nav-item">
         <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/message" routerLinkActive="active">Message</a>
       </li>
     </ul>
@@ -22,6 +27,7 @@
       <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/login" routerLinkActive="active">Login</a>
 
       <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/" (click)="authService.logoutUser()">Logout</a>
+
     </ul>
   </div>
 </nav>
