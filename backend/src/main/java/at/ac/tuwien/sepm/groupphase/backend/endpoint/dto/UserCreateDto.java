@@ -3,15 +3,14 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDate;
 
-public record UserRegisterDto(
-    Long id,
+public record UserCreateDto(
 
+    Long id,
+    Boolean admin,
     @NotEmpty
     @Column(nullable = false)
     @Pattern(regexp = "[ÄÖÜA-Zäöüa-z0-9@]*")
@@ -45,4 +44,3 @@ public record UserRegisterDto(
     @Pattern(regexp = "[ÄÖÜA-Zäöüa-z0-9]*")
     String password) {
 }
-
