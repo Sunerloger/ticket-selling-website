@@ -1,0 +1,48 @@
+<div id="shopping-cart">
+  <p id="shopping-cart-header">
+    Shopping cart
+  </p>
+  <div *ngFor="let item of items">
+    <div class="shopping-cart-item">
+      <div class="shopping-cart-info">
+
+        <div class="event-name">
+          <p> {{ item.event.name }} </p>
+        </div>
+
+        <div class="event-info-container">
+          <p class="event-info">Date: {{ item.event.date | date:'dd.MM.yy' }}</p>
+          <p class="event-info">Starting-Time: {{ item.event.date | date:'HH:mm' }}</p>
+
+          <p class="event-info">Section: {{ item.section.name }}</p>
+          <p class="event-info">Row: {{ item.rowNr }}</p>
+          <p class="event-info">Seat: {{ item.seatNr }}</p>
+        </div>
+
+      </div>
+
+      <div class="shopping-cart-info-price">
+        <div *ngIf="item.reservation ; then thenBlock else elseBlock"></div>
+        <ng-template #thenBlock>
+          <div class="price-container">
+            <p class="price">Reservation Only</p>
+            <p class="price-info"><a> Information about reservations </a></p>
+          </div>
+        </ng-template>
+
+        <ng-template #elseBlock>
+          <div class="price-container">
+            <p class="price">€ {{ item.section.price }} </p>
+            <p class="price-info"> inkl. Mst.</p>
+          </div>
+        </ng-template>
+
+        <button type="button" class="btn btn-danger">remove</button>
+      </div>
+
+    </div>
+  </div>
+  <div id="shopping-cart-buttons" *ngIf="items.length !== 0">
+    <button type="button" class="btn btn-primary">Checkout</button>
+  </div>
+</div>

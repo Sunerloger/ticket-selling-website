@@ -13,6 +13,7 @@ import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import { RoomplanCartComponent } from './components/roomplan-cart/roomplan-cart.component';
+import { ShoppingCartComponent } from './components/shopping-cart/shopping-cart.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { RoomplanCartComponent } from './components/roomplan-cart/roomplan-cart.
     LoginComponent,
     MessageComponent,
     RoomplanCartComponent,
+    ShoppingCartComponent,
   ],
   imports: [
     BrowserModule,
