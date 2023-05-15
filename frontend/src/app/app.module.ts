@@ -12,6 +12,7 @@ import {LoginComponent} from './components/login/login.component';
 import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
+import { EventsComponent } from './components/events/events.component';
 import { RegisterComponent } from './components/register/register.component';
 import { NewsCreateComponent } from './components/news/news-create/news-create.component';
 import { NewsComponent } from './components/news/news.component';
@@ -29,6 +30,7 @@ import {MatInputModule} from '@angular/material/input';
     HomeComponent,
     LoginComponent,
     MessageComponent,
+    EventsComponent,
     RegisterComponent,
     NewsCreateComponent,
     NewsComponent,

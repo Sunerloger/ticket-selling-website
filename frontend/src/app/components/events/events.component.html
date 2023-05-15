@@ -1,0 +1,55 @@
+<form (ngSubmit)="onSubmit()" #eventForm="ngForm">
+  <h2 class="h2 text-dark">Create Event</h2>
+  <div class="form-group">
+    <label for="title">Title: <span class="text-danger">*</span></label>
+    <input type="text" class="form-control" id="title" name="title" [(ngModel)]="event.title" required>
+    <div *ngIf="eventForm.submitted && eventForm.controls['title'].invalid" class="text-danger">Title is required.</div>
+  </div>
+  <div class="form-group">
+    <div *ngFor="let date of event.date; let i = index">
+      <label>Date {{i + 1}}: <span class="text-danger">*</span></label>
+      <input type="date" class="form-control" id="date" name="date" [(ngModel)]="event.date[i]" [min]="today" required>
+      <div *ngIf="eventForm.submitted && eventForm.controls['date'][i]?.invalid" class="text-danger">Date is required.</div>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="addDate()">Add another Date</button>
+  </div>
+  <div class="form-group">
+    <label for="start-time">Starting Time: <span class="text-danger">*</span></label>
+    <input type="time" class="form-control" id="start-time" name="start-time" [(ngModel)]="event.startTime" required>
+    <div *ngIf="eventForm.submitted && eventForm.controls['start-time'].invalid" class="text-danger">Starting time is required.</div>
+  </div>
+  <div class="form-group">
+    <label for="cityname">City: <span class="text-danger">*</span></label>
+    <input type="text" class="form-control" id="cityname" name="cityname" [(ngModel)]="event.cityname" required>
+    <div *ngIf="eventForm.submitted && eventForm.controls['cityname'].invalid" class="text-danger">City name is required.</div>
+  </div>
+  <div class="form-group">
+    <label for="area-code">Area Code: <span class="text-danger">*</span></label>
+    <input type="text" class="form-control" id="area-code" name="area-code" [(ngModel)]="event.areaCode" required pattern="^[0-9]*[1-9][0-9]*$">
+    <div *ngIf="eventForm.submitted && eventForm.controls['area-code'].invalid" class="text-danger">Area code is not valid.</div>
+  </div>
+  <div class="form-group">
+    <label for="duration">Duration: <span class="text-danger">*</span></label>
+    <input input type="time" class="form-control" id="duration" name="duration" [(ngModel)]="event.duration" min="0" required>
+    <div *ngIf="eventForm.submitted && eventForm.controls['duration'].invalid" class="text-danger">Duration is required.</div>
+  </div>
+  <div class="form-group">
+    <label for="category">Category: <span class="text-danger">*</span></label>
+    <input type="text" class="form-control" id="category" name="category" [(ngModel)]="event.category" required>
+    <div *ngIf="eventForm.submitted && eventForm.controls['category'].invalid" class="text-danger">Category is required.</div>
+  </div>
+  <div class="form-group">
+    <label for="address">Address: <span class="text-danger">*</span></label>
+    <input type="text" class="form-control" id="address" name="address" [(ngModel)]="event.address" required>
+    <div *ngIf="eventForm.submitted && eventForm.controls['address'].invalid" class="text-danger">Address is required.</div>
+  </div>
+  <div class="form-group">
+    <label for="description">Description:</label>
+    <textarea class="form-control" id="description" name="description" rows="3" [(ngModel)]="event.description"></textarea>
+  </div>
+  <div class="form-group">
+    <label for="image">Image:</label>
+    <input type="file" class="form-control" id="image" (change)="onFileSelected($event)">
+  </div>
+  <button type="submit" class="btn btn-primary">Create</button>
+</form>
