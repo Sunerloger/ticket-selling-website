@@ -19,7 +19,7 @@
             class="seats_input"
             placeholder="Number of seats"    
             type="number"
-            min="1"
+            min="0"
             oninput="validity.valid||(value='');"
             [ngModel]="this.seatAmount" (ngModelChange)="handleSeatAmountChange($event)"
         >

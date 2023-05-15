@@ -19,6 +19,9 @@ import { ContextmenuComponent } from './components/roomplaneditor/seatrow/contex
 import { ToolbarComponent } from './components/roomplaneditor/toolbar/toolbar.component';
 import { AddrowbtnComponent } from './components/roomplaneditor/seatrow/addrowbtn/addrowbtn.component';
 import { SeatComponent } from './components/roomplaneditor/seatrow/seat/seat.component';
+import { SectionmanagerComponent } from './components/roomplaneditor/sectionmanager/sectionmanager.component';
+import { CreateSectionComponent } from './components/roomplaneditor/sectionmanager/create-section/create-section.component';
+import { ManageSectionComponent } from './components/roomplaneditor/sectionmanager/manage-section/manage-section.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +38,9 @@ import { SeatComponent } from './components/roomplaneditor/seatrow/seat/seat.com
     ToolbarComponent,
     AddrowbtnComponent,
     SeatComponent,
+    SectionmanagerComponent,
+    CreateSectionComponent,
+    ManageSectionComponent,
   ],
   imports: [
     BrowserModule,

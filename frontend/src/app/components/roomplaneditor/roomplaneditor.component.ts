@@ -137,8 +137,11 @@ export class RoomplaneditorComponent implements OnInit {
     //TO-DO: update seatNr of other seats when direction was left
 
     //update state
-    this.roomplan.seatrows[rowNr - 1].seats =
-      this.roomplan.seatrows[rowNr - 1].seats.concat(newSeats);
+    const clonedRoomplan = structuredClone(this.roomplan);
+    clonedRoomplan.seatrows[rowNr - 1].seats =
+    clonedRoomplan.seatrows[rowNr - 1].seats.concat(newSeats);
+
+    this.roomplan = clonedRoomplan;
   }
 
   handleSeatRemoval(payload: SeatRemovalPayload) {
