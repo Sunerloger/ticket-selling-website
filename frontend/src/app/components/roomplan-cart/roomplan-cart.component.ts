@@ -39,7 +39,4 @@ export class RoomplanCartComponent {
       : this.items.length.toString();
   }
 
-
-
-
 }
