@@ -40,7 +40,7 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
             throw new EntityNotFoundException("Seat row not found with id: " + seatDto.getSeatrowId());
         }
         //seatRow = seatRowRepository.findByIdAndHallPlanId(seatDto.getSeatrowId(), seatDto.getHallPlanId());
-        if(seatDto.getId() != null) {
+        if (seatDto.getId() != null) {
             seatDto.setId(null);
         }
         HallPlanSeat seat = seatMapper.toEntity(seatDto);

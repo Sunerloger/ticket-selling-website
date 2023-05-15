@@ -78,7 +78,7 @@ public class HallPlanSeatTest {
         seatDto.setSeatNr(7L);
         seatDto.setCapacity(1L);
         Optional<HallPlanSection> section = hallPlanSectionRepository.findById(1L);
-        if(section.isPresent()) {
+        if (section.isPresent()) {
             HallPlanSectionDto sectionDto = hallPlanSectionMapper.toDto(section.get());
             seatDto.setSection(sectionDto);
         }
@@ -110,7 +110,7 @@ public class HallPlanSeatTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN","USER"})
+    @WithMockUser(username = "admin", roles = {"ADMIN", "USER"})
     public void testUpdateSeat() throws Exception {
 
         // Create a HallPlanSeatDto for the request body

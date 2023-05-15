@@ -45,6 +45,7 @@ public class SeatRowTest {
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).build();
     }
+
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     public void testCreateSeatRow() throws Exception {
