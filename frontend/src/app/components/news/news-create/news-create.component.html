@@ -14,34 +14,18 @@
       <textarea #shortText style="resize: none" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
                 class="form-control" id="shortText" name="shortText" [(ngModel)]="news.shortText" maxLength="100"></textarea>
       <div class="text-end small">{{shortText.value.length}}/100</div>
-      <!--<mat-form-field appearance="outline" floatLabel="auto">
-        <mat-label>Short Description</mat-label>
-        <textarea matInput #shortText cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
-                  class="form-control"
-                  id="shortText" name="shortText" [(ngModel)]="news.shortText" maxlength="100"></textarea>
-        <mat-hint align="end">{{shortText.value.length}}/100</mat-hint>
-      </mat-form-field>-->
     </div>
     <div class="form-group mt-3">
       <label for="fullText">Full Description: </label>
       <textarea #fullText style="resize: none" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2"
                 class="form-control" id="fullText" name="fullText" [(ngModel)]="news.fullText" maxLength="10000"></textarea>
       <div class="text-end small">{{fullText.value.length}}/10000</div>
-      <!--<mat-form-field appearance="outline" floatLabel="auto">
-        <mat-label>Full Description</mat-label>
-        <textarea matInput #fullText cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2"
-                  class="form-control" id="fullText" name="fullText" [(ngModel)]="news.fullText"
-                  maxlength="10000"></textarea>
-        <mat-hint align="end">{{fullText.value.length}}/10000</mat-hint>
-      </mat-form-field>-->
     </div>
     <div class="form-group">
       <div class="container">
-        <div class="select-button" (click)="selectCoverImage.click()">
-          <div class="images-text">
-            Pick Cover Image
-          </div>
-        </div>
+        <button type="button" class="btn btn-secondary mt-3" (click)="selectCoverImage.click()">
+          Pick Cover Image
+        </button>
         <input type="file" style="display: none" #selectCoverImage accept=".png, .jpg, .jpeg, .svg" #selectedFile
                value="select"
                class="form-control-file"
@@ -65,11 +49,9 @@
     </div>
     <div class="form-group">
       <div class="container">
-        <div class="select-button" (click)="selectImages.click()">
-          <div class="images-text">
-            Pick Additional Images
-          </div>
-        </div>
+        <button type="button" class="btn btn-secondary mt-3" (click)="selectImages.click()">
+          Pick Additional Images
+        </button>
         <input multiple style="display: none" #selectImages type="file" accept=".png, .jpg, .jpeg, .svg" value="select"
                class="form-control-file" id="additionalImages" (change)="onAdditionalImagesSelected($event)">
       </div>
@@ -88,8 +70,8 @@
         </mat-grid-list>
       </div>
     </div>
-    <div class="mt-5 mb-5">
-      <button type="submit" class="btn btn-secondary">Submit</button>
+    <div class="mt-5">
+      <button type="submit" class="btn btn-primary submit-button float-end mb-5">Submit</button>
     </div>
   </form>
 </div>
