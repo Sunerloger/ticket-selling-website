@@ -12,7 +12,7 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'roomplancart', component: RoomplanCartComponent},
-  {path: 'testcart', component: ShoppingCartComponent},
+  {path: 'cart', component: ShoppingCartComponent},
 ];
 
 @NgModule({

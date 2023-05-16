@@ -38,4 +38,10 @@ export class ShoppingCartComponent {
     reservation: true
   };
   items = [this.item1, this.item2];
+  delete(index: number){
+    //Todo: remove the item in the backend
+    this.items.splice(index,1);
+    //Todo: then reload the cart
+  }
+
 }

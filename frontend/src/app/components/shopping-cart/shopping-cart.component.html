@@ -2,7 +2,7 @@
   <p id="shopping-cart-header">
     Shopping cart
   </p>
-  <div *ngFor="let item of items">
+  <div *ngFor="let item of items; let i = index">
     <div class="shopping-cart-item">
       <div class="shopping-cart-info">
 
@@ -37,12 +37,17 @@
           </div>
         </ng-template>
 
-        <button type="button" class="btn btn-danger">remove</button>
+        <button type="button" (click)="delete(i)" class="btn btn-danger">X</button>
       </div>
 
     </div>
   </div>
-  <div id="shopping-cart-buttons" *ngIf="items.length !== 0">
+  <div id="checkout" *ngIf="items.length !== 0">
     <button type="button" class="btn btn-primary">Checkout</button>
+    </div>
+  <div *ngIf="items.length === 0">
+    <p>
+      You have no items in your Shopping cart
+    </p>
   </div>
 </div>
