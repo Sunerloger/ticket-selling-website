@@ -1,11 +1,24 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
+
 public class HallPlanSectionDto {
     private Long id;
+
+    @NotBlank(message = "Name is mandatory")
+    @Size(max = 255, message = "Name must be at most {max} characters long")
     private String name;
+
+    @NotBlank(message = "Color is mandatory")
+    @Size(max = 50, message = "Color must be at most {max} characters long")
     private String color;
+
+    @NotNull(message = "Price is mandatory")
+    @PositiveOrZero(message = "Price must be a positive number or zero")
     private Long price;
-    private Long hallplanId;
 
     public Long getId() {
         return id;
@@ -39,13 +52,6 @@ public class HallPlanSectionDto {
         this.price = price;
     }
 
-    public Long gethallplanId() {
-        return hallplanId;
-    }
-
-    public void sethallplanId(Long hallplanId) {
-        this.hallplanId = hallplanId;
-    }
 
     public static final class HallPlanSectionDtoBuilder {
 
@@ -94,7 +100,6 @@ public class HallPlanSectionDto {
             hallPlanSectionDto.setName(name);
             hallPlanSectionDto.setColor(color);
             hallPlanSectionDto.setPrice(price);
-            hallPlanSectionDto.sethallplanId(hallplanId);
             return hallPlanSectionDto;
         }
 

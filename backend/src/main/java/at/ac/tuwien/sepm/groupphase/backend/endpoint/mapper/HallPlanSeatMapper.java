@@ -17,17 +17,14 @@ public interface HallPlanSeatMapper {
     HallPlanSeat toEntity(HallPlanSeatDto hallPlanSeatDto);
 
     @Named("seat")
-    @IterableMapping(qualifiedByName = "seat")
     @Mapping(target = "section", source = "section")
     List<HallPlanSeat> toEntity(List<HallPlanSeatDto> hallPlanSeatDto);
 
     @Named("seat")
-    @IterableMapping(qualifiedByName = "seat")
     @Mapping(target = "section", source = "section")
     HallPlanSeatDto toDto(HallPlanSeat hallPlanSeat);
 
     @Named("seat")
-    @IterableMapping(qualifiedByName = "seat")
     @Mapping(target = "section", source = "section")
     List<HallPlanSeatDto> toDto(List<HallPlanSeat> hallPlanSeat);
 

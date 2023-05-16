@@ -3,6 +3,8 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.List;
+
 public class SeatRowDto {
 
     private Long id;
@@ -10,14 +12,17 @@ public class SeatRowDto {
     @NotNull(message = "rowNr must be specified")
     private Long rowNr;
 
-    private HallPlanDto hallPlan;
+    @NotNull(message = "hallPlanId must be specified")
+    private Long hallPlanId;
 
-    public HallPlanDto getHallPlan() {
-        return hallPlan;
+    private List<HallPlanSeatDto> seats;
+
+    public List<HallPlanSeatDto> getSeats() {
+        return seats;
     }
 
-    public void setHallPlan(HallPlanDto hallPlan) {
-        this.hallPlan = hallPlan;
+    public void setSeats(List<HallPlanSeatDto> seats) {
+        this.seats = seats;
     }
 
     public Long getId() {
@@ -34,6 +39,14 @@ public class SeatRowDto {
 
     public void setRowNr(Long rowNr) {
         this.rowNr = rowNr;
+    }
+
+    public Long getHallPlanId() {
+        return hallPlanId;
+    }
+
+    public void setHallPlanId(Long hallPlanId) {
+        this.hallPlanId = hallPlanId;
     }
 
     public static final class SeatRowDtoBuilder {
@@ -68,7 +81,6 @@ public class SeatRowDto {
             SeatRowDto seatRowDto = new SeatRowDto();
             seatRowDto.setId(id);
             seatRowDto.setRowNr(rowNr);
-            seatRowDto.setHallPlan(hallPlan);
             return seatRowDto;
         }
     }

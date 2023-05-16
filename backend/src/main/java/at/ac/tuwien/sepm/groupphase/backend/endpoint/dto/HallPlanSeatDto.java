@@ -1,30 +1,39 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-
-import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSection;
+import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatStatus;
+import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 public class HallPlanSeatDto {
 
     private Long id;
-    private Long hallPlanId;
 
     @NotNull(message = "status must be specified")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "status must be specified")
+    private HallPlanSeatStatus status;
 
     @NotNull(message = "type must be specified")
-    private String type;
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "type must be specified")
+    private HallPlanSeatType type;
 
     @NotNull(message = "capacity must be specified")
+    @Min(value = 1, message = "capacity must be greater than or equal to {value}")
     private Long capacity;
 
     @NotNull(message = "seatNr must be specified")
+    @Min(value = 1, message = "seatNr must be greater than or equal to {value}")
     private Long seatNr;
-    @NotNull(message = "section_id must be specified")
+
+    @Valid
     private HallPlanSectionDto section;
 
-    @NotNull(message = "seatRow must be specified")
-    private SeatRowDto seatrow;
+    private Long seatrowId;
 
     public Long getId() {
         return id;
@@ -34,21 +43,6 @@ public class HallPlanSeatDto {
         this.id = id;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public Long getCapacity() {
         return capacity;
@@ -66,14 +60,6 @@ public class HallPlanSeatDto {
         this.seatNr = seatNr;
     }
 
-    public Long getHallPlanId() {
-        return hallPlanId;
-    }
-
-    public void setHallPlanId(Long hallPlanId) {
-        this.hallPlanId = hallPlanId;
-    }
-
     public HallPlanSectionDto getSection() {
         return section;
     }
@@ -82,19 +68,35 @@ public class HallPlanSeatDto {
         this.section = section;
     }
 
-    public SeatRowDto getSeatrow() {
-        return seatrow;
+    public Long getSeatrowId() {
+        return seatrowId;
     }
 
-    public void setSeatrow(SeatRowDto seatrow) {
-        this.seatrow = seatrow;
+    public void setSeatrowId(Long seatrowId) {
+        this.seatrowId = seatrowId;
+    }
+
+    public HallPlanSeatStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(HallPlanSeatStatus status) {
+        this.status = status;
+    }
+
+    public HallPlanSeatType getType() {
+        return type;
+    }
+
+    public void setType(HallPlanSeatType type) {
+        this.type = type;
     }
 
     public static final class SeatDtoBuilder {
 
         private Long id;
-        private String status;
-        private String type;
+        private HallPlanSeatStatus status;
+        private HallPlanSeatType type;
         private Long capacity;
         private Long seatNr;
         private Long sectionId;
@@ -111,12 +113,12 @@ public class HallPlanSeatDto {
             return this;
         }
 
-        public SeatDtoBuilder withStatus(String status) {
+        public SeatDtoBuilder withStatus(HallPlanSeatStatus status) {
             this.status = status;
             return this;
         }
 
-        public SeatDtoBuilder withType(String type) {
+        public SeatDtoBuilder withType(HallPlanSeatType type) {
             this.type = type;
             return this;
         }
