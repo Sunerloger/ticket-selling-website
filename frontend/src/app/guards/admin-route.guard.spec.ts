@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RouteGuard } from './route.guard';
+import { AdminRouteGuard } from './admin-route.guard';
 
 describe('RouteGuardService', () => {
-  let service: RouteGuard;
+  let service: AdminRouteGuard;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(RouteGuard);
+    service = TestBed.inject(AdminRouteGuard);
   });
 
   it('should be created', () => {
