@@ -56,7 +56,17 @@ import { ManageSectionComponent } from './components/roomplaneditor/sectionmanag
     ManageSectionComponent,
   ],
   imports: [
-
+    BrowserModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    NgbModule,
+    FormsModule,
+    ToastrModule.forRoot(),
+    BrowserAnimationsModule,
+    MatGridListModule,
+    NgOptimizedImage,
+    MatInputModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { PersistedRoomplan } from 'src/app/dtos/roomplan';
+import { PersistedRoomplan } from 'src/app/dtos/hallplan/roomplan';
 
 enum SubmenuPage {
   addSection,

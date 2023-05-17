@@ -1,14 +1,14 @@
 <div class="create_section_container">
     <div class="input_section">
         <div class="form-group">
-            <input placeholder="Name" class="form-control" type="text" id="name" (input)="handleNameInput($event.currentTarget.value)">
+            <input placeholder="Name" class="form-control" type="text" id="name" (input)="handleNameInputChange($event.currentTarget.value)">
             <label for="name" *ngIf="this.nameErrMessage.length > 0" class="form-label text-danger">Name is mandatory</label>
         </div>
 
         <div class="form-group">
             <input placeholder="From Seat Nr" class="form-control" 
                 type="number" id="fromSeatNr"
-                (input)="handleFromSeat($event.currentTarget.value)"
+                (input)="handleFromSeatChange($event.currentTarget.value)"
                 min="1"
                 oninput="validity.valid||(value='');"
             >
@@ -18,7 +18,7 @@
         <div class="form-group">
             <input placeholder="To Seat Nr" class="form-control" 
             type="number" id="toSeatNr"
-            (input)="handleToSeat($event.currentTarget.value)"
+            (input)="handleToSeatChange($event.currentTarget.value)"
             min="1"
         >
             <label *ngIf="this.toSeatNrErrMessage.length > 0" for="toSeatNr" class="form-label text-danger">{{this.toSeatNrErrMessage}}</label>
@@ -29,12 +29,17 @@
         <span>Select rows</span>
         <div class="select_row_container">
 
-            <button 
+            <div 
                 *ngFor="let seatrow of this.roomplan.seatrows"
-                class="row_button"
             >
-               {{seatrow.rowNr}}
-            </button>
+                <button 
+                    class="row_button"
+                    (click)="handleToggleRowSelect(seatrow.rowNr)"
+                    [ngClass]="{'selected-row-btn' : this.selectedRows.includes(seatrow.rowNr)}"
+                >
+                    {{seatrow.rowNr}}
+                </button>
+        </div>
            
         </div>
     </div>
@@ -60,7 +65,8 @@
         type="button" 
         class="btn btn-primary"
         [attr.disabled]="isDisabled()"
+        (click)="handleAddSectionBtnClick()"
     >
-        Add Section 
+        Create Section 
     </button>
 </div>

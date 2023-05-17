@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PersistedRoomplan } from 'src/app/dtos/roomplan';
+import { PersistedRoomplan } from 'src/app/dtos/hallplan/roomplan';
 import { SeatCreationEvent, SeatRemovalPayload } from '../seatrow/seatrow.component';
 import { ToolbarItem } from '../toolbar/toolbar.component';
 

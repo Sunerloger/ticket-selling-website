@@ -48,7 +48,12 @@
 }
 
 .row_button:hover {
-    background-color: #0d6efd;
+    background-color: rgb(13, 110, 253, 1);
+    color: white;
+}
+
+.selected-row-btn{
+    background-color: #4a8a20;
     color: white;
 }
 

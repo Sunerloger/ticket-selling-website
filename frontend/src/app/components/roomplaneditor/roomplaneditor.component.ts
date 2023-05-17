@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PersistedRoomplan, PersistedSeat, PersistedSeatRow, PersistedSection, SeatStatus, SeatType } from 'src/app/dtos/roomplan';
+import { PersistedRoomplan, PersistedSeat, PersistedSeatRow, PersistedSection, SeatStatus, SeatType } from 'src/app/dtos/hallplan/roomplan';
 import { CreationMenuDirection, SeatCreationEvent, SeatRemovalPayload } from './seatrow/seatrow.component';
 /**
  * Parent Component of all roomplan related components

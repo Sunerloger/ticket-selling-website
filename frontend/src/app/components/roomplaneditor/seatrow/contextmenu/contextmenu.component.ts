@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, HostListener, Output } from '@angular/core';
-import { SeatType } from 'src/app/dtos/roomplan';
+import { SeatType } from 'src/app/dtos/hallplan/roomplan';
 
 export interface SeatCreationEventPayload {
   type: SeatType;
