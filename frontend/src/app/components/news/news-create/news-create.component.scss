@@ -1,16 +1,6 @@
-.select-button {
-  min-height: 10px;
-  height: fit-content;
-  min-width: 200px;
-  width: fit-content;
-  border: dashed 1px #aaa;
-  border-radius: 10px;
-  display: table;
-  background-color: var(--primary-color);
-  margin-top: 30px;
-  &:hover {
-    background-color: var(--monochromatic);
-  }
+.submit-button {
+  min-width: 125px;
+  min-height: 50px;
 }
 
 .images-text {
@@ -18,7 +8,7 @@
   vertical-align: middle;
   text-align: center;
   cursor: pointer;
-  color: black;
+  color: white;
 }
 
 mat-grid-tile {
@@ -48,9 +38,5 @@ mat-grid-tile {
 }
 
 .mat-form-field {
-  width: 100%;
-}
-
-mat-form-field {
   width: 100%;
 }
