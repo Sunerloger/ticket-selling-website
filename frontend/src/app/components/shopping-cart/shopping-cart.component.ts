@@ -1,43 +1,36 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {CartItem} from '../../dtos/cartItem';
+import {ToastrService} from 'ngx-toastr';
+import {Router} from '@angular/router';
+import {CartService} from '../../services/cart.service';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-shopping-cart',
   templateUrl: './shopping-cart.component.html',
   styleUrls: ['./shopping-cart.component.scss']
 })
-export class ShoppingCartComponent {
-  item1: CartItem = {
-    seatNr: 99,
-    seatId: 2,
-    rowNr: 10,
-    section: {
-      color: 'red',
-      name: 'Block A',
-      price: 11.50
-    },
-    event: {
-      name: 'Eventname - Lorem',
-      date: '6/15/15, 2:03 PM',
-    },
-    reservation: false
-  };
-  item2: CartItem = {
-    seatNr: 99,
-    seatId: 2,
-    rowNr: 10,
-    section: {
-      color: 'red',
-      name: 'Block A',
-      price: 11.50
-    },
-    event: {
-      name: 'Eventname - Lorem',
-      date: '6/15/15, 2:03 PM',
-    },
-    reservation: true
-  };
-  items = [this.item1, this.item2];
+export class ShoppingCartComponent implements OnInit{
+  items: CartItem[] = [];
+  constructor(private service: CartService,
+              private notification: ToastrService,
+              private router: Router) {
+  }
+  ngOnInit(): void {
+    this.getItems();
+  }
+
+  getItems(){
+    const observable: Observable<CartItem[]> = this.service.getCart();
+    observable.subscribe({
+      next: data => {
+        this.items = data;
+      }, error: error => {
+        this.router.navigate(['/horses']);
+      }
+    });
+  }
+
   delete(index: number){
     //Todo: remove the item in the backend
     this.items.splice(index,1);

@@ -7,35 +7,27 @@
       <div class="shopping-cart-info">
 
         <div class="event-name">
-          <p> {{ item.event.name }} </p>
+          <p> {{ item.event.title }} </p>
         </div>
 
         <div class="event-info-container">
-          <p class="event-info">Date: {{ item.event.date | date:'dd.MM.yy' }}</p>
-          <p class="event-info">Starting-Time: {{ item.event.date | date:'HH:mm' }}</p>
+          <p class="event-info">Date: {{ item.event.date[0] | date:'dd.MM.yy' }}</p>
+          <p class="event-info">Starting-Time: {{ item.event.date[0] | date:'HH:mm' }}</p>
 
-          <p class="event-info">Section: {{ item.section.name }}</p>
-          <p class="event-info">Row: {{ item.rowNr }}</p>
-          <p class="event-info">Seat: {{ item.seatNr }}</p>
+          <p class="event-info">Section: {{ item.seat.section.name }}</p>
+          <p class="event-info">Row: {{ item.seat.seatrowId }}</p>
+          <p class="event-info">Seat: {{ item.seat.seatNr }}</p>
         </div>
 
       </div>
 
       <div class="shopping-cart-info-price">
-        <div *ngIf="item.reservation ; then thenBlock else elseBlock"></div>
-        <ng-template #thenBlock>
-          <div class="price-container">
-            <p class="price">Reservation Only</p>
-            <p class="price-info"><a> Information about reservations </a></p>
-          </div>
-        </ng-template>
 
-        <ng-template #elseBlock>
           <div class="price-container">
-            <p class="price">€ {{ item.section.price }} </p>
+            <p class="price">€ {{ item.seat.section.price }} </p>
             <p class="price-info"> inkl. Mst.</p>
           </div>
-        </ng-template>
+
 
         <button type="button" (click)="delete(i)" class="btn btn-danger">X</button>
       </div>
