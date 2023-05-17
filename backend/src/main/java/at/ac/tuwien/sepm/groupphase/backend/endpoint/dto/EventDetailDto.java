@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.List;
 public class EventDetailDto  {
     private Long id;
     private String title;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private List<LocalDate> date;
     private LocalTime startTime;
     private String cityname;
