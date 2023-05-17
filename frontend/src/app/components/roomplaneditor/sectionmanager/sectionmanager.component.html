@@ -1,0 +1,24 @@
+<div class="menu">
+    <button [ngClass]="{'btn-secondary' : currentPage === submenuPageEnum.addSection, 
+        'btn-light':  currentPage !== submenuPageEnum.addSection
+        }" class="btn" (click)="switchPage(submenuPageEnum.addSection)">
+        Create Section
+    </button>
+
+    <button [ngClass]="{'btn-secondary' : currentPage === submenuPageEnum.manageSection, 
+        'btn-light':  currentPage !== submenuPageEnum.manageSection
+        }" class="btn btn-light" (click)="switchPage(submenuPageEnum.manageSection)">
+        Manage Sections
+    </button>
+</div>
+
+<div class="content">
+    <app-create-section 
+        *ngIf="currentPage === submenuPageEnum.addSection" 
+        [roomplan]="this.roomplan"
+    />
+
+    <app-manage-section 
+        *ngIf="currentPage === submenuPageEnum.manageSection" 
+    />
+</div>
