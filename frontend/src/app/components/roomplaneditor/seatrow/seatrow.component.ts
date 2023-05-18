@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PersistedSeatRow, SeatType } from 'src/app/dtos/roomplan';
+import { PersistedSeatRow, SeatType } from 'src/app/dtos/hallplan/hallplan';
 import { SeatCreationEventPayload } from './contextmenu/contextmenu.component';
 import { EventManager } from '@angular/platform-browser';
 

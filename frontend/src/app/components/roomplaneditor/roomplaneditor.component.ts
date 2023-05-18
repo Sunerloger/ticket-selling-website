@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { PersistedRoomplan, PersistedSeat, PersistedSeatRow, PersistedSection, SeatStatus, SeatType } from 'src/app/dtos/roomplan';
+import { PersistedHallplan, PersistedSeat, PersistedSeatRow, SeatRow, SeatStatus, SeatType } from 'src/app/dtos/hallplan/hallplan';
 import { CreationMenuDirection, SeatCreationEvent, SeatRemovalPayload } from './seatrow/seatrow.component';
+import { PersistedSection, Section } from 'src/app/dtos/hallplan/section';
+import { HallplanService } from 'src/app/services/hallplan/hallplan.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+
 /**
  * Parent Component of all roomplan related components
  */
@@ -10,10 +15,46 @@ import { CreationMenuDirection, SeatCreationEvent, SeatRemovalPayload } from './
   styleUrls: ['./roomplaneditor.component.scss']
 })
 export class RoomplaneditorComponent implements OnInit {
-  roomplan: PersistedRoomplan;
+  roomplan: PersistedHallplan = {
+    id: 0,
+    seatRows: [],
+    name: '',
+    description: ''
+  };
+
+  constructor(
+    private service: HallplanService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private notification: ToastrService,
+  ) {
+  }
 
   ngOnInit(): void {
-    this.fetchRoomplan();
+    this.route.paramMap.subscribe(params => {
+      const hallplanId = params.get('id');
+      if(Number(hallplanId)){
+        this.fetchHallplanWithId(Number(hallplanId));
+      }else{
+        this.router.navigate(['/hallplans']);
+      }
+    });
+  }
+
+  fetchHallplanWithId(id: number){
+    this.service.getHallplanById(id).subscribe({
+      next: data => {
+        console.log(data)
+        this.roomplan = data;
+      },
+      error: error => {
+        const errorMessage = error.status === 0
+          ? 'Server not reachable'
+          : error.message.message;
+        this.notification.error(errorMessage, 'Requested Hallplan does not exist');
+        this.router.navigate(['/hallplans']);
+      }
+    })
   }
 
 
@@ -54,11 +95,11 @@ export class RoomplaneditorComponent implements OnInit {
       }]
     };
 
-    const roomplan: PersistedRoomplan = {
+    const roomplan: PersistedHallplan = {
       id: 1,
       name: 'Room 01',
       description: 'A room',
-      seatrows: [seatRow1, seatRow2]
+      seatRows: [seatRow1, seatRow2]
     };
 
     //fetch roomplan
@@ -77,38 +118,48 @@ export class RoomplaneditorComponent implements OnInit {
     console.log('handleAddRow rowNr=', rowNr);
 
     //-- persist new Seat Row
-    const persistedEmptySeatRow: PersistedSeatRow = {
+    const emptySeatRow: SeatRow = {
       rowNr,
       seats: [],
-      id: 0
     };
+    this.service.createSeatrow(this.roomplan.id, emptySeatRow).subscribe({
+      next: data => {
+        const persistedEmptySeatRow = data;
 
+        //-- update state
+        const clonedRoomplan = structuredClone(this.roomplan);
 
-    //-- update state
-    const clonedRoomplan = structuredClone(this.roomplan);
+        //update seatrow numbers of other seatrows
+        for (const seatrow of clonedRoomplan.seatRows) {
+          if (seatrow.rowNr >= rowNr) {
+            seatrow.rowNr++; //TO-DO: persist new seatrow
+          }
+        }
 
-    //update seatrow numbers of other seatrows
-    for (const seatrow of clonedRoomplan.seatrows) {
-      if (seatrow.rowNr >= rowNr) {
-        seatrow.rowNr++; //TO-DO: persist new seatrow
+        //add seat
+        clonedRoomplan.seatRows.splice(rowNr - 1, 0, persistedEmptySeatRow);
+        this.roomplan = clonedRoomplan;
+      },
+      error: error => {
+        const errorMessage = error.status === 0
+          ? 'Server not reachable'
+          : error.message.message;
+        this.notification.error(errorMessage, 'Could not create seatrow. Please try again.');
+        this.router.navigate(['/hallplans']);
       }
-    }
-
-    //add seat
-    clonedRoomplan.seatrows.splice(rowNr - 1, 0, persistedEmptySeatRow);
-    this.roomplan = clonedRoomplan;
+    })
   }
 
   handleRemoveRow(deletedRowNr: number) {
     //update state
     const roomplanCloned = structuredClone(this.roomplan);
-    roomplanCloned.seatrows.splice(
+    roomplanCloned.seatRows.splice(
       deletedRowNr - 1,
       1
     );
 
     //update other row nr
-    for (const seatrow of roomplanCloned.seatrows) {
+    for (const seatrow of roomplanCloned.seatRows) {
       if (seatrow.rowNr >= deletedRowNr) {
         seatrow.rowNr--;
       }
@@ -118,7 +169,17 @@ export class RoomplaneditorComponent implements OnInit {
     //persist roomplan with seatrows
   }
 
-  handleAddSeat(payload: SeatCreationEvent) {
+  handleAddSectionToSeats(seatIds: number[], section: Section){
+    console.log("handleAddSectionToSeats", seatIds, section)
+    //call bulk endpoint
+
+    const updatedSeats:PersistedSeat[] = [];
+
+    //update state
+    //just fetch getRoomplan again.. in order to get all the updated seats
+  }
+
+  handleAddSeats(payload: SeatCreationEvent) {
     console.log('addSeat rowNr=', payload.rowNr, ',type=', payload.type, ',direction=', payload.type);
     const { rowNr, type, direction, amountSeat } = payload;
 
@@ -138,8 +199,8 @@ export class RoomplaneditorComponent implements OnInit {
 
     //update state
     const clonedRoomplan = structuredClone(this.roomplan);
-    clonedRoomplan.seatrows[rowNr - 1].seats =
-    clonedRoomplan.seatrows[rowNr - 1].seats.concat(newSeats);
+    clonedRoomplan.seatRows[rowNr - 1].seats =
+    clonedRoomplan.seatRows[rowNr - 1].seats.concat(newSeats);
 
     this.roomplan = clonedRoomplan;
   }
@@ -149,7 +210,7 @@ export class RoomplaneditorComponent implements OnInit {
     const { id, rowNr } = payload;
 
     const clonedRoomplan = structuredClone(this.roomplan);
-    const clonedSeatRow = clonedRoomplan.seatrows[rowNr - 1];
+    const clonedSeatRow = clonedRoomplan.seatRows[rowNr - 1];
     const clonedSeats = clonedSeatRow.seats;
 
     for (let i = 0; i < clonedSeats.length; i++) {
@@ -181,7 +242,7 @@ export class RoomplaneditorComponent implements OnInit {
       case CreationMenuDirection.left:
         return 0;
       case CreationMenuDirection.right:
-        const totalSeats = this.roomplan.seatrows[rowNr - 1].seats.length;
+        const totalSeats = this.roomplan.seatRows[rowNr - 1].seats.length;
         return totalSeats + 1;
     }
   }

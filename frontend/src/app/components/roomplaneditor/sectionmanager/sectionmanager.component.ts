@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
-import { PersistedRoomplan } from 'src/app/dtos/roomplan';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { PersistedHallplan } from 'src/app/dtos/hallplan/hallplan';
+import { CreateSectionPayload } from './create-section/create-section.component';
 
 enum SubmenuPage {
   addSection,
@@ -12,7 +13,8 @@ enum SubmenuPage {
   styleUrls: ['./sectionmanager.component.scss']
 })
 export class SectionmanagerComponent {
-  @Input() roomplan: PersistedRoomplan;
+  @Input() roomplan: PersistedHallplan;
+  @Output() createSectionEvent = new EventEmitter<CreateSectionPayload>();
 
   currentPage: SubmenuPage = SubmenuPage.addSection;
   submenuPageEnum = SubmenuPage;

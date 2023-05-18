@@ -6,15 +6,19 @@ import {Globals} from '../global/globals';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-
   constructor(private authService: AuthService, private globals: Globals) {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const authUri = this.globals.backendUri + '/authentication';
-
+    const registerUri = this.globals.backendUri + '/register';
     // Do not intercept authentication requests
     if (req.url === authUri) {
+      return next.handle(req);
+    }
+
+    //Do no intercept register requests
+    if (req.url === registerUri) {
       return next.handle(req);
     }
 

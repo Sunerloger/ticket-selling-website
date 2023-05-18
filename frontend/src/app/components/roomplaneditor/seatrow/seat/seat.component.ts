@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { SeatType } from 'src/app/dtos/roomplan';
+import { SeatType } from 'src/app/dtos/hallplan/hallplan';
 
 @Component({
   selector: 'app-seat',

@@ -3,15 +3,17 @@
     Section
 */
 
-export interface Roomplan {
+import { PersistedSection, Section } from "./section";
+
+export interface Hallplan {
     name: string;
     description: string;
-    seatrows: SeatRow[];
+    seatRows: SeatRow[];
 }
 
-export interface PersistedRoomplan extends Roomplan {
+export interface PersistedHallplan extends Hallplan {
     id: number;
-    seatrows: PersistedSeatRow[];
+    seatRows: PersistedSeatRow[];
 }
 
 /*
@@ -36,26 +38,12 @@ export interface Seat {
     type: SeatType;
     seatNr: number;
     status: SeatStatus;
-    section: Section;
+    section: Section | null;
 }
 
 export interface PersistedSeat extends Seat {
     id: number;
-    section: PersistedSection;
-}
-
-/*
-    Section
-*/
-
-export interface Section {
-    color: string;
-    name: string;
-    price: number;
-}
-
-export interface PersistedSection extends Section {
-    id: number;
+    section: PersistedSection | null;
 }
 
 /*
