@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PersistedHallplan, PersistedSeat, PersistedSeatRow, SeatRow, SeatStatus, SeatType } from 'src/app/dtos/hallplan/hallplan';
+import { PersistedHallplan, PersistedSeat, PersistedSeatRow, Seat, SeatRow, SeatStatus, SeatType } from 'src/app/dtos/hallplan/hallplan';
 import { CreationMenuDirection, SeatCreationEvent, SeatRemovalPayload } from './seatrow/seatrow.component';
 import { PersistedSection, Section } from 'src/app/dtos/hallplan/section';
 import { HallplanService } from 'src/app/services/hallplan/hallplan.service';
@@ -73,7 +73,8 @@ export class RoomplaneditorComponent implements OnInit {
         type: SeatType.seat,
         seatNr: 1,
         status: SeatStatus.free,
-        section
+        section,
+        capacity: 1
       }]
     };
     const seatRow2: PersistedSeatRow = {
@@ -84,14 +85,16 @@ export class RoomplaneditorComponent implements OnInit {
         type: SeatType.seat,
         seatNr: 1,
         status: SeatStatus.free,
-        section
+        section,
+        capacity: 1
       },
       {
         id: 2,
         type: SeatType.seat,
         seatNr: 2,
         status: SeatStatus.free,
-        section
+        section,
+        capacity: 1
       }]
     };
 
@@ -136,7 +139,7 @@ export class RoomplaneditorComponent implements OnInit {
           }
         }
 
-        //add seat
+        //add seatrow
         clonedRoomplan.seatRows.splice(rowNr - 1, 0, persistedEmptySeatRow);
         this.roomplan = clonedRoomplan;
       },
@@ -179,30 +182,93 @@ export class RoomplaneditorComponent implements OnInit {
     //just fetch getRoomplan again.. in order to get all the updated seats
   }
 
-  handleAddSeats(payload: SeatCreationEvent) {
+  async updateSeatsBulk(rowNr: number, updatedSeats: PersistedSeat[], errorMessage: string){
+    return new Promise((resolve, reject) => {
+      this.service.updateSeatsBulk(
+        this.roomplan.id,
+        this.roomplan.seatRows[rowNr - 1].id,
+        updatedSeats
+      ).subscribe({
+        next: data => {
+          resolve(data);
+        },
+        error: error => {
+          const errorMessage = error.status === 0
+            ? 'Server not reachable'
+            : error.message.message;
+          this.notification.error(errorMessage, errorMessage);
+          reject(error);
+        }
+      })
+    });
+  }
+
+  async handleAddSeats(payload: SeatCreationEvent) {
     console.log('addSeat rowNr=', payload.rowNr, ',type=', payload.type, ',direction=', payload.type);
     const { rowNr, type, direction, amountSeat } = payload;
 
-    const newSeats = [];
     const initialSeatNr = this.getLatestSeatNrFromDirectionAndRowNr(direction, rowNr);
-    let searNr = initialSeatNr;
+    const newSeats: Seat[] = [];
 
     //TO-DO: add row nr to empty seat or call correct endpoint
-    for (let i = 0; i < amountSeat; i++) {
-      newSeats.push(
-        this.createEmptySeat(type, searNr) //persist new seat
-      );
-      searNr++;
+    // --- create seats that needs to be created
+
+    switch(direction){
+      case CreationMenuDirection.left:
+        // --- update seatNr of other seats when direction was left
+        const updateSeats: PersistedSeat[] = [];
+        
+        let seatNrOfOldSeat = amountSeat + 1;
+        for(const seat of this.roomplan.seatRows[rowNr - 1].seats){
+          updateSeats.push({ ...seat, seatNr: seatNrOfOldSeat });
+          seatNrOfOldSeat++;
+        }
+        // persist
+        if(updateSeats.length > 0){
+          await this.updateSeatsBulk(rowNr, updateSeats, "Failed to add seats. Please try again.");
+        }
+     
+
+        // --- generate seats that needs to be persisted 
+        let newSeatNr = 1;
+        for(let i = 0; i < amountSeat; i++){
+          newSeats.push(
+            this.createEmptySeat(type, newSeatNr)
+          );
+          newSeatNr++;
+        }
+        break;
+      case CreationMenuDirection.right:
+        // --- generate seats that needs to be persisted 
+        let highestSeatNr = initialSeatNr;
+        for (let i = 0; i < amountSeat; i++) {
+          newSeats.push(
+            this.createEmptySeat(type, highestSeatNr)
+          );
+          highestSeatNr++;
+        }
+        break;
     }
+    console.log(newSeats, "ACHTUNG")
 
-    //TO-DO: update seatNr of other seats when direction was left
-
-    //update state
-    const clonedRoomplan = structuredClone(this.roomplan);
-    clonedRoomplan.seatRows[rowNr - 1].seats =
-    clonedRoomplan.seatRows[rowNr - 1].seats.concat(newSeats);
-
-    this.roomplan = clonedRoomplan;
+    // --- persist newly created seats
+    this.service.createSeatsBulk(
+      this.roomplan.id, 
+      this.roomplan.seatRows[rowNr - 1].id, 
+      newSeats
+    ).subscribe({
+      next: (data) => {
+        console.log(data)
+        // --- update state
+        this.fetchRoomplan();
+      },
+      error: error => {
+        const errorMessage = error.status === 0
+          ? 'Server not reachable'
+          : error.message.message;
+        this.notification.error(errorMessage, 'Failed adding new seats. Please try again.');
+      }
+    })
   }
 
   handleSeatRemoval(payload: SeatRemovalPayload) {
@@ -226,15 +292,29 @@ export class RoomplaneditorComponent implements OnInit {
 
   }
 
-  createEmptySeat(type: SeatType, seatNr: number): PersistedSeat {
-    const persistedNewSeat: PersistedSeat = {
-      id: 1,
+  createEmptySeat(type: SeatType, seatNr: number, capacity?: number): Seat {
+    switch(type){
+      case SeatType.seat:
+        capacity = 1;
+      case SeatType.vacantSeat:
+        capacity = 0;
+      case SeatType.standingSeat:
+        capacity = capacity ?? 100
+      default: 
+        capacity = 1;
+    }
+    const emptySeat: Seat = {
       type,
       seatNr,
       status: SeatStatus.free,
-      section: null
+      section: {
+        name: 'Unassigned',
+        color: 'white',
+        price: 0
+      },
+      capacity: capacity
     };
-    return persistedNewSeat;
+    return emptySeat;
   }
 
   getLatestSeatNrFromDirectionAndRowNr(direction: CreationMenuDirection, rowNr: number) {

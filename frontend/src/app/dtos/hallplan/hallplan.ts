@@ -38,12 +38,13 @@ export interface Seat {
     type: SeatType;
     seatNr: number;
     status: SeatStatus;
-    section: Section | null;
+    section: Section;
+    capacity: number;
 }
 
 export interface PersistedSeat extends Seat {
     id: number;
-    section: PersistedSection | null;
+    section: PersistedSection;
 }
 
 /*
@@ -57,6 +58,7 @@ export enum SeatStatus {
 }
 
 export enum SeatType {
-    seat,
-    vacantSeat,
+    seat = "SEAT",
+    vacantSeat = "VACANT_SEAT",
+    standingSeat = "STANDING_SEAT"
 }
