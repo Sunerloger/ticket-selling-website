@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "section")
@@ -16,12 +17,15 @@ public class HallPlanSection {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     @Column(name = "name", nullable = false)
     private String name;
 
+    @NotNull
     @Column(name = "color", nullable = false)
     private String color;
 
+    @NotNull
     @Column(name = "price")
     private Long price;
 

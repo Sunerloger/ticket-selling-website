@@ -1,9 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedHallPlanDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanSectionDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanSeatDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.DetailedHallPlanDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatBulkDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSectionDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatRowDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanSectionMapper;
@@ -242,6 +243,26 @@ public class HallPlanEndpoint {
         seatDto.setSeatrowId(seatRowId);
         HallPlanSeatDto savedSeat = hallPlanSeatService.addSeat(seatDto);
         return ResponseEntity.created(URI.create("/api/v1/hallplans/" + hallPlanId + "/seatrows/" + seatRowId + "/seats/" + seatDto.getId())).body(savedSeat);
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/{hallPlanId}/seatrows/{seatRowId}/seats/bulk")
+    @Operation(summary = "Add a new seat to a seat row")
+    public ResponseEntity<HallPlanSeatBulkDto> bulkAddSeat(@PathVariable Long hallPlanId, @PathVariable Long seatRowId, @RequestBody HallPlanSeatBulkDto seatBulk) {
+        seatBulk.setHallPlanId(hallPlanId);
+        seatBulk.setSeatRowId(seatRowId);
+        hallPlanSeatService.bulkAddSeats(seatBulk);
+        return ResponseEntity.created(URI.create("/api/v1/hallplans/" + hallPlanId + "/seatrows/" + seatRowId + "/seats/bulk")).body(seatBulk);
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PutMapping("/{hallPlanId}/seatrows/{seatRowId}/seats/bulk")
+    @Operation(summary = "Add a new seat to a seat row")
+    public ResponseEntity<HallPlanSeatBulkDto> bulkUpdateSeats(@PathVariable Long hallPlanId, @PathVariable Long seatRowId, @RequestBody HallPlanSeatBulkDto seatBulk) {
+        seatBulk.setHallPlanId(hallPlanId);
+        seatBulk.setSeatRowId(seatRowId);
+        hallPlanSeatService.bulkUpdateSeats(seatBulk);
+        return ResponseEntity.created(URI.create("/api/v1/hallplans/" + hallPlanId + "/seatrows/" + seatRowId + "/seats/bulk")).body(seatBulk);
     }
 
     @Secured("ROLE_ADMIN")
