@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedHallPlanDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanSectionDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.DetailedHallPlanDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanSectionMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SeatRowMapper;

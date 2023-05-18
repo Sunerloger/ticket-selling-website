@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-public class EventDetailDto  {
+public class EventDetailDto {
     private Long id;
     private String title;
     private List<LocalDate> date;

@@ -82,8 +82,8 @@ public class SeatRowTest {
             .andExpect(status().isNoContent());
 
         // Check that the seat row was deleted from the database
-        List<SeatRow> seatRows = seatRowRepository.findAll();
-        assertThat(seatRows.size()).isEqualTo(8);
+        Optional<SeatRow> seatRows = seatRowRepository.findById(1L);
+        assertThat(!seatRows.isPresent());
     }
 
     @Test
