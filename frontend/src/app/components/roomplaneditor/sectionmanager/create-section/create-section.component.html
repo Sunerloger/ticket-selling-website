@@ -1,10 +1,12 @@
 <div class="create_section_container">
     <div class="input_section">
+        <!-- Name Input-->
         <div class="form-group">
             <input placeholder="Name" class="form-control" type="text" id="name" (input)="handleNameInputChange($event.currentTarget.value)">
             <label for="name" *ngIf="this.nameErrMessage.length > 0" class="form-label text-danger">Name is mandatory</label>
         </div>
 
+        <!-- From SeatNr Input-->
         <div class="form-group">
             <input placeholder="From Seat Nr" class="form-control" 
                 type="number" id="fromSeatNr"
@@ -15,6 +17,7 @@
             <label *ngIf="this.fromSeatNrErrMessage.length > 0" for="fromSeatNr" class="form-label text-danger">{{this.fromSeatNrErrMessage}}</label>
         </div>
 
+        <!-- To SeatNr Input-->
         <div class="form-group">
             <input placeholder="To Seat Nr" class="form-control" 
             type="number" id="toSeatNr"
@@ -23,14 +26,29 @@
         >
             <label *ngIf="this.toSeatNrErrMessage.length > 0" for="toSeatNr" class="form-label text-danger">{{this.toSeatNrErrMessage}}</label>
         </div>
+
+        <!-- Price Input-->
+        <div class="input-group">
+            <input placeholder="Price" class="form-control" id="price"
+                (input)="handlePriceChange($event.currentTarget.value)" 
+            >
+            <div class="input-group-prepend">
+                <span class="input-group-text">€</span>
+            </div>
+            <label *ngIf="this.priceErrMessage.length > 0" for="price"
+                class="form-label text-danger">{{this.priceErrMessage}}</label>
+        </div>
     </div>
 
+    <!--Select Rows Group -->
     <div class="select_row_group">
         <span>Select rows</span>
         <div class="select_row_container">
+            <!-- Show Empty Message-->
+            <span *ngIf="this.roomplan.seatRows.length === 0">Create a seatrow before attempting to create a section.</span>
 
             <div 
-                *ngFor="let seatrow of this.roomplan.seatrows"
+                *ngFor="let seatrow of this.roomplan.seatRows"
             >
                 <button 
                     class="row_button"

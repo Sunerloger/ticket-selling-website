@@ -1,4 +1,4 @@
-import { Seat } from './roomplan';
+import { Seat } from './hallplan';
 
 export interface Section{
     name: string;
