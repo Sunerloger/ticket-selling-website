@@ -33,6 +33,7 @@ export class RegisterComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
               public authService: AuthService,
+              private notification: ToastrService,
               private router: Router) {
 
   }
@@ -69,10 +70,11 @@ export class RegisterComponent implements OnInit {
       observable.subscribe({
         next: () => {
           this.router.navigate(['/login']);
+          this.notification.success(`${this.user.email} has been successfully registered`);
         },
         error: err => {
           console.error(`Error registering user`, err, this.user);
-          //this.notification.error('Could not register user. Errorcode: ' + err.status + ', Errortext: ' + err.error.errors);
+          this.notification.error('Could not register user. Errorcode: ' + err.status + ', Errortext: ' + err.error.errors);
         }
       });
     } else {
