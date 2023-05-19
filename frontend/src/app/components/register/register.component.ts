@@ -74,7 +74,9 @@ export class RegisterComponent implements OnInit {
         },
         error: err => {
           console.error(`Error registering user`, err, this.user);
-          this.notification.error('Could not register user. Errorcode: ' + err.status + ', Errortext: ' + err.error.errors);
+          if (err.status === 409) {
+            this.notification.error(`${err.error.detail}`);
+          }
         }
       });
     } else {

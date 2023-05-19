@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 
+import jakarta.xml.bind.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,9 +91,12 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser register(ApplicationUser applicationUser) {
+    public ApplicationUser register(ApplicationUser applicationUser) throws ValidationException {
         String encodedPassword = passwordEncoder.encode(applicationUser.getPassword());
         applicationUser.setPassword(encodedPassword);
+        if(findApplicationUserByEmail(applicationUser.getEmail()) != null){
+            throw new ValidationException("Email already in use!");
+        };
         return applicationUserRepository.save(applicationUser);
     }
 }

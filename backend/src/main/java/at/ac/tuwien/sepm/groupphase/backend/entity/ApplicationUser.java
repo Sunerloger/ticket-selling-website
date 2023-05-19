@@ -24,7 +24,6 @@ public class ApplicationUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
     private String email;
 
     @Pattern(regexp = "[ÄÖÜA-Zäöüa-z]*")
