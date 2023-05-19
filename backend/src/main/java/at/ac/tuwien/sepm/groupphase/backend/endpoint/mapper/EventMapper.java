@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AbbreviatedEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventDate;
@@ -46,6 +47,8 @@ public interface EventMapper {
             .map(this::localDatesMapper)
             .collect(Collectors.toList());
     }
+
+    AbbreviatedEventDto eventToAbbreviatedEventDto(Event event);
 
     default LocalDate eventDatesMapper(EventDate eventDate) {
         return eventDate.getDate();
