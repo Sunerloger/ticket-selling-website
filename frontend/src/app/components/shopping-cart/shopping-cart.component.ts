@@ -4,6 +4,7 @@ import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';
 import {CartService} from '../../services/cart.service';
 import {Observable} from 'rxjs';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -16,6 +17,8 @@ export class ShoppingCartComponent implements OnInit{
               private notification: ToastrService,
               private router: Router) {
   }
+
+
   ngOnInit(): void {
     this.getItems();
   }
@@ -31,10 +34,35 @@ export class ShoppingCartComponent implements OnInit{
     });
   }
 
-  delete(index: number){
-    //Todo: remove the item in the backend
-    this.items.splice(index,1);
-    //Todo: then reload the cart
+  deleteByIndex(index: number){
+    //Todo: something with response
+    this.service.deleteCartItemById(this.items[index].seat.id).subscribe(
+      (response) => {
+        console.log('Status:', response.status);
+        this.notification.success(`Ticket successfully removed from cart.`);
+      },
+      (error) => {
+        console.error('Error:', error);
+        this.notification.error(`Something went wrong... please try again!`);
+      }, () => {
+        this.items.splice(index,1);
+      }
+    );
+
   }
+
+  formatTime(time: string): Date {
+    const parts = time.split(':');
+    const hours = Number(parts[0]);
+    const minutes = Number(parts[1]);
+
+    const date = new Date();
+    date.setHours(hours);
+    date.setMinutes(minutes);
+    return date;
+  }
+
+
+
 
 }

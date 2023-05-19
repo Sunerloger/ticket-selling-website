@@ -1,11 +1,15 @@
 
 export interface RoomplanItem {
+  id: number;
+  status: string;
+  type?: string;
+  capacity?: number;
   seatNr: number;
-  seatId: number;
-  rowNr: number;
   section: {
+    id: number;
     color: string;
     name: string;
     price: number;
   };
+  seatrowId: number;
 }
