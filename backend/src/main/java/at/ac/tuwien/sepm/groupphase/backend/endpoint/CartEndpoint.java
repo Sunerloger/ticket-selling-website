@@ -1,25 +1,20 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Cart;
-import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
-import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.CartService;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanSeatService;
 import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatStatus;
-import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.invoke.MethodHandles;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -47,23 +42,45 @@ public class CartEndpoint {
         return itemList;
     }
 
+    /*
+    @PostMapping
+    @Operation(summary = "Add a single Seat to the cart", security = @SecurityRequirement(name = "apiKey"))
+    public ResponseEntity<Void> addToCart(@RequestBody HallPlanSeatDto seat) {
+        LOGGER.info("Post /api/v1/cart");
+        try {
+            //TODO: acquire UserID
+            //TODO: use real UserID
+            service.addItem(seat, 1L);
+        } catch (NotFoundException e) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok().build();
+    }
+     */
+
     @PostMapping
     @Operation(summary = "Add a list of Seats to the cart", security = @SecurityRequirement(name = "apiKey"))
-    public void addToCart(@RequestBody HallPlanSeatDto seat) {
+    public ResponseEntity<Void> addToCart(@RequestBody List<HallPlanSeatDto> seatDtoList) {
         LOGGER.info("Post /api/v1/cart");
-        HallPlanSeatDto requestedSeat = seatService.getSeatById(seat.getId());
 
-        if (requestedSeat == null){
-            return;
-        }
-        if (!requestedSeat.getStatus().equals("FREE")){
-            return;
-        }
-
+        //TODO: acquire UserID
+        //TODO: use real UserID
+        service.addItemList(seatDtoList, 1L);
+        return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Removes a Seat from the cart", security = @SecurityRequirement(name = "apiKey"))
+    public ResponseEntity<Void> removeFromCart(@PathVariable Long id){
+        LOGGER.info("Delete /api/v1/cart");
 
-
-
+        try {
+            //TODO: use real UserID
+            this.service.deleteItem(id, 1L);
+        } catch (NotFoundException e){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.noContent().build();
+    }
 
 }

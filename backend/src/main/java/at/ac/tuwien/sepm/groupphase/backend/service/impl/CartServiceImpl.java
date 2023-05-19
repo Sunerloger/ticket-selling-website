@@ -3,19 +3,15 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CartItemDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanSeatDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanSectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Cart;
-import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSection;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CartRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.*;
 import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatStatus;
-import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatType;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,92 +33,84 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void addItem(HallPlanSeatDto seat) throws NotFoundException {
+    public void addItem(HallPlanSeatDto seat, Long userID) throws NotFoundException {
         HallPlanSeatDto requestedSeat = seatService.getSeatById(seat.getId());
 
         if (requestedSeat == null){
-            throw new NotFoundException();
             //TODO: add corresponding response
+            throw new NotFoundException();
         }
 
         if (requestedSeat.getStatus() != HallPlanSeatStatus.FREE) {
             //TODO: add corresponding response
+            //TODO: Use correct Exception
             throw new NotFoundException();
         }
 
-        //TODO: Add real user id
-        Cart cart = new Cart(1L , seat.getId());
+        Cart cart = new Cart(userID , seat.getId());
         cartRepository.save(cart);
     }
 
     @Override
-    public List<CartItemDto> getItems(Long userID){
-        //List<Cart> cartItemList = cartRepository.findByUserId(1L);
-
-        //TODO: get List of SeatIDs from CartRepository
-        //TODO: Map info of each Seat into CartItemDto
-        //TODO: return list of DTOs
-        List<CartItemDto> itemList = new ArrayList<>();
-        EventDetailDto event = new EventDetailDto();
-        event.setId(1L);
-        event.setAddress("Wiedner Hauptstraße 12");
-        event.setCategory("SEPM");
-        event.setCityname("Vienna");
-        event.setDescription("aasdasd");
-        event.setDuration(LocalTime.of(1,30));
-        event.setStartTime(LocalTime.of(12,00));
-        List<LocalDate> dateList = new ArrayList<>();
-        dateList.add(LocalDate.of(2020,12,12));
-        event.setDate(dateList);
-        event.setTitle("Spassiges SEPM");
-
-        HallPlanSectionDto section = new HallPlanSectionDto();
-        section.setId(1L);
-        section.setName("funny section");
-        section.setColor("red");
-        section.setPrice(12L);
-
-        HallPlanSeatDto seat = new HallPlanSeatDto();
-        seat.setId(1L);
-        seat.setStatus(HallPlanSeatStatus.FREE);
-        seat.setType(HallPlanSeatType.SEAT);
-        seat.setCapacity(1L);
-        seat.setSeatNr(12L);
-        seat.setSeatrowId(1L);
-        seat.setSection(section);
-
-        CartItemDto newitem = new CartItemDto();
-        newitem.setEvent(event);
-        newitem.setSeat(seat);
-
-        itemList.add(newitem);
-        itemList.add(newitem);
-
-
-
-        /*
-        if (cartItemList.isEmpty()){
-            return null;
+    public void addItemList(List<HallPlanSeatDto> seatDtoList, Long userID) throws NotFoundException{
+        if (seatDtoList.isEmpty()){
+            //TODO: add corresponding response
+            //TODO: Use correct Exception
+            throw new NotFoundException();
         }
 
-        List<CartItemDto> returnList = new ArrayList<>();
+        for(int i = 0; i < seatDtoList.size(); i++) {
+            if (seatDtoList.get(i) == null){
+                //TODO: add corresponding response
+                throw new NotFoundException();
+            }
+            if (seatDtoList.get(i).getStatus() != HallPlanSeatStatus.FREE) {
+                //TODO: add corresponding response
+                //TODO: Use correct Exception
+                throw new NotFoundException();
+            }
+        }
+
+        for(int i = 0; i < seatDtoList.size(); i++) {
+            Cart cart = new Cart(userID , seatDtoList.get(i).getId());
+            cartRepository.save(cart);
+        }
+    }
+
+    @Override
+    public List<CartItemDto> getItems(Long userID){
+        List<Cart> cartItemList = cartRepository.findByUserId(1L);
+
+        List<CartItemDto> itemList = new ArrayList<>();
 
         for(int i = 0; i < cartItemList.size(); i++) {
-            //get seat
-            HallPlanSeatDto currentSeat = seatService.getSeatById(cartItemList.get(i).getSeatId());
-            //get section
-            HallPlanSectionDto currentSection = currentSeat.getSection();
-            //get row
-            seatRowService.getSeatRowById(currentSeat.getSeatrowId());
-            //get hallplan (to get event)
+            EventDetailDto event = eventService.getEventById(1L); //TODO:get correct Event
 
-            //get event
+            HallPlanSeatDto seat = seatService.getSeatById(cartItemList.get(i).getSeatId());
+            //TODO:get row by Id
 
-            //save everything in CartItemDto and add to list
+            CartItemDto newitem = new CartItemDto();
+            newitem.setEvent(event);
+            newitem.setSeat(seat);
 
+            itemList.add(newitem);
         }
 
-         */
         return itemList;
     }
+
+    @Override
+    @Transactional
+    public void deleteItem(Long itemID, Long userID) throws NotFoundException{
+        Cart cart = cartRepository.findCartBySeatId(itemID);
+        if (cart == null){
+            throw new NotFoundException();
+        }
+        if (!cart.getUserId().equals(userID)){
+            throw new NotFoundException();
+        }
+        cartRepository.deleteCartBySeatId(itemID);
+    }
+
+
 }

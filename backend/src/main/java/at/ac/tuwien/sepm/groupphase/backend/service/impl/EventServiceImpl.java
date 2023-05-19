@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -27,4 +29,13 @@ public class EventServiceImpl implements EventService {
         LOG.trace("create({})", event);
         return eventRepository.save(eventMapper.eventDetailDtoToEvent(event));
     }
+
+    @Override
+    public EventDetailDto getEventById(Long id){
+        LOG.trace("getEventById({})", id);
+        List<Event> events = new ArrayList<>();
+        events.add(eventRepository.getEventById(id));
+        return eventMapper.eventToEventDetailDto(events).get(0);
+    }
+
 }

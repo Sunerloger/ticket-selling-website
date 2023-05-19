@@ -11,4 +11,6 @@ public interface EventService {
      * @return the created event
      */
     Event create(EventDetailDto event);
+
+    EventDetailDto getEventById(Long id);
 }
