@@ -7,6 +7,10 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -26,5 +30,13 @@ public class EventServiceImpl implements EventService {
     public Event create(EventDetailDto event) {
         LOG.trace("create({})", event);
         return eventRepository.save(eventMapper.eventDetailDtoToEvent(event));
+    }
+
+    @Override
+    public Page<Event> findAllPagesByDate(int pageIndex) {
+        Pageable pageable = PageRequest.of(pageIndex, 20, Sort.by("date").ascending());
+
+        LOG.debug("Find all event entries by pageable: {}", pageable);
+        return eventRepository.findAll(pageable);
     }
 }
