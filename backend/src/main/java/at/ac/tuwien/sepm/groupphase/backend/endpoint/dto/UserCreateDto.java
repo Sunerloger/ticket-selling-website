@@ -10,37 +10,37 @@ import java.time.LocalDate;
 public record UserCreateDto(
 
     Long id,
-    Boolean admin,
-    @NotEmpty
-    @Column(nullable = false)
+
+    @Column(nullable = false, unique = true)
     @Pattern(regexp = "[ÄÖÜA-Zäöüa-z0-9@]*")
     String email,
     @NotEmpty
     @Column(nullable = false)
     @Pattern(regexp = "[ÄÖÜA-Zäöüa-z]*")
     String firstName,
-    @NotEmpty
+
     @Column(nullable = false)
     @Pattern(regexp = "[ÄÖÜA-Zäöüa-z]*")
     String lastName,
-    @NotEmpty
+
     @Column(nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate birthdate,
-    @NotEmpty
+
     @Column(nullable = false)
     @Pattern(regexp = "[ÄÖÜA-Zäöüa-z0-9]*")
     String address,
-    @NotEmpty
+
     @Column(nullable = false)
-    @Pattern(regexp = "[0-9]{4}")
     Long areaCode,
-    @NotEmpty
+
     @Column(nullable = false)
     @Pattern(regexp = "[ÄÖÜA-Zäöüa-z]*")
     String cityName,
-    @NotEmpty
+
     @Column(nullable = false)
     @Pattern(regexp = "[ÄÖÜA-Zäöüa-z0-9]*")
-    String password) {
+    String password,
+
+    Boolean admin) {
 }

@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -40,7 +41,7 @@ public class RegisterEndpoint {
     @PostMapping
     @PermitAll
     @Operation(summary = "Register a new user")
-    public UserRegisterDto post(@RequestBody UserRegisterDto userRegisterDto) {
+    public UserRegisterDto post(@Valid @RequestBody UserRegisterDto userRegisterDto) {
         LOGGER.info("POST: {}", userRegisterDto);
         return userMapper.entityToDto(userService.register(userMapper.dtoToEntity(userRegisterDto)));
     }

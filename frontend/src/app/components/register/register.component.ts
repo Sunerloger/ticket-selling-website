@@ -4,7 +4,7 @@ import {Router} from '@angular/router';
 import {UserService} from '../../services/user.service';
 import {User} from '../../dtos/user';
 import {ToastrService} from 'ngx-toastr';
-import {AuthService} from "../../services/auth.service";
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -39,7 +39,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
-      admin:[''],
+      admin: [''],
       email: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -67,8 +67,12 @@ export class RegisterComponent implements OnInit {
       console.log(this.user);
       const observable = this.userService.registerUser(this.user);
       observable.subscribe({
-        next: data => {
+        next: () => {
           this.router.navigate(['/login']);
+        },
+        error: err => {
+          console.error(`Error registering user`, err, this.user);
+          //this.notification.error('Could not register user. Errorcode: ' + err.status + ', Errortext: ' + err.error.errors);
         }
       });
     } else {

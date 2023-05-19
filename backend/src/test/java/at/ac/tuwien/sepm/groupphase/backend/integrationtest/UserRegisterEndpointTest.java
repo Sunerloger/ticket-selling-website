@@ -43,7 +43,7 @@ public class UserRegisterEndpointTest {
 
 
     private final ApplicationUser applicationUser =
-        new ApplicationUser("martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure");
+        new ApplicationUser("martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure",false);
 
 
 }

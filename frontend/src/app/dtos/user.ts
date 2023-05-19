@@ -1,6 +1,6 @@
 export interface User {
   id?: number;
-  admin?: boolean;
+  admin: boolean;
   email: string;
   firstName: string;
   lastName: string;
