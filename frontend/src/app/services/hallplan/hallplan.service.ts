@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Globals } from '../../global/globals';
 import { Hallplan, PersistedHallplan, PersistedSeat, PersistedSeatRow, Seat, SeatRow } from 'src/app/dtos/hallplan/hallplan';
+import { Section } from 'src/app/dtos/hallplan/section';
 
 
 @Injectable({
@@ -37,10 +38,16 @@ export class HallplanService {
     }
 
     updateSeatsBulk(hallplanId: number, seatrowId: number, seats: PersistedSeat[]) {
-        console.log("update")
         return this.http.put<PersistedSeatRow>(
             `${this.baseUrl}/${hallplanId}/seatrows/${seatrowId}/seats/bulk`,
             seats
+        )
+    }
+
+    createSection(hallplanId: number, section: Section){
+        return this.http.put<PersistedSeatRow>(
+            `${this.baseUrl}/${hallplanId}/sections`,
+            section
         )
     }
 }

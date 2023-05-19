@@ -203,6 +203,17 @@ export class RoomplaneditorComponent implements OnInit {
     });
   }
 
+  /**
+   * Return default section "Unassigned" when it does not exist, the section will be 
+   * creatted
+   * There is one section called "Unassigned" which function as the default
+   * section for every seat of a hallplan
+   * 
+   */
+  retrieveDefaultSection(){
+
+  }
+
   async handleAddSeats(payload: SeatCreationEvent) {
     console.log('addSeat rowNr=', payload.rowNr, ',type=', payload.type, ',direction=', payload.type);
     const { rowNr, type, direction, amountSeat } = payload;
