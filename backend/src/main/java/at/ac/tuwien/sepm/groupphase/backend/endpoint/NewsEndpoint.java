@@ -11,7 +11,6 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = NewsEndpoint.BASE_PATH)
@@ -51,11 +51,12 @@ public class NewsEndpoint {
     }
 
     @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping
     @Operation(summary = "Get list of news without details", security = @SecurityRequirement(name = "apiKey"))
-    public Page<AbbreviatedNewsDto> findAll(@RequestParam(defaultValue = "0") int pageIndex) {
-        LOGGER.info("GET {}/news", BASE_PATH);
+    public List<AbbreviatedNewsDto> findAll(@RequestParam(defaultValue = "0") int pageIndex) {
+        LOGGER.info("GET {}", BASE_PATH);
 
-        return newsService.findAllPagedByCreatedAt(pageIndex).map(newsMapper::newsToAbbreviatedNewsDto);
+        return newsService.findAllPagedByCreatedAt(pageIndex).map(newsMapper::newsToAbbreviatedNewsDto).toList();
     }
 }
