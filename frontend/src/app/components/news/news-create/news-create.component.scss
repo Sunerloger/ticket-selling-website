@@ -3,14 +3,6 @@
   min-height: 50px;
 }
 
-.images-text {
-  display: table-cell;
-  vertical-align: middle;
-  text-align: center;
-  cursor: pointer;
-  color: white;
-}
-
 mat-grid-tile {
   border: 1px solid var(--primary-color);
   background-color: black;

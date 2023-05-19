@@ -1,0 +1,39 @@
+.image-fit {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.image-container {
+  width: auto;
+  height: 300px;
+  background-color: black;
+  color: white;
+  text-align: center;
+  border: 1px solid lightgray;
+}
+
+.standard-image-container {
+  width: auto;
+  height: 300px;
+  color: white;
+  text-align: center;
+  border: 1px solid lightgray;
+}
+
+.maxWidth {
+  width: 100%;
+}
+
+.card-button {
+  margin-bottom: 30px;
+  margin-inline-start: 30px;
+  border: 2px solid lightgray;
+  &:hover {
+    cursor: pointer;
+    border: 2px solid;
+    border-color: var(--primary-color);
+  }
+}

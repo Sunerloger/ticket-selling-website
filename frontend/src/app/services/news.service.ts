@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
-import {News} from '../dtos/news';
+import {AbbreviatedNews, News} from '../dtos/news';
 
 
 @Injectable({
@@ -27,6 +27,18 @@ export class NewsService {
       this.newsBaseUri,
       news,
     );
+  }
 
+
+  /**
+   * Loads a news-page from the backend
+   *
+   * @param pageIndex index of the page that should be fetched
+   * @return an Observable for the fetched page of news entries
+   */
+  getPage(pageIndex: number): Observable<AbbreviatedNews[]> {
+    let params: HttpParams = new HttpParams();
+    params = params.set('pageIndex', pageIndex);
+    return this.httpClient.get<AbbreviatedNews[]>(this.newsBaseUri, {params});
   }
 }
