@@ -70,7 +70,7 @@ public class HallPlanEndpoint {
     public HallPlanDto createHallPlan(@RequestBody HallPlanDto hallplan) {
         LOGGER.info("POST /api/v1/hallplans");
         try {
-            return hallPlanMapper.hallPlanToHallPlanDto(hallPlanService.createHallplan(hallplan));
+            return hallPlanMapper.hallPlanToHallPlanDto(hallPlanService.createHallPlan(hallplan));
         } catch (ValidationException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
@@ -236,7 +236,6 @@ public class HallPlanEndpoint {
     @Operation(summary = "Add a new seat to a seat row")
     public ResponseEntity<HallPlanSeatDto> addSeat(@PathVariable Long hallPlanId, @PathVariable Long seatRowId, @Valid @RequestBody HallPlanSeatDto seatDto) {
         LOGGER.info("POST /api/v1/hallplans/{}/seatrows/{}/seats", hallPlanId, seatRowId);
-        //seatDto.setHallPlanId(hallPlanId);
         SeatRowDto seatRowDto = new SeatRowDto();
         seatRowDto.setHallPlanId(hallPlanId);
         seatRowDto.setId(seatRowId);
