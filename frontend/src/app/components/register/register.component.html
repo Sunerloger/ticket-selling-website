@@ -5,9 +5,13 @@
 
       <div class="card-border">
         <div class="card-header">
-          <h3 class="card-headline">Register</h3>
+          <div *ngIf="authService.isLoggedIn && authService.getUserRole() === 'ADMIN'">
+            <h3 class="card-headline">Create User</h3>
+          </div>
+          <div *ngIf="!authService.isLoggedIn()">
+            <h3 class="card-headline">Register</h3>
+          </div>
         </div>
-
         <form (ngSubmit)="registerUser()" #registerForm="ngForm">
           <div id="input">
             <div class="form-group">
