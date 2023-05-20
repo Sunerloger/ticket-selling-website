@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Globals } from '../../global/globals';
 import { Hallplan, PersistedHallplan, PersistedSeat, PersistedSeatRow, Seat, SeatRow } from 'src/app/dtos/hallplan/hallplan';
-import { Section } from 'src/app/dtos/hallplan/section';
+import { PersistedSection, Section } from 'src/app/dtos/hallplan/section';
 
 
 @Injectable({
@@ -44,8 +44,20 @@ export class HallplanService {
         )
     }
 
+    /*
+
+        --------------------- Section Endpoints ------------------------------
+
+    */
+
+    getAllSections(hallplanId: number) {
+        return this.http.get<PersistedSection[]>(
+            `${this.baseUrl}/${hallplanId}/sections`,
+        )
+    }
+
     createSection(hallplanId: number, section: Section){
-        return this.http.put<PersistedSeatRow>(
+        return this.http.post<PersistedSection>(
             `${this.baseUrl}/${hallplanId}/sections`,
             section
         )

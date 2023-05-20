@@ -1,0 +1,51 @@
+<div class="container">
+    <!-- Total count -->
+    <p>Total sections: {{this.sections.length}}</p>
+    <!-- Underline -->
+    <div class="large_seperator"></div>
+
+    <!-- Sections -->
+    <div *ngFor="let section of this.sections" class="section_display">
+        <div class="section_with_stats">
+            <!-- Name -->
+            <div class="section_name" [ngStyle]="{'border-color': section.color}">
+                {{section.name}}
+            </div>
+
+            <!-- Arow -->
+            <span class="arrow_icon">
+                <svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 96 960 960" width="30">
+                    <path d="m480 896-42-43 247-247H160v-60h525L438 299l42-43 320 320-320 320Z" />
+                </svg>
+            </span>
+            <span class="seat_counter">5 seats</span>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions_wrapper">
+            <div class="seperator"></div>
+            <div class="actions">
+                <button class="btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                        class="bi bi-trash" viewBox="0 0 16 16">
+                        <path
+                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                        <path
+                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                    </svg>
+                </button>
+
+                <button class="btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="27" viewBox="0 96 960 960" width="27">
+                        <path
+                            d="M180 876h44l443-443-44-44-443 443v44Zm614-486L666 262l42-42q17-17 42-17t42 17l44 44q17 17 17 42t-17 42l-42 42Zm-42 42L248 936H120V808l504-504 128 128Zm-107-21-22-22 44 44-22-22Z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Underline -->
+        <div class="large_seperator"></div>
+    </div>
+
+</div>

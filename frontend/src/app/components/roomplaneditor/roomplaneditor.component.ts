@@ -22,6 +22,8 @@ export class RoomplaneditorComponent implements OnInit {
     description: ''
   };
 
+  sections: PersistedSection[] = [];
+
   constructor(
     private service: HallplanService,
     private router: Router,
@@ -35,10 +37,27 @@ export class RoomplaneditorComponent implements OnInit {
       const hallplanId = params.get('id');
       if(Number(hallplanId)){
         this.fetchHallplanWithId(Number(hallplanId));
+        this.fetchAllSections(Number(hallplanId));
       }else{
         this.router.navigate(['/hallplans']);
       }
     });
+  }
+
+  fetchAllSections(hallplanId: number){
+    this.service.getAllSections(hallplanId).subscribe({
+      next: data => {
+        console.log(data, " get all sections")
+        this.sections = data;
+      },
+      error: error => {
+        const errorMessage = error.status === 0
+          ? 'Server not reachable'
+          : error.message.message;
+        this.notification.error(errorMessage, 'Failed to retrieve all sections');
+        this.router.navigate(['/hallplans']);
+      }
+    })
   }
 
   fetchHallplanWithId(id: number){
@@ -216,15 +235,54 @@ export class RoomplaneditorComponent implements OnInit {
     });
   }
 
+  async createDefaultSection(): Promise<PersistedSection>{
+    const defaultSection:Section = {
+      name: "Unassigned",
+      color: "black",
+      price: 0
+    }
+
+    return new Promise((resolve, reject) => {
+      this.service.createSection(this.roomplan.id, defaultSection).subscribe(
+        {
+          next: data => {
+            resolve(data);
+          },
+          error: error => {
+            const errorMessage = error.status === 0
+              ? 'Server not reachable'
+              : error.message.message;
+            this.notification.error(errorMessage, errorMessage);
+            reject(error);
+          }
+        }
+      )
+    });
+  }
+
   /**
    * Return default section "Unassigned" when it does not exist, the section will be 
-   * creatted
+   * created
    * There is one section called "Unassigned" which function as the default
    * section for every seat of a hallplan
    * 
    */
-  retrieveDefaultSection(){
+ async retrieveDefaultSection(): Promise<PersistedSection|null>{
+  const defaultSectionName = "Unassigned";
+   const defaultPersistedSection = this.sections.find(section => section.name === defaultSectionName);
 
+   return new Promise(async (resolve, reject) => {
+     if (defaultPersistedSection) {
+       return resolve(defaultPersistedSection);
+     } else {
+      const defaultSection = await this.createDefaultSection();
+      if(defaultSection){
+        resolve(defaultSection);
+      }else{
+        reject("Error creating default section");
+      }
+     }
+   })
   }
 
   async handleAddSeats(payload: SeatCreationEvent) {
@@ -234,9 +292,7 @@ export class RoomplaneditorComponent implements OnInit {
     const initialSeatNr = this.getLatestSeatNrFromDirectionAndRowNr(direction, rowNr);
     const newSeats: Seat[] = [];
 
-    //TO-DO: add row nr to empty seat or call correct endpoint
     // --- create seats that needs to be created
-
     switch(direction){
       case CreationMenuDirection.left:
         // --- update seatNr of other seats when direction was left
@@ -257,7 +313,7 @@ export class RoomplaneditorComponent implements OnInit {
         let newSeatNr = 1;
         for(let i = 0; i < amountSeat; i++){
           newSeats.push(
-            this.createEmptySeat(type, newSeatNr)
+            await this.createEmptySeat(type, newSeatNr)
           );
           newSeatNr++;
         }
@@ -267,7 +323,7 @@ export class RoomplaneditorComponent implements OnInit {
         let highestSeatNr = initialSeatNr;
         for (let i = 0; i < amountSeat; i++) {
           newSeats.push(
-            this.createEmptySeat(type, highestSeatNr)
+            await this.createEmptySeat(type, highestSeatNr)
           );
           highestSeatNr++;
         }
@@ -316,7 +372,16 @@ export class RoomplaneditorComponent implements OnInit {
 
   }
 
-  createEmptySeat(type: SeatType, seatNr: number, capacity?: number): Seat {
+  /**
+   * Return empty seat with default section
+   * @param type 
+   * @param seatNr 
+   * @param capacity 
+   * @returns 
+   */
+  async createEmptySeat(type: SeatType, seatNr: number, capacity?: number): Promise<Seat> {
+    const defaultSection = await this.retrieveDefaultSection();
+
     switch(type){
       case SeatType.seat:
         capacity = 1;
@@ -331,11 +396,7 @@ export class RoomplaneditorComponent implements OnInit {
       type,
       seatNr,
       status: SeatStatus.free,
-      section: {
-        name: 'Unassigned',
-        color: 'white',
-        price: 0
-      },
+      section: defaultSection,
       capacity: capacity
     };
     return emptySeat;
