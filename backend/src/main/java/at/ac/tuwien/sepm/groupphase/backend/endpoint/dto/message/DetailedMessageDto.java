@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
+package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.message;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

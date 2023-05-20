@@ -4,7 +4,7 @@
 
 .card-header {
   padding-bottom: 5px;
-  background-color: #63A5B6;
+
 
 }
 
@@ -15,12 +15,18 @@
 }
 
 .card-border {
-  color: white;
+  color: black;
   border-color: transparent;
 }
 
-.form-group{
+.form-group {
   color: black;
+  font-size: 15px;
+}
+
+.card-headline {
+  color: black;
+  font-size: 36px;
 }
 
 .checkbox{

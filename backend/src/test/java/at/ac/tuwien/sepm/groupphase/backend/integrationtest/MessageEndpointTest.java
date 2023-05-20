@@ -1,11 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
-import at.ac.tuwien.sepm.groupphase.backend.BackendApplication;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedMessageDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.MessageInquiryDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SimpleMessageDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.message.DetailedMessageDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.message.MessageInquiryDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.message.SimpleMessageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.MessageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Message;
 import at.ac.tuwien.sepm.groupphase.backend.repository.MessageRepository;
@@ -79,7 +78,7 @@ public class MessageEndpointTest implements TestData {
     @Test
     public void givenNothing_whenFindAll_thenEmptyList() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get(MESSAGE_BASE_URI)
-            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -99,7 +98,7 @@ public class MessageEndpointTest implements TestData {
         messageRepository.save(message);
 
         MvcResult mvcResult = this.mockMvc.perform(get(MESSAGE_BASE_URI)
-            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -125,7 +124,7 @@ public class MessageEndpointTest implements TestData {
         messageRepository.save(message);
 
         MvcResult mvcResult = this.mockMvc.perform(get(MESSAGE_BASE_URI + "/{id}", message.getId())
-            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -146,7 +145,7 @@ public class MessageEndpointTest implements TestData {
         messageRepository.save(message);
 
         MvcResult mvcResult = this.mockMvc.perform(get(MESSAGE_BASE_URI + "/{id}", -1)
-            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -160,9 +159,9 @@ public class MessageEndpointTest implements TestData {
         String body = objectMapper.writeValueAsString(messageInquiryDto);
 
         MvcResult mvcResult = this.mockMvc.perform(post(MESSAGE_BASE_URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(body)
-            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -191,9 +190,9 @@ public class MessageEndpointTest implements TestData {
         String body = objectMapper.writeValueAsString(messageInquiryDto);
 
         MvcResult mvcResult = this.mockMvc.perform(post(MESSAGE_BASE_URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(body)
-            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
