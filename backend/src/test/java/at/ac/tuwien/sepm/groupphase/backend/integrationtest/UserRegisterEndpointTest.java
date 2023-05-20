@@ -20,6 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDate;
@@ -62,6 +63,7 @@ public class UserRegisterEndpointTest {
         new ApplicationUser("martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure", false);
 
 
+    @Transactional
     @Test
     public void givenOneApplicationuser_whenSave_UserIsCreated() throws Exception {
 
