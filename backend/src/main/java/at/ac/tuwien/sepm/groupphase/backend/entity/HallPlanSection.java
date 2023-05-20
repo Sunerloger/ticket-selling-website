@@ -32,6 +32,9 @@ public class HallPlanSection {
     @Column(name = "hallplan_id")
     private Long hallPlanId;
 
+    private Long count;
+
+
     public HallPlanSection() {
     }
 
@@ -79,6 +82,14 @@ public class HallPlanSection {
 
     public void setHallPlanId(Long hallPlanId) {
         this.hallPlanId = hallPlanId;
+    }
+
+    public Long getCount() {
+        return count;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
     }
 }
 
