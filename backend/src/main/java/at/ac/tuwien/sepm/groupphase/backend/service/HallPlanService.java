@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSectio
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSection;
 import jakarta.xml.bind.ValidationException;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -23,11 +24,11 @@ public interface HallPlanService {
     /**
      * Creates a new hall plan.
      *
-     * @param hallPlanDto the hallPlanDto containing the information for the new hall plan
+     * @param hallplan the hallPlanDto containing the information for the new hall plan
      * @return the created HallPlan entity
      * @throws ValidationException if the hallPlanDto is invalid
      */
-    HallPlan createHallPlan(HallPlanDto hallPlanDto) throws ValidationException;
+    HallPlan createHallPlan(HallPlanDto hallplan) throws ValidationException;
 
     /**
      * Retrieves a detailed hall plan by its ID.
@@ -99,5 +100,13 @@ public interface HallPlanService {
      * @return a list of HallPlanSection entities associated with the given hall plan ID
      */
     List<HallPlanSection> findAllByHallPlanId(Long id);
+
+    /**
+     * Retrieves all sections by hallplanId.
+     *
+     * @param hallplanId id of the hallplan of the sections to retrieve
+     * @return the sections of the hallplan
+     */
+    List<HallPlanSectionDto> findAllSectionsByHallPlanId(Long hallplanId);
 
 }

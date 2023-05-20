@@ -20,6 +20,9 @@ public class HallPlanSectionDto {
     @PositiveOrZero(message = "Price must be a positive number or zero")
     private Long price;
 
+    @NotNull(message = "HallPlanId is mandatory")
+    private Long hallPlanId;
+
     public Long getId() {
         return id;
     }
@@ -52,6 +55,13 @@ public class HallPlanSectionDto {
         this.price = price;
     }
 
+    public Long getHallPlanId() {
+        return hallPlanId;
+    }
+
+    public void setHallPlanId(Long hallPlanId) {
+        this.hallPlanId = hallPlanId;
+    }
 
     public static final class HallPlanSectionDtoBuilder {
 

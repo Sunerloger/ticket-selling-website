@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
 public class HallPlanSeatBulkDto {
@@ -8,6 +10,7 @@ public class HallPlanSeatBulkDto {
 
     private Long seatRowId;
 
+    @NotNull(message = "list of seats must be provided")
     private List<HallPlanSeatDto> seats;
 
     public Long getHallPlanId() {
