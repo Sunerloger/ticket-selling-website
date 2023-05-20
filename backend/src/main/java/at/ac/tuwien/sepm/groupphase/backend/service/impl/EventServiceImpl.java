@@ -29,7 +29,8 @@ public class EventServiceImpl implements EventService {
     @Override
     public Event create(EventDetailDto event) {
         LOG.trace("create({})", event);
-        return eventRepository.save(eventMapper.eventDetailDtoToEvent(event));
+        Event debug = eventMapper.eventDetailDtoToEvent(event);
+        return eventRepository.save(debug);
     }
 
     @Override

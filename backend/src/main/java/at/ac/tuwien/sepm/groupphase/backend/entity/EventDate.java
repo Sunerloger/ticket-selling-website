@@ -6,8 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.GenerationType;
-
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -18,12 +17,21 @@ public class EventDate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate date;
+    private LocalDateTime date;
 
     @Column(name = "event_id")
     private Long event;
 
-    public EventDate(Long id, LocalDate date, Long event) {
+    private int areaCode;
+
+    private String address;
+
+    private String city;
+
+    @Column(name = "roomplan_id")
+    private Long room;
+
+    public EventDate(Long id, LocalDateTime date, Long event) {
         this.id = id;
         this.date = date;
         this.event = event;
@@ -33,7 +41,7 @@ public class EventDate {
 
     }
 
-    public EventDate(LocalDate localDate) {
+    public EventDate(LocalDateTime localDate) {
         this.date = localDate;
     }
 
@@ -45,11 +53,43 @@ public class EventDate {
         this.id = id;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public Long getRoom() {
+        return room;
+    }
+
+    public void setRoom(Long room) {
+        this.room = room;
+    }
+
+    public int getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(int areaCode) {
+        this.areaCode = areaCode;
+    }
+
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

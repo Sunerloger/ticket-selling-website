@@ -1,15 +1,17 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AbbreviatedEventDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDateDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDetailDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatRowDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventDate;
+import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,39 +28,30 @@ public interface EventMapper {
 
     @IterableMapping(qualifiedByName = "event")
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "eventDatesLocation", source = "eventDatesLocation")
     Event eventDetailDtoToEvent(EventDetailDto event);
 
-    @Named("mapLocalDateToEventDate")
-    default List<LocalDate> mapLocalDateToEventDate(List<EventDate> eventDates) {
+    @Named("mapEventDateDtoToEventDate")
+    default List<EventDate> mapEventDates(List<EventDateDto> eventDates) {
         if (eventDates == null) {
             return Collections.emptyList();
         }
         return eventDates.stream()
-            .map(this::eventDatesMapper)
+            .map(this::mapEventDate)
             .collect(Collectors.toList());
     }
 
-    @Named("mapEventDateToLocalDate")
-    default List<EventDate> mapEventDateToLocalDate(List<LocalDate> localDates) {
-        if (localDates == null) {
-            return Collections.emptyList();
-        }
-        return localDates.stream()
-            .map(this::localDatesMapper)
-            .collect(Collectors.toList());
+    default EventDate mapEventDate(EventDateDto event) {
+        EventDate eventDate = new EventDate();
+        eventDate.setDate(event.getDate());
+        eventDate.setAddress(event.getAddress());
+        eventDate.setCity(event.getCity());
+        eventDate.setAreaCode(event.getAreaCode());
+        eventDate.setRoom(event.getRoom());
+        return eventDate;
     }
 
     AbbreviatedEventDto eventToAbbreviatedEventDto(Event event);
-
-    default LocalDate eventDatesMapper(EventDate eventDate) {
-        return eventDate.getDate();
-    }
-
-    default EventDate localDatesMapper(LocalDate localDate) {
-        EventDate eventDate = new EventDate();
-        eventDate.setDate(localDate);
-        return eventDate;
-    }
 
 
 
