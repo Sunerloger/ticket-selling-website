@@ -6,7 +6,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.GenerationType;
-import java.time.LocalDateTime;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 
 @Entity
@@ -17,7 +19,9 @@ public class EventDate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime date;
+    private LocalDate date;
+
+    private LocalTime startingTime;
 
     @Column(name = "event_id")
     private Long event;
@@ -31,18 +35,19 @@ public class EventDate {
     @Column(name = "roomplan_id")
     private Long room;
 
-    public EventDate(Long id, LocalDateTime date, Long event) {
-        this.id = id;
-        this.date = date;
-        this.event = event;
-    }
-
     public EventDate() {
 
     }
 
-    public EventDate(LocalDateTime localDate) {
-        this.date = localDate;
+    public EventDate(Long id, LocalDate date, LocalTime startingTime, Long event, int areaCode, String address, String city, Long room) {
+        this.id = id;
+        this.date = date;
+        this.startingTime = startingTime;
+        this.event = event;
+        this.areaCode = areaCode;
+        this.address = address;
+        this.city = city;
+        this.room = room;
     }
 
     public Long getId() {
@@ -53,8 +58,36 @@ public class EventDate {
         this.id = id;
     }
 
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public LocalTime getStartingTime() {
+        return startingTime;
+    }
+
+    public void setStartingTime(LocalTime startingTime) {
+        this.startingTime = startingTime;
+    }
+
+    public Long getEvent() {
+        return event;
+    }
+
+    public void setEvent(Long event) {
+        this.event = event;
+    }
+
+    public int getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(int areaCode) {
+        this.areaCode = areaCode;
     }
 
     public String getAddress() {
@@ -79,25 +112,5 @@ public class EventDate {
 
     public void setRoom(Long room) {
         this.room = room;
-    }
-
-    public int getAreaCode() {
-        return areaCode;
-    }
-
-    public void setAreaCode(int areaCode) {
-        this.areaCode = areaCode;
-    }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
-
-    public Long getEvent() {
-        return event;
-    }
-
-    public void setEvent(Long event) {
-        this.event = event;
     }
 }

@@ -31,6 +31,7 @@ import { SeatComponent } from './components/roomplaneditor/seatrow/seat/seat.com
 import { SectionmanagerComponent } from './components/roomplaneditor/sectionmanager/sectionmanager.component';
 import { CreateSectionComponent } from './components/roomplaneditor/sectionmanager/create-section/create-section.component';
 import { ManageSectionComponent } from './components/roomplaneditor/sectionmanager/manage-section/manage-section.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { ManageSectionComponent } from './components/roomplaneditor/sectionmanag
     MatGridListModule,
     NgOptimizedImage,
     MatInputModule,
+    BsDatepickerModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

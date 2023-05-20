@@ -3,10 +3,8 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AbbreviatedEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDateDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDetailDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatRowDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventDate;
-import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -44,6 +42,7 @@ public interface EventMapper {
     default EventDate mapEventDate(EventDateDto event) {
         EventDate eventDate = new EventDate();
         eventDate.setDate(event.getDate());
+        eventDate.setStartingTime(event.getStartingTime());
         eventDate.setAddress(event.getAddress());
         eventDate.setCity(event.getCity());
         eventDate.setAreaCode(event.getAreaCode());
