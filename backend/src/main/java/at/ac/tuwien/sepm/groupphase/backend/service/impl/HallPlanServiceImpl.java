@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -114,6 +115,7 @@ public class HallPlanServiceImpl implements HallPlanService {
         section.setName(sectionDto.getName());
         section.setColor(sectionDto.getColor());
         section.setPrice(sectionDto.getPrice());
+        section.setHallPlanId(sectionDto.getHallPlanId());
         return hallPlanSectionRepository.save(section);
     }
 
@@ -124,6 +126,7 @@ public class HallPlanServiceImpl implements HallPlanService {
         section.setName(sectionDto.getName());
         section.setColor(sectionDto.getColor());
         section.setPrice(sectionDto.getPrice());
+        section.setHallPlanId(sectionDto.getHallPlanId());
         return hallPlanSectionRepository.save(section);
     }
 
@@ -156,7 +159,15 @@ public class HallPlanServiceImpl implements HallPlanService {
 
     @Override
     public List<HallPlanSectionDto> findAllSectionsByHallPlanId(Long hallplanId) {
-        return hallPlanSectionMapper.toDto(hallPlanRepository.findAllSectionsByHallPlanId(hallplanId));
+        List<Object[]> counts = hallPlanRepository.findAllSectionsByHallPlanIdCounts(hallplanId);
+        List<HallPlanSection> sections = new ArrayList<HallPlanSection>();
+        for (Object[] count : counts) {
+            HallPlanSection section = (HallPlanSection) count[0];
+            section.setCount((Long) count[1]);
+            sections.add((HallPlanSection) count[0]);
+        }
+        List<HallPlanSectionDto> list = hallPlanSectionMapper.toDto(sections);
+        return list;
     }
 
 

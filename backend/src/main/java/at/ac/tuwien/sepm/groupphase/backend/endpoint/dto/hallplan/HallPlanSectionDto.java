@@ -23,6 +23,16 @@ public class HallPlanSectionDto {
     @NotNull(message = "HallPlanId is mandatory")
     private Long hallPlanId;
 
+    private Long count;
+
+    public Long getCount() {
+        return count;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
+    }
+
     public Long getId() {
         return id;
     }
