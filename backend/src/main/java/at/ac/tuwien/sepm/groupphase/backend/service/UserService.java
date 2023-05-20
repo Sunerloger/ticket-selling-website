@@ -32,7 +32,7 @@ public interface UserService extends UserDetailsService {
     ApplicationUser findApplicationUserByEmail(String email);
 
     /**
-     * Check for application user based on the email address
+     * Check for application user based on the email address.
      *
      * @param email the email address
      */
