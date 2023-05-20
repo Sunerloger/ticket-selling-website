@@ -199,8 +199,9 @@ public class HallPlanEndpoint {
     @Operation(summary = "Get all sections in hallplan", security = @SecurityRequirement(name = "apiKey"))
     public List<HallPlanSectionDto> findAllSectionsByHallPlanId(@PathVariable Long hallplanId) {
         LOGGER.info("GET /api/v1/{}/sections", hallplanId);
-        return hallPlanService.findAllSectionsByHallPlanId(hallplanId);
+        return hallPlanService.findAllSectionsByHallPlanIdWithCounts(hallplanId);
     }
+
 
     @Secured("ROLE_ADMIN")
     @PostMapping("{hallplanId}/sections")
