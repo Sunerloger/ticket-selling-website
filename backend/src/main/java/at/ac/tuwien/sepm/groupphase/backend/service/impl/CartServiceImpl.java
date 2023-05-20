@@ -8,8 +8,10 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CartRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.*;
 import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatStatus;
+import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -78,6 +80,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public List<CartItemDto> getItems(Long userID){
         List<Cart> cartItemList = cartRepository.findByUserId(1L);
 
@@ -101,13 +104,13 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public void deleteItem(Long itemID, Long userID) throws NotFoundException{
+    public void deleteItem(Long itemID, Long userID) {
         Cart cart = cartRepository.findCartBySeatId(itemID);
         if (cart == null){
-            throw new NotFoundException();
+            return;
         }
         if (!cart.getUserId().equals(userID)){
-            throw new NotFoundException();
+            return;
         }
         cartRepository.deleteCartBySeatId(itemID);
     }

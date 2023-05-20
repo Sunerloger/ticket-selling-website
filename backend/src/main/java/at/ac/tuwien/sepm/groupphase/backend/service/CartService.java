@@ -17,5 +17,5 @@ public interface CartService {
 
     public List<CartItemDto> getItems(Long userID);
 
-    void deleteItem(Long itemID, Long userID) throws NotFoundException;
+    void deleteItem(Long itemID, Long userID);
 }
