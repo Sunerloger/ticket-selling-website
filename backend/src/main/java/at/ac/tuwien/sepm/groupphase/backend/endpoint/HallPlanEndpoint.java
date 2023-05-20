@@ -203,18 +203,20 @@ public class HallPlanEndpoint {
     }
 
     @Secured("ROLE_ADMIN")
-    @PostMapping("/sections")
+    @PostMapping("{hallplanId}/sections")
     @Operation(summary = "Create a new section in the system", security = @SecurityRequirement(name = "apiKey"))
-    public HallPlanSectionDto createSection(@RequestBody HallPlanSectionDto section) {
+    public HallPlanSectionDto createSection(@RequestBody HallPlanSectionDto section, @PathVariable Long hallplanId) {
         LOGGER.info("POST /api/v1/sections");
+        section.setHallPlanId(hallplanId);
         return hallPlanSectionMapper.toDto(hallPlanService.createSection(section));
     }
 
     @Secured("ROLE_ADMIN")
-    @PutMapping("/sections/{id}")
+    @PutMapping("{hallplanId}/sections/{id}")
     @Operation(summary = "Update a section in the system", security = @SecurityRequirement(name = "apiKey"))
-    public HallPlanSectionDto updateSection(@PathVariable Long id, @RequestBody HallPlanSectionDto section) {
+    public HallPlanSectionDto updateSection(@PathVariable Long id, @RequestBody HallPlanSectionDto section, @PathVariable Long hallplanId) {
         LOGGER.info("PUT /api/v1/sections/{}", id);
+        section.setHallPlanId(hallplanId);
         return hallPlanSectionMapper.toDto(hallPlanService.updateSection(id, section));
     }
 
