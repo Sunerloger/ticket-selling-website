@@ -50,4 +50,15 @@ export class HallplanService {
             section
         )
     }
+
+    /**
+     * Delete seatrow by id (including its seats)
+     * @param hallplanId id of hallplan
+     * @param seatrowId id of seatrow
+     */
+    deleteSeatrow(hallplanId: number, seatrowId: number){
+        return this.http.delete<void>(
+            `${this.baseUrl}/${hallplanId}/seatrows/${seatrowId}`
+        )
+    }
 }

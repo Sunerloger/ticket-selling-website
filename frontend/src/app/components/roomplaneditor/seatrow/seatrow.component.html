@@ -3,7 +3,7 @@
     <button 
         *ngIf="showDeleteRowBtn === true" 
         class="delete_row"
-        (click)="this.seatRowDeletion.emit(this.seatRow.rowNr)"
+        (click)="handleSeatRowDeletion()"
     >
         Delete Row
     </button>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PersistedHallplan, PersistedSeat, PersistedSeatRow, Seat, SeatRow, SeatStatus, SeatType } from 'src/app/dtos/hallplan/hallplan';
-import { CreationMenuDirection, SeatCreationEvent, SeatRemovalPayload } from './seatrow/seatrow.component';
+import { CreationMenuDirection, SeatCreationEvent, SeatRemovalPayload, SeatRowDeletionEventPayload } from './seatrow/seatrow.component';
 import { PersistedSection, Section } from 'src/app/dtos/hallplan/section';
 import { HallplanService } from 'src/app/services/hallplan/hallplan.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -153,23 +153,36 @@ export class RoomplaneditorComponent implements OnInit {
     })
   }
 
-  handleRemoveRow(deletedRowNr: number) {
+  handleRemoveRow(payload: SeatRowDeletionEventPayload) {
+    const {rowNr, rowId} = payload;
+
     //update state
     const roomplanCloned = structuredClone(this.roomplan);
     roomplanCloned.seatRows.splice(
-      deletedRowNr - 1,
+      rowNr - 1,
       1
     );
 
     //update other row nr
     for (const seatrow of roomplanCloned.seatRows) {
-      if (seatrow.rowNr >= deletedRowNr) {
+      if (seatrow.rowNr >= rowNr) {
         seatrow.rowNr--;
       }
     }
     this.roomplan = roomplanCloned;
 
     //persist roomplan with seatrows
+    this.service.deleteSeatrow(this.roomplan.id, rowId).subscribe(
+      {
+        error: error => {
+          const errorMessage = error.status === 0
+            ? 'Server not reachable'
+            : error.message.message;
+          this.notification.error(errorMessage, 'Could not create seatrow. Please try again.');
+          this.router.navigate(['/hallplans']);
+        }
+      }
+    )
   }
 
   handleAddSectionToSeats(seatIds: number[], section: Section){
