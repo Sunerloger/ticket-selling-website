@@ -65,12 +65,22 @@ public class CustomUserDetailService implements UserService {
     public ApplicationUser findApplicationUserByEmail(String email) {
         LOGGER.debug("Find application user by email");
         ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(email);
-        //ApplicationUser applicationUser = userRepository.findUserByEmail(email);
         if (applicationUser != null) {
             return applicationUser;
         }
         throw new NotFoundException(String.format("Could not find the user with the email address %s", email));
     }
+
+    @Override
+    public void checkForExistingUserByEmail(String email) throws ValidationException {
+        LOGGER.debug("Check application user by email");
+        ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(email);
+        if (applicationUser != null) {
+            throw new ValidationException("Email already in use!");
+        }
+    }
+
+    ;
 
     @Override
     public String login(UserLoginDto userLoginDto) {
@@ -90,13 +100,12 @@ public class CustomUserDetailService implements UserService {
         throw new BadCredentialsException("Username or password is incorrect or account is locked");
     }
 
+    //Validation Exception is thrown if user already exists
     @Override
     public ApplicationUser register(ApplicationUser applicationUser) throws ValidationException {
         String encodedPassword = passwordEncoder.encode(applicationUser.getPassword());
         applicationUser.setPassword(encodedPassword);
-        if(findApplicationUserByEmail(applicationUser.getEmail()) != null){
-            throw new ValidationException("Email already in use!");
-        };
+        checkForExistingUserByEmail(applicationUser.getEmail());
         return applicationUserRepository.save(applicationUser);
     }
 }

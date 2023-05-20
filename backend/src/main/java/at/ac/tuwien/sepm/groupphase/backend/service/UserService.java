@@ -32,6 +32,13 @@ public interface UserService extends UserDetailsService {
     ApplicationUser findApplicationUserByEmail(String email);
 
     /**
+     * Check for application user based on the email address
+     *
+     * @param email the email address
+     */
+    void checkForExistingUserByEmail(String email) throws ValidationException;
+
+    /**
      * Log in a user.
      *
      * @param userLoginDto login credentials
