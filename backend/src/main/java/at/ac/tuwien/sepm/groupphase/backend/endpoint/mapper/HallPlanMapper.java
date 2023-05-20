@@ -73,6 +73,7 @@ public interface HallPlanMapper {
         hallPlanSectionDto.setName(section.getName());
         hallPlanSectionDto.setColor(section.getColor());
         hallPlanSectionDto.setPrice(section.getPrice());
+        hallPlanSectionDto.setHallPlanId(section.getHallPlanId());
         return hallPlanSectionDto;
     }
 

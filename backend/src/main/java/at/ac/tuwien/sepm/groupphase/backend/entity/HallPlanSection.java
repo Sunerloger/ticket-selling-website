@@ -29,6 +29,9 @@ public class HallPlanSection {
     @Column(name = "price")
     private Long price;
 
+    @Column(name = "hallplan_id")
+    private Long hallPlanId;
+
     public HallPlanSection() {
     }
 
@@ -70,5 +73,12 @@ public class HallPlanSection {
         this.price = price;
     }
 
+    public Long getHallPlanId() {
+        return hallPlanId;
+    }
+
+    public void setHallPlanId(Long hallPlanId) {
+        this.hallPlanId = hallPlanId;
+    }
 }
 
