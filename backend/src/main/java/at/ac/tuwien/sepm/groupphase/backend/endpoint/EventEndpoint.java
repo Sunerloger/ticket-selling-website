@@ -51,7 +51,7 @@ public class EventEndpoint {
     @Secured("ROLE_USER")
     @GetMapping
     @Operation(summary = "Get list of events without details", security = @SecurityRequirement(name = "apiKey"))
-    public Page<AbbreviatedEventDto> findAll(@RequestParam(defaultValue = "0") int pageIndex) {
+    public Page<AbbreviatedEventDto> findAllDefault(@RequestParam(defaultValue = "0") int pageIndex) {
         LOG.info("GET {}/events", "/api/v1/events");
 
         return eventService.findAllPagesByDate(pageIndex).map(eventMapper::eventToAbbreviatedEventDto);

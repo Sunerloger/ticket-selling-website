@@ -27,20 +27,11 @@ public class Event {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "event_id")
-    private List<EventDate> date;
-
-
-    private LocalTime startTime;
-
-    private String cityname;
-
-    private int areaCode;
+    private List<EventDate> eventDatesLocation;
 
     private LocalTime duration;
 
     private String category;
-
-    private String address;
 
     private String description;
 
@@ -53,29 +44,19 @@ public class Event {
     public Event(
         Long id,
         String title,
-        List<EventDate> date,
-        LocalTime startTime,
-        String cityname,
-        int areaCode,
+        List<EventDate> eventDatesLocation,
         LocalTime duration,
         String category,
-        String address,
         String description,
         String image) {
         this.id = id;
         this.title = title;
-        this.date = date;
-        this.startTime = startTime;
-        this.cityname = cityname;
-        this.areaCode = areaCode;
+        this.eventDatesLocation = eventDatesLocation;
         this.duration = duration;
         this.category = category;
-        this.address = address;
         this.description = description;
         this.image = image;
     }
-
-    // getters and setters
 
     public Long getId() {
         return id;
@@ -93,36 +74,12 @@ public class Event {
         this.title = title;
     }
 
-    public List<EventDate> getDate() {
-        return date;
+    public List<EventDate> getEventDatesLocation() {
+        return eventDatesLocation;
     }
 
-    public void setDate(List<EventDate> date) {
-        this.date = date;
-    }
-
-    public LocalTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getCityname() {
-        return cityname;
-    }
-
-    public void setCityname(String cityname) {
-        this.cityname = cityname;
-    }
-
-    public int getAreaCode() {
-        return areaCode;
-    }
-
-    public void setAreaCode(int areaCode) {
-        this.areaCode = areaCode;
+    public void setEventDatesLocation(List<EventDate> eventsDatesLocation) {
+        this.eventDatesLocation = eventsDatesLocation;
     }
 
     public LocalTime getDuration() {
@@ -139,14 +96,6 @@ public class Event {
 
     public void setCategory(String category) {
         this.category = category;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getDescription() {

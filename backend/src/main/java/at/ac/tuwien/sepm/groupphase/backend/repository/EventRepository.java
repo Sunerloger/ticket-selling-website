@@ -16,7 +16,7 @@ import java.util.Optional;
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
 
-    Event save(Event hallPlan);
+    Event save(Event event);
 
     @Transactional
     void deleteById(Long id);
