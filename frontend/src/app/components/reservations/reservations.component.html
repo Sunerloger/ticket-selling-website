@@ -1,0 +1,9 @@
+<p>reservations works!</p>
+<div *ngFor="let item of items; let i = index">
+  <div class="event-name">
+    <p> {{ item.event.title }} </p>
+  </div>
+  <div *ngFor="let ticket of item.reservedSeats; let i = index">
+    <p> {{ ticket.seatNr }} </p>
+  </div>
+</div>

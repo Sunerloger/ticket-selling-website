@@ -1,8 +1,9 @@
 import {Component, Input} from '@angular/core';
-import {RoomplanItem} from '../../dtos/roomplan';
 import {CartService} from '../../services/cart.service';
 import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';
+import {TicketSeat} from '../../dtos/ticket';
+import {ReservationService} from '../../services/reservation.service';
 
 @Component({
   selector: 'app-roomplan-cart',
@@ -14,7 +15,7 @@ export class RoomplanCartComponent {
   /**
   @Input() items?: RoomplanItem[];
    */
-  item1: RoomplanItem = {
+  item1: TicketSeat = {
     id: 6,
     status: 'FREE',
     type: 'STANDING_SEAT',
@@ -28,7 +29,7 @@ export class RoomplanCartComponent {
     },
     seatrowId: 3
   };
-  item2: RoomplanItem = {
+  item2: TicketSeat = {
     id: 1,
     status: 'FREE',
     type: 'SEAT',
@@ -44,7 +45,8 @@ export class RoomplanCartComponent {
   };
   items = [this.item1, this.item2];
 
-  constructor(private service: CartService,
+  constructor(private cartService: CartService,
+              private reservationService: ReservationService,
               private notification: ToastrService,
               private router: Router) {
   }
@@ -55,9 +57,9 @@ export class RoomplanCartComponent {
       : this.items.length.toString();
   }
 
-  addToCart(seatList: RoomplanItem[]){
+  addToCart(seatList: TicketSeat[]){
     //Todo: something with response
-    this.service.addToCart(seatList).subscribe(
+    this.cartService.addToCart(seatList).subscribe(
       (response) => {
         console.log('Status:', response.status);
         this.notification.success(`Ticket successfully removed from cart.`);
@@ -69,7 +71,24 @@ export class RoomplanCartComponent {
         this.router.navigate(['/cart']);
     }
     );
+  }
+
+  reserveSeats(seatList: TicketSeat[]){
+    //Todo: something with response
+    this.reservationService.createReservation(seatList).subscribe(
+      (response) => {
+        console.log('Status:', response.status);
+        this.notification.success(`Ticket successfully removed from cart.`);
+      },
+      (error) => {
+        console.error('Error:', error);
+        this.notification.error(`Something went wrong... please try again!`);
+      }, () => {
+        this.router.navigate(['/reservations']);
+      }
+    );
 
   }
+
 
 }

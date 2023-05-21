@@ -4,7 +4,6 @@ import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';
 import {CartService} from '../../services/cart.service';
 import {Observable} from 'rxjs';
-import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -29,7 +28,7 @@ export class ShoppingCartComponent implements OnInit{
       next: data => {
         this.items = data;
       }, error: error => {
-        this.router.navigate(['/horses']);
+        this.router.navigate(['']);
       }
     });
   }

@@ -3,7 +3,7 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {CartItem} from '../dtos/cartItem';
-import {RoomplanItem} from '../dtos/roomplan';
+import {TicketSeat} from '../dtos/ticket';
 
 @Injectable({
   providedIn: 'root'
@@ -22,9 +22,8 @@ export class CartService {
     return this.httpClient.delete<any>(this.cartBaseUri + '/' + id);
   }
 
-  addToCart(seatList: RoomplanItem[]): Observable<HttpResponse<any>>{
+  addToCart(seatList: TicketSeat[]): Observable<HttpResponse<any>>{
     return this.httpClient.post<any>(this.cartBaseUri, seatList);
   }
-
 
 }
