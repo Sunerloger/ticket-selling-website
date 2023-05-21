@@ -275,11 +275,10 @@ public class HallPlanEndpoint {
     }
 
     @Secured("ROLE_ADMIN")
-    @PutMapping("/{hallPlanId}/seatrows/{seatRowId}/seats/bulk")
+    @PutMapping("/{hallPlanId}/seats/bulk")
     @Operation(summary = "Add a new seat to a seat row")
     public ResponseEntity<HallPlanSeatBulkDto> bulkUpdateSeats(@PathVariable Long hallPlanId, @PathVariable Long seatRowId, @RequestBody HallPlanSeatBulkDto seatBulk) {
         seatBulk.setHallPlanId(hallPlanId);
-        seatBulk.setSeatRowId(seatRowId);
         hallPlanSeatService.bulkUpdateSeats(seatBulk);
         return ResponseEntity.created(URI.create("/api/v1/hallplans/" + hallPlanId + "/seatrows/" + seatRowId + "/seats/bulk")).body(seatBulk);
     }
