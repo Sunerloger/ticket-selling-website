@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PersistedRoomplan } from 'src/app/dtos/hallplan/roomplan';
+import { PersistedHallplan } from 'src/app/dtos/hallplan/hallplan';
 import { SeatCreationEvent, SeatRemovalPayload } from '../seatrow/seatrow.component';
 import { ToolbarItem } from '../toolbar/toolbar.component';
 
@@ -9,7 +9,7 @@ import { ToolbarItem } from '../toolbar/toolbar.component';
   styleUrls: ['./roomplanvisualeditor.component.scss']
 })
 export class RoomplanvisualeditorComponent {
-  @Input() roomplan: PersistedRoomplan;
+  @Input() roomplan: PersistedHallplan;
 
   @Output() addRowEvent = new EventEmitter<{ rowNr: number }>();
   @Output() addSeatEvent = new EventEmitter<SeatCreationEvent>();
@@ -34,7 +34,7 @@ export class RoomplanvisualeditorComponent {
       this.addRowEvent.emit({ rowNr });
     } else {
       let largestRowNr = 0;
-      for (const seatrow of this.roomplan.seatrows) {
+      for (const seatrow of this.roomplan.seatRows) {
         if (seatrow.rowNr > largestRowNr) {
           largestRowNr = seatrow.rowNr;
         }

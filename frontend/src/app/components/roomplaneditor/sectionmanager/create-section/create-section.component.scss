@@ -48,8 +48,9 @@
 }
 
 .row_button:hover {
-    background-color: rgb(13, 110, 253, 1);
-    color: white;
+    box-shadow: 0px 0px 23px -8px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: 0px 0px 23px -8px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 0px 23px -8px rgba(0, 0, 0, 0.75);
 }
 
 .selected-row-btn{

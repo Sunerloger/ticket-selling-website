@@ -16,6 +16,7 @@
     <app-create-section 
         *ngIf="currentPage === submenuPageEnum.addSection" 
         [roomplan]="this.roomplan"
+        (createSectionEvent)="this.createSectionEvent.emit($event)"
     />
 
     <app-manage-section 
