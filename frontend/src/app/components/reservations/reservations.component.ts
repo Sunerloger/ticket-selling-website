@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {Reservation} from '../../dtos/reservation';
 import {ReservationService} from '../../services/reservation.service';
 import {Observable} from 'rxjs';
+import {HttpResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-reservations',
@@ -28,6 +29,18 @@ export class ReservationsComponent implements OnInit{
         this.items = data;
       }, error: error => {
         this.router.navigate(['']);
+      }
+    });
+  }
+
+  cancelReservation(reservation: Reservation){
+    const observable: Observable<HttpResponse<any>> = this.service.deleteReservation(reservation.reservationNr);
+    observable.subscribe({
+      next: data => {
+        //TODO:error message
+        this.getItems();
+      }, error: error => {
+        //TODO:error message
       }
     });
   }

@@ -1,8 +1,9 @@
-<p>reservations works!</p>
+<h3>Your Reservations</h3>
 <div *ngFor="let item of items; let i = index">
   <div class="event-name">
     <p> {{ item.event.title }} </p>
   </div>
+  <button type="button" (click)="cancelReservation(item)" class="btn"></button>
   <div *ngFor="let ticket of item.reservedSeats; let i = index">
     <p> {{ ticket.seatNr }} </p>
   </div>

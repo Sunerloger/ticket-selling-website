@@ -46,7 +46,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         for (Reservation reservation : reservationList) {
             if (reservation.getReservationSeatsList().isEmpty()) {
-                return null;
+                break; //TODO: check if this doesnt break the method
             }
 
             EventDetailDto event = eventService.getEventById(1L); //TODO: get correct Event
@@ -131,7 +131,10 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setUserId(userID);
         reservation.setReservationSeatsList(reservationSeatList);
         reservation.setDate(LocalDate.now());
-        repository.save(reservation);
+        if (!reservation.getReservationSeatsList().isEmpty()){
+            repository.save(reservation);
+        }
+        //TODO: some kind of error (reservation has no items)
     }
 
 
