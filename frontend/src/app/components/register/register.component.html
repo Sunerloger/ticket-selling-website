@@ -83,7 +83,7 @@
             <div class="form-group"
                  [class.has-error]="address.invalid && address.touched">
               <label for="address">Address</label>
-              <input type="text" class="form-control" id="address" name="address" pattern="[A-Za-z0-9 ]*"
+              <input type="text" class="form-control" id="address" name="address" pattern="([A-Za-z0-9ßäöüÄÖÜ]+[-\s/]?)*"
                      [(ngModel)]="user.address"
                      #address="ngModel" required>
               <div *ngIf="registerForm.submitted &&registerForm.controls['address'].invalid" class="text-danger">Address

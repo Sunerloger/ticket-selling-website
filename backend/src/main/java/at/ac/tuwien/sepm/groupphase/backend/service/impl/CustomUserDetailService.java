@@ -9,6 +9,7 @@ import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 
 import jakarta.xml.bind.ValidationException;
+
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -86,20 +87,24 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public String login(UserLoginDto userLoginDto) {
-        UserDetails userDetails = loadUserByUsername(userLoginDto.getEmail());
-        if (userDetails != null
-            && userDetails.isAccountNonExpired()
-            && userDetails.isAccountNonLocked()
-            && userDetails.isCredentialsNonExpired()
-            && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
-        ) {
-            List<String> roles = userDetails.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .toList();
-            return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
+        try {
+            UserDetails userDetails = loadUserByUsername(userLoginDto.getEmail());
+            if (userDetails != null
+                && userDetails.isAccountNonExpired()
+                && userDetails.isAccountNonLocked()
+                && userDetails.isCredentialsNonExpired()
+                && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
+            ) {
+                List<String> roles = userDetails.getAuthorities()
+                    .stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .toList();
+                return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
+            }
+        }catch (UsernameNotFoundException e){
+            throw new BadCredentialsException("Email or password is incorrect or account is locked");
         }
-        throw new BadCredentialsException("Username or password is incorrect or account is locked");
+        throw new BadCredentialsException("Email or password is incorrect or account is locked");
     }
 
     //Validation Exception is thrown if user already exists
