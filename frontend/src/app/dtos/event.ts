@@ -6,6 +6,7 @@ export interface Event {
   eventDatesLocation: EventDate[];
   duration: string;
   category: string;
+  artist: string;
   description?: string;
   image?: string;
 }

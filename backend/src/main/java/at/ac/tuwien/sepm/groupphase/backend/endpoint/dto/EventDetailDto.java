@@ -11,6 +11,7 @@ public class EventDetailDto {
     private String category;
     private String description;
     private String image;
+    private String artist;
 
     public List<EventDateDto> getEventDatesLocation() {
         return eventDatesLocation;
@@ -66,6 +67,14 @@ public class EventDetailDto {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getArtist() {
+        return artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
     }
 }
 
