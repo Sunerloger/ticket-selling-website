@@ -91,7 +91,6 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
     public List<HallPlanSeatDto> bulkUpdateSeats(HallPlanSeatBulkDto bulkDto) {
         LOGGER.debug("Bulk update seats in seatrow");
         for (HallPlanSeatDto seat : bulkDto.getSeats()) {
-            seat.setSeatrowId(bulkDto.getSeatRowId());
             seatRepository.save(seatMapper.toEntity(seat));
         }
         return bulkDto.getSeats();
