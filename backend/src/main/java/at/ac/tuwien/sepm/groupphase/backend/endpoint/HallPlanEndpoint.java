@@ -120,11 +120,10 @@ public class HallPlanEndpoint {
         LOGGER.info("POST /api/v1/{}/seatrows", hallPlanId);
         seatRowDto.setHallPlanId(hallPlanId);
         try {
-            seatRowService.createSeatRow(seatRowDto);
+            return seatRowService.createSeatRow(seatRowDto);
         } catch (ValidationException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
-        return seatRowDto;
     }
 
     @Secured("ROLE_ADMIN")
@@ -246,17 +245,6 @@ public class HallPlanEndpoint {
             .map(hallPlanSectionMapper::toDto)
             .collect(Collectors.toList());
     }
-    /*
-    @Secured("ROLE_ADMIN")
-    @GetMapping("{id}/sections")
-    @Operation(summary = "Get all sections from the system")
-    public List<HallPlanSectionDto> getAllSectionsByHallRoomId(@PathVariable Long id) {
-        LOGGER.info("GET /api/v1/hallplans/{}/sections", id);
-        return hallPlanService.findAllByHallPlanId(id).stream()
-            .map(hallPlanSectionMapper::toDto)
-            .collect(Collectors.toList());
-    }
-    */
 
 
     //*******************************************************
