@@ -29,6 +29,7 @@ public class HallPlanSection {
     @Column(name = "price")
     private Long price;
 
+    @NotNull
     @Column(name = "hallplan_id")
     private Long hallPlanId;
 

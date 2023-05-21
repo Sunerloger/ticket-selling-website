@@ -109,4 +109,12 @@ public interface HallPlanService {
      */
     List<HallPlanSectionDto> findAllSectionsByHallPlanId(Long hallplanId);
 
+    /**
+     * Retrieves all sections by hallplanId and counts of how often a certain section occurs.
+     *
+     * @param hallplanId id of the hallplan of the sections to retrieve
+     * @return the sections of the hallplan
+     */
+    List<HallPlanSectionDto> findAllSectionsByHallPlanIdWithCounts(Long hallplanId);
+
 }

@@ -158,16 +158,39 @@ public class HallPlanServiceImpl implements HallPlanService {
     }
 
     @Override
-    public List<HallPlanSectionDto> findAllSectionsByHallPlanId(Long hallplanId) {
+    public List<HallPlanSectionDto> findAllSectionsByHallPlanIdWithCounts(Long hallplanId) {
         List<Object[]> counts = hallPlanRepository.findAllSectionsByHallPlanIdCounts(hallplanId);
+        List<Object[]> zeroCounts = hallPlanRepository.findHallPlanCountsById(hallplanId);
         List<HallPlanSection> sections = new ArrayList<HallPlanSection>();
+        List<Long> existIdList = new ArrayList<>();
         for (Object[] count : counts) {
             HallPlanSection section = (HallPlanSection) count[0];
             section.setCount((Long) count[1]);
             sections.add((HallPlanSection) count[0]);
+            existIdList.add(section.getId());
+        }
+        for (Object[] zeroCount : zeroCounts) {
+            HallPlanSection section = (HallPlanSection) zeroCount[0];
+            section.setCount(0L);
+            boolean exist = false;
+            for (Long id : existIdList) {
+                if (id.longValue() == section.getId()) {
+                    exist = true;
+                    break;
+                }
+            }
+            if (!exist) {
+                sections.add(section);
+            }
+
         }
         List<HallPlanSectionDto> list = hallPlanSectionMapper.toDto(sections);
         return list;
+    }
+
+    @Override
+    public List<HallPlanSectionDto> findAllSectionsByHallPlanId(Long hallplanId) {
+        return hallPlanSectionMapper.toDto(hallPlanRepository.findAllSectionsByHallPlanId(hallplanId));
     }
 
 
