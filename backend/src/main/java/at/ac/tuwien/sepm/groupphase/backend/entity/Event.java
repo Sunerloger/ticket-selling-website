@@ -36,6 +36,8 @@ public class Event {
 
     private String description;
 
+    private String artist;
+
     @Column(columnDefinition = "TEXT")
     private String image;
 
@@ -48,7 +50,8 @@ public class Event {
         LocalTime duration,
         String category,
         String description,
-        String image) {
+        String image,
+        String artist) {
         this.id = id;
         this.title = title;
         this.eventDatesLocation = eventDatesLocation;
@@ -56,6 +59,7 @@ public class Event {
         this.category = category;
         this.description = description;
         this.image = image;
+        this.artist = artist;
     }
 
     public Long getId() {
@@ -112,5 +116,13 @@ public class Event {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getArtist() {
+        return artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
     }
 }

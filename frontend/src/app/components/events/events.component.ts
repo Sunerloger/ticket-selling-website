@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {FormGroup, FormBuilder, Validators } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {Event} from 'src/app/dtos/event';
 import {EventService} from '../../services/event.service';
 import {ToastrService} from 'ngx-toastr';
@@ -10,8 +10,8 @@ import {EventDate} from 'src/app/dtos/eventDate';
   templateUrl: './events.component.html',
   styleUrls: ['./events.component.scss']
 })
-export class EventsComponent implements OnInit{
-  eventDate:  EventDate = {
+export class EventsComponent implements OnInit {
+  eventDate: EventDate = {
     date: new Date(),
     city: '',
     areaCode: '',
@@ -24,17 +24,18 @@ export class EventsComponent implements OnInit{
     eventDatesLocation: EventDate[100] = [this.eventDate],
     duration: '',
     category: '',
+    artist: '',
     description: '',
     image: '',
   };
-  today: string;
+  today: Date;
   eventForm: FormGroup;
 
 
   constructor(private fb: FormBuilder,
               private service: EventService,
               private notification: ToastrService) {
-    this.today = new Date().toISOString().split('T')[0];
+    this.today = new Date(new Date().toISOString().split('T')[0]);
   }
 
   ngOnInit(): void {
@@ -43,6 +44,7 @@ export class EventsComponent implements OnInit{
       dateLocation: [new EventDate(), Validators.required],
       duration: ['', Validators.required],
       category: ['', Validators.required],
+      artist: ['', Validators.required],
       description: [''],
       image: ['']
     });
@@ -63,6 +65,8 @@ export class EventsComponent implements OnInit{
   addDate() {
     this.event.eventDatesLocation.push(new EventDate());
   }
+
+
   deleteEntry(index: number) {
     this.event.eventDatesLocation.splice(index, 1);
   }
@@ -75,6 +79,7 @@ export class EventsComponent implements OnInit{
     this.eventForm.controls['duration'].setValue(this.event.duration);
     this.eventForm.controls['category'].setValue(this.event.category);
     this.eventForm.controls['description'].setValue(this.event.description);
+    this.eventForm.controls['artist'].setValue(this.event.artist);
     console.log(this.eventForm);
     if (this.eventForm.valid) {
       console.log(this.event);

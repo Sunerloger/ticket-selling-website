@@ -46,6 +46,11 @@
     <div *ngIf="eventForm.submitted && eventForm.controls['category'].invalid" class="text-danger">Category is required.</div>
   </div>
   <div class="form-group">
+    <label for="artist">Artist: <span class="text-danger">*</span></label>
+    <input type="text" class="form-control" id="artist" name="artist" [(ngModel)]="event.artist" required>
+    <div *ngIf="eventForm.submitted && eventForm.controls['artist'].invalid" class="text-danger">Artist is required.</div>
+  </div>
+  <div class="form-group">
     <label for="description">Description:</label>
     <textarea class="form-control" id="description" name="description" rows="3" [(ngModel)]="event.description"></textarea>
   </div>
