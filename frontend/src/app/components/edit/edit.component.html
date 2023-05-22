@@ -83,7 +83,8 @@
             <div class="form-group"
                  [class.has-error]="address.invalid && address.touched">
               <label for="address">Address</label>
-              <input type="text" class="form-control" id="address" name="address" pattern="([A-Za-z0-9ßäöüÄÖÜ]+[-\s/]?)*"
+              <input type="text" class="form-control" id="address" name="address"
+                     pattern="([A-Za-z0-9ßäöüÄÖÜ]+[-\s/]?)*"
                      [(ngModel)]="user.address"
                      #address="ngModel" required>
               <div *ngIf="editForm.submitted &&editForm.controls['address'].invalid" class="text-danger">Address
@@ -150,14 +151,9 @@
                 </div>
                 <div class="text-danger"
                      *ngIf="password.errors?.required">
-                  Password is required!
+                  Your password is required for editing!
                 </div>
               </div>
-            </div>
-
-            <div *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'ADMIN'" class="form-group">
-              <label for="admin">Admin</label>
-              <input type="checkbox" class="checkbox" id="admin" name="admin" [(ngModel)]="user.admin">
             </div>
             <button type="submit" class="btn btn-primary">Register</button>
           </div>

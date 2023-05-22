@@ -44,9 +44,11 @@ export class EditComponent implements OnInit {
     console.log(this.user);
     this.userService.getUser(this.authService.getToken()).subscribe(user => {
       this.user = user;
+      this.user.password = '';
       console.log('User ', user);
     });
     this.editForm = this.formBuilder.group({
+      admin: [''],
       email: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -59,6 +61,7 @@ export class EditComponent implements OnInit {
   }
 
   editUser() {
+    this.editForm.controls['admin'].setValue(this.user.admin);
     this.editForm.controls['email'].setValue(this.user.email);
     this.editForm.controls['firstName'].setValue(this.user.firstName);
     this.editForm.controls['lastName'].setValue(this.user.lastName);
@@ -67,11 +70,10 @@ export class EditComponent implements OnInit {
     this.editForm.controls['areaCode'].setValue(this.user.areaCode);
     this.editForm.controls['cityName'].setValue(this.user.cityName);
     this.editForm.controls['password'].setValue(this.user.password);
-
     console.log(this.editForm);
 
     if (this.editForm.valid) {
-      const observable = this.userService.editUser(this.user);
+      const observable = this.userService.editUser(this.user, this.authService.getToken());
       observable.subscribe({
         next: () => {
           this.router.navigate(['/login']);

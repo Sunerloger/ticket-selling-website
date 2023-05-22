@@ -122,8 +122,9 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public ApplicationUser edit(ApplicationUser applicationUser, String token) {
-        String email = jwtAuthorizationFilter.getUsernameFromToken(token);
-        return applicationUserRepository.saveApplicationUserByEmail(applicationUser,email);
+        String encodedPassword = passwordEncoder.encode(applicationUser.getPassword());
+        applicationUser.setPassword(encodedPassword);
+        return applicationUserRepository.save(applicationUser);
     }
 
     @Override

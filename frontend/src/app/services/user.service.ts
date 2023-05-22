@@ -42,10 +42,10 @@ export class UserService {
     }
   }
 
-  editUser(user: User): Observable<User> {
+  editUser(user: User, token: string): Observable<User> {
     if (this.authService.isLoggedIn()) {
-      return this.http.post<User>(
-        this.userGetUri, user
+      return this.http.put<User>(
+        this.userGetUri + '?token=' + token, user
       );
     }
   }

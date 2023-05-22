@@ -2,7 +2,10 @@ package at.ac.tuwien.sepm.groupphase.backend.repository;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface ApplicationUserRepository extends JpaRepository<ApplicationUser, Long> {
@@ -29,5 +32,6 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
      * @param applicationUser the values which will be updated
      * @return the updated user
      */
-    ApplicationUser saveApplicationUserByEmail(ApplicationUser applicationUser,String email);
+
+
 }

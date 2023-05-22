@@ -103,7 +103,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     //returns all claims from token so we can retrieve information from token
     private Claims getAllClaimsFromToken(String token) {
         byte[] signingKey = securityProperties.getJwtSecret().getBytes();
-        return  Jwts.parserBuilder().setSigningKey(signingKey).build()
+        return Jwts.parserBuilder().setSigningKey(signingKey).build()
             .parseClaimsJws(token.replace(securityProperties.getAuthTokenPrefix(), ""))
             .getBody();
 

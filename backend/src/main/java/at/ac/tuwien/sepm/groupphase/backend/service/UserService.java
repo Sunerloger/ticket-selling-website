@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import jakarta.xml.bind.ValidationException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -51,7 +52,7 @@ public interface UserService extends UserDetailsService {
 
     ApplicationUser register(ApplicationUser applicationUser) throws ValidationException;
 
-    ApplicationUser edit(ApplicationUser userDetailDtoToEntity,String token);
+    ApplicationUser edit(ApplicationUser userDetailDtoToEntity, String token);
 
     ApplicationUser getUser(String token);
 }

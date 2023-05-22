@@ -8,6 +8,7 @@ import java.time.LocalDate;
 public record UserDetailDto(
     Long id,
 
+    Boolean admin,
     @Column(nullable = false, unique = true)
     String email,
 
@@ -28,6 +29,9 @@ public record UserDetailDto(
     Long areaCode,
 
     @Column(nullable = false)
-    String cityName
+    String cityName,
+
+    @Column(nullable = false)
+    String password
 ) {
 }

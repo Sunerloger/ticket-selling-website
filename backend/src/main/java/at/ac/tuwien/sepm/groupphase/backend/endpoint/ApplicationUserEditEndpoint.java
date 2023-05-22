@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,12 +40,12 @@ public class ApplicationUserEditEndpoint {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping
+    @PutMapping
     @PermitAll
     @Operation(summary = "Edit a user")
-    public UserDetailDto post(@Valid @RequestBody UserDetailDto userDetailDto, @RequestParam(value = "token") String token) {
+    public void update(@Valid @RequestBody UserDetailDto userDetailDto, @RequestParam(value = "token") String token) {
         LOGGER.info("EDIT USER " + BASE_PATH + "with TOKEN " + token, userDetailDto);
-        return userMapper.entityToUserDetailDto(userService.edit(userMapper.userDetailDtoToEntity(userDetailDto),token));
+        userMapper.entityToUserDetailDto(userService.edit(userMapper.userDetailDtoToEntity(userDetailDto),token));
     }
 
     @GetMapping
