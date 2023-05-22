@@ -21,6 +21,7 @@
 
     <app-manage-section 
         [sections]="this.sections"
+        (deleteSectionEvent)="this.handleDeleteSection($event)"
         *ngIf="sectionpage === submenuPageEnum.manageSection" 
     />
 </div>

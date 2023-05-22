@@ -21,8 +21,8 @@ export interface SeatCreationEvent {
 }
 
 export interface SeatRowDeletionEventPayload{
-  rowNr: number,
-  rowId: number
+  rowNr: number;
+  rowId: number;
 }
 
 @Component({
@@ -51,7 +51,7 @@ export class SeatrowComponent {
     this.seatRowDeletion.emit({
       rowNr: this.seatRow.rowNr,
       rowId: this.seatRow.id
-    })
+    });
   }
 
   /**

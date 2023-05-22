@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PersistedHallplan, PersistedSeat, PersistedSeatRow, Seat, SeatRow, SeatStatus, SeatType } from 'src/app/dtos/hallplan/hallplan';
 import { CreationMenuDirection, SeatCreationEvent, SeatRemovalPayload, SeatRowDeletionEventPayload } from './seatrow/seatrow.component';
-import { PersistedSection, Section } from 'src/app/dtos/hallplan/section';
+import { PersistedSection, RESERVED_DEFAULT_SECTION_NAME, Section } from 'src/app/dtos/hallplan/section';
 import { HallplanService } from 'src/app/services/hallplan/hallplan.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -47,7 +47,7 @@ export class RoomplaneditorComponent implements OnInit {
   fetchAllSections(hallplanId: number){
     this.service.getAllSections(hallplanId).subscribe({
       next: data => {
-        console.log(data, " get all sections")
+        console.log(data, ' get all sections');
         this.sections = data;
       },
       error: error => {
@@ -57,13 +57,13 @@ export class RoomplaneditorComponent implements OnInit {
         this.notification.error(errorMessage, 'Failed to retrieve all sections');
         this.router.navigate(['/hallplans']);
       }
-    })
+    });
   }
 
   fetchHallplanWithId(id: number){
     this.service.getHallplanById(id).subscribe({
       next: data => {
-        console.log(data)
+        console.log(data);
         this.roomplan = data;
       },
       error: error => {
@@ -73,62 +73,7 @@ export class RoomplaneditorComponent implements OnInit {
         this.notification.error(errorMessage, 'Requested Hallplan does not exist');
         this.router.navigate(['/hallplans']);
       }
-    })
-  }
-
-
-  fetchRoomplan() {
-    const section: PersistedSection = {
-      id: 1,
-      color: 'red',
-      name: 'Premium Seat',
-      price: 30
-    };
-    const seatRow1: PersistedSeatRow = {
-      id: 1,
-      rowNr: 1,
-      seats: [{
-        id: 1,
-        type: SeatType.seat,
-        seatNr: 1,
-        status: SeatStatus.free,
-        section,
-        capacity: 1
-      }]
-    };
-    const seatRow2: PersistedSeatRow = {
-      id: 1,
-      rowNr: 2,
-      seats: [{
-        id: 1,
-        type: SeatType.seat,
-        seatNr: 1,
-        status: SeatStatus.free,
-        section,
-        capacity: 1
-      },
-      {
-        id: 2,
-        type: SeatType.seat,
-        seatNr: 2,
-        status: SeatStatus.free,
-        section,
-        capacity: 1
-      }]
-    };
-
-    const roomplan: PersistedHallplan = {
-      id: 1,
-      name: 'Room 01',
-      description: 'A room',
-      seatRows: [seatRow1, seatRow2]
-    };
-
-    //fetch roomplan
-    const fetchedRoomplan = roomplan;
-
-    //set state
-    this.roomplan = fetchedRoomplan;
+    });
   }
 
   /**
@@ -169,7 +114,7 @@ export class RoomplaneditorComponent implements OnInit {
         this.notification.error(errorMessage, 'Could not create seatrow. Please try again.');
         this.router.navigate(['/hallplans']);
       }
-    })
+    });
   }
 
   handleRemoveRow(payload: SeatRowDeletionEventPayload) {
@@ -201,26 +146,12 @@ export class RoomplaneditorComponent implements OnInit {
           this.router.navigate(['/hallplans']);
         }
       }
-    )
+    );
   }
 
-  handleAddSectionToSeats(seatIds: number[], section: Section){
-    console.log("handleAddSectionToSeats", seatIds, section)
-    //call bulk endpoint
-
-    const updatedSeats:PersistedSeat[] = [];
-
-    //update state
-    //just fetch getRoomplan again.. in order to get all the updated seats
-  }
-
-  async updateSeatsBulk(rowNr: number, updatedSeats: PersistedSeat[], errorMessage: string){
+  createSection(section: Section):Promise<PersistedSection>{
     return new Promise((resolve, reject) => {
-      this.service.updateSeatsBulk(
-        this.roomplan.id,
-        this.roomplan.seatRows[rowNr - 1].id,
-        updatedSeats
-      ).subscribe({
+      this.service.createSection(this.roomplan.id, section).subscribe({
         next: data => {
           resolve(data);
         },
@@ -228,19 +159,66 @@ export class RoomplaneditorComponent implements OnInit {
           const errorMessage = error.status === 0
             ? 'Server not reachable'
             : error.message.message;
-          this.notification.error(errorMessage, errorMessage);
+          this.notification.error(errorMessage, 'Could not create section. Please try again.');
           reject(error);
         }
-      })
+      });
+    });
+  }
+
+  async handleAddSectionToSeats(affectedSeats: PersistedSeat[], section: Section){
+    console.log('handleAddSectionToSeats', affectedSeats, section);
+    //create section
+    const createdSection = await this.createSection(section);
+
+    //assign newly created section to all affected seats
+    for(const seat of affectedSeats){
+      seat.section = createdSection;
+    }
+
+    //update affectedseats with section
+    this.service.updateSeatsBulk(this.roomplan.id, affectedSeats).subscribe({
+      next: () => {
+        this.notification.success(`Successfully created Section '${section.name}'`);
+
+        //fetch hallplan in order to get all the updated seats
+        this.fetchHallplanWithId(this.roomplan.id);
+      },
+      error: error => {
+        const errorMessage = error.status === 0
+          ? 'Server not reachable'
+          : error.message.message;
+        this.notification.error(errorMessage, 'Could not create section. Please try again.');
+      }
+    });
+  }
+
+  async updateSeatsBulk(updatedSeats: PersistedSeat[], errorMessage: string){
+    return new Promise((resolve, reject) => {
+      this.service.updateSeatsBulk(
+        this.roomplan.id,
+        updatedSeats
+      ).subscribe({
+        next: data => {
+          resolve(data);
+        },
+        error: error => {
+          const errorMessageDefault = error.status === 0
+            ? 'Server not reachable'
+            : error.message.message;
+          this.notification.error(errorMessageDefault, errorMessage);
+          reject(error);
+        }
+      });
     });
   }
 
   async createDefaultSection(): Promise<PersistedSection>{
-    const defaultSection:Section = {
-      name: "Unassigned",
-      color: "black",
+    const defaultSection: Section = {
+      name: RESERVED_DEFAULT_SECTION_NAME,
+      color: 'white',
       price: 0
-    }
+    };
 
     return new Promise((resolve, reject) => {
       this.service.createSection(this.roomplan.id, defaultSection).subscribe(
@@ -256,19 +234,19 @@ export class RoomplaneditorComponent implements OnInit {
             reject(error);
           }
         }
-      )
+      );
     });
   }
 
   /**
-   * Return default section "Unassigned" when it does not exist, the section will be 
+   * Return default section "Unassigned" when it does not exist, the section will be
    * created
    * There is one section called "Unassigned" which function as the default
    * section for every seat of a hallplan
-   * 
+   *
    */
  async retrieveDefaultSection(): Promise<PersistedSection|null>{
-  const defaultSectionName = "Unassigned";
+  const defaultSectionName = 'Unassigned';
    const defaultPersistedSection = this.sections.find(section => section.name === defaultSectionName);
 
    return new Promise(async (resolve, reject) => {
@@ -279,10 +257,10 @@ export class RoomplaneditorComponent implements OnInit {
       if(defaultSection){
         resolve(defaultSection);
       }else{
-        reject("Error creating default section");
+        reject('Error creating default section');
       }
      }
-   })
+   });
   }
 
   async handleAddSeats(payload: SeatCreationEvent) {
@@ -297,7 +275,7 @@ export class RoomplaneditorComponent implements OnInit {
       case CreationMenuDirection.left:
         // --- update seatNr of other seats when direction was left
         const updateSeats: PersistedSeat[] = [];
-        
+
         let seatNrOfOldSeat = amountSeat + 1;
         for(const seat of this.roomplan.seatRows[rowNr - 1].seats){
           updateSeats.push({ ...seat, seatNr: seatNrOfOldSeat });
@@ -305,11 +283,11 @@ export class RoomplaneditorComponent implements OnInit {
         }
         // persist
         if(updateSeats.length > 0){
-          await this.updateSeatsBulk(rowNr, updateSeats, "Failed to add seats. Please try again.");
+          await this.updateSeatsBulk(updateSeats, 'Failed to add seats. Please try again.');
         }
-     
 
-        // --- generate seats that needs to be persisted 
+
+        // --- generate seats that needs to be persisted
         let newSeatNr = 1;
         for(let i = 0; i < amountSeat; i++){
           newSeats.push(
@@ -319,7 +297,7 @@ export class RoomplaneditorComponent implements OnInit {
         }
         break;
       case CreationMenuDirection.right:
-        // --- generate seats that needs to be persisted 
+        // --- generate seats that needs to be persisted
         let highestSeatNr = initialSeatNr;
         for (let i = 0; i < amountSeat; i++) {
           newSeats.push(
@@ -329,18 +307,16 @@ export class RoomplaneditorComponent implements OnInit {
         }
         break;
     }
-    console.log(newSeats, "ACHTUNG")
 
     // --- persist newly created seats
     this.service.createSeatsBulk(
-      this.roomplan.id, 
-      this.roomplan.seatRows[rowNr - 1].id, 
+      this.roomplan.id,
+      this.roomplan.seatRows[rowNr - 1].id,
       newSeats
     ).subscribe({
-      next: (data) => {
-        console.log(data)
+      next: () => {
         // --- update state
-        this.fetchRoomplan();
+        this.fetchHallplanWithId(this.roomplan.id);
       },
       error: error => {
         const errorMessage = error.status === 0
@@ -348,36 +324,56 @@ export class RoomplaneditorComponent implements OnInit {
           : error.message.message;
         this.notification.error(errorMessage, 'Failed adding new seats. Please try again.');
       }
-    })
+    });
   }
 
-  handleSeatRemoval(payload: SeatRemovalPayload) {
-    console.log(payload);
+  async handleSeatRemoval(payload: SeatRemovalPayload) {
     const { id, rowNr } = payload;
 
     const clonedRoomplan = structuredClone(this.roomplan);
     const clonedSeatRow = clonedRoomplan.seatRows[rowNr - 1];
     const clonedSeats = clonedSeatRow.seats;
 
+    let deletedSeatIndex = -1; 
+    const updatedSeatsWithNewSeatNr: PersistedSeat[] = []
     for (let i = 0; i < clonedSeats.length; i++) {
       if (clonedSeats[i].id === id) {
+        deletedSeatIndex = i;
         clonedSeats.splice(i, 1);
-        break;
+        continue;
+      }
+      //update the seatnumbers after deleted seats
+      if(deletedSeatIndex !== -1){ 
+        //we already found the deletedseat after that all seats should have their seat nr adjusted
+        clonedSeats[i].seatNr--;
+        updatedSeatsWithNewSeatNr.push(clonedSeats[i]);
       }
     };
 
-    this.roomplan = clonedRoomplan;
+    //persist new seats
+    await this.updateSeatsBulk(updatedSeatsWithNewSeatNr, "Failed to remove seat. Please try again");
 
-    //TO-DO: persist new seatrow
-
+    //persist new seat removal
+    this.service.deleteSeat(this.roomplan.id, this.roomplan.seatRows[rowNr - 1].id, id).subscribe({
+      next: () => {
+        this.roomplan = clonedRoomplan;
+      },
+      error: error => {
+        const errorMessage = error.status === 0
+          ? 'Server not reachable'
+          : error.message.message;
+        this.notification.error(errorMessage, 'Failed removing seat. Please try again.');
+      }
+    })
   }
 
   /**
    * Return empty seat with default section
-   * @param type 
-   * @param seatNr 
-   * @param capacity 
-   * @returns 
+   *
+   * @param type
+   * @param seatNr
+   * @param capacity
+   * @returns
    */
   async createEmptySeat(type: SeatType, seatNr: number, capacity?: number): Promise<Seat> {
     const defaultSection = await this.retrieveDefaultSection();
@@ -385,11 +381,14 @@ export class RoomplaneditorComponent implements OnInit {
     switch(type){
       case SeatType.seat:
         capacity = 1;
+        break;
       case SeatType.vacantSeat:
         capacity = 0;
+        break;
       case SeatType.standingSeat:
-        capacity = capacity ?? 100
-      default: 
+        capacity = capacity ?? 100;
+        break;
+      default:
         capacity = 1;
     }
     const emptySeat: Seat = {
@@ -397,7 +396,7 @@ export class RoomplaneditorComponent implements OnInit {
       seatNr,
       status: SeatStatus.free,
       section: defaultSection,
-      capacity: capacity
+      capacity
     };
     return emptySeat;
   }

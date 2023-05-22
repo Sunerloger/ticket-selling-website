@@ -26,22 +26,37 @@ export class HallplanService {
         return this.http.post<PersistedSeatRow>(
             `${this.baseUrl}/${hallplanId}/seatrows`,
             seatrow
-        )
+        );
     }
+
+    /*
+
+        --------------------- Seats Endpoints ------------------------------
+
+    */
 
     createSeatsBulk(hallplanId: number, seatrowId: number, seats: Seat[]){
-        console.log("save")
         return this.http.post<PersistedSeatRow>(
             `${this.baseUrl}/${hallplanId}/seatrows/${seatrowId}/seats/bulk`,
-            seats
-        )
+            {
+                seats
+            }
+        );
     }
 
-    updateSeatsBulk(hallplanId: number, seatrowId: number, seats: PersistedSeat[]) {
+    updateSeatsBulk(hallplanId: number, seats: PersistedSeat[]) {
         return this.http.put<PersistedSeatRow>(
-            `${this.baseUrl}/${hallplanId}/seatrows/${seatrowId}/seats/bulk`,
-            seats
-        )
+            `${this.baseUrl}/${hallplanId}/seats/bulk`,
+            {
+                seats: seats
+            }
+        );
+    }
+
+    deleteSeat(hallplanId: number, seatrowId: number, seatId: number){
+        return this.http.delete<void>(
+            `${this.baseUrl}/${hallplanId}/seatrows/${seatrowId}/seats/${seatId}`
+        );
     }
 
     /*
@@ -53,24 +68,31 @@ export class HallplanService {
     getAllSections(hallplanId: number) {
         return this.http.get<PersistedSection[]>(
             `${this.baseUrl}/${hallplanId}/sections`,
-        )
+        );
     }
 
     createSection(hallplanId: number, section: Section){
         return this.http.post<PersistedSection>(
             `${this.baseUrl}/${hallplanId}/sections`,
             section
-        )
+        );
+    }
+
+    deleteSection( sectionId: number){
+        return this.http.delete<PersistedSection>(
+            `${this.baseUrl}/sections/${sectionId}`
+        );
     }
 
     /**
      * Delete seatrow by id (including its seats)
+     *
      * @param hallplanId id of hallplan
      * @param seatrowId id of seatrow
      */
     deleteSeatrow(hallplanId: number, seatrowId: number){
         return this.http.delete<void>(
             `${this.baseUrl}/${hallplanId}/seatrows/${seatrowId}`
-        )
+        );
     }
 }

@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { PersistedSection } from 'src/app/dtos/hallplan/section';
+import { PersistedSection, RESERVED_DEFAULT_SECTION_NAME } from 'src/app/dtos/hallplan/section';
 import { HallplanService } from 'src/app/services/hallplan/hallplan.service';
 
 @Component({
@@ -11,6 +11,8 @@ import { HallplanService } from 'src/app/services/hallplan/hallplan.service';
 })
 export class ManageSectionComponent implements OnInit{
   @Input() sections: PersistedSection[];
+
+  @Output() deleteSectionEvent = new EventEmitter<PersistedSection['id']>();
 
 
   constructor(
@@ -25,6 +27,9 @@ export class ManageSectionComponent implements OnInit{
 
   }
 
+  isDefaultSection(section: PersistedSection){
+    return section.name === RESERVED_DEFAULT_SECTION_NAME;
+  }
 
 
 

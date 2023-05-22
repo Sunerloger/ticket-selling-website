@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { PersistedHallplan } from 'src/app/dtos/hallplan/hallplan';
 import { CreateSectionPayload } from './create-section/create-section.component';
 import { HallplanService } from 'src/app/services/hallplan/hallplan.service';
@@ -7,8 +7,8 @@ import { ToastrService } from 'ngx-toastr';
 import { PersistedSection } from 'src/app/dtos/hallplan/section';
 
 enum SubmenuPage {
-  addSection = "create",
-  manageSection = "manage"
+  addSection = 'create',
+  manageSection = 'manage'
 }
 
 @Component({
@@ -16,11 +16,11 @@ enum SubmenuPage {
   templateUrl: './sectionmanager.component.html',
   styleUrls: ['./sectionmanager.component.scss']
 })
-export class SectionmanagerComponent implements OnInit {
+export class SectionmanagerComponent implements OnInit, OnChanges {
   @Input() roomplan: PersistedHallplan;
   @Output() createSectionEvent = new EventEmitter<CreateSectionPayload>();
 
-  sections: PersistedSection[] = []
+  sections: PersistedSection[] = [];
   sectionpage: SubmenuPage; //curent page
   submenuPageEnum = SubmenuPage; //enum reference
 
@@ -30,6 +30,10 @@ export class SectionmanagerComponent implements OnInit {
     private route: ActivatedRoute,
     private notification: ToastrService,
   ) {
+  }
+
+  ngOnChanges(): void {
+    this.fetchAllSections(this.roomplan.id);
   }
 
   ngOnInit(): void {
@@ -43,10 +47,10 @@ export class SectionmanagerComponent implements OnInit {
         const sectionPageParam = params.sectionpage;
         switch (sectionPageParam) {
           case SubmenuPage.addSection:
-            this.sectionpage = SubmenuPage.addSection
+            this.sectionpage = SubmenuPage.addSection;
             break;
           case SubmenuPage.manageSection:
-            this.sectionpage = SubmenuPage.manageSection
+            this.sectionpage = SubmenuPage.manageSection;
             break;
           default:
             this.sectionpage = SubmenuPage.addSection;
@@ -64,7 +68,25 @@ export class SectionmanagerComponent implements OnInit {
         this.router.navigate(['/hallplans']);
       }
     });
+  }
 
+  handleDeleteSection(sectionId: number){
+    const deletionIndex = this.sections.findIndex(section => section.id === sectionId);
+
+    //persist deletion
+    this.service.deleteSection(sectionId).subscribe({
+      next: () => {
+        if (deletionIndex >= 0) {
+          this.sections.splice(deletionIndex, 1);
+        }
+      },
+      error: error => {
+        const errorMessage = error.status === 0
+          ? 'Server not reachable'
+          : error.message.message;
+        this.notification.error(errorMessage, 'Selection has assigned seats. Delete associated seats first or re-assign.');
+      }
+    });
   }
 
   fetchAllSections(hallplanId: number) {
@@ -78,7 +100,7 @@ export class SectionmanagerComponent implements OnInit {
           : error.message.message;
         this.notification.error(errorMessage, 'Requested Hallplan does not exist');
       }
-    })
+    });
   }
 
 

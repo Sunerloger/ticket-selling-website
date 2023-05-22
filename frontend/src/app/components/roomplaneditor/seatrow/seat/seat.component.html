@@ -1,6 +1,7 @@
 <div 
     class="seat"
     (click)="this.seatRemoval.emit(this.id)"
+    [ngStyle]="{'background-color': this.section.color}"
 >
     <span class="hover_overlay">Delete</span>
     <!-- Icon for Seat of Type Vacant-->
