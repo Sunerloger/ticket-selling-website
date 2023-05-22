@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.beans.Expression;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 
@@ -49,23 +50,25 @@ public class EventServiceImpl implements EventService {
         Pageable pageable = PageRequest.of(pageIndex, 20, Sort.by("title").ascending());
         String eventDatesLocation = "eventDatesLocation";
         Specification<Event> specification = (root, query, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.greaterThanOrEqualTo(root.join(eventDatesLocation).get("date"), fromDate);
+            Predicate predicate = criteriaBuilder.isTrue(root.get("id"));
+            if (fromDate != null) {
+                predicate = criteriaBuilder.greaterThanOrEqualTo(root.join(eventDatesLocation).get("date"), fromDate);
+            }
 
             if (toDate != null) {
                 predicate = criteriaBuilder.and(predicate, criteriaBuilder.lessThanOrEqualTo(root.join(eventDatesLocation).get("date"), toDate));
             }
 
             if (artist != null) {
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.get("artist"), artist));
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.get("artist"), "%" + artist + "%"));
             }
 
             if (location != null) {
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.join(eventDatesLocation).get("address"), location));
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.join(eventDatesLocation).get("address"), "%" + location + "%"));
             }
 
             return predicate;
         };
-
         return eventRepository.findAll(specification, pageable);
     }
 }
