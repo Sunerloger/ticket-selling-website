@@ -20,5 +20,5 @@ export interface PersistedSection extends Section{
 }
 
 export interface DetailedPersistedSection extends PersistedSection{
-    count: number
+    count: number;
 }

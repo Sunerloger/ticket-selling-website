@@ -48,7 +48,7 @@ export class HallplanService {
         return this.http.put<PersistedSeatRow>(
             `${this.baseUrl}/${hallplanId}/seats/bulk`,
             {
-                seats: seats
+                seats
             }
         );
     }

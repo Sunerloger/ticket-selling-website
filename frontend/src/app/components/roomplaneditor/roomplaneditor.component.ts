@@ -149,7 +149,7 @@ export class RoomplaneditorComponent implements OnInit {
     );
   }
 
-  createSection(section: Section):Promise<PersistedSection>{
+  createSection(section: Section): Promise<PersistedSection>{
     return new Promise((resolve, reject) => {
       this.service.createSection(this.roomplan.id, section).subscribe({
         next: data => {
@@ -334,8 +334,8 @@ export class RoomplaneditorComponent implements OnInit {
     const clonedSeatRow = clonedRoomplan.seatRows[rowNr - 1];
     const clonedSeats = clonedSeatRow.seats;
 
-    let deletedSeatIndex = -1; 
-    const updatedSeatsWithNewSeatNr: PersistedSeat[] = []
+    let deletedSeatIndex = -1;
+    const updatedSeatsWithNewSeatNr: PersistedSeat[] = [];
     for (let i = 0; i < clonedSeats.length; i++) {
       if (clonedSeats[i].id === id) {
         deletedSeatIndex = i;
@@ -343,7 +343,7 @@ export class RoomplaneditorComponent implements OnInit {
         continue;
       }
       //update the seatnumbers after deleted seats
-      if(deletedSeatIndex !== -1){ 
+      if(deletedSeatIndex !== -1){
         //we already found the deletedseat after that all seats should have their seat nr adjusted
         clonedSeats[i].seatNr--;
         updatedSeatsWithNewSeatNr.push(clonedSeats[i]);
@@ -351,7 +351,7 @@ export class RoomplaneditorComponent implements OnInit {
     };
 
     //persist new seats
-    await this.updateSeatsBulk(updatedSeatsWithNewSeatNr, "Failed to remove seat. Please try again");
+    await this.updateSeatsBulk(updatedSeatsWithNewSeatNr, 'Failed to remove seat. Please try again');
 
     //persist new seat removal
     this.service.deleteSeat(this.roomplan.id, this.roomplan.seatRows[rowNr - 1].id, id).subscribe({
@@ -364,7 +364,7 @@ export class RoomplaneditorComponent implements OnInit {
           : error.message.message;
         this.notification.error(errorMessage, 'Failed removing seat. Please try again.');
       }
-    })
+    });
   }
 
   /**

@@ -10,11 +10,11 @@ export class EditableSectionComponent {
   @Input() section: DetailedPersistedSection;
   @Output() deleteSectionEvent = new EventEmitter<PersistedSection['id']>();
 
-  name: string = "";
-  price: number = 0;
+  name = '';
+  price = 0;
 
-  priceErrMessage: string = "";
-  nameErrMessage: string = "";
+  priceErrMessage = '';
+  nameErrMessage = '';
 
   isDefaultSection(section: PersistedSection) {
     return section.name === RESERVED_DEFAULT_SECTION_NAME;
@@ -54,11 +54,11 @@ export class EditableSectionComponent {
   }
 
   /**
-  *   // Check if the input is a valid number with optional two decimal places
-  *
-  * @param input that may resemble a number
-  * @returns if given input is valid currency number
-  */
+   *   // Check if the input is a valid number with optional two decimal places
+   *
+   * @param input that may resemble a number
+   * @returns if given input is valid currency number
+   */
   isValidCurrencyNumber(input: string) {
     return /^\d+(\.\d{1,2})?$/.test(input);
   }
