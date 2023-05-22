@@ -101,7 +101,7 @@ public class CustomUserDetailService implements UserService {
                     .toList();
                 return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
             }
-        }catch (UsernameNotFoundException e){
+        } catch (UsernameNotFoundException e) {
             throw new BadCredentialsException("Email or password is incorrect or account is locked");
         }
         throw new BadCredentialsException("Email or password is incorrect or account is locked");
