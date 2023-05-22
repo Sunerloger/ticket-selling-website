@@ -1,9 +1,10 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {from, Observable} from 'rxjs';
 import {environment} from 'src/environments/environment';
 const baseUri = environment.backendUrl + '/api/v1/events';
 import {Event} from 'src/app/dtos/event';
+import {AbbreviatedEvent} from "../dtos/abbreviatedEvents";
 @Injectable({
   providedIn: 'root'
 })
@@ -19,14 +20,43 @@ export class EventService {
    * @return an Observable for the created horse
    */
   create(event: Event): Observable<Event> {
-    const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzZWN1cmUtYmFja2VuZCIsImF1ZCI6InNlY3VyZS1hcHAiLCJzdWIiO' +
-      'iJhZG1pbkBlbWFpbC5jb20iLCJleHAiOjE2ODM1MDA1OTcsInJvbCI6WyJST0xFX0FETUlOIiwiUk9MRV9VU0VSIl19.4TolSBIgN1QcA2PADS-OOMe' +
-      'Vn7gmSDP8hMa221Rul1enb5GI_5C5HuKqQm37-1WJQyKJchBl2zv0qB4fPFApoA';
-    console.log(token);
     console.log(event);
     return this.http.post<Event>(
       baseUri,
       event
     );
   }
+  /**
+   * Get all events stored in the system.
+   *
+   * @return observable list of found events.
+   */
+  getAll(): Observable<any> {
+    return this.http.get<any>(baseUri);
+  }
+
+  /**
+   * Loads an event-page from the backend
+   *
+   * @param pageIndex index of the page that should be fetched
+   * @return an Observable for the fetched page of event entries
+   */
+  getPage(pageIndex: number, fromDate: string, toDate: string, artist: string, location: string ): Observable<AbbreviatedEvent[]> {
+    let params: HttpParams = new HttpParams();
+    params = params.set('pageIndex', pageIndex);
+    if(fromDate != null){
+      params = params.set('fromDate', fromDate);
+    }
+    if(toDate != null){
+      params = params.set('untilDate', toDate);
+    }
+    if(artist !== ''){
+      params = params.set('artist', artist);
+    }
+    if(location !== ''){
+      params = params.set('location', location);
+    }
+    return this.http.get<AbbreviatedEvent[]>(baseUri, {params});
+  }
+
 }

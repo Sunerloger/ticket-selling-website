@@ -32,6 +32,9 @@ import { SectionmanagerComponent } from './components/roomplaneditor/sectionmana
 import { CreateSectionComponent } from './components/roomplaneditor/sectionmanager/create-section/create-section.component';
 import { ManageSectionComponent } from './components/roomplaneditor/sectionmanager/manage-section/manage-section.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { EventOverviewComponent } from './components/event-overview/event-overview.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 
 @NgModule({
   declarations: [
@@ -55,6 +58,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     SectionmanagerComponent,
     CreateSectionComponent,
     ManageSectionComponent,
+    EventOverviewComponent,
   ],
   imports: [
     BrowserModule,
@@ -69,6 +73,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     NgOptimizedImage,
     MatInputModule,
     BsDatepickerModule,
+    MatPaginatorModule,
+    InfiniteScrollModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

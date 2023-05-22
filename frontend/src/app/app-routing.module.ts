@@ -10,6 +10,7 @@ import {NewsCreateComponent} from './components/news/news-create/news-create.com
 import {NewsComponent} from './components/news/news.component';
 import {AdminRouteGuard} from './guards/admin-route.guard';
 import { RoomplaneditorComponent } from './components/roomplaneditor/roomplaneditor.component';
+import {EventOverviewComponent} from './components/event-overview/event-overview.component';
 
 
 const routes: Routes = [
@@ -19,6 +20,7 @@ const routes: Routes = [
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'events', canActivate: [AdminRouteGuard], component: EventsComponent},
+  {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
   {path: 'news', canActivate: [AuthGuard], component: NewsComponent},
   {path: 'news/create', canActivate: [AdminRouteGuard], component: NewsCreateComponent},
   {path: 'roomplan/:id/edit', component: RoomplaneditorComponent }
