@@ -1,38 +1,41 @@
 <div class="pt-5">
   <div class="card-header">
-    <h3 class="card-headline">Shopping Cart</h3>
+    <h3 class="card-headline">Cart</h3>
   </div>
   <div *ngFor="let item of items; let i = index">
     <div class="shopping-cart-item">
       <div class="shopping-cart-info">
 
         <div class="event-name">
-          <p> {{ item.event.title }} </p>
+          <h4> {{ item.event.title }} </h4>
         </div>
 
         <div class="event-info-container">
-          <p class="event-info">Date: {{ item.event.date[0] | date:'dd.MM.yy' }}</p>
-          <p class="event-info">Starting-Time: {{ formatTime(item.event.startTime) | date:'HH:mm' }}</p>
+          <span class="event-info">Date:  <b> {{ item.event.date[0] | date:'dd.MM.yy' }}</b></span>
+          <span class="event-info">Starting-Time:  <b> {{ formatTime(item.event.startTime) | date:'HH:mm' }}</b></span>
 
-          <p class="event-info">Section: {{ item.seat.section.name }}</p>
-          <p class="event-info">Row: {{ item.seat.seatrowId }}</p>
-          <p class="event-info">Seat: {{ item.seat.seatNr }}</p>
+          <span class="event-info">Section: <b> {{ item.seat.section.name }}</b></span>
+          <span class="event-info">Row: <b> {{ item.seat.seatrowId }}</b></span>
+          <span class="event-info">Seat:  <b> {{ item.seat.seatNr }}</b></span>
         </div>
 
       </div>
 
       <div class="shopping-cart-info-price">
 
-          <div class="price-container">
-            <p class="price">€ {{ item.seat.section.price }} </p>
-            <p class="price-info"> inkl. Mst.</p>
-          </div>
+        <div class="price-container">
+          <h4 class="price">€ {{ item.seat.section.price }} </h4>
+          <span class="price-info"> inkl. Mst.</span>
+        </div>
 
         <button type="button" (click)="deleteByIndex(i)" class="btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-          <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
-          <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
-        </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-trash"
+               viewBox="0 0 16 16">
+            <path
+              d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+            <path
+              d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+          </svg>
         </button>
       </div>
 
@@ -40,11 +43,11 @@
   </div>
   <div id="checkout" *ngIf="items.length !== 0">
     <button type="button" class="btn btn-primary">Checkout</button>
-    </div>
+  </div>
   <div *ngIf="items.length === 0">
-    <p>
-      You have no items in your Shopping cart
-    </p>
+    <h5>
+      Your cart is currently empty
+    </h5>
   </div>
 </div>
 

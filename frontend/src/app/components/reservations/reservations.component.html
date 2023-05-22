@@ -1,22 +1,43 @@
 <div class="pt-5">
   <div class="card-header">
-    <h3 class="card-headline">Your Reservations</h3>
+    <h3 class="card-headline">Reservations</h3>
   </div>
-  <div *ngFor="let item of items; let i = index">
+  <div *ngFor="let item of items; let i = index" class="reservation">
+    <div class="reservation-info">
+      <h4> Reservation-number: {{ item.reservationNr }} </h4>
+      <h4> Reserved on: {{ item.reservationDate | date:'dd.MM.yy' }} </h4>
+    </div>
     <div class="event">
-      <p> Reservation-Number{{ item.reservationNr }} </p>
-      <p> Reserved on:{{ item.reservationDate | date:'dd.MM.yy' }} </p>
-      <p> Event: {{ item.event.title }} </p>
-      <p> Date: {{ item.event.date }} </p>
-      <p> Starting-Time: {{ formatTime(item.event.startTime) | date:'HH:mm' }} </p>
+      <h5> Event: {{ item.event.title }} </h5>
+      <div class="event-info">
+        <span> Date: <b> {{ item.event.date }} </b> </span>
+        <span> Starting-Time: <b> {{ formatTime(item.event.startTime) | date:'HH:mm' }} </b> </span>
+      </div>
     </div>
 
-    <div *ngFor="let ticket of item.reservedSeats; let i = index" class="ticket">
-      <p> Section: {{ ticket.section.name }} </p>
-      <p> Row: {{ ticket.seatrowId }} </p>
-      <p> Seat: {{ ticket.seatNr }} </p>
-      <p> (Reservation only) € {{ ticket.section.price }} </p>
+    <div class="reservation-tickets">
+      <h5>Reserved Tickets:</h5>
+      <div *ngFor="let ticket of item.reservedSeats; let i = index">
+        <div class="ticket">
+          <div class="ticket-seatinfo">
+            <span> Section: <b> {{ ticket.section.name }}  </b></span>
+            <span> Row: <b> {{ ticket.seatrowId }}  </b></span>
+            <span> Seat: <b> {{ ticket.seatNr }} </b> </span>
+          </div>
+          <div class="ticket-priceinfo">
+            <span> (Reservation only) <b> € {{ ticket.section.price }} </b> </span>
+          </div>
+        </div>
+      </div>
+      <div class="buttons">
+        <button type="button" (click)="cancelReservation(item)" class="btn btn-secondary">Cancel Reservation</button>
+        <button type="button" class="btn btn-primary">Purchase Tickets</button>
+      </div>
     </div>
-    <button type="button" (click)="cancelReservation(item)" class="btn btn-danger">Cancel Reservation</button>
+  </div>
+  <div *ngIf="items.length === 0">
+    <h5>
+      You have no reservations
+    </h5>
   </div>
 </div>

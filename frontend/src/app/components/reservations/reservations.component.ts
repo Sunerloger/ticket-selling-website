@@ -4,7 +4,7 @@ import {Router} from '@angular/router';
 import {Reservation} from '../../dtos/reservation';
 import {ReservationService} from '../../services/reservation.service';
 import {Observable} from 'rxjs';
-import {HttpResponse} from "@angular/common/http";
+import {HttpResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-reservations',
