@@ -12,14 +12,22 @@ export class NewsOverviewComponent implements OnInit {
   pageIndex = 0;
   distance = 1;
   throttle = 2; // ms
-
+  showAlreadyReadNews = false;
   news: AbbreviatedNews[] = [];
 
   constructor(private authService: AuthService,
               private newsService: NewsService) {}
 
   ngOnInit() {
-    this.newsService.getPage(this.pageIndex).subscribe((news: AbbreviatedNews[]) => {
+    this.initializeLoadedPages();
+  }
+
+  /**
+   * Loads the first page of news from the backend and deletes all other pages from frontend
+   */
+  initializeLoadedPages() {
+    this.pageIndex = 0;
+    this.newsService.getPage(0).subscribe((news: AbbreviatedNews[]) => {
       this.news = news;
     });
   }

@@ -18,11 +18,10 @@ import { NewsCreateComponent } from './components/news/news-create/news-create.c
 import { NewsOverviewComponent } from './components/news/news-overview/news-overview.component';
 import {ToastrModule} from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatGridListModule} from '@angular/material/grid-list';
 import {NgOptimizedImage} from '@angular/common';
-import {MatInputModule} from '@angular/material/input';
 import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 import { NewsDetailComponent } from './components/news/news-detail/news-detail.component';
+import { TextareaAutoresizeDirective } from './directives/textarea-autoresize.directive';
 
 @NgModule({
   declarations: [
@@ -37,6 +36,7 @@ import { NewsDetailComponent } from './components/news/news-detail/news-detail.c
     NewsCreateComponent,
     NewsOverviewComponent,
     NewsDetailComponent,
+    TextareaAutoresizeDirective,
   ],
   imports: [
     BrowserModule,
@@ -47,9 +47,7 @@ import { NewsDetailComponent } from './components/news/news-detail/news-detail.c
     FormsModule,
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
-    MatGridListModule,
     NgOptimizedImage,
-    MatInputModule,
     InfiniteScrollModule,
   ],
   providers: [httpInterceptorProviders],
