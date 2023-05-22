@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {User} from '../dtos/user';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {AuthService} from './auth.service';
 
@@ -50,8 +50,12 @@ export class UserService {
     }
   }
 
-  delete(id: number) {
-    console.log(id);
-    return this.http.delete(this.userGetUri + '?id=' + id);
+  delete(id: number, email: string, password: string) {
+    console.log(id + email + password);
+    let params = new HttpParams();
+    params = params.append('id', id);
+    params = params.append('email', email);
+    params = params.append('password', password);
+    return this.http.delete(this.userGetUri, {params});
   }
 }

@@ -5,6 +5,13 @@ import {UserService} from '../../services/user.service';
 import {AuthService} from '../../services/auth.service';
 import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';
+import {Observable} from "rxjs";
+
+
+export enum EditDeleteMode {
+  edit,
+  delete,
+}
 
 @Component({
   selector: 'app-edit',
@@ -25,6 +32,7 @@ export class EditComponent implements OnInit {
 
   };
 
+  mode: EditDeleteMode = EditDeleteMode.edit;
   editForm: FormGroup;
   submitted = false;
   //Error flag
@@ -37,6 +45,17 @@ export class EditComponent implements OnInit {
               private notification: ToastrService,
               private router: Router) {
 
+  }
+
+  public get heading(): string {
+    switch (this.mode) {
+      case EditDeleteMode.edit:
+        return 'Editing';
+      case EditDeleteMode.delete:
+        return 'Deleting';
+      default:
+        return '?';
+    }
   }
 
 
@@ -73,11 +92,20 @@ export class EditComponent implements OnInit {
     console.log(this.editForm);
 
     if (this.editForm.valid) {
-      const observable = this.userService.editUser(this.user, this.authService.getToken());
+      let observable: Observable<any>;
+      switch (this.mode) {
+        case EditDeleteMode.edit:
+          observable = this.userService.editUser(this.user, this.authService.getToken());
+          break;
+        case EditDeleteMode.delete:
+          observable = this.userService.delete(this.user.id, this.user.email, this.user.password);
+          break;
+        default:
+          console.error('Unkown Mode');
+      }
       observable.subscribe({
-        next: () => {
-          this.router.navigate(['/login']);
-          this.notification.success(`${this.user.email} has been successfully edited`);
+        next: data => {
+          this.notification.success(`Successfully Edited/Deleted`);
         },
         error: err => {
           console.error(`Error editing user`, err, this.user);
@@ -91,13 +119,32 @@ export class EditComponent implements OnInit {
     }
   }
 
-  delete(id: number) {
-    console.log(id);
-    this.userService.delete(id).subscribe({
+  edit(user: User) {
+
+    const observable = this.userService.editUser(this.user, this.authService.getToken());
+    observable.subscribe({
       next: () => {
+        this.router.navigate(['/login']);
+        this.notification.success(`${this.user.email} has been successfully edited`);
+      },
+      error: err => {
+        console.error(`Error editing user`, err, this.user);
+        if (err.status === 409) {
+          this.notification.error(`${err.error.detail}`);
+        }
+      }
+    });
+  }
+
+  delete(user: User) {
+    console.log(user);
+    this.userService.delete(user.id, user.email, user.password).subscribe({
+      next: () => {
+        this.router.navigate(['']);
+        this.authService.logoutUser();
         this.notification.success(`User successfully deleted.`);
       },
-      error: error =>{
+      error: error => {
         this.notification.error(`User could not be deleted.`);
       }
     });

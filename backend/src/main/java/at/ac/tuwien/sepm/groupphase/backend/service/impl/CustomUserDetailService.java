@@ -135,13 +135,16 @@ public class CustomUserDetailService implements UserService {
     @Override
     public ApplicationUser getUser(String token) {
         String email = jwtAuthorizationFilter.getUsernameFromToken(token);
-        System.out.println("TEST");
         return applicationUserRepository.findUserByEmail(email);
     }
 
     @Override
-    public void delete(Long id) {
-        applicationUserRepository.deleteById(id);
+    public void delete(Long id, String email, String password) {
+        UserDetails userDetails = loadUserByUsername(email);
+        if (passwordEncoder.matches(password, userDetails.getPassword())) {
+            applicationUserRepository.deleteById(id);
+        }
+        throw new BadCredentialsException("Password is incorrect");
     }
 
 }

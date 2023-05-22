@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDeleteDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
@@ -42,10 +43,11 @@ public class ApplicationUserEditEndpoint {
     }
 
     @DeleteMapping
+    @PermitAll
     @ResponseStatus(HttpStatus.OK)
-    public void delete(@RequestParam(value = "id") Long id) {
+    public void delete(UserDeleteDto userDeleteDto) {
         LOGGER.info("DELETE " + BASE_PATH);
-        userService.delete(id);
+        userService.delete(userDeleteDto.id(), userDeleteDto.email(), userDeleteDto.password());
     }
 
     @ResponseStatus(HttpStatus.OK)
