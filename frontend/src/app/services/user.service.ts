@@ -49,4 +49,9 @@ export class UserService {
       );
     }
   }
+
+  delete(id: number) {
+    console.log(id);
+    return this.http.delete(this.userGetUri + '?id=' + id);
+  }
 }

@@ -90,4 +90,16 @@ export class EditComponent implements OnInit {
       this.editForm.markAllAsTouched();
     }
   }
+
+  delete(id: number) {
+    console.log(id);
+    this.userService.delete(id).subscribe({
+      next: () => {
+        this.notification.success(`User successfully deleted.`);
+      },
+      error: error =>{
+        this.notification.error(`User could not be deleted.`);
+      }
+    });
+  }
 }

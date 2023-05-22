@@ -22,6 +22,8 @@
       </li>
     </ul>
     <ul class="navbar-nav mr-5">
+      <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/edit"
+         routerLinkActive="active">Edit Account</a>
       <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/register"
          routerLinkActive="active">Register</a>
       <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/login" routerLinkActive="active">Login</a>
