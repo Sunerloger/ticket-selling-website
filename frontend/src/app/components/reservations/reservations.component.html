@@ -1,10 +1,22 @@
-<h3>Your Reservations</h3>
-<div *ngFor="let item of items; let i = index">
-  <div class="event-name">
-    <p> {{ item.event.title }} </p>
+<div class="pt-5">
+  <div class="card-header">
+    <h3 class="card-headline">Your Reservations</h3>
   </div>
-  <button type="button" (click)="cancelReservation(item)" class="btn"></button>
-  <div *ngFor="let ticket of item.reservedSeats; let i = index">
-    <p> {{ ticket.seatNr }} </p>
+  <div *ngFor="let item of items; let i = index">
+    <div class="event">
+      <p> Reservation-Number{{ item.reservationNr }} </p>
+      <p> Reserved on:{{ item.reservationDate | date:'dd.MM.yy' }} </p>
+      <p> Event: {{ item.event.title }} </p>
+      <p> Date: {{ item.event.date }} </p>
+      <p> Starting-Time: {{ formatTime(item.event.startTime) | date:'HH:mm' }} </p>
+    </div>
+
+    <div *ngFor="let ticket of item.reservedSeats; let i = index" class="ticket">
+      <p> Section: {{ ticket.section.name }} </p>
+      <p> Row: {{ ticket.seatrowId }} </p>
+      <p> Seat: {{ ticket.seatNr }} </p>
+      <p> (Reservation only) € {{ ticket.section.price }} </p>
+    </div>
+    <button type="button" (click)="cancelReservation(item)" class="btn btn-danger">Cancel Reservation</button>
   </div>
 </div>
