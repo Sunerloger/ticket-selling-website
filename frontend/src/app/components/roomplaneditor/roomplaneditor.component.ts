@@ -44,7 +44,7 @@ export class RoomplaneditorComponent implements OnInit {
   fetchHallplanWithId(id: number){
     this.service.getHallplanById(id).subscribe({
       next: data => {
-        console.log(data)
+        console.log(data);
         this.roomplan = data;
       },
       error: error => {
@@ -54,7 +54,7 @@ export class RoomplaneditorComponent implements OnInit {
         this.notification.error(errorMessage, 'Requested Hallplan does not exist');
         this.router.navigate(['/hallplans']);
       }
-    })
+    });
   }
 
 
@@ -147,7 +147,7 @@ export class RoomplaneditorComponent implements OnInit {
         this.notification.error(errorMessage, 'Could not create seatrow. Please try again.');
         this.router.navigate(['/hallplans']);
       }
-    })
+    });
   }
 
   handleRemoveRow(deletedRowNr: number) {
@@ -170,10 +170,10 @@ export class RoomplaneditorComponent implements OnInit {
   }
 
   handleAddSectionToSeats(seatIds: number[], section: Section){
-    console.log("handleAddSectionToSeats", seatIds, section)
+    console.log('handleAddSectionToSeats', seatIds, section);
     //call bulk endpoint
 
-    const updatedSeats:PersistedSeat[] = [];
+    const updatedSeats: PersistedSeat[] = [];
 
     //update state
     //just fetch getRoomplan again.. in order to get all the updated seats
@@ -218,7 +218,7 @@ export class RoomplaneditorComponent implements OnInit {
         clonedSeats.splice(i, 1);
         break;
       }
-    };
+    }
 
     this.roomplan = clonedRoomplan;
 

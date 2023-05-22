@@ -11,6 +11,7 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.FetchType;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -22,6 +23,8 @@ import java.util.Objects;
 @Entity
 public class News {
 
+    private static final String base64Pattern = "^data:image/(gif|png|jpeg|webp|svg\\+xml);base64,.*={0,2}$";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,6 +33,7 @@ public class News {
     @Column(nullable = false, length = 50)
     private String title;
 
+    @NotBlank
     @Column(nullable = false, name = "abbreviated_text", length = 100)
     private String shortText;
 
@@ -41,8 +45,8 @@ public class News {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
-    // TODO: store images in filesystem?
     @Lob
+    @Pattern(regexp = base64Pattern)
     @Column(name = "cover_image", columnDefinition = "BLOB")
     private String coverImage;
 

@@ -3,7 +3,7 @@
     Section
 */
 
-import { PersistedSection, Section } from "./section";
+import { PersistedSection, Section } from './section';
 
 export interface Hallplan {
     name: string;

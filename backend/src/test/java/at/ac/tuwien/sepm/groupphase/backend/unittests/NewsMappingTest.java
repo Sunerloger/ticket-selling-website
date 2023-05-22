@@ -77,7 +77,7 @@ public class NewsMappingTest implements TestData {
         newsList.add(news);
         newsList.add(news);
 
-        List<AbbreviatedNewsDto> abbreviatedNewsDtos = newsMapper.newsToAbbreviatedNewsDto(newsList);
+        List<AbbreviatedNewsDto> abbreviatedNewsDtos = newsList.stream().map(newsMapper::newsToAbbreviatedNewsDto).toList();
         assertEquals(2, abbreviatedNewsDtos.size());
         AbbreviatedNewsDto abbreviatedNewsDto = abbreviatedNewsDtos.get(0);
         assertAll(

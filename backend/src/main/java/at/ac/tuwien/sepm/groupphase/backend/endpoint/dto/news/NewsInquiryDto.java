@@ -1,8 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.Objects;
 
 public class NewsInquiryDto {
 
+    private static final String base64Pattern = "^data:image/(gif|png|jpeg|webp|svg\\+xml);base64,.*={0,2}$";
 
     @NotNull(message = "Title must not be null")
     @NotBlank(message = "Title must not be blank")
@@ -17,6 +19,7 @@ public class NewsInquiryDto {
     private String title;
 
     @NotNull(message = "Short Text must not be null")
+    @NotBlank(message = "Title must not be blank")
     @Size(max = 100)
     private String shortText;
 
@@ -24,12 +27,12 @@ public class NewsInquiryDto {
     @Size(max = 10000)
     private String fullText;
 
-    // TODO: test for real picture format
-
+    @Pattern(regexp = base64Pattern, message = "Cover Image is not a valid base64 picture")
     private String coverImage;
 
     @NotNull
-    private List<String> images = new LinkedList<>();
+    private List<@Pattern(regexp = base64Pattern, message = "An additional image is not a valid base64 picture")
+        String> images = new LinkedList<>();
 
 
     public String getTitle() {

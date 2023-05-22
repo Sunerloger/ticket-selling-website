@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { Globals } from '../../global/globals';
-import { Hallplan, PersistedHallplan, PersistedSeat, PersistedSeatRow, SeatRow } from 'src/app/dtos/hallplan/hallplan';
+import { PersistedHallplan, PersistedSeat, PersistedSeatRow, SeatRow } from 'src/app/dtos/hallplan/hallplan';
 
 
 @Injectable({
@@ -25,13 +24,13 @@ export class HallplanService {
         return this.http.post<PersistedSeatRow>(
             `${this.baseUrl}/${hallplanId}/seatrows`,
             seatrow
-        )
+        );
     }
 
     createSeat(hallplanId: number, seatrowId: number, seat: PersistedSeat){
         return this.http.post<PersistedSeatRow>(
             `${this.baseUrl}/${hallplanId}/seatrows/${seatrowId}/seat/bulk`,
             seat
-        )
+        );
     }
 }
