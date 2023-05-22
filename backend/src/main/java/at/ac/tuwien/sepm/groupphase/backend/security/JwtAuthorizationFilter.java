@@ -8,6 +8,7 @@ import io.jsonwebtoken.Jwts;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.function.Function;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -86,5 +87,22 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         MDC.put("u", username);
 
         return new UsernamePasswordAuthenticationToken(username, null, authorities);
+    }
+
+    //returns the username from token
+    public String getUsernameFromToken(String token) {
+        return getClaimFromToken(token, Claims::getSubject);
+    }
+
+
+    public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = getAllClaimsFromToken(token);
+        return claimsResolver.apply(claims);
+    }
+
+    //returns all claims from token so we can retrieve information from token
+    private Claims getAllClaimsFromToken(String token) {
+        byte[] signingKey = securityProperties.getJwtSecret().getBytes();
+        return Jwts.parserBuilder().setSigningKey(signingKey).build().parseClaimsJws(token).getBody();
     }
 }

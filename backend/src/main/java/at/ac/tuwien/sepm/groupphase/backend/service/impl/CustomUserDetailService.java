@@ -96,4 +96,5 @@ public class CustomUserDetailService implements UserService {
         applicationUser.setPassword(encodedPassword);
         return applicationUserRepository.save(applicationUser);
     }
+
 }

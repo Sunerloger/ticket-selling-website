@@ -40,4 +40,5 @@ public interface UserService extends UserDetailsService {
     String login(UserLoginDto userLoginDto);
 
     ApplicationUser register(ApplicationUser applicationUser);
+
 }
