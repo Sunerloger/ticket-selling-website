@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
+package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,6 +19,19 @@ public class HallPlanSectionDto {
     @NotNull(message = "Price is mandatory")
     @PositiveOrZero(message = "Price must be a positive number or zero")
     private Long price;
+
+    @NotNull(message = "HallPlanId is mandatory")
+    private Long hallPlanId;
+
+    private Long count;
+
+    public Long getCount() {
+        return count;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
+    }
 
     public Long getId() {
         return id;
@@ -52,6 +65,13 @@ public class HallPlanSectionDto {
         this.price = price;
     }
 
+    public Long getHallPlanId() {
+        return hallPlanId;
+    }
+
+    public void setHallPlanId(Long hallPlanId) {
+        this.hallPlanId = hallPlanId;
+    }
 
     public static final class HallPlanSectionDtoBuilder {
 

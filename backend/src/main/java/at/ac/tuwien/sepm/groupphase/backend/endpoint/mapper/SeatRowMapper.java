@@ -1,14 +1,13 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanSeatDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanSectionDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatRowDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSection;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.util.Collections;

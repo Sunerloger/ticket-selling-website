@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
+package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan;
 
 import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatStatus;
 import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatType;

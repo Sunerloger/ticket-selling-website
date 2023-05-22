@@ -21,7 +21,7 @@ const routes: Routes = [
   {path: 'events', canActivate: [AdminRouteGuard], component: EventsComponent},
   {path: 'news', canActivate: [AuthGuard], component: NewsComponent},
   {path: 'news/create', canActivate: [AdminRouteGuard], component: NewsCreateComponent},
-  {path: 'roomplan/:id/edit', component: RoomplaneditorComponent }
+  {path: 'hallplans/:id/edit', component: RoomplaneditorComponent }
 ];
 
 

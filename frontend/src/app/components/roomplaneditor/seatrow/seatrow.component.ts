@@ -20,6 +20,11 @@ export interface SeatCreationEvent {
   rowNr: number;
 }
 
+export interface SeatRowDeletionEventPayload{
+  rowNr: number;
+  rowId: number;
+}
+
 @Component({
   selector: 'app-seatrow',
   templateUrl: './seatrow.component.html',
@@ -31,7 +36,7 @@ export class SeatrowComponent {
   @Input() showAddRowBtn = false;
 
   @Output() seatCreationEvent = new EventEmitter<SeatCreationEvent>();
-  @Output() seatRowDeletion = new EventEmitter<number>();
+  @Output() seatRowDeletion = new EventEmitter<SeatRowDeletionEventPayload>();
   @Output() seatRemoval = new EventEmitter<SeatRemovalPayload>();
 
   //references to typescript enums
@@ -41,6 +46,13 @@ export class SeatrowComponent {
   //state variables
   showCreationMenuRight = false;
   showCreationMenuLeft = false;
+
+  handleSeatRowDeletion(){
+    this.seatRowDeletion.emit({
+      rowNr: this.seatRow.rowNr,
+      rowId: this.seatRow.id
+    });
+  }
 
   /**
    * Handles click outside of context menu
