@@ -121,10 +121,9 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser edit(ApplicationUser applicationUser) {
-
-       // return applicationUserRepository.updateByEmail(applicationUser);
-        return null;
+    public ApplicationUser edit(ApplicationUser applicationUser, String token) {
+        String email = jwtAuthorizationFilter.getUsernameFromToken(token);
+        return applicationUserRepository.saveApplicationUserByEmail(applicationUser,email);
     }
 
     @Override

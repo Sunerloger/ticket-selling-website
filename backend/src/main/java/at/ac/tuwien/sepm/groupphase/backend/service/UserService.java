@@ -51,7 +51,7 @@ public interface UserService extends UserDetailsService {
 
     ApplicationUser register(ApplicationUser applicationUser) throws ValidationException;
 
-    ApplicationUser edit(ApplicationUser userDetailDtoToEntity);
+    ApplicationUser edit(ApplicationUser userDetailDtoToEntity,String token);
 
     ApplicationUser getUser(String token);
 }

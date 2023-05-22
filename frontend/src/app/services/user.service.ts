@@ -41,4 +41,12 @@ export class UserService {
       );
     }
   }
+
+  editUser(user: User): Observable<User> {
+    if (this.authService.isLoggedIn()) {
+      return this.http.post<User>(
+        this.userGetUri, user
+      );
+    }
+  }
 }

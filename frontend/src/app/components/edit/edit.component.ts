@@ -44,10 +44,9 @@ export class EditComponent implements OnInit {
     console.log(this.user);
     this.userService.getUser(this.authService.getToken()).subscribe(user => {
       this.user = user;
-      console.log('User ',user);
+      console.log('User ', user);
     });
     this.editForm = this.formBuilder.group({
-      admin: [''],
       email: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -59,4 +58,34 @@ export class EditComponent implements OnInit {
     });
   }
 
+  editUser() {
+    this.editForm.controls['email'].setValue(this.user.email);
+    this.editForm.controls['firstName'].setValue(this.user.firstName);
+    this.editForm.controls['lastName'].setValue(this.user.lastName);
+    this.editForm.controls['birthdate'].setValue(this.user.birthdate);
+    this.editForm.controls['address'].setValue(this.user.address);
+    this.editForm.controls['areaCode'].setValue(this.user.areaCode);
+    this.editForm.controls['cityName'].setValue(this.user.cityName);
+    this.editForm.controls['password'].setValue(this.user.password);
+
+    console.log(this.editForm);
+
+    if (this.editForm.valid) {
+      const observable = this.userService.editUser(this.user);
+      observable.subscribe({
+        next: () => {
+          this.router.navigate(['/login']);
+          this.notification.success(`${this.user.email} has been successfully edited`);
+        },
+        error: err => {
+          console.error(`Error editing user`, err, this.user);
+          if (err.status === 409) {
+            this.notification.error(`${err.error.detail}`);
+          }
+        }
+      });
+    } else {
+      this.editForm.markAllAsTouched();
+    }
+  }
 }

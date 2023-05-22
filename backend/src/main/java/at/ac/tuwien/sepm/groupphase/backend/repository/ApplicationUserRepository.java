@@ -29,5 +29,5 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
      * @param applicationUser the values which will be updated
      * @return the updated user
      */
-    //ApplicationUser updateByEmail(String email,ApplicationUser applicationUser);
+    ApplicationUser saveApplicationUserByEmail(ApplicationUser applicationUser,String email);
 }

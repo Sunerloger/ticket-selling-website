@@ -42,13 +42,13 @@ public class ApplicationUserEditEndpoint {
     @PostMapping
     @PermitAll
     @Operation(summary = "Edit a user")
-    public UserDetailDto post(@Valid @RequestBody UserDetailDto userDetailDto) {
-        LOGGER.info("POST: {}", userDetailDto);
-        return userMapper.entityToUserDetailDto(userService.edit(userMapper.userDetailDtoToEntity(userDetailDto)));
+    public UserDetailDto post(@Valid @RequestBody UserDetailDto userDetailDto, @RequestParam(value = "token") String token) {
+        LOGGER.info("EDIT USER " + BASE_PATH + "with TOKEN " + token, userDetailDto);
+        return userMapper.entityToUserDetailDto(userService.edit(userMapper.userDetailDtoToEntity(userDetailDto),token));
     }
 
     @GetMapping
-    public UserDetailDto getUser(@RequestParam(value ="token") String token){
+    public UserDetailDto getUser(@RequestParam(value = "token") String token) {
         LOGGER.info("GET USER " + BASE_PATH + "with TOKEN" + token);
         return userMapper.entityToUserDetailDto(userService.getUser(token));
     }
