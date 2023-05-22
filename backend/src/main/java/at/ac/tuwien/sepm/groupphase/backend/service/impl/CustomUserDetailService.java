@@ -122,9 +122,14 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public ApplicationUser edit(ApplicationUser applicationUser, String token) {
-        String encodedPassword = passwordEncoder.encode(applicationUser.getPassword());
-        applicationUser.setPassword(encodedPassword);
-        return applicationUserRepository.save(applicationUser);
+        //TODO: if password will be edited aswell
+        UserDetails currentUser = loadUserByUsername(applicationUser.getEmail());
+        if (passwordEncoder.matches(applicationUser.getPassword(), currentUser.getPassword())) {
+            String encodedPassword = passwordEncoder.encode(applicationUser.getPassword());
+            applicationUser.setPassword(encodedPassword);
+            return applicationUserRepository.save(applicationUser);
+        }
+        throw new BadCredentialsException("Password was wrong!");
     }
 
     @Override

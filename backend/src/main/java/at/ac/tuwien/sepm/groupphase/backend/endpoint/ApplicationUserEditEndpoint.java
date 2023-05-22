@@ -45,7 +45,7 @@ public class ApplicationUserEditEndpoint {
     @Operation(summary = "Edit a user")
     public void update(@Valid @RequestBody UserDetailDto userDetailDto, @RequestParam(value = "token") String token) {
         LOGGER.info("EDIT USER " + BASE_PATH + "with TOKEN " + token, userDetailDto);
-        userMapper.entityToUserDetailDto(userService.edit(userMapper.userDetailDtoToEntity(userDetailDto),token));
+        userMapper.entityToUserDetailDto(userService.edit(userMapper.userDetailDtoToEntity(userDetailDto), token));
     }
 
     @GetMapping
