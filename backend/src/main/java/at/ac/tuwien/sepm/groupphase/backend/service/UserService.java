@@ -56,5 +56,5 @@ public interface UserService extends UserDetailsService {
 
     ApplicationUser getUser(String token);
 
-    void delete(Long id,String email, String password);
+    void delete(Long id, String email, String password);
 }
