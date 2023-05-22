@@ -6,7 +6,6 @@ import {Globals} from '../global/globals';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-
   constructor(private authService: AuthService, private globals: Globals) {
   }
 

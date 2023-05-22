@@ -3,14 +3,13 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.BackendApplication;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.MessageInquiryDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.message.MessageInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.MessageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Message;
 import at.ac.tuwien.sepm.groupphase.backend.repository.MessageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,10 +33,10 @@ import jakarta.annotation.security.DeclareRoles;
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
+
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -137,7 +136,7 @@ public class SecurityTest implements TestData {
     @Test
     public void givenUserLoggedIn_whenFindAll_then200() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get(MESSAGE_BASE_URI)
-            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -164,9 +163,9 @@ public class SecurityTest implements TestData {
         String body = objectMapper.writeValueAsString(messageInquiryDto);
 
         MvcResult mvcResult = this.mockMvc.perform(post(MESSAGE_BASE_URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(body)
-            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -181,8 +180,8 @@ public class SecurityTest implements TestData {
         String body = objectMapper.writeValueAsString(messageInquiryDto);
 
         MvcResult mvcResult = this.mockMvc.perform(post(MESSAGE_BASE_URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(body))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -197,9 +196,9 @@ public class SecurityTest implements TestData {
         String body = objectMapper.writeValueAsString(messageInquiryDto);
 
         MvcResult mvcResult = this.mockMvc.perform(post(MESSAGE_BASE_URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(body)
-            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();

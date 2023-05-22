@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedMessageDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.MessageInquiryDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SimpleMessageDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.message.DetailedMessageDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.message.MessageInquiryDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.message.SimpleMessageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.MessageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,8 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 
 import jakarta.validation.Valid;
+
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,4 +65,6 @@ public class MessageEndpoint {
         return messageMapper.messageToDetailedMessageDto(
             messageService.publishMessage(messageMapper.messageInquiryDtoToMessage(messageDto)));
     }
+
+
 }

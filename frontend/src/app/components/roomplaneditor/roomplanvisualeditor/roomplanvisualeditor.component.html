@@ -1,0 +1,41 @@
+<div class="editor">
+
+<!-- Toolbar -->      
+<app-toolbar
+       (toolbarClick)="handleToolbarItemClick($event)"    
+/>
+
+<div class="editor_container">
+    <div class="venue_template">
+        <span>Venue</span>
+    </div>
+    <!-- Seat Layout -->
+    <div class="seat_layout_template">
+        <!-- Seat Row -->
+        <div class="seatrow_container">
+            <div 
+                class="seat_row_mapper"
+                *ngFor="let seatrow of roomplan.seatRows"
+            >
+            <!-- Add Row (shown in Detail-View )-->
+            <app-addrowbtn 
+                *ngIf="isDetailedView === true" 
+                (click)="handleAddRowEvent(seatrow.rowNr)" 
+            />
+            <app-seatrow 
+                    [showDeleteRowBtn]="isDetailedView"
+                    [seatRow]="seatrow"
+                    (seatRemoval)="this.seatRemovalEvent.emit($event)"
+                    (seatRowDeletion)="this.seatRowDeletionEvent.emit($event)"
+                    (seatCreationEvent)="onAddSeat($event)"
+                />
+            </div>
+        </div>
+       
+      
+        <!-- Add Row (shown in Non-Detail-View)-->
+        <app-addrowbtn
+           (click)="handleAddRowEvent()"
+        />
+</div>
+</div>
