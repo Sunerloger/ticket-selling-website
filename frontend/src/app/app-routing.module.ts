@@ -27,6 +27,7 @@ const routes: Routes = [
       {path: 'create', canActivate: [AdminRouteGuard], component: NewsCreateComponent},
     ]},
   {path: 'roomplan/:id/edit', component: RoomplaneditorComponent },
+  {path: 'hallplans/:id/edit', component: RoomplaneditorComponent },
   {path: '**', redirectTo: 'news'},
 ];
 

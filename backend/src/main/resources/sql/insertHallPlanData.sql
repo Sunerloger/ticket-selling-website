@@ -18,15 +18,15 @@ VALUES (1, 1),
        (3, 3),
        (1, 4);
 
-INSERT INTO section (name, color, price)
-VALUES ('VIP', 'gold', 100),
-       ('Front Row', 'red', 80),
-       ('Middle Section', 'green', 60),
-       ('Back Section', 'blue', 40),
-       ('Standing Area', 'gray', 20),
-       ('Balcony', 'purple', 70),
-       ('Family Section', 'orange', 50),
-       ('Disabled Section', 'pink', 30);
+INSERT INTO section (name, color, price, hallplan_id)
+VALUES ('VIP', 'gold', 100, 1),
+       ('Front Row', 'red', 80, 1),
+       ('Middle Section', 'green', 60, 1),
+       ('Back Section', 'blue', 40, 1),
+       ('Standing Area', 'gray', 20, 1),
+       ('Balcony', 'purple', 70, 1),
+       ('Family Section', 'orange', 50, 1),
+       ('Disabled Section', 'pink', 30, 1);
 
 INSERT INTO seat (status, type, capacity, seat_nr, seatrow_id, section_id)
 VALUES ('FREE', 'SEAT', 1, 1, 1, 1),

@@ -1,12 +1,12 @@
 <div class="menu">
-    <button [ngClass]="{'btn-secondary' : currentPage === submenuPageEnum.addSection, 
-        'btn-light':  currentPage !== submenuPageEnum.addSection
+    <button [ngClass]="{'btn-secondary' : sectionpage === submenuPageEnum.addSection, 
+        'btn-light':  sectionpage !== submenuPageEnum.addSection
         }" class="btn" (click)="switchPage(submenuPageEnum.addSection)">
         Create Section
     </button>
 
-    <button [ngClass]="{'btn-secondary' : currentPage === submenuPageEnum.manageSection, 
-        'btn-light':  currentPage !== submenuPageEnum.manageSection
+    <button [ngClass]="{'btn-secondary' : sectionpage === submenuPageEnum.manageSection, 
+        'btn-light':  sectionpage !== submenuPageEnum.manageSection
         }" class="btn btn-light" (click)="switchPage(submenuPageEnum.manageSection)">
         Manage Sections
     </button>
@@ -14,12 +14,14 @@
 
 <div class="content">
     <app-create-section 
-        *ngIf="currentPage === submenuPageEnum.addSection" 
+        *ngIf="sectionpage === submenuPageEnum.addSection" 
         [roomplan]="this.roomplan"
         (createSectionEvent)="this.createSectionEvent.emit($event)"
     />
 
     <app-manage-section 
-        *ngIf="currentPage === submenuPageEnum.manageSection" 
+        [sections]="this.sections"
+        (deleteSectionEvent)="this.handleDeleteSection($event)"
+        *ngIf="sectionpage === submenuPageEnum.manageSection" 
     />
 </div>

@@ -1,12 +1,13 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedHallPlanDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanSectionDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.DetailedHallPlanDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanSectionMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SeatRowMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
+import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSection;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +59,7 @@ public class HallPlanServiceImpl implements HallPlanService {
     }
 
     @Override
-    public HallPlan createHallplan(HallPlanDto hallplan) throws ValidationException {
+    public HallPlan createHallPlan(HallPlanDto hallplan) throws ValidationException {
         LOGGER.debug("Create new hall plan");
         Optional<HallPlan> existingHallPlan = hallPlanRepository.findHallPlanById(hallplan.getId());
         if (existingHallPlan.isPresent()) {
@@ -66,7 +68,7 @@ public class HallPlanServiceImpl implements HallPlanService {
         return hallPlanRepository.save(hallPlanMapper.hallPlanDtoToHallPlan(hallplan));
     }
 
-    @Transactional
+
     @Override
     public DetailedHallPlanDto getHallPlanById(Long id) {
         LOGGER.debug("Get hall plan by id: {}", id);
@@ -75,9 +77,11 @@ public class HallPlanServiceImpl implements HallPlanService {
         if (hallPlanEntityWithoutSeats.isPresent()) {
             hallPlanEntityWithoutSeats.get().setSeatRows(seatRows);
         } else {
-            throw new EntityNotFoundException("Hall Plan with id " + id + " was not found in the system");
+            throw new NotFoundException("Hall Plan with id " + id + " was not found in the system");
         }
-        return hallPlanEntityWithoutSeats.map(hallPlanMapper::mapToDetailedHallPlanDto).orElse(null);
+        DetailedHallPlanDto detailed = hallPlanEntityWithoutSeats.map(hallPlanMapper::mapToDetailedHallPlanDto).orElse(null);
+        return detailed;
+        //return hallPlanEntityWithoutSeats.map(hallPlanMapper::mapToDetailedHallPlanDto).orElse(null);
     }
 
     @Override
@@ -111,6 +115,7 @@ public class HallPlanServiceImpl implements HallPlanService {
         section.setName(sectionDto.getName());
         section.setColor(sectionDto.getColor());
         section.setPrice(sectionDto.getPrice());
+        section.setHallPlanId(sectionDto.getHallPlanId());
         return hallPlanSectionRepository.save(section);
     }
 
@@ -121,6 +126,7 @@ public class HallPlanServiceImpl implements HallPlanService {
         section.setName(sectionDto.getName());
         section.setColor(sectionDto.getColor());
         section.setPrice(sectionDto.getPrice());
+        section.setHallPlanId(sectionDto.getHallPlanId());
         return hallPlanSectionRepository.save(section);
     }
 
@@ -140,6 +146,7 @@ public class HallPlanServiceImpl implements HallPlanService {
     @Override
     public List<HallPlanSection> getAllSections() {
         LOGGER.debug("Get all hall plan sections");
+        List<HallPlanSection> sections = hallPlanRepository.findAllSectionsByHallPlanId(1L);
         return hallPlanSectionRepository.findAll();
     }
 
@@ -148,6 +155,42 @@ public class HallPlanServiceImpl implements HallPlanService {
         LOGGER.debug("Find all hall plan sections by hall plan id: {}", id);
         //List<HallPlanSection> testList = hallPlanSectionRepository.findByHallPlanId(id);
         return null;
+    }
+
+    @Override
+    public List<HallPlanSectionDto> findAllSectionsByHallPlanIdWithCounts(Long hallplanId) {
+        List<Object[]> counts = hallPlanRepository.findAllSectionsByHallPlanIdCounts(hallplanId);
+        List<Object[]> zeroCounts = hallPlanRepository.findHallPlanCountsById(hallplanId);
+        List<HallPlanSection> sections = new ArrayList<HallPlanSection>();
+        List<Long> existIdList = new ArrayList<>();
+        for (Object[] count : counts) {
+            HallPlanSection section = (HallPlanSection) count[0];
+            section.setCount((Long) count[1]);
+            sections.add((HallPlanSection) count[0]);
+            existIdList.add(section.getId());
+        }
+        for (Object[] zeroCount : zeroCounts) {
+            HallPlanSection section = (HallPlanSection) zeroCount[0];
+            section.setCount(0L);
+            boolean exist = false;
+            for (Long id : existIdList) {
+                if (id.longValue() == section.getId()) {
+                    exist = true;
+                    break;
+                }
+            }
+            if (!exist) {
+                sections.add(section);
+            }
+
+        }
+        List<HallPlanSectionDto> list = hallPlanSectionMapper.toDto(sections);
+        return list;
+    }
+
+    @Override
+    public List<HallPlanSectionDto> findAllSectionsByHallPlanId(Long hallplanId) {
+        return hallPlanSectionMapper.toDto(hallPlanRepository.findAllSectionsByHallPlanId(hallplanId));
     }
 
 

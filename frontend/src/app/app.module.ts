@@ -32,6 +32,8 @@ import { SeatComponent } from './components/roomplaneditor/seatrow/seat/seat.com
 import { SectionmanagerComponent } from './components/roomplaneditor/sectionmanager/sectionmanager.component';
 import { CreateSectionComponent } from './components/roomplaneditor/sectionmanager/create-section/create-section.component';
 import { ManageSectionComponent } from './components/roomplaneditor/sectionmanager/manage-section/manage-section.component';
+import { EditableSectionComponent }
+from './components/roomplaneditor/sectionmanager/manage-section/editable-section/editable-section.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +59,7 @@ import { ManageSectionComponent } from './components/roomplaneditor/sectionmanag
     SectionmanagerComponent,
     CreateSectionComponent,
     ManageSectionComponent,
+    EditableSectionComponent,
   ],
   imports: [
     BrowserModule,

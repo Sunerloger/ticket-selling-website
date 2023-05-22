@@ -32,7 +32,7 @@ const defaultColorOptions: ColorItem[] = [
 
 export interface CreateSectionPayload {
   section: Section;
-  affectedSeatIds: number[];
+  affectedSeatIds: PersistedSeat[];
 }
 
 @Component({
@@ -118,8 +118,8 @@ export class CreateSectionComponent implements OnChanges {
   /**
    * PRE-COND: smallest possible seatnr is 1
    */
-  affectedSeats(): PersistedSeat['id'][] {
-    const affectedSeatIds: number[] = [];
+  affectedSeats(): PersistedSeat[] {
+    const affectedSeats: PersistedSeat[] = [];
 
     for (let selectedSeatNr = this.fromSeatNr; selectedSeatNr <= this.toSeatNr; selectedSeatNr++) {
       for (const seatrow of this.roomplan.seatRows) {
@@ -129,13 +129,11 @@ export class CreateSectionComponent implements OnChanges {
         }
 
         //find affected seat
-        const affectedSeat = seatrow.seats.find(seat => {
-          return seat.seatNr === selectedSeatNr;
-        });
-        affectedSeatIds.push(affectedSeat.id);
+        const affectedSeat = seatrow.seats.find(seat => seat.seatNr === selectedSeatNr);
+        affectedSeats.push(affectedSeat);
       }
     }
-    return affectedSeatIds;
+    return affectedSeats;
   }
 
   isDisabled() {
@@ -150,6 +148,8 @@ export class CreateSectionComponent implements OnChanges {
   handleNameInputChange(updatedName: string) {
     if (updatedName.length === 0) {
       this.nameErrMessage = 'Name is mandatory';
+    } else {
+      this.nameErrMessage = '';
     }
     this.name = updatedName;
   }
@@ -207,7 +207,7 @@ export class CreateSectionComponent implements OnChanges {
   }
 
   /**
-   * Check if the input is a valid number with optional two decimal places
+   *   // Check if the input is a valid number with optional two decimal places
    *
    * @param input that may resemble a number
    * @returns if given input is valid currency number
@@ -234,8 +234,7 @@ export class CreateSectionComponent implements OnChanges {
         //...otherwise validate toSeatNr
         if (updatedToSeatNr < this.fromSeatNr) {
           this.toSeatNrErrMessage = `Must be larger or equal to From Seat Nr = ${this.fromSeatNr}`;
-        } else if (! (updatedToSeatNr > 0 && updatedToSeatNr <= seatrow.seats.length) ) {
-          //...check if seatNr is within seatrow range
+        } else if (!(updatedToSeatNr > 0 && updatedToSeatNr <= seatrow.seats.length)) {//...check if seatNr is within seatrow range
           this.toSeatNrErrMessage = `SeatNr: ${updatedToSeatNr} does not exist in seatrowNr: ${seatrow.rowNr}`;
         }
       }
