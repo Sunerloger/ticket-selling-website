@@ -9,16 +9,21 @@ import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.FetchType;
+import jakarta.validation.constraints.Pattern;
+
 import java.util.Objects;
 
 @Entity
 public class NewsImage {
+
+    private static final String base64Pattern = "^data:image/(gif|png|jpeg|webp|svg\\+xml);base64,.*={0,2}$";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Lob
+    @Pattern(regexp = base64Pattern)
     @Column(name = "image_data", columnDefinition = "BLOB")
     private String imageData;
 

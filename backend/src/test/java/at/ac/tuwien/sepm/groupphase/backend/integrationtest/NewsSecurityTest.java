@@ -29,6 +29,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -81,10 +83,9 @@ public class NewsSecurityTest implements TestData {
         news.setImages(testImageList);
     }
 
-    /* // TODO: (not implemented yet, method not allowed for now)
-
     @Test
     public void givenUserLoggedIn_whenFindAll_then200() throws Exception {
+        // default pageIndex is 0
         MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
             .andDo(print())
@@ -99,6 +100,7 @@ public class NewsSecurityTest implements TestData {
 
     @Test
     public void givenNoOneLoggedIn_whenFindAll_then403() throws Exception {
+        // default pageIndex is 0
         MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI))
             .andDo(print())
             .andReturn();
@@ -106,10 +108,6 @@ public class NewsSecurityTest implements TestData {
 
         assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
     }
-
-     */
-
-    // TODO: Test getById and delete
 
     @Test
     public void givenAdminLoggedIn_whenPost_then201() throws Exception {
