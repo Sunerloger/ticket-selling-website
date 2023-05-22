@@ -1,7 +1,7 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -22,6 +22,16 @@ import {NgOptimizedImage} from '@angular/common';
 import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 import { NewsDetailComponent } from './components/news/news-detail/news-detail.component';
 import { TextareaAutoresizeDirective } from './directives/textarea-autoresize.directive';
+import { RoomplaneditorComponent } from './components/roomplaneditor/roomplaneditor.component';
+import { RoomplanvisualeditorComponent } from './components/roomplaneditor/roomplanvisualeditor/roomplanvisualeditor.component';
+import { SeatrowComponent } from './components/roomplaneditor/seatrow/seatrow.component';
+import { ContextmenuComponent } from './components/roomplaneditor/seatrow/contextmenu/contextmenu.component';
+import { ToolbarComponent } from './components/roomplaneditor/toolbar/toolbar.component';
+import { AddrowbtnComponent } from './components/roomplaneditor/seatrow/addrowbtn/addrowbtn.component';
+import { SeatComponent } from './components/roomplaneditor/seatrow/seat/seat.component';
+import { SectionmanagerComponent } from './components/roomplaneditor/sectionmanager/sectionmanager.component';
+import { CreateSectionComponent } from './components/roomplaneditor/sectionmanager/create-section/create-section.component';
+import { ManageSectionComponent } from './components/roomplaneditor/sectionmanager/manage-section/manage-section.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +47,16 @@ import { TextareaAutoresizeDirective } from './directives/textarea-autoresize.di
     NewsOverviewComponent,
     NewsDetailComponent,
     TextareaAutoresizeDirective,
+    RoomplaneditorComponent,
+    RoomplanvisualeditorComponent,
+    SeatrowComponent,
+    ContextmenuComponent,
+    ToolbarComponent,
+    AddrowbtnComponent,
+    SeatComponent,
+    SectionmanagerComponent,
+    CreateSectionComponent,
+    ManageSectionComponent,
   ],
   imports: [
     BrowserModule,

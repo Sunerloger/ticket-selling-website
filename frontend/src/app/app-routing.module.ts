@@ -10,6 +10,8 @@ import {NewsCreateComponent} from './components/news/news-create/news-create.com
 import {NewsOverviewComponent} from './components/news/news-overview/news-overview.component';
 import {AdminRouteGuard} from './guards/admin-route.guard';
 import {NewsDetailComponent} from './components/news/news-detail/news-detail.component';
+import { RoomplaneditorComponent } from './components/roomplaneditor/roomplaneditor.component';
+
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -24,11 +26,13 @@ const routes: Routes = [
         }*/},
       {path: 'create', canActivate: [AdminRouteGuard], component: NewsCreateComponent},
     ]},
+  {path: 'roomplan/:id/edit', component: RoomplaneditorComponent },
   {path: '**', redirectTo: 'news'},
 ];
 
+
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {useHash: true})],
+  imports: [RouterModule.forRoot(routes, { useHash: true })],
   exports: [RouterModule]
 })
 export class AppRoutingModule {
