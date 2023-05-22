@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
 
@@ -43,8 +44,12 @@ public class AdminCreateEndpoint {
     @PostMapping
     @Secured("ROLE_ADMIN")
     @Operation(summary = "Create a new user", security = @SecurityRequirement(name = "apiKey"))
-    public UserCreateDto post(@RequestBody UserCreateDto userCreateDto) throws ValidationException {
+    public UserCreateDto post(@RequestBody UserCreateDto userCreateDto) {
         LOGGER.info("POST: {}", userCreateDto);
-        return userMapper.entityToUserCreateDto(userService.register(userMapper.userCreateDtoToEntity(userCreateDto)));
+        try {
+            return userMapper.entityToUserCreateDto(userService.register(userMapper.userCreateDtoToEntity(userCreateDto)));
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
     }
 }
