@@ -5,9 +5,13 @@
 
       <div class="card-border">
         <div class="card-header">
-          <h3 class="card-headline">Register</h3>
+          <div *ngIf="authService.isLoggedIn && authService.getUserRole() === 'ADMIN'">
+            <h3 class="card-headline">Create User</h3>
+          </div>
+          <div *ngIf="!authService.isLoggedIn()">
+            <h3 class="card-headline">Register</h3>
+          </div>
         </div>
-
         <form (ngSubmit)="registerUser()" #registerForm="ngForm">
           <div id="input">
             <div class="form-group">
@@ -79,7 +83,7 @@
             <div class="form-group"
                  [class.has-error]="address.invalid && address.touched">
               <label for="address">Address</label>
-              <input type="text" class="form-control" id="address" name="address" pattern="[A-Za-z0-9 ]*"
+              <input type="text" class="form-control" id="address" name="address" pattern="([A-Za-z0-9ßäöüÄÖÜ]+[-\s/]?)*"
                      [(ngModel)]="user.address"
                      #address="ngModel" required>
               <div *ngIf="registerForm.submitted &&registerForm.controls['address'].invalid" class="text-danger">Address

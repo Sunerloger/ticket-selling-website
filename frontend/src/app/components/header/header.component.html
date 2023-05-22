@@ -16,7 +16,6 @@
         <a class="nav-link" *ngIf="authService.isLoggedIn() && authService.getUserRole() === 'ADMIN'"
            routerLink="/register">Create User</a>
       </li>
-
         <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/news" routerLinkActive="active">News</a>
       </li>
       <li class="nav-item">
