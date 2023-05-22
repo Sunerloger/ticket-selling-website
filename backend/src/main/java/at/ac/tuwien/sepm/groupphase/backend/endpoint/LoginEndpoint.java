@@ -26,8 +26,8 @@ public class LoginEndpoint {
     public String login(@RequestBody UserLoginDto userLoginDto) {
         try {
             return userService.login(userLoginDto);
-        }catch (BadCredentialsException e){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,e.getMessage(),e);
+        } catch (BadCredentialsException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage(), e);
         }
     }
 }

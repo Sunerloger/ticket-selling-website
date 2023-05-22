@@ -55,4 +55,6 @@ public interface UserService extends UserDetailsService {
     ApplicationUser edit(ApplicationUser userDetailDtoToEntity, String token);
 
     ApplicationUser getUser(String token);
+
+    void delete(Long id);
 }

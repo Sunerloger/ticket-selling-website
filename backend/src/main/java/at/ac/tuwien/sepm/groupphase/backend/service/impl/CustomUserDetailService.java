@@ -139,4 +139,9 @@ public class CustomUserDetailService implements UserService {
         return applicationUserRepository.findUserByEmail(email);
     }
 
+    @Override
+    public void delete(Long id) {
+        applicationUserRepository.deleteById(id);
+    }
+
 }

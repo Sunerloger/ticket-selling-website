@@ -26,12 +26,6 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
      */
     ApplicationUser findUserByEmail(String email);
 
-    /**
-     * Update user
-     *
-     * @param applicationUser the values which will be updated
-     * @return the updated user
-     */
-
-
+    @Override
+    void deleteById(Long id);
 }
