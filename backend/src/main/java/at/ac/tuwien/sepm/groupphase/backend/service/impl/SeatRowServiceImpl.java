@@ -1,9 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatRowDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatRowBulkDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SeatRowMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRowRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.SeatRowService;
@@ -53,7 +56,7 @@ public class SeatRowServiceImpl implements SeatRowService {
         Long hallPlanId = seatRowDto.getHallPlanId();
         LOGGER.debug("Creating seat row for hall plan with id: {}", hallPlanId);
         HallPlan hallPlan = hallPlanRepository.findById(hallPlanId)
-            .orElseThrow(() -> new EntityNotFoundException("HallPlan with id " + hallPlanId + " not found"));
+            .orElseThrow(() -> new NotFoundException("HallPlan with id " + hallPlanId + " not found"));
 
         Optional<SeatRow> existingSeatRow = seatRowRepository.findByRowNrAndHallPlanId(seatRowDto.getRowNr(), hallPlan.getId());
         if (existingSeatRow.isPresent()) {
@@ -75,10 +78,16 @@ public class SeatRowServiceImpl implements SeatRowService {
     }
 
     @Override
-    public SeatRowDto updateSeatRow(SeatRowDto seatRowDto) {
+    public SeatRowDto updateSeatRow(SeatRowDto seatRowDto) throws ValidationException {
         Long id = seatRowDto.getId();
         LOGGER.debug("Updating seat row with id: {}", id);
         Optional<SeatRow> seatRowEntityOptional = seatRowRepository.findById(id);
+
+        Optional<SeatRow> existingSeatRow = seatRowRepository.findByRowNrAndHallPlanId(seatRowDto.getRowNr(), seatRowDto.getHallPlanId());
+        if (existingSeatRow.isPresent()) {
+            throw new ValidationException("SeatRow with rowNr " + seatRowDto.getRowNr() + " and hallPlanId " + seatRowDto.getHallPlanId() + " already exists");
+        }
+
         if (seatRowEntityOptional.isPresent()) {
             SeatRow seatRowEntity = seatRowMapper.toEntity(seatRowDto);
             SeatRow updatedSeatRow = seatRowRepository.save(seatRowEntity);
@@ -94,8 +103,28 @@ public class SeatRowServiceImpl implements SeatRowService {
         if (seatRowEntityOptional.isPresent()) {
             seatRowRepository.deleteById(id);
             return true;
+        } else {
+            throw new NotFoundException("The seat with id " + id + "is not defined");
         }
-        return false;
+    }
+
+    @Override
+    public List<SeatRowDto> bulkCreateSeatRow(HallPlanSeatRowBulkDto seatRowBulkDto) {
+        LOGGER.debug("Bulk create seatrows in hallplan");
+        for (SeatRowDto seatRow : seatRowBulkDto.getSeatRows()) {
+            seatRow.setId(null);
+            seatRowRepository.save(seatRowMapper.toEntity(seatRow));
+        }
+        return seatRowBulkDto.getSeatRows();
+    }
+
+    @Override
+    public List<SeatRowDto> bulkUpdateSeatRow(HallPlanSeatRowBulkDto seatRowBulkDto) {
+        LOGGER.debug("Bulk update seatrows in hallplan");
+        for (SeatRowDto seatRow : seatRowBulkDto.getSeatRows()) {
+            seatRowRepository.save(seatRowMapper.toEntity(seatRow));
+        }
+        return seatRowBulkDto.getSeatRows();
     }
 
 

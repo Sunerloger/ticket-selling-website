@@ -51,7 +51,7 @@
     margin-right: 0.5rem;
 }
 
-.section_main{
+.section_main {
     display: flex;
     gap: 1rem;
 }
@@ -88,15 +88,32 @@
 }
 
 /*
-    Single Stat
+    Multiple Stats
 */
-.single_stat{
+.single_stat {
     display: flex;
     flex-direction: row;
     gap: 1rem;
 }
 
-.multiple_stats{
+.multiple_stats {
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
+}
+
+.color_preview_box{
+    width: 3rem;
+    height: auto;
+    border-radius: 5px;
+    border: 0.5px solid lightgrey;
+}
+
+.single_stat_with_label{
+    display: flex;
+    justify-content: center;
+
+    height: auto;
+
+    gap: 1rem;
 }
