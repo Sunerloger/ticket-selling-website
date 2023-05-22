@@ -2,7 +2,7 @@
   <div class="card-header">
     <h3 class="card-headline">Reservations</h3>
   </div>
-  <div *ngFor="let item of items; let i = index" class="reservation">
+  <div *ngFor="let item of items; let i = index; let last = last" class="reservation">
     <div class="reservation-info">
       <h4> Reservation-number: {{ item.reservationNr }} </h4>
       <h4> Reserved on: {{ item.reservationDate | date:'dd.MM.yy' }} </h4>
@@ -17,7 +17,7 @@
 
     <div class="reservation-tickets">
       <h5>Reserved Tickets:</h5>
-      <div *ngFor="let ticket of item.reservedSeats; let i = index">
+      <div *ngFor="let ticket of item.reservedSeats; let j = index">
         <div class="ticket">
           <div class="ticket-seatinfo">
             <span> Section: <b> {{ ticket.section.name }}  </b></span>
@@ -34,6 +34,7 @@
         <button type="button" class="btn btn-primary">Purchase Tickets</button>
       </div>
     </div>
+    <hr *ngIf="!last">
   </div>
   <div *ngIf="items.length === 0">
     <h5>

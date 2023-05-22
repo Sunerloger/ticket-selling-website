@@ -1,27 +1,26 @@
 <div id="roomplan-cart">
-  <p id="roomplan-cart-header">
+  <h5>
     {{ selectedSeats() }} Tickets selected
-  </p>
+  </h5>
   <div *ngFor="let item of items">
 
-    <div  class="roomplan-cart-item">
-      <span class="roomplan-cart-item-infobox">
-        <p class="roomplan-cart-item-extrainfo">Section:</p> <p class="roomplan-cart-item-info">{{ item.section.name }}</p>
-        <p class="roomplan-cart-item-extrainfo">Row:</p> <p class="roomplan-cart-item-info">{{ item.seatrowId }}</p>
-        <p class="roomplan-cart-item-extrainfo">Seat:</p> <p class="roomplan-cart-item-info">{{ item.seatNr }}</p>
-      </span>
+    <div  class="cart-item">
+      <div class="cart-info">
+        <span class="cart-item-info"> Section: <b>{{ item.section.name }} </b> </span>
+        <span class="cart-item-info"> Row: <b> {{ item.seatrowId }} </b> </span>
+        <span class="cart-item-info"> Seat: <b> {{ item.seatNr }} </b> </span>
+      </div>
 
-      <span class="roomplan-cart-item-price-info">
-        <p class="roomplan-cart-price">€ {{ item.section.price | number:'1.2-2' }}</p>
-        <p class="roomplan-cart-price-mst">inkl. Mst.</p>
-      </span>
+      <div class="item-price-info">
+        <span class="cart-price"><h5> € {{ item.section.price | number:'1.2-2' }} </h5> inkl. Mst.</span>
+      </div>
     </div>
   </div>
-  <div id="roomplan-cart-buttons" *ngIf="items.length !== 0">
+  <div id="buttons" *ngIf="items.length !== 0">
     <div>
       <button type="button" class="btn btn-secondary">Cancel</button>
     </div>
-    <div>
+    <div id="buttons-right">
       <button type="button" class="btn btn-primary" (click)="reserveSeats(items)">Reserve</button>
       <button id="purchase" type="button" class="btn btn-primary" (click)="addToCart(items)">Add to Cart</button>
     </div>
