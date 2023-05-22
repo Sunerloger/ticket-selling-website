@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
@@ -49,4 +50,8 @@ public interface UserService extends UserDetailsService {
     String login(UserLoginDto userLoginDto) throws BadCredentialsException;
 
     ApplicationUser register(ApplicationUser applicationUser) throws ValidationException;
+
+    ApplicationUser edit(ApplicationUser userDetailDtoToEntity);
+
+    ApplicationUser getUser(String token);
 }

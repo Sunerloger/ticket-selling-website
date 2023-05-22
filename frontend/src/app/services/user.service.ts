@@ -13,6 +13,7 @@ export class UserService {
 
   private userBaseUri: string = this.globals.backendUri + '/register';
   private adminBaseUri: string = this.globals.backendUri + '/user';
+  private userGetUri: string = this.globals.backendUri + '/edit';
 
   constructor(
     public authService: AuthService,
@@ -29,6 +30,14 @@ export class UserService {
     } else {
       return this.http.post<User>(
         this.userBaseUri, user
+      );
+    }
+  }
+
+  getUser(token: string): Observable<User> {
+    if (this.authService.isLoggedIn()) {
+      return this.http.get<User>(
+        this.userGetUri + '?token=' + token
       );
     }
   }

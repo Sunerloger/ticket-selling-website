@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserCreateDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import org.mapstruct.Mapper;
@@ -19,12 +20,19 @@ public interface UserMapper {
     @Mapping(target = "id", source = "id")
     UserCreateDto entityToUserCreateDto(ApplicationUser user);
 
+    @Named("user")
+    @Mapping(target = "id", source = "id")
+    UserDetailDto entityToUserDetailDto(ApplicationUser user);
+
 
     @Mapping(target = "id", source = "id")
     ApplicationUser dtoToEntity(UserRegisterDto userRegisterDto);
 
     @Mapping(target = "id", source = "id")
     ApplicationUser userCreateDtoToEntity(UserCreateDto userCreateDto);
+
+    @Mapping(target = "id", source = "id")
+    ApplicationUser userDetailDtoToEntity(UserDetailDto userDetailDto);
 
 
 }

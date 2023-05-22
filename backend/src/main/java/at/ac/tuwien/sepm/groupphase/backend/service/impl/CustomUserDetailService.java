@@ -1,10 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ApplicationUserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.security.JwtAuthorizationFilter;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 
@@ -34,14 +36,16 @@ public class CustomUserDetailService implements UserService {
     private final UserRepository userRepository;
     private final ApplicationUserRepository applicationUserRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtAuthorizationFilter jwtAuthorizationFilter;
     private final JwtTokenizer jwtTokenizer;
 
     @Autowired
     public CustomUserDetailService(ApplicationUserRepository applicationUserRepository, UserRepository userRepository, PasswordEncoder passwordEncoder,
-                                   JwtTokenizer jwtTokenizer) {
+                                   JwtTokenizer jwtTokenizer, JwtAuthorizationFilter jwtAuthorizationFilter) {
         this.applicationUserRepository = applicationUserRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtAuthorizationFilter = jwtAuthorizationFilter;
         this.jwtTokenizer = jwtTokenizer;
     }
 
@@ -101,7 +105,7 @@ public class CustomUserDetailService implements UserService {
                     .toList();
                 return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
             }
-        }catch (UsernameNotFoundException e){
+        } catch (UsernameNotFoundException e) {
             throw new BadCredentialsException("Email or password is incorrect or account is locked");
         }
         throw new BadCredentialsException("Email or password is incorrect or account is locked");
@@ -114,6 +118,20 @@ public class CustomUserDetailService implements UserService {
         applicationUser.setPassword(encodedPassword);
         checkForExistingUserByEmail(applicationUser.getEmail());
         return applicationUserRepository.save(applicationUser);
+    }
+
+    @Override
+    public ApplicationUser edit(ApplicationUser applicationUser) {
+
+       // return applicationUserRepository.updateByEmail(applicationUser);
+        return null;
+    }
+
+    @Override
+    public ApplicationUser getUser(String token) {
+        String email = jwtAuthorizationFilter.getUsernameFromToken(token);
+        System.out.println("TEST");
+        return applicationUserRepository.findUserByEmail(email);
     }
 
 }

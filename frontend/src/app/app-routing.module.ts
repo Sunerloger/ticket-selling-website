@@ -9,7 +9,8 @@ import {RegisterComponent} from './components/register/register.component';
 import {NewsCreateComponent} from './components/news/news-create/news-create.component';
 import {NewsComponent} from './components/news/news.component';
 import {AdminRouteGuard} from './guards/admin-route.guard';
-import { RoomplaneditorComponent } from './components/roomplaneditor/roomplaneditor.component';
+import {RoomplaneditorComponent} from './components/roomplaneditor/roomplaneditor.component';
+import {EditComponent} from './components/edit/edit.component';
 
 
 const routes: Routes = [
@@ -21,12 +22,13 @@ const routes: Routes = [
   {path: 'events', canActivate: [AdminRouteGuard], component: EventsComponent},
   {path: 'news', canActivate: [AuthGuard], component: NewsComponent},
   {path: 'news/create', canActivate: [AdminRouteGuard], component: NewsCreateComponent},
-  {path: 'roomplan/:id/edit', component: RoomplaneditorComponent }
+  {path: 'roomplan/:id/edit', component: RoomplaneditorComponent},
+  {path: 'edit', component: EditComponent}
 ];
 
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  imports: [RouterModule.forRoot(routes, {useHash: true})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {
