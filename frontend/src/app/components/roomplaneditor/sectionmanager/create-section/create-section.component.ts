@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { PersistedHallplan, PersistedSeat, PersistedSeatRow, SeatRow } from 'src/app/dtos/hallplan/hallplan';
+import { PersistedHallplan, PersistedSeat, SeatRow } from 'src/app/dtos/hallplan/hallplan';
 import { Section } from 'src/app/dtos/hallplan/section';
 
 interface ColorItem {
@@ -64,7 +64,7 @@ export class CreateSectionComponent implements OnChanges {
     if (this.fromSeatNrErrMessage.length > 0 || this.toSeatNrErrMessage.length > 0 || this.fromSeatNr > 0 || this.toSeatNr > 0) {
       this.handleFromSeatChange(String(this.fromSeatNr), changes.roomplan.currentValue as PersistedHallplan);
       this.handleToSeatChange(String(this.toSeatNr), changes.roomplan.currentValue as PersistedHallplan);
-    };
+    }
     this.refreshSelectedRows();
   };
 

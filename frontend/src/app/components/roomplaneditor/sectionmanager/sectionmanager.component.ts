@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { PersistedHallplan } from 'src/app/dtos/hallplan/hallplan';
 import { CreateSectionPayload } from './create-section/create-section.component';
 import { HallplanService } from 'src/app/services/hallplan/hallplan.service';

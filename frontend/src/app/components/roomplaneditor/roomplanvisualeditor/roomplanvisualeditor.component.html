@@ -1,8 +1,8 @@
 <div class="editor">
 
-<!-- Toolbar -->      
+<!-- Toolbar -->
 <app-toolbar
-       (toolbarClick)="handleToolbarItemClick($event)"    
+       (toolbarClick)="handleToolbarItemClick($event)"
 />
 
 <div class="editor_container">
@@ -13,16 +13,16 @@
     <div class="seat_layout_template">
         <!-- Seat Row -->
         <div class="seatrow_container">
-            <div 
+            <div
                 class="seat_row_mapper"
                 *ngFor="let seatrow of roomplan.seatRows"
             >
             <!-- Add Row (shown in Detail-View )-->
-            <app-addrowbtn 
-                *ngIf="isDetailedView === true" 
-                (click)="handleAddRowEvent(seatrow.rowNr)" 
+            <app-addrowbtn
+                *ngIf="isDetailedView === true"
+                (click)="handleAddRowEvent(seatrow.rowNr)"
             />
-            <app-seatrow 
+            <app-seatrow
                     [showDeleteRowBtn]="isDetailedView"
                     [seatRow]="seatrow"
                     (seatRemoval)="this.seatRemovalEvent.emit($event)"
@@ -31,8 +31,8 @@
                 />
             </div>
         </div>
-       
-      
+
+
         <!-- Add Row (shown in Non-Detail-View)-->
         <app-addrowbtn
            (click)="handleAddRowEvent()"

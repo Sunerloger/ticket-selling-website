@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PersistedHallplan, PersistedSeat, PersistedSeatRow, Seat, SeatRow, SeatStatus, SeatType } from 'src/app/dtos/hallplan/hallplan';
+import { PersistedHallplan, PersistedSeat, Seat, SeatRow, SeatStatus, SeatType } from 'src/app/dtos/hallplan/hallplan';
 import { CreationMenuDirection, SeatCreationEvent, SeatRemovalPayload, SeatRowDeletionEventPayload } from './seatrow/seatrow.component';
 import { PersistedSection, RESERVED_DEFAULT_SECTION_NAME, Section } from 'src/app/dtos/hallplan/section';
 import { HallplanService } from 'src/app/services/hallplan/hallplan.service';
@@ -348,7 +348,7 @@ export class RoomplaneditorComponent implements OnInit {
         clonedSeats[i].seatNr--;
         updatedSeatsWithNewSeatNr.push(clonedSeats[i]);
       }
-    };
+    }
 
     //persist new seats
     await this.updateSeatsBulk(updatedSeatsWithNewSeatNr, 'Failed to remove seat. Please try again');
