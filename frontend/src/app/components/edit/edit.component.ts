@@ -5,7 +5,7 @@ import {UserService} from '../../services/user.service';
 import {AuthService} from '../../services/auth.service';
 import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';
-import {Observable} from "rxjs";
+import {Observable} from 'rxjs';
 
 
 export enum EditDeleteMode {
@@ -38,6 +38,7 @@ export class EditComponent implements OnInit {
   //Error flag
   error = false;
   errorMessage = '';
+  passwordVerify: string;
 
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
@@ -91,7 +92,7 @@ export class EditComponent implements OnInit {
     this.editForm.controls['password'].setValue(this.user.password);
     console.log(this.editForm);
 
-    if (this.editForm.valid) {
+    if (this.editForm.valid && this.user.password.match(this.passwordVerify)) {
       let observable: Observable<any>;
       switch (this.mode) {
         case EditDeleteMode.edit:
@@ -101,11 +102,24 @@ export class EditComponent implements OnInit {
           observable = this.userService.delete(this.user.id, this.user.email, this.user.password);
           break;
         default:
-          console.error('Unkown Mode');
+          console.error('Unknown Mode');
       }
       observable.subscribe({
         next: data => {
-          this.notification.success(`Successfully Edited/Deleted`);
+          switch (this.mode) {
+            case EditDeleteMode.edit:
+              this.router.navigate(['']);
+              this.notification.success(`${this.user.email} has been successfully edited`);
+              break;
+            case EditDeleteMode.delete:
+              this.authService.logoutUser();
+              this.router.navigate(['']);
+              this.notification.success(`${this.user.email} has been successfully deleted`);
+              break;
+            default:
+              console.error('Unknown Mode');
+          }
+
         },
         error: err => {
           console.error(`Error editing user`, err, this.user);
@@ -115,38 +129,8 @@ export class EditComponent implements OnInit {
         }
       });
     } else {
+      this.notification.error(`Passwords do not match!`);
       this.editForm.markAllAsTouched();
     }
-  }
-
-  edit(user: User) {
-
-    const observable = this.userService.editUser(this.user, this.authService.getToken());
-    observable.subscribe({
-      next: () => {
-        this.router.navigate(['/login']);
-        this.notification.success(`${this.user.email} has been successfully edited`);
-      },
-      error: err => {
-        console.error(`Error editing user`, err, this.user);
-        if (err.status === 409) {
-          this.notification.error(`${err.error.detail}`);
-        }
-      }
-    });
-  }
-
-  delete(user: User) {
-    console.log(user);
-    this.userService.delete(user.id, user.email, user.password).subscribe({
-      next: () => {
-        this.router.navigate(['']);
-        this.authService.logoutUser();
-        this.notification.success(`User successfully deleted.`);
-      },
-      error: error => {
-        this.notification.error(`User could not be deleted.`);
-      }
-    });
   }
 }

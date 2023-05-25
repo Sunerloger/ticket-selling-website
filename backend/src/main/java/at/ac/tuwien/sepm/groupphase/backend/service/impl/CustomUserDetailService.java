@@ -122,7 +122,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public ApplicationUser edit(ApplicationUser applicationUser, String token) {
-        //TODO: if password will be edited aswell
+        //TODO: Dont let user change password
         UserDetails currentUser = loadUserByUsername(applicationUser.getEmail());
         if (passwordEncoder.matches(applicationUser.getPassword(), currentUser.getPassword())) {
             String encodedPassword = passwordEncoder.encode(applicationUser.getPassword());
@@ -141,10 +141,11 @@ public class CustomUserDetailService implements UserService {
     @Override
     public void delete(Long id, String email, String password) {
         UserDetails userDetails = loadUserByUsername(email);
-        if (passwordEncoder.matches(password, userDetails.getPassword())) {
-            applicationUserRepository.deleteById(id);
+        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+            throw new BadCredentialsException("Password is incorrect");
         }
-        throw new BadCredentialsException("Password is incorrect");
+        applicationUserRepository.deleteById(id);
+
     }
 
 }
