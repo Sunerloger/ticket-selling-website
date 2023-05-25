@@ -1,5 +1,7 @@
 import { Seat } from './hallplan';
 
+export const RESERVED_DEFAULT_SECTION_NAME = 'Unassigned';
+
 export interface Section{
     name: string;
     color: string;
@@ -15,4 +17,8 @@ export interface DetailedSection{
 
 export interface PersistedSection extends Section{
     id: number;
+}
+
+export interface DetailedPersistedSection extends PersistedSection{
+    count: number;
 }

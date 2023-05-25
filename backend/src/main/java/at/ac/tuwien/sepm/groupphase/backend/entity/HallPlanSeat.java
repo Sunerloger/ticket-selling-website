@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "seat")
@@ -23,22 +24,28 @@ public class HallPlanSeat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private HallPlanSeatStatus status;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
     private HallPlanSeatType type;
 
+    @NotNull
     @Column(name = "capacity", nullable = false)
     private Long capacity;
+    @NotNull
     @Column(name = "seat_nr", nullable = false)
     private Long seatNr;
 
+    @NotNull
     @Column(name = "seatrow_id")
     private Long seatrowId;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "section_id")
     private HallPlanSection section;
