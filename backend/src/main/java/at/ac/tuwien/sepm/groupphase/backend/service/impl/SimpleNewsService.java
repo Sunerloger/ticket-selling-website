@@ -1,9 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.News;
-import at.ac.tuwien.sepm.groupphase.backend.entity.NewsImage;
-import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.*;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.*;
+import at.ac.tuwien.sepm.groupphase.backend.entity.*;
+import at.ac.tuwien.sepm.groupphase.backend.exception.*;
+import at.ac.tuwien.sepm.groupphase.backend.repository.*;
 import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
+import jakarta.transaction.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -13,19 +16,47 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.*;
 
 @Service
 public class SimpleNewsService implements NewsService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final NewsRepository newsRepository;
+    private final EventRepository eventRepository;
+    private final NewsMapper newsMapper;
 
-    public SimpleNewsService(NewsRepository newsRepository) {
+    public SimpleNewsService(NewsRepository newsRepository, EventRepository eventRepository, NewsMapper newsMapper) {
         this.newsRepository = newsRepository;
+        this.eventRepository = eventRepository;
+        this.newsMapper = newsMapper;
     }
 
     @Override
-    public News publishNews(News news) {
+    @Transactional
+    public News publishNews(NewsInquiryDto newsDto) {
+
+        Long eventId = newsDto.getEventId();
+
+        News news = newsMapper.newsInquiryDtoWithImagesToNewsWithoutEvent(newsDto);
+
+        if (!(eventId == null)) {
+
+            if (!eventRepository.existsById(eventId)) {
+                throw new NotFoundException("Event not found with id: " + eventId);
+            }
+
+            Optional<Event> eventOpt = eventRepository.findById(eventId);
+
+            if (eventOpt.isPresent()) {
+                news.setEvent(eventOpt.get());
+            } else {
+                news.setEvent(null);
+            }
+        } else {
+            news.setEvent(null);
+        }
+
         LOGGER.debug("Publish new news {}", news);
 
         for (NewsImage img : news.getImages()) {
@@ -36,6 +67,7 @@ public class SimpleNewsService implements NewsService {
     }
 
     @Override
+    @Transactional
     public Page<News> findAllPagedByCreatedAt(int pageIndex) {
         Pageable pageable = PageRequest.of(pageIndex, 20, Sort.by("createdAt").descending());
 
@@ -44,4 +76,29 @@ public class SimpleNewsService implements NewsService {
         return newsRepository.findAll(pageable);
     }
 
+    @Override
+    @Transactional
+    public News getById(Long id) {
+        LOGGER.debug("Find news by id {}", id);
+        Optional<News> newsOptional = newsRepository.findById(id);
+        if (newsOptional.isPresent()) {
+            News news = newsOptional.get();
+            news.getImages().size(); // lazy loading
+            return news;
+        } else {
+            throw new NotFoundException(String.format("Could not find news with id %s", id));
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        LOGGER.debug("Delete news by id {}", id);
+
+        if (!newsRepository.existsById(id)) {
+            throw new NotFoundException("News not found with id: " + id);
+        }
+
+        newsRepository.deleteById(id);
+    }
 }

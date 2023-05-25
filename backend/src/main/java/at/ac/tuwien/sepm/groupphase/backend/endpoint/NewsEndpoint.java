@@ -11,15 +11,9 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -47,7 +41,7 @@ public class NewsEndpoint {
         LOGGER.info("POST {} body: {}", BASE_PATH, newsDto);
 
         return newsMapper.newsToDetailedNewsDto(
-            newsService.publishNews(newsMapper.newsInquiryDtoWithImagesToNews(newsDto)));
+            newsService.publishNews(newsDto));
     }
 
     @Secured("ROLE_USER")
@@ -58,5 +52,24 @@ public class NewsEndpoint {
         LOGGER.info("GET {}", BASE_PATH);
 
         return newsService.findAllPagedByCreatedAt(pageIndex).map(newsMapper::newsToAbbreviatedNewsDto).toList();
+    }
+
+    @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("{id}")
+    @Operation(summary = "Get detailed news by id without short description", security = @SecurityRequirement(name = "apiKey"))
+    public DetailedNewsDto findOneById(@PathVariable Long id) {
+        LOGGER.info("GET {}/{}", BASE_PATH, id);
+
+        return newsMapper.newsToDetailedNewsDto(newsService.getById(id));
+    }
+
+    @Secured("ROLE_ADMIN")
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping("{id}")
+    @Operation(summary = "Delete news entry with the given id", security = @SecurityRequirement(name = "apiKey"))
+    public void deleteOneById(@PathVariable Long id) {
+        LOGGER.info("DELETE {}/{}", BASE_PATH, id);
+        newsService.deleteById(id);
     }
 }

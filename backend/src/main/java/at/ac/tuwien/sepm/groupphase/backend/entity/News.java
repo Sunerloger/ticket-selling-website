@@ -1,16 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Lob;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name = "news")
 public class News {
 
     private static final String base64Pattern = "^data:image/(gif|png|jpeg|webp|svg\\+xml);base64,.*={0,2}$";
@@ -52,6 +43,10 @@ public class News {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "news")
     private List<NewsImage> images = new LinkedList<>();
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "event_id")
+    private Event event;
 
     public Long getId() {
         return id;
@@ -109,6 +104,14 @@ public class News {
         this.images = images;
     }
 
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -122,12 +125,13 @@ public class News {
             && Objects.equals(shortText, news.shortText)
             && Objects.equals(fullText, news.fullText)
             && Objects.equals(createdAt, news.createdAt)
-            && Objects.equals(coverImage, news.coverImage);
+            && Objects.equals(coverImage, news.coverImage)
+            && Objects.equals(event, news.event);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, shortText, fullText, createdAt, coverImage);
+        return Objects.hash(id, title, shortText, fullText, createdAt, coverImage, event);
     }
 
     @Override
@@ -137,7 +141,8 @@ public class News {
             + ", title='" + title + '\''
             + ", shortText='" + shortText + '\''
             + ", fullText='" + fullText + '\''
-            + ", createdAt=" + createdAt
+            + ", createdAt=" + createdAt + '\''
+            + ", event=" + event
             + '}';
     }
 
@@ -150,6 +155,7 @@ public class News {
         private LocalDateTime createdAt;
         private String coverImage;
         private List<NewsImage> images;
+        private Event event;
 
         private NewsBuilder() {
         }
@@ -193,6 +199,11 @@ public class News {
             return this;
         }
 
+        public NewsBuilder withEvent(Event event) {
+            this.event = event;
+            return this;
+        }
+
         public News build() {
             News news = new News();
             news.setId(id);
@@ -202,6 +213,7 @@ public class News {
             news.setCreatedAt(createdAt);
             news.setCoverImage(coverImage);
             news.setImages(images);
+            news.setEvent(event);
             return news;
         }
     }

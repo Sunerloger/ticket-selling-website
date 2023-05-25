@@ -19,6 +19,8 @@ public class DetailedNewsDto {
 
     private List<String> images = new LinkedList<>();
 
+    private Long eventId;
+
     public Long getId() {
         return id;
     }
@@ -71,6 +73,14 @@ public class DetailedNewsDto {
         this.images.add(image);
     }
 
+    public Long getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -83,12 +93,13 @@ public class DetailedNewsDto {
             && Objects.equals(title, that.title)
             && Objects.equals(fullText, that.fullText)
             && Objects.equals(createdAt, that.createdAt)
-            && Objects.equals(coverImage, that.coverImage);
+            && Objects.equals(coverImage, that.coverImage)
+            && Objects.equals(eventId, that.eventId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, fullText, createdAt, coverImage);
+        return Objects.hash(id, title, fullText, createdAt, coverImage, eventId);
     }
 
     @Override
@@ -97,7 +108,8 @@ public class DetailedNewsDto {
             + "id=" + id
             + ", title='" + title + '\''
             + ", fullText='" + fullText + '\''
-            + ", createdAt=" + createdAt
+            + ", createdAt=" + createdAt + '\''
+            + ", eventId=" + eventId
             + '}';
     }
 
@@ -109,6 +121,7 @@ public class DetailedNewsDto {
         private LocalDateTime createdAt;
         private String coverImage;
         private List<String> images;
+        private Long eventId;
 
         private DetailedNewsDtoBuilder() {
         }
@@ -147,6 +160,11 @@ public class DetailedNewsDto {
             return this;
         }
 
+        public DetailedNewsDto.DetailedNewsDtoBuilder withEventId(Long eventId) {
+            this.eventId = eventId;
+            return this;
+        }
+
         public DetailedNewsDto build() {
             DetailedNewsDto detailedNewsDto = new DetailedNewsDto();
             detailedNewsDto.setId(id);
@@ -155,6 +173,7 @@ public class DetailedNewsDto {
             detailedNewsDto.setCreatedAt(createdAt);
             detailedNewsDto.setCoverImage(coverImage);
             detailedNewsDto.setImages(images);
+            detailedNewsDto.setEventId(eventId);
             return detailedNewsDto;
         }
     }

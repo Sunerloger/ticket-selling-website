@@ -13,7 +13,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import java.time.LocalTime;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "event")
@@ -29,6 +29,8 @@ public class Event {
     @JoinColumn(name = "event_id")
     private List<EventDate> date;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "event")
+    private List<News> newsEntries = new LinkedList<>();
 
     private LocalTime startTime;
 
@@ -163,5 +165,17 @@ public class Event {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public List<News> getNewsEntries() {
+        return newsEntries;
+    }
+
+    public void setNewsEntries(List<News> newsEntries) {
+        this.newsEntries = newsEntries;
+    }
+
+    public void addNewsEntry(News newsEntry) {
+        this.newsEntries.add(newsEntry);
     }
 }
