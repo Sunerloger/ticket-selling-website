@@ -72,6 +72,7 @@ from './components/roomplaneditor/sectionmanager/manage-section/editable-section
     BrowserAnimationsModule,
     NgOptimizedImage,
     InfiniteScrollModule,
+    NgbModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

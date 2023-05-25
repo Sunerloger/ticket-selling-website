@@ -1,10 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, NgForm} from '@angular/forms';
-import {NewsService} from '../../../services/news.service';
+import {NewsService} from '../../../services/news/news.service';
 import {News} from '../../../dtos/news';
+import {Event} from '../../../dtos/event';
 import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
+import {EventService} from '../../../services/event.service';
 
 
 @Component({
@@ -25,6 +27,7 @@ export class NewsCreateComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private service: NewsService,
+              private eventService: EventService,
               private notification: ToastrService,
               private router: Router) {
   }
@@ -89,6 +92,16 @@ export class NewsCreateComponent implements OnInit {
   public removeImages(i: number) {
     this.news.images.splice(i,1);
   }
+
+  /*public formatEventTitle(event: Event | null | undefined): string {
+    return (event == null)
+      ? ''
+      : `${event.title}`;
+  }
+
+  eventSuggestions = (input: string): Observable<string[]> => (input === '')
+    ? of([])
+    : this.eventService.searchEventByName(input, 5);*/
 
   private convertToBase64(file: File) {
     const reader = new FileReader();

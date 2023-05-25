@@ -11,6 +11,7 @@ import {NewsOverviewComponent} from './components/news/news-overview/news-overvi
 import {AdminRouteGuard} from './guards/admin-route.guard';
 import {NewsDetailComponent} from './components/news/news-detail/news-detail.component';
 import { RoomplaneditorComponent } from './components/roomplaneditor/roomplaneditor.component';
+import {NewsResolver} from './components/news/news.resolver';
 
 
 const routes: Routes = [
@@ -18,12 +19,15 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
-  {path: 'events', canActivate: [AdminRouteGuard], component: EventsComponent},
+  {path: 'events', canActivate: [AuthGuard], children: [
+      {path: 'create', canActivate: [AdminRouteGuard], component: EventsComponent},
+      {path: ':id/info', component: EventsComponent},
+    ]},
   {path: 'news', canActivate: [AuthGuard], children: [
       {path: '', component: NewsOverviewComponent},
-      {path: ':id/info', component: NewsDetailComponent/*, resolve: {
+      {path: ':id/info', component: NewsDetailComponent, resolve: {
           news: NewsResolver
-        }*/},
+        }},
       {path: 'create', canActivate: [AdminRouteGuard], component: NewsCreateComponent},
     ]},
   {path: 'roomplan/:id/edit', component: RoomplaneditorComponent },

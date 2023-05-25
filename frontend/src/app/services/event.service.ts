@@ -1,6 +1,6 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {environment} from 'src/environments/environment';
 const baseUri = environment.backendUrl + '/api/v1/events';
 import {Event} from 'src/app/dtos/event';
