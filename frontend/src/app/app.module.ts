@@ -15,12 +15,13 @@ import {httpInterceptorProviders} from './interceptors';
 import { EventsComponent } from './components/events/events.component';
 import { RegisterComponent } from './components/register/register.component';
 import { NewsCreateComponent } from './components/news/news-create/news-create.component';
-import { NewsComponent } from './components/news/news.component';
+import { NewsOverviewComponent } from './components/news/news-overview/news-overview.component';
 import {ToastrModule} from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatGridListModule} from '@angular/material/grid-list';
 import {NgOptimizedImage} from '@angular/common';
-import {MatInputModule} from '@angular/material/input';
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
+import { NewsDetailComponent } from './components/news/news-detail/news-detail.component';
+import { TextareaAutoresizeDirective } from './directives/textarea-autoresize.directive';
 import { RoomplaneditorComponent } from './components/roomplaneditor/roomplaneditor.component';
 import { RoomplanvisualeditorComponent } from './components/roomplaneditor/roomplanvisualeditor/roomplanvisualeditor.component';
 import { SeatrowComponent } from './components/roomplaneditor/seatrow/seatrow.component';
@@ -32,6 +33,8 @@ import { SectionmanagerComponent } from './components/roomplaneditor/sectionmana
 import { CreateSectionComponent } from './components/roomplaneditor/sectionmanager/create-section/create-section.component';
 import { ManageSectionComponent } from './components/roomplaneditor/sectionmanager/manage-section/manage-section.component';
 import { EditComponent } from './components/edit/edit.component';
+import { EditableSectionComponent }
+from './components/roomplaneditor/sectionmanager/manage-section/editable-section/editable-section.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +47,9 @@ import { EditComponent } from './components/edit/edit.component';
     EventsComponent,
     RegisterComponent,
     NewsCreateComponent,
-    NewsComponent,
+    NewsOverviewComponent,
+    NewsDetailComponent,
+    TextareaAutoresizeDirective,
     RoomplaneditorComponent,
     RoomplanvisualeditorComponent,
     SeatrowComponent,
@@ -56,6 +61,7 @@ import { EditComponent } from './components/edit/edit.component';
     CreateSectionComponent,
     ManageSectionComponent,
     EditComponent,
+    EditableSectionComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,9 +72,8 @@ import { EditComponent } from './components/edit/edit.component';
     FormsModule,
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
-    MatGridListModule,
     NgOptimizedImage,
-    MatInputModule,
+    InfiniteScrollModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

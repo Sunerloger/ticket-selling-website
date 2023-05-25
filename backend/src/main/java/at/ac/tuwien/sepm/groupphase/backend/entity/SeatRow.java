@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
@@ -20,9 +21,11 @@ public class SeatRow {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     @Column(name = "rowNr")
     private Long rowNr;
 
+    @NotNull
     @Column(name = "hallplan_id")
     private Long hallPlanId;
 

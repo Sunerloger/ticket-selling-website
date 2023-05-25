@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.exceptionhandler;
 
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import jakarta.xml.bind.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -38,6 +39,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
+    @ExceptionHandler(value = {ValidationException.class})
+    protected ResponseEntity<Object> handleUnprocessableEntity(RuntimeException ex, WebRequest request) {
+        LOGGER.warn(ex.getMessage());
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
+    }
+
     /**
      * Override methods from ResponseEntityExceptionHandler to send a customized HTTP response for a know exception
      * from e.g. Spring
@@ -54,6 +61,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             .map(err -> err.getField() + " " + err.getDefaultMessage())
             .collect(Collectors.toList());
         body.put("Validation errors", errors);
+
+        // enforce UNPROCESSABLE_ENTITY on all MethodArgumentNotValidExceptions
+        status = HttpStatus.UNPROCESSABLE_ENTITY;
 
         return new ResponseEntity<>(body.toString(), headers, status);
 
