@@ -263,6 +263,11 @@ export class RoomplaneditorComponent implements OnInit {
    });
   }
 
+  /**
+   * Add and persist given SeatCreationEvent payload. Note amountSeat equals to 
+   * capacity of seat when type is StandingSeat
+   * @param payload of seatcreationevent
+   */
   async handleAddSeats(payload: SeatCreationEvent) {
     console.log('addSeat rowNr=', payload.rowNr, ',type=', payload.type, ',direction=', payload.type);
     const { rowNr, type, direction, amountSeat } = payload;
@@ -281,31 +286,57 @@ export class RoomplaneditorComponent implements OnInit {
           updateSeats.push({ ...seat, seatNr: seatNrOfOldSeat });
           seatNrOfOldSeat++;
         }
+        console.log(updateSeats)
         // persist
         if(updateSeats.length > 0){
           await this.updateSeatsBulk(updateSeats, 'Failed to add seats. Please try again.');
         }
 
 
-        // --- generate seats that needs to be persisted
-        let newSeatNr = 1;
-        for(let i = 0; i < amountSeat; i++){
-          newSeats.push(
-            await this.createEmptySeat(type, newSeatNr)
-          );
-          newSeatNr++;
+        // --- generate the new seat(s=) from the payload that needs to be persisted
+        switch(type){
+          case SeatType.seat:
+          case SeatType.vacantSeat:
+            let newSeatNr = 1;
+            for (let i = 1; i <= amountSeat; i++) {
+              newSeats.push(
+                await this.createEmptySeat(type, newSeatNr)
+              );
+              newSeatNr++;
+            }
+            break;
+          case SeatType.standingSeat:
+            newSeats.push(
+              await this.createEmptySeat(type, 1, amountSeat)
+            )
+            break;
+          default:
+            console.log("Unsupported Seat Type", type);
         }
+      
         break;
       case CreationMenuDirection.right:
-        // --- generate seats that needs to be persisted
-        let highestSeatNr = initialSeatNr;
-        for (let i = 0; i < amountSeat; i++) {
-          newSeats.push(
-            await this.createEmptySeat(type, highestSeatNr)
-          );
-          highestSeatNr++;
+        // --- generate the new seat(s=) from the payload that needs to be persisted
+        switch (type) {
+          case SeatType.seat:
+          case SeatType.vacantSeat:
+            let highestSeatNr = initialSeatNr;
+            for (let i = 0; i < amountSeat; i++) {
+              newSeats.push(
+                await this.createEmptySeat(type, highestSeatNr)
+              );
+              highestSeatNr++;
+            }
+            break;
+          case SeatType.standingSeat:
+            newSeats.push(
+              await this.createEmptySeat(type, initialSeatNr, amountSeat)
+            )
+            break;
+          default:
+            console.log("Unsupported Seat Type: ", type);
         }
-        break;
+
     }
 
     // --- persist newly created seats
@@ -339,7 +370,6 @@ export class RoomplaneditorComponent implements OnInit {
     for (let i = 0; i < clonedSeats.length; i++) {
       if (clonedSeats[i].id === id) {
         deletedSeatIndex = i;
-        clonedSeats.splice(i, 1);
         continue;
       }
       //update the seatnumbers after deleted seats
@@ -349,6 +379,9 @@ export class RoomplaneditorComponent implements OnInit {
         updatedSeatsWithNewSeatNr.push(clonedSeats[i]);
       }
     }
+
+    //delete seat
+    clonedSeats.splice(deletedSeatIndex, 1);
 
     //persist new seats
     await this.updateSeatsBulk(updatedSeatsWithNewSeatNr, 'Failed to remove seat. Please try again');

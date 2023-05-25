@@ -25,13 +25,19 @@
 }
 
 .seat_icon,
-.blank_space_icon {
+.blank_space_icon, .people_icon {
     border-radius: 10px;
     padding: 0.3rem;
     cursor: pointer;
 }
 
 .seat_icon:hover,
-.blank_space_icon:hover {
+.blank_space_icon:hover, .people_icon:hover {
     background-color: lightgrey;
+}
+
+.seperator{
+    height: 1.8rem;
+    width: 0.13rem;
+    background-color: black;
 }

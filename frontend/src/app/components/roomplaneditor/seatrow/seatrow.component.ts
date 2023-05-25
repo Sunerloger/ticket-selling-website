@@ -33,6 +33,8 @@ export class SeatrowComponent {
   @Input() seatRow: PersistedSeatRow;
   @Input() showDeleteRowBtn = false;
   @Input() showAddRowBtn = false;
+  @Input() showRowNr = false;
+  @Input() showSeatNr = false;
 
   @Output() seatCreationEvent = new EventEmitter<SeatCreationEvent>();
   @Output() seatRowDeletion = new EventEmitter<SeatRowDeletionEventPayload>();

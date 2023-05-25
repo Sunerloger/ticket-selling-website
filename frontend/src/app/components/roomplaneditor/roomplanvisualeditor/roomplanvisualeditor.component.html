@@ -25,6 +25,8 @@
             <app-seatrow
                     [showDeleteRowBtn]="isDetailedView"
                     [seatRow]="seatrow"
+                    [showRowNr]="this.showRowNr"
+                    [showSeatNr]="this.showSeatNr"
                     (seatRemoval)="this.seatRemovalEvent.emit($event)"
                     (seatRowDeletion)="this.seatRowDeletionEvent.emit($event)"
                     (seatCreationEvent)="onAddSeat($event)"

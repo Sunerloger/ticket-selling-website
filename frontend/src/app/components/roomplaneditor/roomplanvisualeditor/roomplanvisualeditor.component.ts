@@ -17,10 +17,20 @@ export class RoomplanvisualeditorComponent {
   @Output() seatRemovalEvent = new EventEmitter<SeatRemovalPayload>();
 
   isDetailedView = false;
+  showRowNr = false;
+  showSeatNr = false;
 
   handleToolbarItemClick(clickedItem: ToolbarItem) {
-    if (clickedItem === ToolbarItem.detailedView) {
-      this.isDetailedView = !this.isDetailedView;
+    switch(clickedItem){
+      case ToolbarItem.detailedView:
+        this.isDetailedView = !this.isDetailedView;
+        break;
+      case ToolbarItem.showSeatRowNr:
+        this.showRowNr = !this.showRowNr;
+        break;
+      case ToolbarItem.showSeatNr:
+        this.showSeatNr = !this.showSeatNr;
+        break;
     }
   }
 
