@@ -1,9 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedHallPlanDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanSectionDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanSeatDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.DetailedHallPlanDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatBulkDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatRowBulkDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSectionDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatRowDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanSectionMapper;
@@ -69,7 +71,7 @@ public class HallPlanEndpoint {
     public HallPlanDto createHallPlan(@RequestBody HallPlanDto hallplan) {
         LOGGER.info("POST /api/v1/hallplans");
         try {
-            return hallPlanMapper.hallPlanToHallPlanDto(hallPlanService.createHallplan(hallplan));
+            return hallPlanMapper.hallPlanToHallPlanDto(hallPlanService.createHallPlan(hallplan));
         } catch (ValidationException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
@@ -115,14 +117,31 @@ public class HallPlanEndpoint {
     @PostMapping("{hallPlanId}/seatrows")
     @Operation(summary = "Create a new seat row in the system", security = @SecurityRequirement(name = "apiKey"))
     public SeatRowDto createSeatRow(@PathVariable Long hallPlanId, @RequestBody SeatRowDto seatRowDto) {
-        LOGGER.info("POST /api/v1/{hallPlanId}/seatrows", hallPlanId);
+        LOGGER.info("POST /api/v1/{}/seatrows", hallPlanId);
         seatRowDto.setHallPlanId(hallPlanId);
         try {
-            seatRowService.createSeatRow(seatRowDto);
+            return seatRowService.createSeatRow(seatRowDto);
         } catch (ValidationException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
-        return seatRowDto;
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PostMapping("{hallPlanId}/seatrows/bulk")
+    @Operation(summary = "Create a new set of seat rows in the system", security = @SecurityRequirement(name = "apiKey"))
+    public ResponseEntity<List<SeatRowDto>> bulkCreateSeatRow(@PathVariable Long hallPlanId, @RequestBody HallPlanSeatRowBulkDto seatRowBulkDto) {
+        LOGGER.info("POST /api/v1/{}/seatrows/bulk", hallPlanId);
+        seatRowBulkDto.setHallPlanId(hallPlanId);
+        return ResponseEntity.ok(seatRowService.bulkCreateSeatRow(seatRowBulkDto));
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PutMapping("{hallPlanId}/seatrows/bulk")
+    @Operation(summary = "Create a new set of seat rows in the system", security = @SecurityRequirement(name = "apiKey"))
+    public ResponseEntity<List<SeatRowDto>> bulkUpdateSeatRow(@PathVariable Long hallPlanId, @RequestBody HallPlanSeatRowBulkDto seatRowBulkDto) {
+        LOGGER.info("PUT /api/v1/{}/seatrows/bulk", hallPlanId);
+        seatRowBulkDto.setHallPlanId(hallPlanId);
+        return ResponseEntity.ok(seatRowService.bulkUpdateSeatRow(seatRowBulkDto));
     }
 
     @Secured("ROLE_ADMIN")
@@ -137,7 +156,7 @@ public class HallPlanEndpoint {
     @Secured("ROLE_ADMIN")
     @PutMapping("{hallplanId}/seatrows/{id}")
     @Operation(summary = "Update an existing seat row in the system", security = @SecurityRequirement(name = "apiKey"))
-    public SeatRowDto updateSeatRow(@PathVariable Long hallplanId, @PathVariable Long id, @RequestBody SeatRowDto seatRowDto) {
+    public SeatRowDto updateSeatRow(@PathVariable Long hallplanId, @PathVariable Long id, @RequestBody SeatRowDto seatRowDto) throws ValidationException {
         LOGGER.info("PUT /api/v1/hallplans/seatrows/{}", id);
         seatRowDto.setId(id);
         seatRowService.updateSeatRow(seatRowDto);
@@ -148,7 +167,7 @@ public class HallPlanEndpoint {
     @GetMapping("{hallplanId}/seatrows/{id}")
     @Operation(summary = "Get a seat row by id", security = @SecurityRequirement(name = "apiKey"))
     public ResponseEntity<SeatRowDto> getSeatRowById(@PathVariable Long hallplanId, @PathVariable Long id) {
-        LOGGER.info("GET /api/v1/hallplans/{}/seatrows/{}", id);
+        LOGGER.info("GET /api/v1/hallplans/{}/seatrows/{}", hallplanId, id);
         SeatRowDto seatRowDto = seatRowService.getSeatRowById(id);
         return seatRowDto == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(seatRowDto);
     }
@@ -175,18 +194,29 @@ public class HallPlanEndpoint {
     //*                   Section Mappings                  *
     //*******************************************************
     @Secured("ROLE_ADMIN")
-    @PostMapping("/sections")
+    @GetMapping("{hallplanId}/sections")
+    @Operation(summary = "Get all sections in hallplan", security = @SecurityRequirement(name = "apiKey"))
+    public List<HallPlanSectionDto> findAllSectionsByHallPlanId(@PathVariable Long hallplanId) {
+        LOGGER.info("GET /api/v1/{}/sections", hallplanId);
+        return hallPlanService.findAllSectionsByHallPlanIdWithCounts(hallplanId);
+    }
+
+
+    @Secured("ROLE_ADMIN")
+    @PostMapping("{hallplanId}/sections")
     @Operation(summary = "Create a new section in the system", security = @SecurityRequirement(name = "apiKey"))
-    public HallPlanSectionDto createSection(@RequestBody HallPlanSectionDto section) {
+    public HallPlanSectionDto createSection(@RequestBody HallPlanSectionDto section, @PathVariable Long hallplanId) {
         LOGGER.info("POST /api/v1/sections");
+        section.setHallPlanId(hallplanId);
         return hallPlanSectionMapper.toDto(hallPlanService.createSection(section));
     }
 
     @Secured("ROLE_ADMIN")
-    @PutMapping("/sections/{id}")
+    @PutMapping("{hallplanId}/sections/{id}")
     @Operation(summary = "Update a section in the system", security = @SecurityRequirement(name = "apiKey"))
-    public HallPlanSectionDto updateSection(@PathVariable Long id, @RequestBody HallPlanSectionDto section) {
+    public HallPlanSectionDto updateSection(@PathVariable Long id, @RequestBody HallPlanSectionDto section, @PathVariable Long hallplanId) {
         LOGGER.info("PUT /api/v1/sections/{}", id);
+        section.setHallPlanId(hallplanId);
         return hallPlanSectionMapper.toDto(hallPlanService.updateSection(id, section));
     }
 
@@ -216,15 +246,6 @@ public class HallPlanEndpoint {
             .collect(Collectors.toList());
     }
 
-    @Secured("ROLE_ADMIN")
-    @GetMapping("{id}/sections")
-    @Operation(summary = "Get all sections from the system")
-    public List<HallPlanSectionDto> getAllSectionsByHallRoomId(@PathVariable Long id) {
-        LOGGER.info("GET /api/v1/hallplans/{}/sections", id);
-        return hallPlanService.findAllByHallPlanId(id).stream()
-            .map(hallPlanSectionMapper::toDto)
-            .collect(Collectors.toList());
-    }
 
     //*******************************************************
     //*                     Seat Mappings                   *
@@ -235,13 +256,31 @@ public class HallPlanEndpoint {
     @Operation(summary = "Add a new seat to a seat row")
     public ResponseEntity<HallPlanSeatDto> addSeat(@PathVariable Long hallPlanId, @PathVariable Long seatRowId, @Valid @RequestBody HallPlanSeatDto seatDto) {
         LOGGER.info("POST /api/v1/hallplans/{}/seatrows/{}/seats", hallPlanId, seatRowId);
-        //seatDto.setHallPlanId(hallPlanId);
         SeatRowDto seatRowDto = new SeatRowDto();
         seatRowDto.setHallPlanId(hallPlanId);
         seatRowDto.setId(seatRowId);
         seatDto.setSeatrowId(seatRowId);
         HallPlanSeatDto savedSeat = hallPlanSeatService.addSeat(seatDto);
         return ResponseEntity.created(URI.create("/api/v1/hallplans/" + hallPlanId + "/seatrows/" + seatRowId + "/seats/" + seatDto.getId())).body(savedSeat);
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/{hallPlanId}/seatrows/{seatRowId}/seats/bulk")
+    @Operation(summary = "Add a new seat to a seat row")
+    public ResponseEntity<HallPlanSeatBulkDto> bulkAddSeat(@PathVariable Long hallPlanId, @PathVariable Long seatRowId, @RequestBody HallPlanSeatBulkDto seatBulk) {
+        seatBulk.setHallPlanId(hallPlanId);
+        seatBulk.setSeatRowId(seatRowId);
+        hallPlanSeatService.bulkAddSeats(seatBulk);
+        return ResponseEntity.created(URI.create("/api/v1/hallplans/" + hallPlanId + "/seatrows/" + seatRowId + "/seats/bulk")).body(seatBulk);
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PutMapping("/{hallPlanId}/seats/bulk")
+    @Operation(summary = "Add a new seat to a seat row")
+    public ResponseEntity<HallPlanSeatBulkDto> bulkUpdateSeats(@PathVariable Long hallPlanId, @RequestBody HallPlanSeatBulkDto seatBulk) {
+        seatBulk.setHallPlanId(hallPlanId);
+        hallPlanSeatService.bulkUpdateSeats(seatBulk);
+        return ResponseEntity.created(URI.create("/api/v1/hallplans/" + hallPlanId + "/seats/bulk")).body(seatBulk);
     }
 
     @Secured("ROLE_ADMIN")

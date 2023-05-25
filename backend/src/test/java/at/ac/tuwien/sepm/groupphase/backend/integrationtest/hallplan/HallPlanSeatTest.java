@@ -1,14 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest.hallplan;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanSeatDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanSectionDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanSectionMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSection;
-import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSeatRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSectionRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRowRepository;
 import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatStatus;
 import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,11 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import static net.bytebuddy.matcher.ElementMatchers.any;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 

@@ -60,6 +60,11 @@ export class NewsCreateComponent implements OnInit {
         return;
       }
 
+      if (this.news.shortText.trim().length === 0) {
+        this.notification.warning('The short description is blank', 'The form is not valid');
+        return;
+      }
+
       const observable: Observable<News> = this.service.create(this.news);
 
       observable.subscribe({
@@ -73,7 +78,7 @@ export class NewsCreateComponent implements OnInit {
         }
       });
     } else {
-      this.notification.warning('Please fill out the title', 'The form is not valid');
+      this.notification.warning('Please fill out the required fields', 'The form is not valid');
     }
   }
 

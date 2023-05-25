@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,7 +47,8 @@ public class Event {
     @Column(columnDefinition = "TEXT")
     private String image;
 
-    public Event() {}
+    public Event() {
+    }
 
     public Event(
         Long id,
