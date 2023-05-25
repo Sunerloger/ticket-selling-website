@@ -20,17 +20,20 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'events', canActivate: [AdminRouteGuard], component: EventsComponent},
-  {path: 'news', canActivate: [AuthGuard], children: [
-    {path: '', component: NewsOverviewComponent},
-    {path: ':id/info', component: NewsDetailComponent/*, resolve: {
+  {
+    path: 'news', canActivate: [AuthGuard], children: [
+      {path: '', component: NewsOverviewComponent},
+      {
+        path: ':id/info', component: NewsDetailComponent/*, resolve: {
         news: NewsResolver
-      }*/},
-    {path: 'create', canActivate: [AdminRouteGuard], component: NewsCreateComponent},
-  ]},
+      }*/
+      },
+      {path: 'create', canActivate: [AdminRouteGuard], component: NewsCreateComponent},
+    ]
+  },
   {path: 'edit', component: EditComponent},
- 
-  {path: 'roomplan/:id/edit', component: RoomplaneditorComponent },
-  {path: 'hallplans/:id/edit', component: RoomplaneditorComponent },
+  {path: 'roomplan/:id/edit', component: RoomplaneditorComponent},
+  {path: 'hallplans/:id/edit', component: RoomplaneditorComponent},
   {path: '**', redirectTo: 'news'},
 ];
 

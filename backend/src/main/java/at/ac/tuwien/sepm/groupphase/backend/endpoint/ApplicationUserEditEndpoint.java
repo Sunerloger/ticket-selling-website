@@ -60,6 +60,7 @@ public class ApplicationUserEditEndpoint {
     }
 
     @GetMapping
+    @PermitAll
     public UserDetailDto getUser(@RequestParam(value = "token") String token) {
         LOGGER.info("GET USER " + BASE_PATH + "with TOKEN" + token);
         return userMapper.entityToUserDetailDto(userService.getUser(token));
