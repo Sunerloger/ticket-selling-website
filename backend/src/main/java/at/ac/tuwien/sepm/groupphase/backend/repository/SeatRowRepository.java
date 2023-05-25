@@ -22,7 +22,8 @@ public interface SeatRowRepository extends JpaRepository<SeatRow, Long> {
 
     @Query("SELECT r FROM SeatRow r "
         + "LEFT JOIN FETCH r.seats s "
-        + "WHERE r.hallPlanId = :hallplanId\n")
+        + "WHERE r.hallPlanId = :hallplanId "
+        + "ORDER BY r.rowNr ASC, s.seatNr ASC")
     List<SeatRow> findAllByHallplanIdWithSeats(@Param("hallplanId") Long hallplanId);
 
     @Query("SELECT sr FROM SeatRow sr WHERE sr.hallPlanId = :hallplanId ORDER BY sr.rowNr ASC")
