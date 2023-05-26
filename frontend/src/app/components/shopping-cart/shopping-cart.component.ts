@@ -17,7 +17,6 @@ export class ShoppingCartComponent implements OnInit{
               private router: Router) {
   }
 
-
   ngOnInit(): void {
     this.getItems();
   }
@@ -61,7 +60,15 @@ export class ShoppingCartComponent implements OnInit{
     return date;
   }
 
+  sumOfItems(): number {
+    let sum = 0;
+    this.items.forEach((element) =>{
+      sum += element.seat.price;
+    });
+    return sum;
+  }
 
-
-
+  checkout(): void {
+    this.router.navigate(['/cart/checkout']);
+  }
 }

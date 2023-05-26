@@ -6,13 +6,13 @@
 
     <div  class="cart-item">
       <div class="cart-info">
-        <span class="cart-item-info"> Section: <b>{{ item.section.name }} </b> </span>
-        <span class="cart-item-info"> Row: <b> {{ item.seatrowId }} </b> </span>
+        <span class="cart-item-info"> Section: <b>{{ item.sectionName }} </b> </span>
+        <span class="cart-item-info"> Row: <b> {{ item.seatRowNr }} </b> </span>
         <span class="cart-item-info"> Seat: <b> {{ item.seatNr }} </b> </span>
       </div>
 
       <div class="item-price-info">
-        <span class="cart-price"><h5> € {{ item.section.price | number:'1.2-2' }} </h5> inkl. Mst.</span>
+        <span class="cart-price"><h5> {{ (item.price | number:'1.2-2').replace('.',',') }} € </h5> inkl. Mst.</span>
       </div>
     </div>
   </div>

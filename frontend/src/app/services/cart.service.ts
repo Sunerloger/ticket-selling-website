@@ -3,7 +3,8 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {CartItem} from '../dtos/cartItem';
-import {TicketSeat} from '../dtos/ticket';
+import {SeatDetail} from '../dtos/seatDetail';
+import {CreatePurchase} from '../dtos/purchases';
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +23,11 @@ export class CartService {
     return this.httpClient.delete<any>(this.cartBaseUri + '/' + id);
   }
 
-  addToCart(seatList: TicketSeat[]): Observable<HttpResponse<any>>{
+  addToCart(seatList: SeatDetail[]): Observable<HttpResponse<any>>{
     return this.httpClient.post<any>(this.cartBaseUri, seatList);
+  }
+  purchaseCart(purchaseItem: CreatePurchase): Observable<HttpResponse<any>>{
+    return this.httpClient.post<any>(this.cartBaseUri + '/purchase', purchaseItem);
   }
 
 }

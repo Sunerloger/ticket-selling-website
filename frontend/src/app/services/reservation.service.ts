@@ -4,7 +4,7 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {Reservation} from '../dtos/reservation';
-import {TicketSeat} from '../dtos/ticket';
+import {SeatDetail} from '../dtos/seatDetail';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +21,7 @@ export class ReservationService {
     );
   }
 
-  createReservation(seatList: TicketSeat[]): Observable<HttpResponse<any>> {
+  createReservation(seatList: SeatDetail[]): Observable<HttpResponse<any>> {
     return this.httpClient.post<any>(this.reservationBaseUri, seatList);
   }
 

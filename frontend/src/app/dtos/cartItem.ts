@@ -1,7 +1,7 @@
 import {Event} from './event';
-import {TicketSeat} from './ticket';
+import {SeatDetail} from './seatDetail';
 
 export interface CartItem {
-  seat: TicketSeat;
+  seat: SeatDetail;
   event: Event;
 }

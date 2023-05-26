@@ -1,15 +1,8 @@
+import {SeatDetail} from './seatDetail';
+import {Event} from './event';
 
 export interface TicketSeat {
-  id: number;
-  status: string;
-  type?: string;
-  capacity?: number;
-  seatNr: number;
-  section: {
-    id: number;
-    color: string;
-    name: string;
-    price: number;
-  };
-  seatrowId: number;
+  ticketNr: number;
+  seat: SeatDetail;
+  event: Event;
 }

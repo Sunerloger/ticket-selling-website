@@ -13,6 +13,7 @@ import {NewsComponent} from './components/news/news.component';
 import {AdminRouteGuard} from './guards/admin-route.guard';
 import { RoomplaneditorComponent } from './components/roomplaneditor/roomplaneditor.component';
 import {ReservationsComponent} from './components/reservations/reservations.component';
+import {CartCheckoutComponent} from './components/cart-checkout/cart-checkout.component';
 
 
 const routes: Routes = [
@@ -27,9 +28,9 @@ const routes: Routes = [
   {path: 'news', canActivate: [AuthGuard], component: NewsComponent},
   {path: 'news/create', canActivate: [AdminRouteGuard], component: NewsCreateComponent},
   {path: 'roomplan/:id/edit', component: RoomplaneditorComponent },
-  {path: 'reservations', component: ReservationsComponent}
+  {path: 'reservations', component: ReservationsComponent},
+  {path: 'cart/checkout', component: CartCheckoutComponent}
 ];
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { useHash: true })],

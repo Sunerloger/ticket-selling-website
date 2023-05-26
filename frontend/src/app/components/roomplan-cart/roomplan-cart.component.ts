@@ -2,8 +2,8 @@ import {Component, Input} from '@angular/core';
 import {CartService} from '../../services/cart.service';
 import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';
-import {TicketSeat} from '../../dtos/ticket';
 import {ReservationService} from '../../services/reservation.service';
+import {SeatDetail} from '../../dtos/seatDetail';
 
 @Component({
   selector: 'app-roomplan-cart',
@@ -15,33 +15,21 @@ export class RoomplanCartComponent {
   /**
   @Input() items?: RoomplanItem[];
    */
-  item1: TicketSeat = {
+  item1: SeatDetail = {
     id: 6,
-    status: 'FREE',
+    price: 40,
     type: 'STANDING_SEAT',
-    capacity: 1,
     seatNr: 1,
-    section: {
-      id: 4,
-      name: 'Back Section',
-      color: 'blue',
-      price: 40
-    },
-    seatrowId: 3
+    sectionName: 'lol',
+    seatRowNr: 3
   };
-  item2: TicketSeat = {
+  item2: SeatDetail = {
     id: 1,
-    status: 'FREE',
+    price: 12,
     type: 'SEAT',
-    capacity: 1,
     seatNr: 1,
-    section: {
-      id: 1,
-      name: 'VIP',
-      color: 'gold',
-      price: 100
-    },
-    seatrowId: 1
+    sectionName: 'VIP',
+    seatRowNr: 1
   };
   items = [this.item1, this.item2];
 
@@ -57,7 +45,7 @@ export class RoomplanCartComponent {
       : this.items.length.toString();
   }
 
-  addToCart(seatList: TicketSeat[]){
+  addToCart(seatList: SeatDetail[]){
     //Todo: something with response
     this.cartService.addToCart(seatList).subscribe(
       (response) => {
@@ -73,7 +61,7 @@ export class RoomplanCartComponent {
     );
   }
 
-  reserveSeats(seatList: TicketSeat[]){
+  reserveSeats(seatList: SeatDetail[]){
     //Todo: something with response
     this.reservationService.createReservation(seatList).subscribe(
       (response) => {

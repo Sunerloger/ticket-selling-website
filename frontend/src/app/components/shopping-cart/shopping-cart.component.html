@@ -14,8 +14,8 @@
           <span class="event-info">Date:  <b> {{ item.event.date[0] | date:'dd.MM.yy' }}</b></span>
           <span class="event-info">Starting-Time:  <b> {{ formatTime(item.event.startTime) | date:'HH:mm' }}</b></span>
 
-          <span class="event-info">Section: <b> {{ item.seat.section.name }}</b></span>
-          <span class="event-info">Row: <b> {{ item.seat.seatrowId }}</b></span>
+          <span class="event-info">Section: <b> {{ item.seat.sectionName}}</b></span>
+          <span class="event-info">Row: <b> {{ item.seat.seatRowNr }}</b></span>
           <span class="event-info">Seat:  <b> {{ item.seat.seatNr }}</b></span>
         </div>
 
@@ -24,7 +24,7 @@
       <div class="shopping-cart-info-price">
 
         <div class="price-container">
-          <h4 class="price">€ {{ item.seat.section.price }} </h4>
+          <h4 class="price">{{ (item.seat.price | number:'1.2-2').replace('.',',') }} €</h4>
           <span class="price-info"> inkl. Mst.</span>
         </div>
 
@@ -41,8 +41,9 @@
 
     </div>
   </div>
-  <div id="checkout" *ngIf="items.length !== 0">
-    <button type="button" class="btn btn-primary">Checkout</button>
+  <div  *ngIf="items.length !== 0">
+    <span class="total"> Total ({{items.length}} Ticket{{ this.items.length === 1 ? '' : 's' }}): &nbsp; <h3>{{sumOfItems()}} €</h3></span>
+    <button id="checkout" type="button" class="btn btn-primary" (click)="checkout()">&nbsp;Checkout&nbsp;</button>
   </div>
   <div *ngIf="items.length === 0">
     <h5>

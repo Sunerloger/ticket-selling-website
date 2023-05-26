@@ -1,9 +1,9 @@
 import {Event} from './event';
-import {TicketSeat} from './ticket';
+import {SeatDetail} from './seatDetail';
 
 export interface Reservation {
   reservationNr: number;
   event: Event;
   reservationDate: Date;
-  reservedSeats: TicketSeat[];
+  reservedSeats: SeatDetail[];
 }
