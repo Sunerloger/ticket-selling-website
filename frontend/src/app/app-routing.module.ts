@@ -11,6 +11,7 @@ import {NewsOverviewComponent} from './components/news/news-overview/news-overvi
 import {AdminRouteGuard} from './guards/admin-route.guard';
 import {NewsDetailComponent} from './components/news/news-detail/news-detail.component';
 import { RoomplaneditorComponent } from './components/roomplaneditor/roomplaneditor.component';
+import {EventOverviewComponent} from './components/event-overview/event-overview.component';
 
 
 const routes: Routes = [
@@ -29,6 +30,7 @@ const routes: Routes = [
   {path: 'roomplan/:id/edit', component: RoomplaneditorComponent },
   {path: 'hallplans/:id/edit', component: RoomplaneditorComponent },
   {path: '**', redirectTo: 'news'},
+    {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
 ];
 
 
