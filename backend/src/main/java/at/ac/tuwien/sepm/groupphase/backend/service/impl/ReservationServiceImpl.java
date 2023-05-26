@@ -1,16 +1,13 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
-import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Reservation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ReservationSeat;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSeatRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ReservationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanSeatService;
 import at.ac.tuwien.sepm.groupphase.backend.service.ReservationService;
-import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatStatus;
 import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -38,8 +34,8 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ReservationDto> getReservationsOfUser(Long userID) {
-        List<Reservation> reservationList = repository.findReservationsByUserIdOrderByDate(userID);
+    public List<ReservationDto> getReservationsOfUser(Long userId) {
+        List<Reservation> reservationList = repository.findReservationsByUserIdOrderByDate(userId);
         List<ReservationDto> reservationDtoList = new ArrayList<>();
 
         for (Reservation reservation : reservationList) {
@@ -73,15 +69,14 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    public void deleteReservation(Long reservationNr, Long userID) {
+    public void deleteReservation(Long reservationNr, Long userId) {
         Reservation reservation = repository.findReservationByReservationNr(reservationNr);
 
         if (reservation == null){
             return; //Todo: No Content
         }
 
-        if (!reservation.getUserId().equals(userID)){
+        if (!reservation.getUserId().equals(userId)){
             return; //TODO: No Content (to not have side channels)
         }
 
@@ -93,7 +88,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    public void addReservation(List<SeatDto> itemDtoList, Long userID) {
+    public void addReservation(List<SeatDto> itemDtoList, Long userId) {
         if(itemDtoList.isEmpty()) return;
         for (SeatDto item: itemDtoList) {
             if (!seatService.doesSeatExist(item.getId())) throw new NotFoundException();
@@ -103,7 +98,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         Reservation reservation = new Reservation();
         reservation.setDate(LocalDate.now());
-        reservation.setUserId(userID);
+        reservation.setUserId(userId);
 
         List<ReservationSeat> reservationSeatList = new ArrayList<>();
 

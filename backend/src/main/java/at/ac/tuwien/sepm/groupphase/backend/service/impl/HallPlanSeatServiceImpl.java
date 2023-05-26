@@ -138,5 +138,22 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
         seatRepository.save(seat);
         return true;
     }
+
+    //TODO: Update This Method to support new Database Model (standing seats)
+    @Override
+    @Transactional
+    public boolean freePurchasedSeat(Long seatId) {
+        Optional<HallPlanSeat> optionalHallPlanSeat =  seatRepository.getSeatById(seatId);
+        if (optionalHallPlanSeat.isEmpty()) return false;
+        HallPlanSeat seat = optionalHallPlanSeat.get();
+        if (HallPlanSeatType.VACANT_SEAT.equals(seat.getType())) return false;
+        if (!HallPlanSeatStatus.OCCUPIED.equals(seat.getStatus())) return false;
+        seat.setStatus(HallPlanSeatStatus.FREE);
+        seatRepository.save(seat);
+        return true;
+    }
+
+
+
 }
 

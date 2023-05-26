@@ -17,6 +17,10 @@ public class Ticket {
         this.seatId = seatId;
     }
 
+    public Ticket() {
+
+    }
+
     public Long getSeatId() {
         return seatId;
     }

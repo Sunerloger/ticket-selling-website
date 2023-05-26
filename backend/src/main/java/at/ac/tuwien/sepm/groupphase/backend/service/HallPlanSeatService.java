@@ -25,4 +25,8 @@ public interface HallPlanSeatService {
 
     @Transactional
     boolean cancelReservation(Long seatId);
+
+    //TODO: Update This Method to support new Database Model (standing seats)
+    @Transactional
+    boolean freePurchasedSeat(Long seatId);
 }

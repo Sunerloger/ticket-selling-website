@@ -12,10 +12,10 @@ import java.util.List;
 public interface ReservationService {
 
 
-    List<ReservationDto> getReservationsOfUser(Long userID);
+    List<ReservationDto> getReservationsOfUser(Long userId);
 
     @Transactional
-    void deleteReservation(Long reservationNr, Long userID);
+    void deleteReservation(Long reservationNr, Long userId);
 
-    void addReservation(List<SeatDto> itemDtoList, Long userID);
+    void addReservation(List<SeatDto> itemDtoList, Long userId);
 }

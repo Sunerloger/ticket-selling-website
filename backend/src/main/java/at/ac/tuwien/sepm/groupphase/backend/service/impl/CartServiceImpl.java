@@ -5,10 +5,8 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Cart;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CartRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.*;
-import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -70,7 +68,6 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public void deleteItem(Long itemId, Long userID) {
         Cart cart = cartRepository.findCartBySeatId(itemId);
         if (cart == null){

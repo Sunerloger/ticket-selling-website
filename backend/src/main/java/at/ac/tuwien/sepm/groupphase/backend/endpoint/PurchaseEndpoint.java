@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PurchaseDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ReservationDto;
 import at.ac.tuwien.sepm.groupphase.backend.service.PurchaseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -31,27 +30,27 @@ public class PurchaseEndpoint {
         LOGGER.info("GET /api/v1/purchase");
         //TODO: acquire UserID
         //TODO: use real UserID
-
         return service.getPurchasesOfUser(1L);
     }
 
     @GetMapping("/{purchaseNr}")
     @Operation(summary = "Get a single Purchase by its purchaseNr", security = @SecurityRequirement(name = "apiKey"))
-    public ReservationDto getPurchaseByNr(@PathVariable Long purchaseNr) {
+    public PurchaseDto getPurchaseByNr(@PathVariable Long purchaseNr) {
         LOGGER.info("GET /api/v1/purchase/{}", purchaseNr);
         //TODO: acquire UserID
         //TODO: use real UserID
 
-        //TODO: Call service function
-        return null;
+        return service.getPurchaseByPurchaseNr(purchaseNr, 1L);
     }
 
     @DeleteMapping("/{purchaseNr}")
     @Operation(summary = "Removes a Purchase by purchaseNr", security = @SecurityRequirement(name = "apiKey"))
     public ResponseEntity<Void> cancelPurchase(@PathVariable Long purchaseNr) {
         LOGGER.info("Delete /api/v1/purchase/{}", purchaseNr);
+        //TODO: acquire UserID
+        //TODO: use real UserID
 
-        //TODO: Call service function
+        service.deletePurchase(purchaseNr,1L);
         return ResponseEntity.noContent().build();
     }
 

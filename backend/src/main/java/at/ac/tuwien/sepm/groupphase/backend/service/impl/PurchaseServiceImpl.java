@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Purchase;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PurchaseRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +34,43 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
+    public PurchaseDto getPurchaseByPurchaseNr(Long purchaseNr, Long userId){
+        Purchase purchase = repository.findPurchasesByPurchaseNr(purchaseNr);
+        //TODO: check if purchase belong to user cart
+
+        List<Ticket> ticketList = purchase.getTicketList();
+        List<TicketDto> ticketDtoList = new ArrayList<>();
+        for (Ticket ticket : ticketList) {
+            ticketDtoList.add(ticketService.ticketDtoFromTicket(ticket));
+        }
+        return new PurchaseDto(ticketDtoList, purchase);
+    }
+
+    @Override
+    @Transactional
+    public void deletePurchase(Long purchaseNr, Long userId){
+        Purchase purchase = repository.findPurchasesByPurchaseNr(purchaseNr);
+
+        if (purchase == null){
+            return; //Todo: No Content
+        }
+
+        if (!purchase.getUserId().equals(userId)){
+            return; //TODO: No Content (to not have side channels)
+        }
+
+        for (Ticket ticket:purchase.getTicketList()) {
+            seatService.freePurchasedSeat(ticket.getSeatId());
+        }
+        repository.deletePurchaseByPurchaseNr(purchaseNr);
+    }
+
+    @Override
     public List<PurchaseDto> getPurchasesOfUser(Long userId) {
         List<Purchase> purchaseList = repository.findPurchasesByUserIdOrderByPurchaseDate(userId);
         List<PurchaseDto> purchaseDtoList = new ArrayList<>();
+
+        //TODO: check if purchase belong to user cart
 
         for (Purchase purchase : purchaseList) {
             if (purchase.getTicketList().isEmpty()) {
@@ -74,7 +109,6 @@ public class PurchaseServiceImpl implements PurchaseService {
         Purchase purchase = new Purchase();
         purchase.setDate(LocalDate.now());
         purchase.setUserId(userId);
-
         //TODO: Get UserInfo
         //TODO: Check if custom address
         //TODO: create Purchase Object
@@ -82,7 +116,6 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchase.setBillAreaCode(1337L);
         purchase.setBillCityName("not implemented (city)");
         purchase.setTicketList(ticketList);
-
         repository.save(purchase);
     }
 
