@@ -16,13 +16,16 @@
         <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/news" routerLinkActive="active">News</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/cart" routerLinkActive="active">Cart</a>
+        <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/roomplancart" routerLinkActive="active">Roomplancart</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/reservations" routerLinkActive="active">Reservations</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/roomplancart" routerLinkActive="active">Roomplancart</a>
+        <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/purchases" routerLinkActive="active">Purchases</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/cart" routerLinkActive="active">Cart</a>
       </li>
     </ul>
     <ul class="navbar-nav mr-5">

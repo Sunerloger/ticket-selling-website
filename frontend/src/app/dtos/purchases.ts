@@ -17,6 +17,6 @@ export interface Purchase {
   billAddress: string;
   billCityName: string;
   billAreaCode: number;
-  seats: TicketSeat[];
+  ticketList: TicketSeat[];
 
 }
