@@ -1,20 +1,22 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class EventDateDto {
-    private LocalDateTime date;
+    private LocalDate date;
+    private LocalTime startingTime;
     private Long event;
     private int areaCode;
     private String address;
     private String city;
     private Long room;
 
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -56,5 +58,13 @@ public class EventDateDto {
 
     public void setRoom(Long room) {
         this.room = room;
+    }
+
+    public LocalTime getStartingTime() {
+        return startingTime;
+    }
+
+    public void setStartingTime(LocalTime startingTime) {
+        this.startingTime = startingTime;
     }
 }

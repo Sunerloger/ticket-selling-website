@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
@@ -32,8 +31,9 @@ import { SeatComponent } from './components/roomplaneditor/seatrow/seat/seat.com
 import { SectionmanagerComponent } from './components/roomplaneditor/sectionmanager/sectionmanager.component';
 import { CreateSectionComponent } from './components/roomplaneditor/sectionmanager/create-section/create-section.component';
 import { ManageSectionComponent } from './components/roomplaneditor/sectionmanager/manage-section/manage-section.component';
-import { EditableSectionComponent }
-from './components/roomplaneditor/sectionmanager/manage-section/editable-section/editable-section.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { EditableSectionComponent } from './components/roomplaneditor/sectionmanager/manage-section/editable-section/editable-section.component';
+
 
 @NgModule({
   declarations: [
@@ -72,6 +72,7 @@ from './components/roomplaneditor/sectionmanager/manage-section/editable-section
     BrowserAnimationsModule,
     NgOptimizedImage,
     InfiniteScrollModule,
+    BsDatepickerModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
