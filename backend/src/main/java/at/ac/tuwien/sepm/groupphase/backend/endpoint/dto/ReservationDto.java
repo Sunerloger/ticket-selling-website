@@ -10,13 +10,13 @@ public class ReservationDto {
     private EventDetailDto event;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate reservationDate;
-    private List<HallPlanSeatDto> reservedSeats;
+    private List<SeatDto> reservedSeats;
 
     public ReservationDto(){
 
     }
 
-    public ReservationDto(Long reservationNr, EventDetailDto event, LocalDate reservationDate, List<HallPlanSeatDto> reservedSeats) {
+    public ReservationDto(Long reservationNr, EventDetailDto event, LocalDate reservationDate, List<SeatDto> reservedSeats) {
         this.reservationNr = reservationNr;
         this.event = event;
         this.reservationDate = reservationDate;
@@ -39,11 +39,11 @@ public class ReservationDto {
         this.reservationDate = reservationDate;
     }
 
-    public List<HallPlanSeatDto> getReservedSeats() {
+    public List<SeatDto> getReservedSeats() {
         return reservedSeats;
     }
 
-    public void setReservedSeats(List<HallPlanSeatDto> reservedSeats) {
+    public void setReservedSeats(List<SeatDto> reservedSeats) {
         this.reservedSeats = reservedSeats;
     }
 

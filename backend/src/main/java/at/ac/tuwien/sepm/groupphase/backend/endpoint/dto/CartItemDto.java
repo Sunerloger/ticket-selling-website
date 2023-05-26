@@ -5,13 +5,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 
 public class CartItemDto {
-    private HallPlanSeatDto seat;
+    private SeatDto seat;
     private EventDetailDto event;
 
     public CartItemDto() {
     }
 
-    public CartItemDto(HallPlanSeatDto seat, EventDetailDto event) {
+    public CartItemDto(SeatDto seat, EventDetailDto event) {
         this.seat = seat;
         this.event = event;
     }
@@ -24,11 +24,11 @@ public class CartItemDto {
         this.event = event;
     }
 
-    public HallPlanSeatDto getSeat() {
+    public SeatDto getSeat() {
         return seat;
     }
 
-    public void setSeat(HallPlanSeatDto seat) {
+    public void setSeat(SeatDto seat) {
         this.seat = seat;
     }
 }

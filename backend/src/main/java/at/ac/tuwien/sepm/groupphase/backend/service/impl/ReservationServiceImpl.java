@@ -1,8 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDetailDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanSeatDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ReservationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Reservation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ReservationSeat;
@@ -29,14 +27,14 @@ public class ReservationServiceImpl implements ReservationService {
     private ReservationRepository repository;
     private HallPlanSeatService seatService;
     private EventService eventService;
-    private HallPlanSeatRepository hallPlanSeatRepository; //TODO: replace with seatservice repository
+    private SeatRowServiceImpl rowService;
 
     @Autowired
-    public ReservationServiceImpl(ReservationRepository repository, HallPlanSeatService seatService, EventService eventService, HallPlanSeatRepository hallPlanSeatRepository) {
+    public ReservationServiceImpl(ReservationRepository repository, HallPlanSeatService seatService, EventService eventService, SeatRowServiceImpl rowService) {
         this.repository = repository;
         this.seatService = seatService;
         this.eventService = eventService;
-        this.hallPlanSeatRepository = hallPlanSeatRepository;
+        this.rowService = rowService;
     }
 
     @Override
@@ -46,20 +44,27 @@ public class ReservationServiceImpl implements ReservationService {
 
         for (Reservation reservation : reservationList) {
             if (reservation.getReservationSeatsList().isEmpty()) {
-                break; //TODO: check if this doesnt break the method
+                break; //TODO: actually this shouldnt happen (every reservation should have seats)
             }
 
-            EventDetailDto event = eventService.getEventById(1L); //TODO: get correct Event
+            List<SeatDto> seatDtoList = new ArrayList<>();
+            List<ReservationSeat> reservationSeatList = reservation.getReservationSeatsList();
+
+            for (ReservationSeat reservationSeat: reservationSeatList){
+                HallPlanSeatDto hallPlanSeatDto = seatService.getSeatById(reservationSeat.getSeatId());
+                SeatRowDto rowDto = rowService.getSeatRowById(hallPlanSeatDto.getSeatrowId());
+                seatDtoList.add(new SeatDto(hallPlanSeatDto,rowDto));
+            }
+
             ReservationDto reservationDto = new ReservationDto();
+            reservationDto.setReservedSeats(seatDtoList);
+
+            EventDetailDto event = eventService.getEventById(1L); //TODO: get correct Event
             reservationDto.setEvent(event);
+
             reservationDto.setReservationDate(reservation.getDate());
             reservationDto.setReservationNr(reservation.getReservationNr());
 
-            List<HallPlanSeatDto> seatDtoList = new ArrayList<>();
-            for (int j = 0; j < reservation.getReservationSeatsList().size(); j++) {
-                seatDtoList.add(seatService.getSeatById(reservation.getReservationSeatsList().get(j).getSeat()));
-            }
-            reservationDto.setReservedSeats(seatDtoList);
             reservationDtoList.add(reservationDto);
         }
 
@@ -70,67 +75,47 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     public void deleteReservation(Long reservationNr, Long userID) {
-
-        //maybe implement this whole function in HallplanSeatService
         Reservation reservation = repository.findReservationByReservationNr(reservationNr);
 
         if (reservation == null){
-            return;
+            return; //Todo: No Content
         }
 
         if (!reservation.getUserId().equals(userID)){
-            return;
+            return; //TODO: No Content (to not have side channels)
         }
 
         for (ReservationSeat reservationSeat:reservation.getReservationSeatsList()) {
-            Optional<HallPlanSeat> optSeat = hallPlanSeatRepository.findById(reservationSeat.getSeat());
-            if (optSeat.isPresent()){
-                HallPlanSeat seat = optSeat.get();
-                if (seat.getStatus().equals(HallPlanSeatStatus.RESERVED)){
-                    seat.setStatus(HallPlanSeatStatus.FREE);
-                    hallPlanSeatRepository.saveAndFlush(seat);
-                }
-            }
+            seatService.cancelReservation(reservationSeat.getSeatId());
         }
-
         repository.deleteReservationByReservationNr(reservationNr);
     }
 
     @Override
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    public void addReservation(List<HallPlanSeatDto> itemDtoList, Long userID) {
-        List<HallPlanSeat> seatList = new ArrayList<>();
-        for (HallPlanSeatDto item: itemDtoList) {
-            Optional<HallPlanSeat> optSeat = hallPlanSeatRepository.findById(item.getId());
-            if (optSeat.isEmpty()){
-                throw new NotFoundException();
-            }
-            HallPlanSeat seat = optSeat.get();
-            seatList.add(seat);
+    public void addReservation(List<SeatDto> itemDtoList, Long userID) {
+        if(itemDtoList.isEmpty()) return;
+        for (SeatDto item: itemDtoList) {
+            if (!seatService.doesSeatExist(item.getId())) throw new NotFoundException();
         }
 
         //TODO: check if items are part of the same event
 
-        List<HallPlanSeat> freeSeatList = new ArrayList<>();
-        for (HallPlanSeat seat: seatList){
-            if (seat.getStatus().equals(HallPlanSeatStatus.FREE)){
-                seat.setStatus(HallPlanSeatStatus.RESERVED);
-                hallPlanSeatRepository.saveAndFlush(seat);
-                freeSeatList.add(seat);
+        Reservation reservation = new Reservation();
+        reservation.setDate(LocalDate.now());
+        reservation.setUserId(userID);
+
+        List<ReservationSeat> reservationSeatList = new ArrayList<>();
+
+        for (SeatDto item: itemDtoList) {
+            if (seatService.tryReserveSeat(item.getId())){
+                reservationSeatList.add(new ReservationSeat(item.getId()));
+                //TODO: Inform user that not all seats were Reserved
             }
         }
 
-        Reservation reservation = new Reservation();
-        List<ReservationSeat> reservationSeatList = new ArrayList<>();
-        for (HallPlanSeat seat: freeSeatList){
-            ReservationSeat reservationSeat = new ReservationSeat();
-            reservationSeat.setSeat(seat.getId());
-            reservationSeatList.add(reservationSeat);
-        }
-
-        reservation.setUserId(userID);
         reservation.setReservationSeatsList(reservationSeatList);
-        reservation.setDate(LocalDate.now());
+
         if (!reservation.getReservationSeatsList().isEmpty()){
             repository.save(reservation);
         }

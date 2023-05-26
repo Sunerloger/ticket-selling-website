@@ -7,17 +7,20 @@ public class ReservationSeat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long seat;
+    private Long seatId;
+    public ReservationSeat(){
 
+    }
+    public ReservationSeat(Long seatId){
+        this.seatId = seatId;
+    }
     public Long getId() {
         return id;
     }
-
-    public Long getSeat() {
-        return seat;
+    public Long getSeatId() {
+        return seatId;
     }
-
-    public void setSeat(Long seat) {
-        this.seat = seat;
+    public void setSeatId(Long seat) {
+        this.seatId = seat;
     }
 }

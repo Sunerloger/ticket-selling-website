@@ -3,14 +3,13 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.CartService;
-import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanSeatService;
+import at.ac.tuwien.sepm.groupphase.backend.service.PurchaseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.invoke.MethodHandles;
@@ -21,11 +20,13 @@ import java.util.List;
 public class CartEndpoint {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final CartService service;
+    private CartService service;
+    private PurchaseService purchaseService;
 
     @Autowired
-    public CartEndpoint(CartService cartService, HallPlanSeatService seatService){
+    public CartEndpoint(CartService cartService, PurchaseService purchaseService){
         this.service = cartService;
+        this.purchaseService = purchaseService;
     }
 
     @GetMapping
@@ -41,7 +42,7 @@ public class CartEndpoint {
 
     @PostMapping
     @Operation(summary = "Add a list of Seats to the cart", security = @SecurityRequirement(name = "apiKey"))
-    public ResponseEntity<Void> addToCart(@RequestBody List<HallPlanSeatDto> seatDtoList) {
+    public ResponseEntity<Void> addToCart(@RequestBody List<SeatDto> seatDtoList) {
         LOGGER.info("Post /api/v1/cart");
         try {
         //TODO: acquire UserID
@@ -65,6 +66,14 @@ public class CartEndpoint {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/purchase")
+    @Operation(summary = "Purchases the tickets in the cart", security = @SecurityRequirement(name = "apiKey"))
+    public ResponseEntity<Void> buyCart(@RequestBody PurchaseCreationDto purchaseCreationDto){
+        LOGGER.info("Post /api/v1/cart/purchase");
+        purchaseService.purchaseCartOfUser(1L, purchaseCreationDto);
+        return ResponseEntity.ok().build();
     }
 
 }

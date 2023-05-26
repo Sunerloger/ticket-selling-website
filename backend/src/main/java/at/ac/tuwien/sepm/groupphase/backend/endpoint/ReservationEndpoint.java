@@ -2,8 +2,8 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanSeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ReservationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanSeatService;
 import at.ac.tuwien.sepm.groupphase.backend.service.ReservationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -23,7 +23,7 @@ public class ReservationEndpoint {
     private final ReservationService service;
 
     @Autowired
-    public ReservationEndpoint(ReservationService reservationService, HallPlanSeatService seatService) {
+    public ReservationEndpoint(ReservationService reservationService) {
         this.service = reservationService;
     }
 
@@ -40,7 +40,7 @@ public class ReservationEndpoint {
 
     @PostMapping
     @Operation(summary = "Create a new Reservation with the given seats", security = @SecurityRequirement(name = "apiKey"))
-    public ResponseEntity<Void> newReservation(@RequestBody List<HallPlanSeatDto> seatDtoList) {
+    public ResponseEntity<Void> newReservation(@RequestBody List<SeatDto> seatDtoList) {
         LOGGER.info("Post /api/v1/reservation");
         try {
             //TODO: acquire UserID
