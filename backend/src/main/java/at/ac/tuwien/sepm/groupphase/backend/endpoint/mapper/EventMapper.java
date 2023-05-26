@@ -51,12 +51,6 @@ public interface EventMapper {
     }
 
     AbbreviatedEventDto eventToAbbreviatedEventDto(Event event);
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> 125126bfe81cc565561525dee8259ff81cc7c027
 
 
 }

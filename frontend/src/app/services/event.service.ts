@@ -4,7 +4,7 @@ import {from, Observable} from 'rxjs';
 import {environment} from 'src/environments/environment';
 const baseUri = environment.backendUrl + '/api/v1/events';
 import {Event} from 'src/app/dtos/event';
-import {AbbreviatedEvent} from "../dtos/abbreviatedEvents";
+import {AbbreviatedEvent} from '../dtos/abbreviatedEvents';
 @Injectable({
   providedIn: 'root'
 })
