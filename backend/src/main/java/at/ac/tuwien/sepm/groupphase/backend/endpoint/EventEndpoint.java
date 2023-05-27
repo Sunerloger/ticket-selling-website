@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AbbreviatedEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
@@ -9,15 +10,21 @@ import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/events")
@@ -44,4 +51,28 @@ public class EventEndpoint {
         }
     }
 
+    @Secured("ROLE_USER")
+    @GetMapping
+    @Operation(summary = "Get list of events without details", security = @SecurityRequirement(name = "apiKey"))
+    public List<AbbreviatedEventDto> findAllDefault(
+        @RequestParam(defaultValue = "0") int pageIndex,
+        @RequestParam(required = false) String artist,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate untilDate,
+        @RequestParam(required = false) String location
+    ) {
+        LOG.info("GET {}/events", "/api/v1/events");
+
+        if (artist != null || fromDate != null || untilDate != null || location != null) {
+            LOG.info("called with param");
+            return eventService.findAllPagesByDateAndAuthorAndLocation(pageIndex, fromDate, untilDate, artist, location)
+                .map(eventMapper::eventToAbbreviatedEventDto)
+                .toList();
+        } else {
+            LOG.info("called without param");
+            return eventService.findAllPagesByDate(pageIndex)
+                .map(eventMapper::eventToAbbreviatedEventDto)
+                .toList();
+        }
+    }
 }

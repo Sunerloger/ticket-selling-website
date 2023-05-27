@@ -12,8 +12,8 @@ public interface TestData {
     String TEST_NEWS_TITLE = "Title";
     String TEST_NEWS_SUMMARY = "Summary";
     String TEST_NEWS_TEXT = "TestMessageText";
-    String TEST_COVER_IMAGE = "IAMACOVERIMAGE";
-    List<String> TEST_NEWS_IMAGE_DATA_LIST = new LinkedList<>(Arrays.asList("IMAGEONE", "IMAGETWO", "IMAGETHREE"));
+    String TEST_COVER_IMAGE = "data:image/png;base64,IAMACOVERIMAGE==";
+    List<String> TEST_NEWS_IMAGE_DATA_LIST = new LinkedList<>(Arrays.asList("data:image/png;base64,IMAGEONE==", "data:image/jpeg;base64,IMAGETWO==", "data:image/png;base64,IMAGETHREE=="));
     LocalDateTime TEST_NEWS_PUBLISHED_AT =
         LocalDateTime.of(2019, 11, 13, 12, 15, 0, 0);
 
