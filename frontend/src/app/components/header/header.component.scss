@@ -1,5 +1,5 @@
 .navbar {
-  background-color: #63A5B6;
+  background-color: #23a6d5;
   font-size: 24px;
   padding-right: 10px;
 }
@@ -7,19 +7,68 @@
   font-size: 36px;
   font-family: 'Oleo Script';
 }
+.navbar-nav-right {
+  margin-left:auto;
+}
+
 .navbar-nav {
-  margin-left: auto;
+  display:flex;
+  justify-content:space-between;
+  flex-direction: row;
+
+}
+
+.navbar-subcontainer {
+  display:flex;
+  flex-direction: row;
+}
+
+.header-links-margins {
+  margin-left: 1rem;
 }
 
 .nav-link {
   color: white;
 }
 
-.navbar-brand {
+.navbar-brand-style {
   color: white;
-  margin-left: 10px;
+  margin-left: 1rem;
+  margin-right: 0.5rem;
+  text-decoration: none;
 }
 
 .bi-ticket {
   color: white;
+}
+
+.custom-animated-text {
+	background: linear-gradient(-45deg, #233166,#ffffff);
+	background-size: 400% 400%;
+	background-clip: text;
+	-webkit-background-clip: text;
+  color: transparent;
+
+}
+
+.animated-text-custom {
+  color: #ebebeb; /* Initial color */
+  transition: color 0.5s ease; /* Transition duration and easing */
+}
+
+.animated-text-custom:hover {
+  color: #ffffff; /* Color to transition to on hover */
+}
+
+.flex-container {
+  display: flex;
+
+}
+
+.left-item {
+  margin-right: auto;
+}
+
+.right-item {
+  margin-left: auto;
 }

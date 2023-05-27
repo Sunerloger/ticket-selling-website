@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Globals } from '../../global/globals';
-import { PersistedHallplan, PersistedSeat, PersistedSeatRow, Seat, SeatRow } from 'src/app/dtos/hallplan/hallplan';
+import { Hallplan, PersistedHallplan, PersistedSeat, PersistedSeatRow, Seat, SeatRow } from 'src/app/dtos/hallplan/hallplan';
 import { PersistedSection, Section } from 'src/app/dtos/hallplan/section';
 
 
@@ -15,6 +15,12 @@ export class HallplanService {
     constructor(private http: HttpClient, private globals: Globals) {
     }
 
+    getAllHallplans() {
+        return this.http.get<Hallplan[]>(
+          `${this.baseUrl}`  
+        );
+    }
+    
     getHallplanById(id: number){
         return this.http.get<PersistedHallplan>(
             `${this.baseUrl}/${id}`

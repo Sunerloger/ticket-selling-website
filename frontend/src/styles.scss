@@ -38,3 +38,14 @@ button.btn.btn-secondary {
 .primary {
   color: var(--primary-color);
 }
+
+
+.logo-fontstyle {
+  font-family: 'OleoScript', cursive;
+  font-size: 36px;
+}
+
+@font-face {
+  font-family: 'OleoScript';
+  src: url('./assets/OleoScript-Regular.ttf') format('truetype');
+}
