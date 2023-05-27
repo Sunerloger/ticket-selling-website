@@ -32,17 +32,6 @@ items: Purchase[] = [];
     });
   }
 
-  formatTime(time: string): Date {
-    const parts = time.split(':');
-    const hours = Number(parts[0]);
-    const minutes = Number(parts[1]);
-
-    const date = new Date();
-    date.setHours(hours);
-    date.setMinutes(minutes);
-    return date;
-  }
-
   sumOfItems(purchase: Purchase): number {
     let sum = 0;
     purchase.ticketList.forEach((element) =>{

@@ -2,19 +2,22 @@
   <div class="card-header">
     <h3 class="card-headline">Purchases</h3>
   </div>
-
+  <div *ngIf="items.length === 0">
+    <h5>
+      You have no purchases on Record
+    </h5>
+  </div>
   <div *ngFor="let purchase of items; let i = index; let last = last" class="purchase">
     <div class="billing-info">
-      <h3>Billing-number: {{purchase.purchaseNr}} ( {{purchase.ticketList.length }} Ticket{{ purchase.ticketList.length === 1 ? '' : 's' }} )</h3>
-      <span>Fistname, Lastname</span><br>
-      <span>{{purchase.billAddress}}</span><br>
-      <span>{{purchase.billCityName}}, {{purchase.billAreaCode}}</span><br>
+      <h4> {{purchase.purchaseDate | date:'dd.MM.yy' }}  ({{purchase.ticketList.length }} Ticket{{ purchase.ticketList.length === 1 ? '' : 's' }})</h4>
+      <h5>Bill number: {{purchase.purchaseNr}}</h5>
+      <button type="button" class="btn btn-primary" [routerLink]="['/purchases', purchase.purchaseNr]" >Purchase Details</button>
     </div>
 
     <div class="other-info">
-      <h3>Purchased: {{ purchase.purchaseDate | date:'dd.MM.yy' }}</h3>
-      <h3>Sum: {{ (sumOfItems(purchase)| number:'1.2-2').replace('.',',') }} €</h3>
-      <button type="button" class="btn btn-primary">Purchase Details</button>
+
+      <h4>Sum: {{ (sumOfItems(purchase)| number:'1.2-2').replace('.',',') }} €</h4>
+
     </div>
 
   </div>

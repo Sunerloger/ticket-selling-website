@@ -45,6 +45,10 @@ export class ReservationsComponent implements OnInit{
     });
   }
 
+  purchaseReservation(reservationNr: number): void {
+    this.router.navigate(['reservations/' + reservationNr + '/checkout' ]);
+  }
+
   formatTime(time: string): Date {
     const parts = time.split(':');
     const hours = Number(parts[0]);
@@ -55,4 +59,5 @@ export class ReservationsComponent implements OnInit{
     date.setMinutes(minutes);
     return date;
   }
+
 }

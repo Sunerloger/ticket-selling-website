@@ -5,6 +5,7 @@ import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {Reservation} from '../dtos/reservation';
 import {SeatDetail} from '../dtos/seatDetail';
+import {CreatePurchase} from '../dtos/purchases';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,12 @@ export class ReservationService {
     );
   }
 
+  getReservation(reservationNr: number): Observable<Reservation> {
+    return this.httpClient.get<Reservation>(
+      this.reservationBaseUri + '/' + reservationNr
+    );
+  }
+
   createReservation(seatList: SeatDetail[]): Observable<HttpResponse<any>> {
     return this.httpClient.post<any>(this.reservationBaseUri, seatList);
   }
@@ -28,4 +35,9 @@ export class ReservationService {
   deleteReservation(reservationNr: number): Observable<HttpResponse<any>> {
     return this.httpClient.delete<any>(this.reservationBaseUri + '/' + reservationNr);
   }
+
+  purchaseReservation(purchaseItem: CreatePurchase, reservationNr: number): Observable<HttpResponse<any>> {
+    return this.httpClient.post<any>(this.reservationBaseUri + '/' + reservationNr + '/purchase', purchaseItem);
+  }
+
 }

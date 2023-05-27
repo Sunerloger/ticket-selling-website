@@ -42,5 +42,11 @@
 }
 
 .item-list {
+  display: flex;
+  align-items: center;
   margin-bottom: 0.5rem;
+}
+
+.item-list > input {
+  margin-right: 0.5rem;
 }

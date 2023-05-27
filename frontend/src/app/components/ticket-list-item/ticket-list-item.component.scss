@@ -1,44 +1,24 @@
-.card-header {
-  padding-bottom: 5px;
-}
-
-.card-headline {
-  color: black;
-  font-size: 36px;
-}
-
-#shopping-cart-header {
-  margin: 0;
-  font-size: 2rem;
-}
-
-.item-list {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
 .shopping-cart-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: #D9D9D9;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
   padding-bottom: 0.5rem;
   border-radius: 6px
 }
 
 .shopping-cart-info {
-  flex-grow: 7;
-  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: auto;
   display: flex;
   flex-direction: column;
 }
 
 .shopping-cart-info-price {
-  flex-grow: 2;
-  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: auto;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -78,11 +58,4 @@
 
 .price-info > span{
   text-decoration: underline;
-}
-
-.total{
-  margin-top: 1rem;
-  font-size: 1.5rem;
-  display: flex;
-  align-items: baseline
 }

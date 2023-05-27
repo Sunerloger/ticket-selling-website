@@ -78,16 +78,19 @@
   <div class="infobox">
     <h4>Item Overview</h4>
 
-    <div *ngFor="let item of items; let i = index">
-      <div class="item-list">
-        <app-ticket-list-item [event]="item.event" [seat]="item.seat" style="flex: auto"></app-ticket-list-item>
+    <div *ngIf="item !== undefined">
+      <div *ngFor="let reservation of item.reservedSeats; let i = index">
+        <div class="item-list">
+          <input type="checkbox" class="checkbox" name="admin" [(ngModel)]="checkboxList[i]">
+          <app-ticket-list-item [event]="item.event" [seat]="reservation" style="flex: auto"></app-ticket-list-item>
+        </div>
       </div>
     </div>
 
   </div>
 
   <div class="Total-Price infobox">
-    <h4>Total: {{ (sumOfItems()| number:'1.2-2').replace('.', ',') }} €</h4>
+    <h4>Total: {{ (sumOfCheckedItems()| number:'1.2-2').replace('.', ',') }} €</h4>
   </div>
   <button id="checkout" type="button" class="btn btn-primary" (click)="purchase()">&nbsp;Buy Now&nbsp;</button>
 </div>

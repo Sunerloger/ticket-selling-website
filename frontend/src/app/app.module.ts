@@ -36,6 +36,9 @@ import { ManageSectionComponent } from './components/roomplaneditor/sectionmanag
 import { ReservationsComponent } from './components/reservations/reservations.component';
 import { CartCheckoutComponent } from './components/cart-checkout/cart-checkout.component';
 import { PurchasesComponent } from './components/purchases/purchases.component';
+import { PurchaseDetailComponent } from './components/purchase-detail/purchase-detail.component';
+import { TicketListItemComponent } from './components/ticket-list-item/ticket-list-item.component';
+import { ReservationCheckoutComponent } from './components/reservation-checkout/reservation-checkout.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +67,9 @@ import { PurchasesComponent } from './components/purchases/purchases.component';
     ReservationsComponent,
     CartCheckoutComponent,
     PurchasesComponent,
+    PurchaseDetailComponent,
+    TicketListItemComponent,
+    ReservationCheckoutComponent,
   ],
   imports: [
     BrowserModule,

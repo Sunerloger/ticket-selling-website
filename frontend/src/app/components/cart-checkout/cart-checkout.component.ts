@@ -7,7 +7,6 @@ import {Observable} from 'rxjs';
 import {CreatePurchase} from '../../dtos/purchases';
 import {SeatDetail} from '../../dtos/seatDetail';
 
-
 @Component({
   selector: 'app-cart-checkout',
   templateUrl: './cart-checkout.component.html',
@@ -48,6 +47,7 @@ export class CartCheckoutComponent implements OnInit{
     date.setMinutes(minutes);
     return date;
   }
+
   sumOfItems(): number {
     let sum = 0;
     this.items.forEach((element) =>{
@@ -57,7 +57,6 @@ export class CartCheckoutComponent implements OnInit{
   }
   purchase(): void{
     this.creationItem.seats = [];
-    console.log(this.items.length);
     this.items.forEach((element) =>{
       const seat: SeatDetail = {} as SeatDetail;
       seat.seatNr = element.seat.seatNr;
@@ -65,7 +64,6 @@ export class CartCheckoutComponent implements OnInit{
       seat.type = element.seat.type;
       seat.seatRowNr = element.seat.seatRowNr;
       seat.id = element.seat.id;
-      console.log(seat.id);
       this.creationItem.seats.push(seat);
     });
     this.service.purchaseCart(this.creationItem).subscribe(
@@ -77,8 +75,8 @@ export class CartCheckoutComponent implements OnInit{
         console.error('Error:', error);
         this.notification.error(`Something went wrong... please try again!`);
       }, () => {
+        this.router.navigate(['/purchases']);
       }
     );
-    console.log('end');
   }
 }

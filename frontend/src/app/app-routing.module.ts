@@ -15,6 +15,8 @@ import { RoomplaneditorComponent } from './components/roomplaneditor/roomplanedi
 import {ReservationsComponent} from './components/reservations/reservations.component';
 import {CartCheckoutComponent} from './components/cart-checkout/cart-checkout.component';
 import {PurchasesComponent} from './components/purchases/purchases.component';
+import {PurchaseDetailComponent} from './components/purchase-detail/purchase-detail.component';
+import {ReservationCheckoutComponent} from './components/reservation-checkout/reservation-checkout.component';
 
 
 const routes: Routes = [
@@ -31,7 +33,9 @@ const routes: Routes = [
   {path: 'roomplan/:id/edit', component: RoomplaneditorComponent },
   {path: 'reservations', component: ReservationsComponent},
   {path: 'cart/checkout', component: CartCheckoutComponent},
-  {path: 'purchases', component: PurchasesComponent}
+  {path: 'purchases', component: PurchasesComponent},
+  {path: 'purchases/:id', component: PurchaseDetailComponent},
+  {path: 'reservations/:id/checkout', component: ReservationCheckoutComponent}
 ];
 
 @NgModule({

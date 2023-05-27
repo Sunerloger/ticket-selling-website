@@ -19,19 +19,14 @@
       <h5>Reserved Tickets:</h5>
       <div *ngFor="let ticket of item.reservedSeats; let j = index">
         <div class="ticket">
-          <div class="ticket-seatinfo">
-            <span> Section: <b> {{ ticket.sectionName }}  </b></span>
-            <span> Row: <b> {{ ticket.seatRowNr }}  </b></span>
-            <span> Seat: <b> {{ ticket.seatNr }} </b> </span>
-          </div>
-          <div class="ticket-priceinfo">
-            <span> (Reservation only) <b> {{ (ticket.price | number:'1.2-2').replace('.',',') }} €</b> </span>
-          </div>
+          <app-ticket-list-item [seat]="ticket" [event]="item.event" [isReservation]="true"></app-ticket-list-item>
         </div>
       </div>
       <div class="buttons">
         <button type="button" (click)="cancelReservation(item)" class="btn btn-secondary">Cancel Reservation</button>
-        <button type="button" class="btn btn-primary">Purchase Tickets</button>
+        <button type="button" (click)="purchaseReservation(item.reservationNr)" class="btn btn-primary">Purchase
+          Tickets
+        </button>
       </div>
     </div>
     <hr *ngIf="!last">
