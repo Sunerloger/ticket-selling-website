@@ -68,6 +68,37 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    public ReservationDto getReservationOfUser(Long reservationNr, Long userId){
+        Reservation reservation = repository.findReservationByReservationNr(reservationNr);
+        if (!reservation.getUserId().equals(userId)) return null;
+
+        if (reservation.getReservationSeatsList().isEmpty()) {
+            return null;
+        }
+
+        List<SeatDto> seatDtoList = new ArrayList<>();
+        List<ReservationSeat> reservationSeatList = reservation.getReservationSeatsList();
+
+        for (ReservationSeat reservationSeat: reservationSeatList){
+            HallPlanSeatDto hallPlanSeatDto = seatService.getSeatById(reservationSeat.getSeatId());
+            SeatRowDto rowDto = rowService.getSeatRowById(hallPlanSeatDto.getSeatrowId());
+            seatDtoList.add(new SeatDto(hallPlanSeatDto,rowDto));
+        }
+
+        ReservationDto reservationDto = new ReservationDto();
+        reservationDto.setReservedSeats(seatDtoList);
+
+        EventDetailDto event = eventService.getEventById(1L); //TODO: get correct Event
+        reservationDto.setEvent(event);
+
+        reservationDto.setReservationDate(reservation.getDate());
+        reservationDto.setReservationNr(reservation.getReservationNr());
+
+        return reservationDto;
+    }
+
+
+    @Override
     @Transactional
     public void deleteReservation(Long reservationNr, Long userId) {
         Reservation reservation = repository.findReservationByReservationNr(reservationNr);

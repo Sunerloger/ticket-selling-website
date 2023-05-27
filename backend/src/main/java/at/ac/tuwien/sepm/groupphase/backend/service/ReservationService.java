@@ -14,6 +14,8 @@ public interface ReservationService {
 
     List<ReservationDto> getReservationsOfUser(Long userId);
 
+    ReservationDto getReservationOfUser(Long reservationNr, Long userId);
+
     @Transactional
     void deleteReservation(Long reservationNr, Long userId);
 

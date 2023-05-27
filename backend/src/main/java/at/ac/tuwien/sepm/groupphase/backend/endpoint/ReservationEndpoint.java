@@ -1,8 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PurchaseCreationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ReservationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.service.PurchaseService;
 import at.ac.tuwien.sepm.groupphase.backend.service.ReservationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -19,11 +21,13 @@ import java.util.List;
 @RequestMapping(value = "/api/v1/reservation")
 public class ReservationEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final ReservationService service;
+    private ReservationService service;
+    private PurchaseService purchaseService;
 
     @Autowired
-    public ReservationEndpoint(ReservationService reservationService) {
+    public ReservationEndpoint(ReservationService reservationService, PurchaseService purchaseService) {
         this.service = reservationService;
+        this.purchaseService = purchaseService;
     }
 
     @GetMapping
@@ -33,8 +37,28 @@ public class ReservationEndpoint {
 
         //TODO: acquire UserID
         //TODO: use real UserID
-        List<ReservationDto> itemList = service.getReservationsOfUser(1L);
+        Long userId = 1L;
+
+        List<ReservationDto> itemList = service.getReservationsOfUser(userId);
         return itemList;
+    }
+
+    @GetMapping("/{reservationNr}")
+    @Operation(summary = "Gets a list of all Reservations from that user", security = @SecurityRequirement(name = "apiKey"))
+    public ReservationDto getReservation(@PathVariable Long reservationNr) {
+        LOGGER.info("GET /api/v1/reservation/{}", reservationNr);
+
+        //TODO: acquire UserID
+        //TODO: use real UserID
+        Long userId = 1L;
+
+        ReservationDto reservation = service.getReservationOfUser(reservationNr, userId);
+        if (reservation == null){
+            //something response;
+            LOGGER.warn("something went wrong");
+            return null;
+        }
+        return reservation;
     }
 
     @PostMapping
@@ -44,7 +68,9 @@ public class ReservationEndpoint {
         try {
             //TODO: acquire UserID
             //TODO: use real UserID
-            service.addReservation(seatDtoList, 1L);
+            Long userId = 1L;
+
+            service.addReservation(seatDtoList, userId);
         } catch (NotFoundException e) {
             return ResponseEntity.noContent().build();
         }
@@ -58,8 +84,23 @@ public class ReservationEndpoint {
 
         //TODO: acquire UserID
         //TODO: use real UserID
-        this.service.deleteReservation(reservationNr, 1L);
+        Long userId = 1L;
+
+        this.service.deleteReservation(reservationNr, userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{reservationNr}/purchase")
+    @Operation(summary = "Purchases a given amount of tickets of a Reservation", security = @SecurityRequirement(name = "apiKey"))
+    public ResponseEntity<Void> buyReservation(@RequestBody PurchaseCreationDto purchaseCreationDto, @PathVariable Long reservationNr){
+        LOGGER.info("Post /api/v1/cart/purchase");
+
+        //TODO: acquire UserID
+        //TODO: use real UserID
+        Long userId = 1L;
+
+        purchaseService.purchaseReservationOfUser(reservationNr, purchaseCreationDto, userId );
+        return ResponseEntity.ok().build();
     }
 
 

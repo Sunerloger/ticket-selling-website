@@ -23,14 +23,16 @@ public class PurchaseServiceImpl implements PurchaseService {
     private EventService eventService;
     private TicketService ticketService;
     private CartService cartService;
+    private ReservationService reservationService;
 
     @Autowired
-    public PurchaseServiceImpl(PurchaseRepository repository, HallPlanSeatService seatService, EventService eventService, TicketService ticketService, CartService cartService) {
+    public PurchaseServiceImpl(PurchaseRepository repository, HallPlanSeatService seatService, EventService eventService, TicketService ticketService, CartService cartService, ReservationService reservationService) {
         this.repository = repository;
         this.seatService = seatService;
         this.eventService = eventService;
         this.cartService = cartService;
         this.ticketService = ticketService;
+        this.reservationService = reservationService;
     }
 
     @Override
@@ -105,6 +107,38 @@ public class PurchaseServiceImpl implements PurchaseService {
                 cartService.deleteItem(seatDto.getId(), userId);
             }
         }
+
+        Purchase purchase = new Purchase();
+        purchase.setDate(LocalDate.now());
+        purchase.setUserId(userId);
+        //TODO: Get UserInfo
+        //TODO: Check if custom address
+        //TODO: create Purchase Object
+        purchase.setBillAddress("not implemented (address)");
+        purchase.setBillAreaCode(1337L);
+        purchase.setBillCityName("not implemented (city)");
+        purchase.setTicketList(ticketList);
+        repository.save(purchase);
+    }
+
+    @Override
+    public void purchaseReservationOfUser(Long reservationNr, PurchaseCreationDto purchaseCreationDto, Long userId) {
+        //TODO: verify request
+        //TODO: check if items belong to reservation
+
+        List<Ticket> ticketList = new ArrayList<>();
+
+        if (purchaseCreationDto.getSeats() == null) {
+            return;
+            //TODO: some kind of error
+        }
+        for (SeatDto seatDto : purchaseCreationDto.getSeats()) {
+            if (seatService.purchaseReservedSeat(seatDto.getId())) {
+                ticketList.add(new Ticket(seatDto.getId()));
+            }
+        }
+
+        reservationService.deleteReservation(reservationNr, userId);
 
         Purchase purchase = new Purchase();
         purchase.setDate(LocalDate.now());
