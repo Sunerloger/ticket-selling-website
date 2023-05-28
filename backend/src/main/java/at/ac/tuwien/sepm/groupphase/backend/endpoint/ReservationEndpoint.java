@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +37,7 @@ public class ReservationEndpoint {
         this.purchaseService = purchaseService;
     }
 
+    @Secured("ROLE_USER")
     @GetMapping
     @Operation(summary = "Gets a list of all Reservations from that user", security = @SecurityRequirement(name = "apiKey"))
     public List<ReservationDto> getReservations() {
@@ -49,6 +51,7 @@ public class ReservationEndpoint {
         return itemList;
     }
 
+    @Secured("ROLE_USER")
     @GetMapping("/{reservationNr}")
     @Operation(summary = "Gets a list of all Reservations from that user", security = @SecurityRequirement(name = "apiKey"))
     public ReservationDto getReservation(@PathVariable Long reservationNr) {
@@ -67,6 +70,7 @@ public class ReservationEndpoint {
         return reservation;
     }
 
+    @Secured("ROLE_USER")
     @PostMapping
     @Operation(summary = "Create a new Reservation with the given seats", security = @SecurityRequirement(name = "apiKey"))
     public ResponseEntity<Void> newReservation(@RequestBody List<SeatDto> seatDtoList) {
@@ -83,6 +87,7 @@ public class ReservationEndpoint {
         return ResponseEntity.ok().build();
     }
 
+    @Secured("ROLE_USER")
     @DeleteMapping("/{reservationNr}")
     @Operation(summary = "Removes a Reservation by reservationnumber", security = @SecurityRequirement(name = "apiKey"))
     public ResponseEntity<Void> deleteReservation(@PathVariable Long reservationNr) {
@@ -96,6 +101,7 @@ public class ReservationEndpoint {
         return ResponseEntity.noContent().build();
     }
 
+    @Secured("ROLE_USER")
     @PostMapping("/{reservationNr}/purchase")
     @Operation(summary = "Purchases a given amount of tickets of a Reservation", security = @SecurityRequirement(name = "apiKey"))
     public ResponseEntity<Void> buyReservation(@RequestBody PurchaseCreationDto purchaseCreationDto, @PathVariable Long reservationNr) {

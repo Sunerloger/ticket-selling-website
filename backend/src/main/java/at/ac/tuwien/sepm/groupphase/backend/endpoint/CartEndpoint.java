@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +37,7 @@ public class CartEndpoint {
         this.purchaseService = purchaseService;
     }
 
+    @Secured("ROLE_USER")
     @GetMapping
     @Operation(summary = "Get a list of all CartItems", security = @SecurityRequirement(name = "apiKey"))
     public List<CartItemDto> getCart() {
@@ -47,6 +49,7 @@ public class CartEndpoint {
         return itemList;
     }
 
+    @Secured("ROLE_USER")
     @PostMapping
     @Operation(summary = "Add a list of Seats to the cart", security = @SecurityRequirement(name = "apiKey"))
     public ResponseEntity<Void> addToCart(@RequestBody List<SeatDto> seatDtoList) {
@@ -61,6 +64,7 @@ public class CartEndpoint {
         return ResponseEntity.ok().build();
     }
 
+    @Secured("ROLE_USER")
     @DeleteMapping("/{id}")
     @Operation(summary = "Removes a Seat from the cart", security = @SecurityRequirement(name = "apiKey"))
     public ResponseEntity<Void> removeFromCart(@PathVariable Long id) {
@@ -75,6 +79,7 @@ public class CartEndpoint {
         return ResponseEntity.noContent().build();
     }
 
+    @Secured("ROLE_USER")
     @PostMapping("/purchase")
     @Operation(summary = "Purchases the tickets in the cart", security = @SecurityRequirement(name = "apiKey"))
     public ResponseEntity<Void> buyCart(@RequestBody PurchaseCreationDto purchaseCreationDto) {
