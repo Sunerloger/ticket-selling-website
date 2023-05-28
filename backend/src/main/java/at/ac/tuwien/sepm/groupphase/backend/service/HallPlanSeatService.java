@@ -60,6 +60,7 @@ public interface HallPlanSeatService {
     //TODO: Update This Method to support new Database Model (standing seats)
     @Transactional
     boolean freePurchasedSeat(Long seatId);
+
     /**
      * Adds multiple seats to the hall plan.
      *

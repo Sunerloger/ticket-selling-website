@@ -1,6 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.GenerationType;
+
 @Entity
 @Table(name = "cart")
 public class Cart {
@@ -9,13 +14,16 @@ public class Cart {
     private Long id;
     private Long userId;
     private Long seatId;
+
     public Cart(Long userId, Long seatId) {
         this.seatId = seatId;
         this.userId = userId;
     }
+
     public Cart() {
 
     }
+
     public Long getSeatId() {
         return seatId;
     }

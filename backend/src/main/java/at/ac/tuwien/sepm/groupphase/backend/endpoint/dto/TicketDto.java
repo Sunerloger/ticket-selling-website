@@ -9,6 +9,7 @@ public class TicketDto {
     private Long ticketNr;
     private SeatDto seat;
     private EventDetailDto event;
+
     public TicketDto() {
     }
 
@@ -31,6 +32,7 @@ public class TicketDto {
     public EventDetailDto getEvent() {
         return event;
     }
+
     public void setEvent(EventDetailDto event) {
         this.event = event;
     }

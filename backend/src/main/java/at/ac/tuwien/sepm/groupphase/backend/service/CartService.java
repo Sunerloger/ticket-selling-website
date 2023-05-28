@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface CartService {
     void addItemList(List<SeatDto> seatDtoList, Long userId) throws NotFoundException;
-    public List<CartItemDto> getItems(Long userID);
-    void deleteItem(Long itemID, Long userID);
+
+    public List<CartItemDto> getItems(Long userId);
+
+    void deleteItem(Long itemId, Long userId);
 }

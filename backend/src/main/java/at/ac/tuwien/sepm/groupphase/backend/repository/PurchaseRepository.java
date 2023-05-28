@@ -9,8 +9,11 @@ import java.util.List;
 @Repository
 public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
     List<Purchase> findPurchasesByUserIdOrderByPurchaseDate(Long id);
+
     @Override
     Purchase save(Purchase purchase);
+
     Purchase findPurchasesByPurchaseNr(Long purchaseNr);
+
     void deletePurchaseByPurchaseNr(Long purchaseNr);
 }

@@ -12,7 +12,7 @@ public class ReservationDto {
     private LocalDate reservationDate;
     private List<SeatDto> reservedSeats;
 
-    public ReservationDto(){
+    public ReservationDto() {
 
     }
 

@@ -7,7 +7,11 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Purchase;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PurchaseRepository;
-import at.ac.tuwien.sepm.groupphase.backend.service.*;
+import at.ac.tuwien.sepm.groupphase.backend.service.PurchaseService;
+import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanSeatService;
+import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
+import at.ac.tuwien.sepm.groupphase.backend.service.CartService;
+import at.ac.tuwien.sepm.groupphase.backend.service.ReservationService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,23 +24,21 @@ import java.util.List;
 public class PurchaseServiceImpl implements PurchaseService {
     private PurchaseRepository repository;
     private HallPlanSeatService seatService;
-    private EventService eventService;
     private TicketService ticketService;
     private CartService cartService;
     private ReservationService reservationService;
 
     @Autowired
-    public PurchaseServiceImpl(PurchaseRepository repository, HallPlanSeatService seatService, EventService eventService, TicketService ticketService, CartService cartService, ReservationService reservationService) {
+    public PurchaseServiceImpl(PurchaseRepository repository, HallPlanSeatService seatService, TicketService ticketService, CartService cartService, ReservationService reservationService) {
         this.repository = repository;
         this.seatService = seatService;
-        this.eventService = eventService;
         this.cartService = cartService;
         this.ticketService = ticketService;
         this.reservationService = reservationService;
     }
 
     @Override
-    public PurchaseDto getPurchaseByPurchaseNr(Long purchaseNr, Long userId){
+    public PurchaseDto getPurchaseByPurchaseNr(Long purchaseNr, Long userId) {
         Purchase purchase = repository.findPurchasesByPurchaseNr(purchaseNr);
         //TODO: check if purchase belong to user cart
 
@@ -50,18 +52,18 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     @Transactional
-    public void deletePurchase(Long purchaseNr, Long userId){
+    public void deletePurchase(Long purchaseNr, Long userId) {
         Purchase purchase = repository.findPurchasesByPurchaseNr(purchaseNr);
 
-        if (purchase == null){
+        if (purchase == null) {
             return; //Todo: No Content
         }
 
-        if (!purchase.getUserId().equals(userId)){
+        if (!purchase.getUserId().equals(userId)) {
             return; //TODO: No Content (to not have side channels)
         }
 
-        for (Ticket ticket:purchase.getTicketList()) {
+        for (Ticket ticket : purchase.getTicketList()) {
             seatService.freePurchasedSeat(ticket.getSeatId());
         }
         repository.deletePurchaseByPurchaseNr(purchaseNr);

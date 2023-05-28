@@ -9,9 +9,10 @@ public class PurchaseCreationDto {
     private String city;
     private List<SeatDto> seats;
 
-    public PurchaseCreationDto(){
+    public PurchaseCreationDto() {
 
     }
+
     public PurchaseCreationDto(boolean useUserAddress, String address, Long areaCode, String city, List<SeatDto> seatDtoList) {
         this.useUserAddress = useUserAddress;
         this.address = address;

@@ -9,9 +9,12 @@ import java.util.List;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     List<Reservation> findReservationsByUserIdOrderByDate(Long id);
+
     @Override
     Reservation save(Reservation reservation);
+
     void deleteReservationByReservationNr(Long reservationNr);
+
     Reservation findReservationByReservationNr(Long reservationNr);
 
 }

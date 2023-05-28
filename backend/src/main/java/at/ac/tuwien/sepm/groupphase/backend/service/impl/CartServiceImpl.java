@@ -1,10 +1,17 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
+
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CartItemDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatRowDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Cart;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CartRepository;
-import at.ac.tuwien.sepm.groupphase.backend.service.*;
+import at.ac.tuwien.sepm.groupphase.backend.service.CartService;
+import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
+import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanSeatService;
+import at.ac.tuwien.sepm.groupphase.backend.service.SeatRowService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,19 +36,19 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void addItemList(List<SeatDto> seatDtoList, Long userID) throws NotFoundException{
-        if (seatDtoList.isEmpty()){
+    public void addItemList(List<SeatDto> seatDtoList, Long userId) throws NotFoundException {
+        if (seatDtoList.isEmpty()) {
             //TODO: add corresponding response
             //TODO: Use correct Exception
             throw new NotFoundException();
         }
 
-        for (SeatDto seatDto: seatDtoList) {
-            if (!seatService.doesSeatExist(seatDto.getId())){
+        for (SeatDto seatDto : seatDtoList) {
+            if (!seatService.doesSeatExist(seatDto.getId())) {
                 throw new NotFoundException();
             }
-            if (seatService.tryReserveSeat(seatDto.getId())){
-                Cart cart = new Cart(userID , seatDto.getId());
+            if (seatService.tryReserveSeat(seatDto.getId())) {
+                Cart cart = new Cart(userId, seatDto.getId());
                 cartRepository.save(cart);
             } else {
                 //TODO: Prepare answer to show user not all items were added
@@ -50,11 +57,11 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public List<CartItemDto> getItems(Long userID){
+    public List<CartItemDto> getItems(Long userId) {
         List<CartItemDto> itemList = new ArrayList<>();
 
-        List<Cart> cartItemList = cartRepository.findByUserId(1L);
-        for (Cart cart: cartItemList){
+        List<Cart> cartItemList = cartRepository.findByUserId(userId);
+        for (Cart cart : cartItemList) {
             HallPlanSeatDto hallPlanSeatDto = seatService.getSeatById(cart.getSeatId());
             SeatRowDto rowDto = seatRowService.getSeatRowById(hallPlanSeatDto.getSeatrowId());
             EventDetailDto eventDto = eventService.getEventById(1L); //TODO:get correct Event
@@ -70,10 +77,10 @@ public class CartServiceImpl implements CartService {
     @Transactional
     public void deleteItem(Long itemId, Long userId) {
         Cart cart = cartRepository.findCartBySeatIdAndUserId(itemId, userId);
-        if (cart == null){
+        if (cart == null) {
             return;
         }
-        if (!cart.getUserId().equals(userId)){
+        if (!cart.getUserId().equals(userId)) {
             return;
         }
 

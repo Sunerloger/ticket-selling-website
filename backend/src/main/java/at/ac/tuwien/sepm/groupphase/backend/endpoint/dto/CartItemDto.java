@@ -8,6 +8,7 @@ public class CartItemDto {
     private SeatDto seat;
     private EventDetailDto event;
     private Long id;
+
     public CartItemDto() {
     }
 

@@ -13,7 +13,7 @@ public class Ticket {
 
     private Long seatId;
 
-    public Ticket(Long seatId){
+    public Ticket(Long seatId) {
         this.seatId = seatId;
     }
 

@@ -12,7 +12,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -53,7 +59,7 @@ public class ReservationEndpoint {
         Long userId = 1L;
 
         ReservationDto reservation = service.getReservationOfUser(reservationNr, userId);
-        if (reservation == null){
+        if (reservation == null) {
             //something response;
             LOGGER.warn("something went wrong");
             return null;
@@ -92,14 +98,14 @@ public class ReservationEndpoint {
 
     @PostMapping("/{reservationNr}/purchase")
     @Operation(summary = "Purchases a given amount of tickets of a Reservation", security = @SecurityRequirement(name = "apiKey"))
-    public ResponseEntity<Void> buyReservation(@RequestBody PurchaseCreationDto purchaseCreationDto, @PathVariable Long reservationNr){
+    public ResponseEntity<Void> buyReservation(@RequestBody PurchaseCreationDto purchaseCreationDto, @PathVariable Long reservationNr) {
         LOGGER.info("Post /api/v1/cart/purchase");
 
         //TODO: acquire UserID
         //TODO: use real UserID
         Long userId = 1L;
 
-        purchaseService.purchaseReservationOfUser(reservationNr, purchaseCreationDto, userId );
+        purchaseService.purchaseReservationOfUser(reservationNr, purchaseCreationDto, userId);
         return ResponseEntity.ok().build();
     }
 

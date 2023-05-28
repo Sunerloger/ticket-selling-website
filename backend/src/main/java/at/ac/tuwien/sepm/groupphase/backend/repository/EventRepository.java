@@ -20,10 +20,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     void deleteById(Long id);
 
     Event getEventById(Long id);
+
     @NonNull
     Page<Event> findAll(@NonNull Pageable pageable);
 
     @NonNull
-    Page<Event> findAll(@NonNull  Specification<Event> specification, @NonNull Pageable pageable);
+    Page<Event> findAll(@NonNull Specification<Event> specification, @NonNull Pageable pageable);
 }
 

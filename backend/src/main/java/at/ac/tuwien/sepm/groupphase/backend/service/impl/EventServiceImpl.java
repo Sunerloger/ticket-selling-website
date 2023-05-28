@@ -75,7 +75,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventDetailDto getEventById(Long id){
+    public EventDetailDto getEventById(Long id) {
         LOG.trace("getEventById({})", id);
         List<Event> events = new ArrayList<>();
         events.add(eventRepository.getEventById(id));
