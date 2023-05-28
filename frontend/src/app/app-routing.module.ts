@@ -12,12 +12,14 @@ import {AdminRouteGuard} from './guards/admin-route.guard';
 import {RoomplaneditorComponent} from './components/roomplaneditor/roomplaneditor.component';
 import {EditComponent} from './components/edit/edit.component';
 import {NewsDetailComponent} from './components/news/news-detail/news-detail.component';
+import {AdminBlockUnblockComponent} from './components/admin-block-unblock/admin-block-unblock.component';
 
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
+  {path: 'block', component: AdminBlockUnblockComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'events', canActivate: [AdminRouteGuard], component: EventsComponent},
   {
@@ -34,7 +36,8 @@ const routes: Routes = [
   {path: 'edit', component: EditComponent},
   {path: 'roomplan/:id/edit', component: RoomplaneditorComponent},
   {path: 'hallplans/:id/edit', component: RoomplaneditorComponent},
-  {path: '**', redirectTo: 'news'},
+  {path: '**', redirectTo: 'news'}
+
 ];
 
 

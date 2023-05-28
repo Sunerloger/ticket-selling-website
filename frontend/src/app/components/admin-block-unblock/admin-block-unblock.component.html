@@ -1,0 +1,41 @@
+<div class="pt-5">
+  <div class="row">
+    <div class="col-md-6 mx-auto">
+      <span class="anchor" id="blockForm"></span>
+
+      <div class="card-border">
+        <div class="card-header">
+          <h3 class="card-headline">{{heading}}</h3>
+        </div>
+        <form (ngSubmit)="blockUser()" #blockForm="ngForm">
+          <div id="input">
+            <div *ngIf="mode === 0">
+              <label for="email">Email</label>
+              <input type="email" class="form-control"
+                     id="email" name="email" [(ngModel)]="user.email" #email="ngModel" required
+                     pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$">
+              <div *ngIf="blockForm.submitted && blockForm.controls['email'].invalid" class="text-danger">
+                <span class="validation-info"
+                      *ngIf="email.errors?.required">
+                 Email is required!
+               </span>
+                <span class="validation-info"
+                      *ngIf="email.errors?.pattern">
+                 Email is invalid!
+               </span>
+
+              </div>
+            </div>
+            <div *ngIf="mode === 0">
+              <button type="submit" class="btn btn-danger">Block</button>
+            </div>
+            <div *ngIf="mode === 1">
+              <button class="btn btn-danger">Unblock</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+

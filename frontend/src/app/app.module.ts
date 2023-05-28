@@ -41,6 +41,7 @@ import {
 import {EditComponent} from './components/edit/edit.component';
 import {EditableSectionComponent}
   from './components/roomplaneditor/sectionmanager/manage-section/editable-section/editable-section.component';
+import {AdminBlockUnblockComponent} from './components/admin-block-unblock/admin-block-unblock.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import {EditableSectionComponent}
     ManageSectionComponent,
     EditComponent,
     EditableSectionComponent,
+    AdminBlockUnblockComponent,
   ],
   imports: [
     BrowserModule,

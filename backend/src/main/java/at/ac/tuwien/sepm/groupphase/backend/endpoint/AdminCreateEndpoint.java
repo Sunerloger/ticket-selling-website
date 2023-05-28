@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserCreateDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserUnBlockDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +16,7 @@ import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -51,5 +53,14 @@ public class AdminCreateEndpoint {
         } catch (ValidationException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping
+    @Secured("ROLE_ADMIN")
+    @Operation(summary = "Block/Unblock a user", security = @SecurityRequirement(name = "apiKey"))
+    public void put(@RequestBody UserUnBlockDto userUnBlockDto) {
+        LOGGER.info("Block user " + BASE_PATH + "user: {}", userUnBlockDto.email());
+        userService.block(userMapper.userUnBlockDtoToEntity(userUnBlockDto));
     }
 }

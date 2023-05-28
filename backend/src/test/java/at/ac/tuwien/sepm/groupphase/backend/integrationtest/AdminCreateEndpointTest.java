@@ -60,7 +60,7 @@ public class AdminCreateEndpointTest {
 
 
     private final ApplicationUser applicationUser =
-        new ApplicationUser("marty@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure", false);
+        new ApplicationUser("marty@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure", false,false);
 
 
     @Transactional

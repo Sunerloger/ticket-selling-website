@@ -148,4 +148,10 @@ public class CustomUserDetailService implements UserService {
 
     }
 
+    @Override
+    public void block(ApplicationUser applicationUser) {
+        System.out.println(applicationUser);
+        applicationUserRepository.updateIsLocked(applicationUser.getEmail(), applicationUser.getLocked());
+    }
+
 }

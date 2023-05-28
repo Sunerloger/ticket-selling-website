@@ -46,6 +46,8 @@ public class ApplicationUser {
 
     private Boolean admin;
 
+    private Boolean isLocked;
+
     public ApplicationUser() {
     }
 
@@ -56,8 +58,9 @@ public class ApplicationUser {
         this.admin = admin;
     }
 
+
     public ApplicationUser(String email, String firstName, String lastName, LocalDate birthdate, String address, Long areaCode, String cityName,
-                           String password, Boolean admin) {
+                           String password, Boolean admin, Boolean isLocked) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -67,6 +70,12 @@ public class ApplicationUser {
         this.cityName = cityName;
         this.password = password;
         this.admin = admin;
+        this.isLocked = isLocked;
+    }
+
+    public ApplicationUser(String email, Boolean isLocked) {
+        this.email = email;
+        this.isLocked = isLocked;
     }
 
     public String getEmail() {
@@ -148,4 +157,13 @@ public class ApplicationUser {
     public void setCityName(String cityName) {
         this.cityName = cityName;
     }
+
+    public Boolean getLocked() {
+        return isLocked;
+    }
+
+    public void setLocked(Boolean locked) {
+        isLocked = locked;
+    }
+
 }
