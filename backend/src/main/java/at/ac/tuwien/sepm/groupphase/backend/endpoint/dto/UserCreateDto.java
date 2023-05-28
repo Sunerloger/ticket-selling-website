@@ -34,5 +34,8 @@ public record UserCreateDto(
     @Column(nullable = false)
     String password,
 
-    Boolean admin) {
+    @Column(nullable = false)
+    Boolean admin,
+    @Column(nullable = false)
+    Boolean isLocked) {
 }

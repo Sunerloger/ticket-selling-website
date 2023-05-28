@@ -31,8 +31,10 @@ public record UserRegisterDto(
     @Column(nullable = false)
     String password,
 
+    @Column(nullable = false)
     Boolean admin,
 
+    @Column(nullable = false)
     Boolean isLocked
 
 ) {
