@@ -56,11 +56,12 @@ public class AdminCreateEndpointTest {
     @Autowired
     private SecurityProperties securityProperties;
 
-    static final String BASE_PATH = "/api/v1/user";
+    static final String BASE_PATH = "/api/v1/admin";
 
 
     private final ApplicationUser applicationUser =
-        new ApplicationUser("marty@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure", false,false);
+        new ApplicationUser("marty@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure", false,
+            false);
 
 
     @Transactional
