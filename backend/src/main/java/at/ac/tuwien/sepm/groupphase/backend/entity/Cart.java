@@ -1,16 +1,13 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import org.h2.engine.User;
-import org.springframework.data.annotation.Reference;
-
+import jakarta.persistence.*;
 @Entity
 @Table(name = "cart")
 public class Cart {
-    private Long userId;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Long userId;
     private Long seatId;
     public Cart(Long userId, Long seatId) {
         this.seatId = seatId;
@@ -33,5 +30,9 @@ public class Cart {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

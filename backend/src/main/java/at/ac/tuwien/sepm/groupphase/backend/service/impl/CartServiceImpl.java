@@ -60,7 +60,7 @@ public class CartServiceImpl implements CartService {
             EventDetailDto eventDto = eventService.getEventById(1L); //TODO:get correct Event
             SeatDto seatDto = new SeatDto(hallPlanSeatDto, rowDto);
 
-            itemList.add(new CartItemDto(seatDto,eventDto));
+            itemList.add(new CartItemDto(seatDto, eventDto, cart.getId()));
         }
 
         return itemList;
@@ -68,19 +68,19 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public void deleteItem(Long itemId, Long userID) {
-        Cart cart = cartRepository.findCartBySeatId(itemId);
+    public void deleteItem(Long itemId, Long userId) {
+        Cart cart = cartRepository.findCartBySeatIdAndUserId(itemId, userId);
         if (cart == null){
             return;
         }
-        if (!cart.getUserId().equals(userID)){
+        if (!cart.getUserId().equals(userId)){
             return;
         }
 
         //TODO: change this to not use itemID aka SeatID but a different identifier to allow multiple items of the same id in the same cart.
 
         seatService.cancelReservation(itemId);
-        cartRepository.deleteCartBySeatId(itemId);
+        cartRepository.deleteCartById(cart.getId());
     }
 
 

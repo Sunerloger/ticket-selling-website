@@ -7,13 +7,14 @@ import java.time.LocalDate;
 public class CartItemDto {
     private SeatDto seat;
     private EventDetailDto event;
-
+    private Long id;
     public CartItemDto() {
     }
 
-    public CartItemDto(SeatDto seat, EventDetailDto event) {
+    public CartItemDto(SeatDto seat, EventDetailDto event, Long id) {
         this.seat = seat;
         this.event = event;
+        this.id = id;
     }
 
     public EventDetailDto getEvent() {
@@ -30,5 +31,13 @@ public class CartItemDto {
 
     public void setSeat(SeatDto seat) {
         this.seat = seat;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
