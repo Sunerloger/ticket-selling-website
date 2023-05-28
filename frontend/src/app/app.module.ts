@@ -34,6 +34,8 @@ import { CreateSectionComponent } from './components/roomplaneditor/sectionmanag
 import { ManageSectionComponent } from './components/roomplaneditor/sectionmanager/manage-section/manage-section.component';
 import { EditableSectionComponent }
 from './components/roomplaneditor/sectionmanager/manage-section/editable-section/editable-section.component';
+import { CustomerhallplandisplayComponent } from './components/customerhallplandisplay/customerhallplandisplay.component';
+import { ImmutableseatComponent } from './components/roomplaneditor/seatrow/immutableseat/immutableseat.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +62,8 @@ from './components/roomplaneditor/sectionmanager/manage-section/editable-section
     CreateSectionComponent,
     ManageSectionComponent,
     EditableSectionComponent,
+    CustomerhallplandisplayComponent,
+    ImmutableseatComponent,
   ],
   imports: [
     BrowserModule,

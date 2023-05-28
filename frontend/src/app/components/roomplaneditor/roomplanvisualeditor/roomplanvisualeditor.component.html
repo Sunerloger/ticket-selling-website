@@ -2,7 +2,8 @@
 
 <!-- Toolbar -->
 <app-toolbar
-       (toolbarClick)="handleToolbarItemClick($event)"
+        *ngIf="renderAsImmutable === false"
+        (toolbarClick)="handleToolbarItemClick($event)"
 />
 
 <div class="editor_container">
@@ -15,7 +16,7 @@
         <div class="seatrow_container">
             <div
                 class="seat_row_mapper"
-                *ngFor="let seatrow of roomplan.seatRows"
+                *ngFor="let seatrow of this.roomplan.seatRows"
             >
             <!-- Add Row (shown in Detail-View )-->
             <app-addrowbtn
@@ -23,6 +24,7 @@
                 (click)="handleAddRowEvent(seatrow.rowNr)"
             />
             <app-seatrow
+                    [renderAsImmutable]="this.renderAsImmutable"
                     [showDeleteRowBtn]="isDetailedView"
                     [seatRow]="seatrow"
                     [showRowNr]="this.showRowNr"
@@ -37,7 +39,8 @@
 
         <!-- Add Row (shown in Non-Detail-View)-->
         <app-addrowbtn
-           (click)="handleAddRowEvent()"
+            *ngIf="renderAsImmutable === false"
+            (click)="handleAddRowEvent()"
         />
 </div>
 </div>

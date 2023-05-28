@@ -47,7 +47,6 @@ export class RoomplaneditorComponent implements OnInit {
   fetchAllSections(hallplanId: number){
     this.service.getAllSections(hallplanId).subscribe({
       next: data => {
-        console.log(data, ' get all sections');
         this.sections = data;
       },
       error: error => {
@@ -63,7 +62,6 @@ export class RoomplaneditorComponent implements OnInit {
   fetchHallplanWithId(id: number){
     this.service.getHallplanById(id).subscribe({
       next: data => {
-        console.log(data);
         this.roomplan = data;
       },
       error: error => {
