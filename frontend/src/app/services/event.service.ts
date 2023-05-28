@@ -5,6 +5,7 @@ import {environment} from 'src/environments/environment';
 const baseUri = environment.backendUrl + '/api/v1/events';
 import {Event} from 'src/app/dtos/event';
 import {AbbreviatedEvent} from '../dtos/abbreviatedEvents';
+import {AbbreviatedHallplan} from '../dtos/hallplan/abbreviatedHallplan';
 @Injectable({
   providedIn: 'root'
 })
@@ -58,5 +59,4 @@ export class EventService {
     }
     return this.http.get<AbbreviatedEvent[]>(baseUri, {params});
   }
-
 }

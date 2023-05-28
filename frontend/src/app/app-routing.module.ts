@@ -29,8 +29,8 @@ const routes: Routes = [
     ]},
   {path: 'roomplan/:id/edit', component: RoomplaneditorComponent },
   {path: 'hallplans/:id/edit', component: RoomplaneditorComponent },
+  {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
   {path: '**', redirectTo: 'news'},
-    {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
 ];
 
 
