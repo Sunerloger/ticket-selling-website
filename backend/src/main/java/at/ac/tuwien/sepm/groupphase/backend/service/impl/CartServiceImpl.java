@@ -1,5 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
-
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Cart;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;

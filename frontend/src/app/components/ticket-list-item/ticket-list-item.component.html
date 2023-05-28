@@ -6,9 +6,9 @@
     </div>
 
     <div class="event-info-container">
-      <span class="event-info">Date:  <b> {{ event.date[0] | date:'dd.MM.yy' }}</b></span>
+      <span class="event-info">Date:  <b> {{ event.eventDatesLocation[0].date | date:'dd.MM.yy' }}</b></span>
       <span
-        class="event-info">Starting-Time:  <b> {{ formatTime(event.startTime) | date:'HH:mm' }}</b></span>
+        class="event-info">Starting-Time:  <b> {{ formatTime(event.eventDatesLocation[0].startingTime) | date:'HH:mm' }}</b></span>
 
       <span class="event-info">Section: <b> {{ seat.sectionName}}</b></span>
       <span class="event-info">Row: <b> {{ seat.seatRowNr }}</b></span>
