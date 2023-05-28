@@ -271,6 +271,7 @@ export class RoomplaneditorComponent implements OnInit {
     const { rowNr, type, direction, amountSeat } = payload;
 
     const initialSeatNr = this.getLatestSeatNrFromDirectionAndRowNr(direction, rowNr);
+    const initialOrderNr = this.getLatestOrderNrFromDirectionAndRowNr(direction, rowNr);
     const newSeats: Seat[] = [];
 
     // --- create seats that needs to be created
@@ -296,11 +297,13 @@ export class RoomplaneditorComponent implements OnInit {
           case SeatType.seat:
           case SeatType.vacantSeat:
             let newSeatNr = 1;
+            let newOrderNr = 1;
             for (let i = 1; i <= amountSeat; i++) {
               newSeats.push(
-                await this.createEmptySeat(type, newSeatNr)
+                await this.createEmptySeat(type, newOrderNr, newSeatNr)
               );
               newSeatNr++;
+              newOrderNr++;
             }
             break;
           case SeatType.standingSeat:
@@ -319,11 +322,14 @@ export class RoomplaneditorComponent implements OnInit {
           case SeatType.seat:
           case SeatType.vacantSeat:
             let highestSeatNr = initialSeatNr;
+            let highestOrderNr = initialOrderNr;
+
             for (let i = 0; i < amountSeat; i++) {
               newSeats.push(
-                await this.createEmptySeat(type, highestSeatNr)
+                await this.createEmptySeat(type, highestOrderNr, highestSeatNr)
               );
               highestSeatNr++;
+              highestOrderNr++;
             }
             break;
           case SeatType.standingSeat:
@@ -370,13 +376,23 @@ export class RoomplaneditorComponent implements OnInit {
         deletedSeatIndex = i;
         continue;
       }
-      //update the seatnumbers after deleted seats
+      //update the seatnumbers after deletedSeat was found during previous iterations
+      //... to optimize performance 
       if(deletedSeatIndex !== -1){
         //we already found the deletedseat after that all seats should have their seat nr adjusted
-        clonedSeats[i].seatNr--;
+        if(clonedSeats[i].type !== SeatType.vacantSeat){ 
+          //a vacant seat always has the seatNr -1 so no need to update
+          if(clonedSeats[deletedSeatIndex].type !== SeatType.vacantSeat){ 
+            //... verify that the deleted seat was not a vacant seat. 
+            //If a vacant seat was deleted, the successor seats should not have their seat number updated
+            clonedSeats[i].seatNr--; 
+          }
+        }
+        clonedSeats[i].orderNr--; //every seat has its orderNr pushed back by 1
         updatedSeatsWithNewSeatNr.push(clonedSeats[i]);
       }
     }
+    console.log(updatedSeatsWithNewSeatNr)
 
     //delete seat
     clonedSeats.splice(deletedSeatIndex, 1);
@@ -409,7 +425,7 @@ export class RoomplaneditorComponent implements OnInit {
    * @param capacity
    * @returns
    */
-  async createEmptySeat(type: SeatType, seatNr: number, capacity?: number): Promise<Seat> {
+  async createEmptySeat(type: SeatType, orderNr: number, seatNr: number, capacity?: number): Promise<Seat> {
     const defaultSection = await this.retrieveDefaultSection();
     let overridenSeatNr = seatNr;
 
@@ -432,13 +448,28 @@ export class RoomplaneditorComponent implements OnInit {
       seatNr: overridenSeatNr,
       status: SeatStatus.free,
       section: defaultSection,
-      orderNr: seatNr,
+      orderNr: orderNr,
       capacity
     };
     return emptySeat;
   }
 
   getLatestSeatNrFromDirectionAndRowNr(direction: CreationMenuDirection, rowNr: number) {
+    switch (direction) {
+      case CreationMenuDirection.left:
+        return 0;
+      case CreationMenuDirection.right:
+        let totalSeats = 0;
+        for(const seat of this.roomplan.seatRows[rowNr - 1].seats){
+          if(seat.type !== SeatType.vacantSeat){
+            totalSeats++;
+          }
+        }
+        return totalSeats + 1;
+    }
+  }
+
+  getLatestOrderNrFromDirectionAndRowNr(direction: CreationMenuDirection, rowNr: number){
     switch (direction) {
       case CreationMenuDirection.left:
         return 0;
