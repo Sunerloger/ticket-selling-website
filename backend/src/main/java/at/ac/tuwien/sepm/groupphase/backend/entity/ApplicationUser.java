@@ -8,7 +8,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DialectOverride;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDate;
@@ -44,9 +48,9 @@ public class ApplicationUser {
 
     private String password;
 
-    private Boolean admin;
+    private Boolean admin = false;
 
-    private Boolean isLocked;
+    private Boolean isLocked = false;
 
     public ApplicationUser() {
     }

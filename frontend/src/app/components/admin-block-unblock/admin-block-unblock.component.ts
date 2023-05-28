@@ -100,4 +100,8 @@ export class AdminBlockUnblockComponent implements OnInit {
       });
     }
   }
+
+  getBlockedUsers() {
+
+  }
 }

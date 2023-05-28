@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.annotation.security.PermitAll;
 import jakarta.xml.bind.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = AdminCreateEndpoint.BASE_PATH)
@@ -44,7 +48,7 @@ public class AdminCreateEndpoint {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    @Secured("ROLE_ADMIN")
+    @Secured({"ROLE_ADMIN"})
     @Operation(summary = "Create a new user", security = @SecurityRequirement(name = "apiKey"))
     public UserCreateDto post(@RequestBody UserCreateDto userCreateDto) {
         LOGGER.info("POST: {}", userCreateDto);
@@ -62,5 +66,12 @@ public class AdminCreateEndpoint {
     public void put(@RequestBody UserUnBlockDto userUnBlockDto) {
         LOGGER.info("Block user " + BASE_PATH + "user: {}", userUnBlockDto.email());
         userService.block(userMapper.userUnBlockDtoToEntity(userUnBlockDto));
+    }
+
+    @GetMapping
+    @Secured("ROLE_ADMIN")
+    public List<UserUnBlockDto> getBlockedUsers() {
+        LOGGER.info("Get blocked users " + BASE_PATH);
+        return userMapper.entityToStreamUserUnBlockDto(userService.getBlockedUsers());
     }
 }

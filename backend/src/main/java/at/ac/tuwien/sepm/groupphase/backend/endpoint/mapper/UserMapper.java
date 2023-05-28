@@ -9,6 +9,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 @Mapper
 public interface UserMapper {
 
@@ -30,6 +33,9 @@ public interface UserMapper {
     @Mapping(target = "isLocked", source = "locked")
     UserUnBlockDto entityToUserUnBlockDto(ApplicationUser applicationUser);
 
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "isLocked", source = "locked")
+    List<UserUnBlockDto> entityToStreamUserUnBlockDto(List<ApplicationUser> applicationUserStream);
 
     @Mapping(target = "id", source = "id")
     ApplicationUser dtoToEntity(UserRegisterDto userRegisterDto);

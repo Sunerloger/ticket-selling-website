@@ -8,6 +8,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 @Repository
 public interface ApplicationUserRepository extends JpaRepository<ApplicationUser, Long> {
 
@@ -34,4 +37,7 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
     @Modifying
     @Query("update ApplicationUser u set u.isLocked = :isLocked where u.email = :email")
     void updateIsLocked(@Param(value = "email") String email, @Param(value = "isLocked") boolean isLocked);
+
+    @Transactional(readOnly = true)
+    List<ApplicationUser> findUserByIsLockedIsTrue();
 }

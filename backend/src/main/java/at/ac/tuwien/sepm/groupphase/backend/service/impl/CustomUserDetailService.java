@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class CustomUserDetailService implements UserService {
@@ -150,8 +151,11 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public void block(ApplicationUser applicationUser) {
-        System.out.println(applicationUser);
         applicationUserRepository.updateIsLocked(applicationUser.getEmail(), applicationUser.getLocked());
     }
 
+    @Override
+    public List<ApplicationUser> getBlockedUsers() {
+        return applicationUserRepository.findUserByIsLockedIsTrue();
+    }
 }

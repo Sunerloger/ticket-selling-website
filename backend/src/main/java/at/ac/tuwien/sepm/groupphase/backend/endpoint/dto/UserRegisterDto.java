@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDate;
@@ -31,11 +32,8 @@ public record UserRegisterDto(
     @Column(nullable = false)
     String password,
 
-    @Column(nullable = false)
-    Boolean admin,
+    Boolean admin
 
-    @Column(nullable = false)
-    Boolean isLocked
 
 ) {
 }
