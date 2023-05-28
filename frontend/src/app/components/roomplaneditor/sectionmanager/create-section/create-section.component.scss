@@ -40,17 +40,17 @@
     height: 2rem;
     width: 2rem;
     border-radius: 5px;
-    
-  
+
+
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .row_button:hover {
-    box-shadow: 0px 0px 23px -8px rgba(0, 0, 0, 0.75);
-    -webkit-box-shadow: 0px 0px 23px -8px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 0px 0px 23px -8px rgba(0, 0, 0, 0.75);
+    box-shadow: 0 0 23px -8px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: 0 0 23px -8px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0 0 23px -8px rgba(0, 0, 0, 0.75);
 }
 
 .selected-row-btn{

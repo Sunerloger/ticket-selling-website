@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
@@ -18,11 +17,16 @@ import {EventsComponent} from './components/events/events.component';
 import {RegisterComponent} from './components/register/register.component';
 import {NewsCreateComponent} from './components/news/news-create/news-create.component';
 import {NewsComponent} from './components/news/news.component';
+import { EventsComponent } from './components/events/events.component';
+import { RegisterComponent } from './components/register/register.component';
+import { NewsCreateComponent } from './components/news/news-create/news-create.component';
+import { NewsOverviewComponent } from './components/news/news-overview/news-overview.component';
 import {ToastrModule} from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatGridListModule} from '@angular/material/grid-list';
 import {NgOptimizedImage} from '@angular/common';
-import {MatInputModule} from '@angular/material/input';
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
+import { NewsDetailComponent } from './components/news/news-detail/news-detail.component';
+import { TextareaAutoresizeDirective } from './directives/textarea-autoresize.directive';
 import { RoomplaneditorComponent } from './components/roomplaneditor/roomplaneditor.component';
 import { RoomplanvisualeditorComponent } from './components/roomplaneditor/roomplanvisualeditor/roomplanvisualeditor.component';
 import { SeatrowComponent } from './components/roomplaneditor/seatrow/seatrow.component';
@@ -39,6 +43,11 @@ import { PurchasesComponent } from './components/purchases/purchases.component';
 import { PurchaseDetailComponent } from './components/purchase-detail/purchase-detail.component';
 import { TicketListItemComponent } from './components/ticket-list-item/ticket-list-item.component';
 import { ReservationCheckoutComponent } from './components/reservation-checkout/reservation-checkout.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { EditableSectionComponent }
+  from './components/roomplaneditor/sectionmanager/manage-section/editable-section/editable-section.component';
+import { EventOverviewComponent } from './components/event-overview/event-overview.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -53,7 +62,9 @@ import { ReservationCheckoutComponent } from './components/reservation-checkout/
     EventsComponent,
     RegisterComponent,
     NewsCreateComponent,
-    NewsComponent,
+    NewsOverviewComponent,
+    NewsDetailComponent,
+    TextareaAutoresizeDirective,
     RoomplaneditorComponent,
     RoomplanvisualeditorComponent,
     SeatrowComponent,
@@ -70,6 +81,8 @@ import { ReservationCheckoutComponent } from './components/reservation-checkout/
     PurchaseDetailComponent,
     TicketListItemComponent,
     ReservationCheckoutComponent,
+    EditableSectionComponent,
+    EventOverviewComponent,
   ],
   imports: [
     BrowserModule,
@@ -80,9 +93,11 @@ import { ReservationCheckoutComponent } from './components/reservation-checkout/
     FormsModule,
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
-    MatGridListModule,
     NgOptimizedImage,
-    MatInputModule,
+    InfiniteScrollModule,
+    BsDatepickerModule,
+    MatPaginatorModule,
+    InfiniteScrollModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

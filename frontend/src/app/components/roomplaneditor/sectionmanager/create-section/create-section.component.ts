@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { PersistedHallplan, PersistedSeat, PersistedSeatRow, SeatRow } from 'src/app/dtos/hallplan/hallplan';
+import { PersistedHallplan, PersistedSeat, SeatRow } from 'src/app/dtos/hallplan/hallplan';
 import { Section } from 'src/app/dtos/hallplan/section';
 
 interface ColorItem {
@@ -31,8 +31,8 @@ const defaultColorOptions: ColorItem[] = [
 ];
 
 export interface CreateSectionPayload {
-  section: Section,
-  affectedSeatIds: number[];
+  section: Section;
+  affectedSeatIds: PersistedSeat[];
 }
 
 @Component({
@@ -64,7 +64,7 @@ export class CreateSectionComponent implements OnChanges {
     if (this.fromSeatNrErrMessage.length > 0 || this.toSeatNrErrMessage.length > 0 || this.fromSeatNr > 0 || this.toSeatNr > 0) {
       this.handleFromSeatChange(String(this.fromSeatNr), changes.roomplan.currentValue as PersistedHallplan);
       this.handleToSeatChange(String(this.toSeatNr), changes.roomplan.currentValue as PersistedHallplan);
-    };
+    }
     this.refreshSelectedRows();
   };
 
@@ -118,8 +118,8 @@ export class CreateSectionComponent implements OnChanges {
   /**
    * PRE-COND: smallest possible seatnr is 1
    */
-  affectedSeats(): PersistedSeat['id'][] {
-    const affectedSeatIds: number[] = [];
+  affectedSeats(): PersistedSeat[] {
+    const affectedSeats: PersistedSeat[] = [];
 
     for (let selectedSeatNr = this.fromSeatNr; selectedSeatNr <= this.toSeatNr; selectedSeatNr++) {
       for (const seatrow of this.roomplan.seatRows) {
@@ -129,13 +129,11 @@ export class CreateSectionComponent implements OnChanges {
         }
 
         //find affected seat
-        const affectedSeat = seatrow.seats.find(seat => {
-          return seat.seatNr === selectedSeatNr
-        });
-        affectedSeatIds.push(affectedSeat.id);
+        const affectedSeat = seatrow.seats.find(seat => seat.seatNr === selectedSeatNr);
+        affectedSeats.push(affectedSeat);
       }
     }
-    return affectedSeatIds;
+    return affectedSeats;
   }
 
   isDisabled() {
@@ -150,6 +148,8 @@ export class CreateSectionComponent implements OnChanges {
   handleNameInputChange(updatedName: string) {
     if (updatedName.length === 0) {
       this.nameErrMessage = 'Name is mandatory';
+    } else {
+      this.nameErrMessage = '';
     }
     this.name = updatedName;
   }
@@ -160,7 +160,7 @@ export class CreateSectionComponent implements OnChanges {
 
       //update state
       this.fromSeatNr = updatedFromSeatNr;
-      this.fromSeatNrErrMessage = ""
+      this.fromSeatNrErrMessage = '';
 
       //validate
       for (const seatrow of updatedRoomplan.seatRows) {
@@ -178,13 +178,13 @@ export class CreateSectionComponent implements OnChanges {
         }
       }
     } else if (fromSeatInput.length === 0) {
-      this.fromSeatNrErrMessage = "From Seat Nr is mandatory"
+      this.fromSeatNrErrMessage = 'From Seat Nr is mandatory';
     }
   }
 
   handlePriceChange(newPriceInput: string) {
-    if (newPriceInput.endsWith(".")) {
-      newPriceInput += "0";
+    if (newPriceInput.endsWith('.')) {
+      newPriceInput += '0';
     }
 
     if (this.isValidCurrencyNumber(newPriceInput)) {
@@ -195,19 +195,20 @@ export class CreateSectionComponent implements OnChanges {
 
       //validate price
       if (newPrice > 0) {
-        this.priceErrMessage = "";
+        this.priceErrMessage = '';
       } else if (newPrice <= 0) {
-        this.priceErrMessage = "Price must be larger than zero"
+        this.priceErrMessage = 'Price must be larger than zero';
       }
     } else if (newPriceInput.length === 0) {
-      this.priceErrMessage = "Price is mandatory"
+      this.priceErrMessage = 'Price is mandatory';
     } else {
-      this.priceErrMessage = "Invalid price, may only contain up to two decimal points or none";
+      this.priceErrMessage = 'Invalid price, may only contain up to two decimal points or none';
     }
   }
 
   /**
    *   // Check if the input is a valid number with optional two decimal places
+   *
    * @param input that may resemble a number
    * @returns if given input is valid currency number
    */
@@ -221,7 +222,7 @@ export class CreateSectionComponent implements OnChanges {
 
       //update state
       this.toSeatNr = updatedToSeatNr;
-      this.toSeatNrErrMessage = ""
+      this.toSeatNrErrMessage = '';
 
       //validate
       for (const seatrow of updatedRoomplan.seatRows) {
@@ -233,14 +234,12 @@ export class CreateSectionComponent implements OnChanges {
         //...otherwise validate toSeatNr
         if (updatedToSeatNr < this.fromSeatNr) {
           this.toSeatNrErrMessage = `Must be larger or equal to From Seat Nr = ${this.fromSeatNr}`;
-
-        } //...check if seatNr is within seatrow range 
-        else if (! (updatedToSeatNr > 0 && updatedToSeatNr <= seatrow.seats.length) ) {
+        } else if (!(updatedToSeatNr > 0 && updatedToSeatNr <= seatrow.seats.length)) {//...check if seatNr is within seatrow range
           this.toSeatNrErrMessage = `SeatNr: ${updatedToSeatNr} does not exist in seatrowNr: ${seatrow.rowNr}`;
         }
       }
     } else if (toSeatInput.length === 0) {
-      this.toSeatNrErrMessage = "To Seat Nr is mandatory"
+      this.toSeatNrErrMessage = 'To Seat Nr is mandatory';
     }
   }
 }

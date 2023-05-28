@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallPlanSeatDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatBulkDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanSeatMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
@@ -154,6 +155,26 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
     }
 
 
+
+    @Override
+    public List<HallPlanSeatDto> bulkAddSeats(HallPlanSeatBulkDto bulkDto) {
+        LOGGER.debug("Bulk add seats in seatrow");
+        for (HallPlanSeatDto seat : bulkDto.getSeats()) {
+            seat.setId(null);
+            seat.setSeatrowId(bulkDto.getSeatRowId());
+            seatRepository.save(seatMapper.toEntity(seat));
+        }
+        return bulkDto.getSeats();
+    }
+
+    @Override
+    public List<HallPlanSeatDto> bulkUpdateSeats(HallPlanSeatBulkDto bulkDto) {
+        LOGGER.debug("Bulk update seats in seatrow");
+        for (HallPlanSeatDto seat : bulkDto.getSeats()) {
+            seatRepository.save(seatMapper.toEntity(seat));
+        }
+        return bulkDto.getSeats();
+    }
 
 }
 
