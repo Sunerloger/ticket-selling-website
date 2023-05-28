@@ -86,6 +86,7 @@ public interface HallPlanMapper {
         seatDto.setSeatNr(seat.getSeatNr());
         seatDto.setSection(mapHallPlanSection(seat.getSection()));
         seatDto.setSeatrowId(seat.getSeatrowId());
+        seatDto.setOrderNr(seat.getOrderNr());
         return seatDto;
     }
 

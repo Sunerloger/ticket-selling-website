@@ -399,7 +399,10 @@ export class RoomplaneditorComponent implements OnInit {
   }
 
   /**
-   * Return empty seat with default section
+   * Return empty seat 
+   * Section is assigned specified default section
+   * Depending on type given seatNr is ignored and instead -1 is assigned to seatNr.
+   * OrderNr is infered from seatNr
    *
    * @param type
    * @param seatNr
@@ -408,6 +411,7 @@ export class RoomplaneditorComponent implements OnInit {
    */
   async createEmptySeat(type: SeatType, seatNr: number, capacity?: number): Promise<Seat> {
     const defaultSection = await this.retrieveDefaultSection();
+    let overridenSeatNr = seatNr;
 
     switch(type){
       case SeatType.seat:
@@ -415,6 +419,7 @@ export class RoomplaneditorComponent implements OnInit {
         break;
       case SeatType.vacantSeat:
         capacity = 0;
+        overridenSeatNr = -1;
         break;
       case SeatType.standingSeat:
         capacity = capacity ?? 100;
@@ -424,9 +429,10 @@ export class RoomplaneditorComponent implements OnInit {
     }
     const emptySeat: Seat = {
       type,
-      seatNr,
+      seatNr: overridenSeatNr,
       status: SeatStatus.free,
       section: defaultSection,
+      orderNr: seatNr,
       capacity
     };
     return emptySeat;
