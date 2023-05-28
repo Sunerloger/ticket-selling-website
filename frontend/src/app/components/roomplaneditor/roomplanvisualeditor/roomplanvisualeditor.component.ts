@@ -9,7 +9,7 @@ import { ToolbarItem } from '../toolbar/toolbar.component';
   styleUrls: ['./roomplanvisualeditor.component.scss']
 })
 export class RoomplanvisualeditorComponent {
-  @Input() renderAsImmutable: boolean = false;
+  @Input() renderAsImmutable = false;
   @Input() roomplan: PersistedHallplan;
 
   @Output() addRowEvent = new EventEmitter<{ rowNr: number }>();

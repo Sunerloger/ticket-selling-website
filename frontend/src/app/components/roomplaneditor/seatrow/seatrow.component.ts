@@ -30,7 +30,7 @@ export interface SeatRowDeletionEventPayload{
   styleUrls: ['./seatrow.component.scss']
 })
 export class SeatrowComponent {
-  @Input() renderAsImmutable: boolean = false;
+  @Input() renderAsImmutable = false;
   @Input() seatRow: PersistedSeatRow;
   @Input() showDeleteRowBtn = false;
   @Input() showAddRowBtn = false;

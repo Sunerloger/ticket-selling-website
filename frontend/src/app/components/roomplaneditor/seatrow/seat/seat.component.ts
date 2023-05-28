@@ -3,8 +3,8 @@ import { SeatType } from 'src/app/dtos/hallplan/hallplan';
 import { Section } from 'src/app/dtos/hallplan/section';
 
 interface Size{
-  width: number,
-  height: number
+  width: number;
+  height: number;
 }
 
 @Component({
@@ -29,8 +29,8 @@ export class SeatComponent {
     const width = this.capacity * 0.05;
     const height = this.capacity * 0.03;
     return {
-      width:width,
-      height: height
-    }
+      width,
+      height
+    };
   }
 }

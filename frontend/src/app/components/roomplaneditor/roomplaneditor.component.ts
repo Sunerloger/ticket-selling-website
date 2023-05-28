@@ -262,8 +262,9 @@ export class RoomplaneditorComponent implements OnInit {
   }
 
   /**
-   * Add and persist given SeatCreationEvent payload. Note amountSeat equals to 
+   * Add and persist given SeatCreationEvent payload. Note amountSeat equals to
    * capacity of seat when type is StandingSeat
+   *
    * @param payload of seatcreationevent
    */
   async handleAddSeats(payload: SeatCreationEvent) {
@@ -285,7 +286,7 @@ export class RoomplaneditorComponent implements OnInit {
           updateSeats.push({ ...seat, seatNr: seatNrOfOldSeat });
           seatNrOfOldSeat++;
         }
-        console.log(updateSeats)
+        console.log(updateSeats);
         // persist
         if(updateSeats.length > 0){
           await this.updateSeatsBulk(updateSeats, 'Failed to add seats. Please try again.');
@@ -309,12 +310,12 @@ export class RoomplaneditorComponent implements OnInit {
           case SeatType.standingSeat:
             newSeats.push(
               await this.createEmptySeat(type, 1, amountSeat)
-            )
+            );
             break;
           default:
-            console.log("Unsupported Seat Type", type);
+            console.log('Unsupported Seat Type', type);
         }
-      
+
         break;
       case CreationMenuDirection.right:
         // --- generate the new seat(s=) from the payload that needs to be persisted
@@ -335,10 +336,10 @@ export class RoomplaneditorComponent implements OnInit {
           case SeatType.standingSeat:
             newSeats.push(
               await this.createEmptySeat(type, initialSeatNr, amountSeat)
-            )
+            );
             break;
           default:
-            console.log("Unsupported Seat Type: ", type);
+            console.log('Unsupported Seat Type: ', type);
         }
 
     }
@@ -377,22 +378,22 @@ export class RoomplaneditorComponent implements OnInit {
         continue;
       }
       //update the seatnumbers after deletedSeat was found during previous iterations
-      //... to optimize performance 
+      //... to optimize performance
       if(deletedSeatIndex !== -1){
         //we already found the deletedseat after that all seats should have their seat nr adjusted
-        if(clonedSeats[i].type !== SeatType.vacantSeat){ 
+        if(clonedSeats[i].type !== SeatType.vacantSeat){
           //a vacant seat always has the seatNr -1 so no need to update
-          if(clonedSeats[deletedSeatIndex].type !== SeatType.vacantSeat){ 
-            //... verify that the deleted seat was not a vacant seat. 
+          if(clonedSeats[deletedSeatIndex].type !== SeatType.vacantSeat){
+            //... verify that the deleted seat was not a vacant seat.
             //If a vacant seat was deleted, the successor seats should not have their seat number updated
-            clonedSeats[i].seatNr--; 
+            clonedSeats[i].seatNr--;
           }
         }
         clonedSeats[i].orderNr--; //every seat has its orderNr pushed back by 1
         updatedSeatsWithNewSeatNr.push(clonedSeats[i]);
       }
     }
-    console.log(updatedSeatsWithNewSeatNr)
+    console.log(updatedSeatsWithNewSeatNr);
 
     //delete seat
     clonedSeats.splice(deletedSeatIndex, 1);
@@ -415,7 +416,7 @@ export class RoomplaneditorComponent implements OnInit {
   }
 
   /**
-   * Return empty seat 
+   * Return empty seat
    * Section is assigned specified default section
    * Depending on type given seatNr is ignored and instead -1 is assigned to seatNr.
    * OrderNr is infered from seatNr
@@ -448,7 +449,7 @@ export class RoomplaneditorComponent implements OnInit {
       seatNr: overridenSeatNr,
       status: SeatStatus.free,
       section: defaultSection,
-      orderNr: orderNr,
+      orderNr,
       capacity
     };
     return emptySeat;

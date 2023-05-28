@@ -4,7 +4,7 @@ import { PersistedHallplan, PersistedSeat } from 'src/app/dtos/hallplan/hallplan
 import { HallplanService } from 'src/app/services/hallplan/hallplan.service';
 
 export interface SeatSelectionPayload{
-  selected: PersistedSeat[]
+  selected: PersistedSeat[];
 }
 
 @Component({

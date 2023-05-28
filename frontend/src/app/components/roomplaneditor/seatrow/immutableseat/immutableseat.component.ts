@@ -3,8 +3,8 @@ import { PersistedSeat, SeatStatus, SeatType } from 'src/app/dtos/hallplan/hallp
 import { Section } from 'src/app/dtos/hallplan/section';
 
 interface Size {
-  width: number,
-  height: number
+  width: number;
+  height: number;
 }
 
 @Component({
@@ -14,7 +14,7 @@ interface Size {
 })
 export class ImmutableseatComponent {
   @Input() seat: PersistedSeat;
-  isSelected: boolean = false;
+  isSelected = false;
 
   seatTypeEnum = SeatType;
 
@@ -27,7 +27,7 @@ export class ImmutableseatComponent {
 
   isReserved(){
     if(Array.isArray(this.seat.status)){
-      return this.seat.status.length > 0
+      return this.seat.status.length > 0;
     }else{
       return this.seat.status !== SeatStatus.free;
     }
@@ -37,8 +37,8 @@ export class ImmutableseatComponent {
     const width = this.seat.capacity * 0.05;
     const height = this.seat.capacity * 0.03;
     return {
-      width: width,
-      height: height
-    }
+      width,
+      height
+    };
   }
 }
