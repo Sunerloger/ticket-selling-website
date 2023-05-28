@@ -12,7 +12,7 @@ import {AuthService} from './auth.service';
 export class UserService {
 
   private userBaseUri: string = this.globals.backendUri + '/register';
-  private adminBaseUri: string = this.globals.backendUri + '/user';
+  private adminBaseUri: string = this.globals.backendUri + '/admin';
   private userGetUri: string = this.globals.backendUri + '/edit';
 
   constructor(

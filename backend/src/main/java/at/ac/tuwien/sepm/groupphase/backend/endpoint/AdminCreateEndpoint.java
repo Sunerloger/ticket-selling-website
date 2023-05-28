@@ -29,7 +29,7 @@ import java.lang.invoke.MethodHandles;
 @RequestMapping(value = AdminCreateEndpoint.BASE_PATH)
 public class AdminCreateEndpoint {
 
-    static final String BASE_PATH = "/api/v1/user";
+    static final String BASE_PATH = "/api/v1/admin";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService;
