@@ -62,7 +62,8 @@ export class AdminBlockUnblockComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.blockForm.get('email').valueChanges.pipe(debounceTime(100)).subscribe(dataValue => {
+    this.onChange();
+    this.blockForm.valueChanges.pipe(debounceTime(200)).subscribe(dataValue => {
       this.onChange();
     });
   }
@@ -117,7 +118,8 @@ export class AdminBlockUnblockComponent implements OnInit {
   }
 
   onChange() {
-    const user = new BlockUser(this.blockForm.controls['email'].value, null);
+    const x = this.blockForm.value;
+    const user = new BlockUser(x.email, x.isLocked);
     console.log(user);
     if (this.mode === 0) {
       user.isLocked = false;
@@ -131,8 +133,10 @@ export class AdminBlockUnblockComponent implements OnInit {
   changeMode() {
     if (this.mode === 0) {
       this.mode = 1;
+      this.onChange();
     } else {
       this.mode = 0;
+      this.onChange();
     }
   }
 }

@@ -7,12 +7,14 @@
         <div class="card-header">
           <h3 class="card-headline">{{heading}}</h3>
         </div>
-        <form (ngSubmit)="blockUser(user.email)" #blockForm="ngForm">
+        <!--<form (ngSubmit)="blockUser(user.email)" #blockForm="ngForm">-->
+        <form [formGroup]="blockForm">
           <div id="input">
             <label for="email">Email</label>
-            <input type="email" class="form-control"
-                   id="email" name="email" [(ngModel)]="user.email" #email="ngModel" required
+            <input type="email" class="form-control" formControlName="email"
+                   id="email" name="email" [(ngModel)]="user.email"
                    pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$">
+            <!--
             <div *ngIf="blockForm.submitted && blockForm.controls['email'].invalid" class="text-danger">
                 <span class="validation-info"
                       *ngIf="email.errors?.required">
@@ -23,6 +25,7 @@
                  Email is invalid!
                </span>
             </div>
+            -->
           </div>
           <div *ngIf="mode === 1">
             <tr *ngFor="let user of users" class="center-td">
@@ -41,7 +44,7 @@
             </tr>
           </div>
           <div>
-            <button type="click" class="btn btn-primary" (click)="changeMode()">Change Mode</button>
+            <button class="btn btn-primary" (click)="changeMode()">Change Mode</button>
           </div>
         </form>
       </div>
