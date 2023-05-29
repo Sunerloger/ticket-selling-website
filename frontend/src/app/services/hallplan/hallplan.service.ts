@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import { Globals } from '../../global/globals';
 import { Hallplan, PersistedHallplan, PersistedSeat, PersistedSeatRow, Seat, SeatRow } from 'src/app/dtos/hallplan/hallplan';
 import { PersistedSection, Section } from 'src/app/dtos/hallplan/section';
+import {Observable} from 'rxjs';
+import {AbbreviatedHallplan} from '../../dtos/hallplan/abbreviatedHallplan';
 
 
 @Injectable({
@@ -100,4 +102,15 @@ export class HallplanService {
             `${this.baseUrl}/${hallplanId}/seatrows/${seatrowId}`
         );
     }
+
+  /**
+   * Get Roomplans by pages.
+   *
+   * @param pageIndex index of the searched for page
+   */
+  getRoomplans(pageIndex: number): Observable<AbbreviatedHallplan[]> {
+    let params: HttpParams = new HttpParams();
+    params = params.set('pageIndex', pageIndex);
+    return this.http.get<AbbreviatedHallplan[]>(this.baseUrl+'/search', {params});
+  }
 }

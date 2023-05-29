@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,8 +8,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -18,26 +21,33 @@ import java.util.List;
 @Entity
 @Table(name = "event")
 public class Event {
+    private static final String base64Pattern = "^data:image/(gif|png|jpeg|webp|svg\\+xml);base64,.*={0,2}$";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     private String title;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "event_id")
     private List<EventDate> eventDatesLocation;
 
+    @NotNull
     private LocalTime duration;
 
+    @NotBlank
     private String category;
 
     private String description;
 
+    @NotBlank
     private String artist;
 
-    @Column(columnDefinition = "TEXT")
+    @Lob
+    @Pattern(regexp = base64Pattern)
+    @Column(columnDefinition = "BLOB")
     private String image;
 
     public Event() {

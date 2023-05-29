@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSectio
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSection;
 import jakarta.xml.bind.ValidationException;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
@@ -116,5 +117,13 @@ public interface HallPlanService {
      * @return the sections of the hallplan
      */
     List<HallPlanSectionDto> findAllSectionsByHallPlanIdWithCounts(Long hallplanId);
+
+    /**
+     * Retrieves a page containing 5 Hallplans.
+     *
+     * @param pageIndex index of the page
+     * @return a list of hallplans
+     */
+    Page<HallPlan> findPageOfHallplans(int pageIndex);
 
 }
