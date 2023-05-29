@@ -6,6 +6,7 @@ import {Observable} from 'rxjs';
 import {Reservation} from '../dtos/reservation';
 import {SeatDetail} from '../dtos/seatDetail';
 import {CreatePurchase} from '../dtos/purchases';
+import {PersistedSeat} from '../dtos/hallplan/hallplan';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +29,7 @@ export class ReservationService {
     );
   }
 
-  createReservation(seatList: SeatDetail[]): Observable<HttpResponse<any>> {
+  createReservation(seatList: PersistedSeat[]): Observable<HttpResponse<any>> {
     return this.httpClient.post<any>(this.reservationBaseUri, seatList);
   }
 

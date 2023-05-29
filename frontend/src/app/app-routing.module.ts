@@ -14,14 +14,17 @@ import {AdminRouteGuard} from './guards/admin-route.guard';
 import {EditComponent} from './components/edit/edit.component';
 import {NewsDetailComponent} from './components/news/news-detail/news-detail.component';
 import {AdminBlockUnblockComponent} from './components/admin-block-unblock/admin-block-unblock.component';
-import { RoomplaneditorComponent } from './components/roomplaneditor/roomplaneditor.component';
+import {RoomplaneditorComponent} from './components/roomplaneditor/roomplaneditor.component';
 import {ReservationsComponent} from './components/reservations/reservations.component';
 import {CartCheckoutComponent} from './components/cart-checkout/cart-checkout.component';
 import {PurchasesComponent} from './components/purchases/purchases.component';
 import {PurchaseDetailComponent} from './components/purchase-detail/purchase-detail.component';
 import {ReservationCheckoutComponent} from './components/reservation-checkout/reservation-checkout.component';
 import {EventOverviewComponent} from './components/event-overview/event-overview.component';
-import { HallplanManagerComponent } from './components/hallplan-manager/hallplan-manager.component';
+import {HallplanManagerComponent} from './components/hallplan-manager/hallplan-manager.component';
+import {
+  PerformanceTicketSelctionComponent
+} from './components/performance-ticket-selction/performance-ticket-selction.component';
 
 
 const routes: Routes = [
@@ -34,7 +37,7 @@ const routes: Routes = [
   {path: 'block', component: AdminBlockUnblockComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'news/create', canActivate: [AdminRouteGuard], component: NewsCreateComponent},
-  {path: 'roomplan/:id/edit', component: RoomplaneditorComponent },
+  {path: 'roomplan/:id/edit', component: RoomplaneditorComponent},
   {path: 'reservations', component: ReservationsComponent},
   {path: 'cart/checkout', component: CartCheckoutComponent},
   {path: 'purchases', component: PurchasesComponent},
@@ -56,9 +59,10 @@ const routes: Routes = [
   {path: 'edit', component: EditComponent},
   {path: 'roomplan/:id/edit', component: RoomplaneditorComponent},
   {path: 'hallplans/:id/edit', component: RoomplaneditorComponent},
+  {path: 'performance-tickets/:id', canActivate: [AuthGuard], component: PerformanceTicketSelctionComponent},
   {path: '**', redirectTo: 'news'},
-  {path: 'hallplans/:id/edit', component: RoomplaneditorComponent },
-    {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
+  {path: 'hallplans/:id/edit', component: RoomplaneditorComponent},
+  {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
 ];
 
 @NgModule({
