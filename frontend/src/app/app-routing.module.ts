@@ -42,6 +42,7 @@ const routes: Routes = [
   {path: 'reservations/:id/checkout', component: ReservationCheckoutComponent},
   {path: 'hallplans/manage', canActivate: [AuthGuard], component: HallplanManagerComponent},
   {path: 'events', canActivate: [AdminRouteGuard], component: EventsComponent},
+  {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
   {
     path: 'news', canActivate: [AuthGuard], children: [
       {path: '', component: NewsOverviewComponent},
@@ -58,7 +59,6 @@ const routes: Routes = [
   {path: 'hallplans/:id/edit', component: RoomplaneditorComponent},
   {path: '**', redirectTo: 'news'},
   {path: 'hallplans/:id/edit', component: RoomplaneditorComponent },
-    {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
 ];
 
 @NgModule({
