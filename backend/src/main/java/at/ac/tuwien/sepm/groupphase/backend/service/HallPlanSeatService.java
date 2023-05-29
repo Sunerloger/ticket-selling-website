@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatDto;
 import jakarta.transaction.Transactional;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatBulkDto;
+import jakarta.xml.bind.ValidationException;
 
 import java.util.List;
 
@@ -39,7 +40,7 @@ public interface HallPlanSeatService {
      * @param seatDto the seatDto containing the updated information
      * @return the updated seatDto
      */
-    HallPlanSeatDto updateSeat(HallPlanSeatDto seatDto);
+    HallPlanSeatDto updateSeat(HallPlanSeatDto seatDto) throws ValidationException;
 
     /**
      * Deletes a seat by its ID.
