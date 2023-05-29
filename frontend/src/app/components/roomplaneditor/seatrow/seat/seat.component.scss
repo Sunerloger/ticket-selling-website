@@ -3,17 +3,20 @@
 */
 .seat {
     position: relative;
-    display: inline-block;
     border-radius: 5px;
     padding: 0.1rem;
 }
 
 .hover_overlay {
     position: absolute;
+    bottom: 100%;
     left: -0.5rem;
-
-    bottom: 1.8rem;
     color: #DD2D2D;
+    background-color: rgba(221, 45, 45, 0.9);
+    color: white;
+    border-radius: 5px;
+    padding: 0.2rem;
+
     font-weight: 500;
 
     visibility: hidden;
@@ -26,4 +29,33 @@
 
 .seat:hover .hover_overlay {
     visibility: visible;
+}
+
+/* 
+    StandingSeat
+*/
+.standing_seat {
+    border: 2px solid black;
+    border-radius: 5px;
+    display: flex;
+    justify-content: left;
+
+    min-width: 2.3rem;
+    /* ensure that inline styling does not destroy layout */
+    min-height: 1.5rem;
+    max-height: 20rem;
+    max-width: 35rem;
+}
+
+.standing_seat:hover {
+    border-color: #DD2D2D;
+    color: #DD2D2D;
+}
+
+.capacity_display {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    font-size: 1.15rem;
 }

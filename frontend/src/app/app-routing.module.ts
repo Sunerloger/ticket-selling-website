@@ -11,7 +11,9 @@ import {RegisterComponent} from './components/register/register.component';
 import {NewsCreateComponent} from './components/news/news-create/news-create.component';
 import {NewsOverviewComponent} from './components/news/news-overview/news-overview.component';
 import {AdminRouteGuard} from './guards/admin-route.guard';
+import {EditComponent} from './components/edit/edit.component';
 import {NewsDetailComponent} from './components/news/news-detail/news-detail.component';
+import {AdminBlockUnblockComponent} from './components/admin-block-unblock/admin-block-unblock.component';
 import { RoomplaneditorComponent } from './components/roomplaneditor/roomplaneditor.component';
 import {ReservationsComponent} from './components/reservations/reservations.component';
 import {CartCheckoutComponent} from './components/cart-checkout/cart-checkout.component';
@@ -29,6 +31,7 @@ const routes: Routes = [
   {path: 'roomplancart', component: RoomplanCartComponent},
   {path: 'cart', component: ShoppingCartComponent},
   {path: 'register', component: RegisterComponent},
+  {path: 'block', component: AdminBlockUnblockComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'news/create', canActivate: [AdminRouteGuard], component: NewsCreateComponent},
   {path: 'roomplan/:id/edit', component: RoomplaneditorComponent },
@@ -39,21 +42,27 @@ const routes: Routes = [
   {path: 'reservations/:id/checkout', component: ReservationCheckoutComponent},
   {path: 'hallplans/manage', canActivate: [AuthGuard], component: HallplanManagerComponent},
   {path: 'events', canActivate: [AdminRouteGuard], component: EventsComponent},
-  {path: 'news', canActivate: [AuthGuard], children: [
+  {
+    path: 'news', canActivate: [AuthGuard], children: [
       {path: '', component: NewsOverviewComponent},
-      {path: ':id/info', component: NewsDetailComponent/*, resolve: {
-          news: NewsResolver
-        }*/},
+      {
+        path: ':id/info', component: NewsDetailComponent/*, resolve: {
+        news: NewsResolver
+      }*/
+      },
       {path: 'create', canActivate: [AdminRouteGuard], component: NewsCreateComponent},
-    ]},
-  {path: 'roomplan/:id/edit', component: RoomplaneditorComponent },
-  {path: 'hallplans/:id/edit', component: RoomplaneditorComponent },
+    ]
+  },
+  {path: 'edit', component: EditComponent},
+  {path: 'roomplan/:id/edit', component: RoomplaneditorComponent},
+  {path: 'hallplans/:id/edit', component: RoomplaneditorComponent},
   {path: '**', redirectTo: 'news'},
+  {path: 'hallplans/:id/edit', component: RoomplaneditorComponent },
     {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  imports: [RouterModule.forRoot(routes, {useHash: true})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {

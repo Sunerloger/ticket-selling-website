@@ -9,6 +9,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SeatRowMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSection;
+import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanRepository;
@@ -19,6 +20,10 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.xml.bind.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -185,6 +190,12 @@ public class HallPlanServiceImpl implements HallPlanService {
         }
         List<HallPlanSectionDto> list = hallPlanSectionMapper.toDto(sections);
         return list;
+    }
+
+    @Override
+    public Page<HallPlan> findPageOfHallplans(int pageIndex) {
+        Pageable pageable = PageRequest.of(pageIndex, 5, Sort.by("name").ascending());
+        return hallPlanRepository.findAll(pageable);
     }
 
     @Override

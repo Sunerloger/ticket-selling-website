@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PersistedSeatRow, SeatType } from 'src/app/dtos/hallplan/hallplan';
+import { PersistedSeat, PersistedSeatRow, SeatType } from 'src/app/dtos/hallplan/hallplan';
 import { SeatCreationEventPayload } from './contextmenu/contextmenu.component';
+import { SeatSelectionPayload } from './immutableseat/immutableseat.component';
 
 export interface SeatRemovalPayload {
   id: number;
@@ -30,13 +31,17 @@ export interface SeatRowDeletionEventPayload{
   styleUrls: ['./seatrow.component.scss']
 })
 export class SeatrowComponent {
+  @Input() renderAsImmutable = false;
   @Input() seatRow: PersistedSeatRow;
   @Input() showDeleteRowBtn = false;
   @Input() showAddRowBtn = false;
+  @Input() showRowNr = false;
+  @Input() showSeatNr = false;
 
   @Output() seatCreationEvent = new EventEmitter<SeatCreationEvent>();
   @Output() seatRowDeletion = new EventEmitter<SeatRowDeletionEventPayload>();
   @Output() seatRemoval = new EventEmitter<SeatRemovalPayload>();
+  @Output() seatSelectionChangeEvent = new EventEmitter<SeatSelectionPayload>();
 
   //references to typescript enums
   creationMenuDirectionEnum = CreationMenuDirection;

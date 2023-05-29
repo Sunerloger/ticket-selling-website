@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserCreateDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
@@ -21,10 +22,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class UserRegisterMappingTest {
 
     private final ApplicationUser applicationUser =
-        new ApplicationUser("martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure");
+        new ApplicationUser("martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure", false,false);
 
     private final UserRegisterDto userRegisterDtoActual =
-        new UserRegisterDto(1L, "martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure");
+        new UserRegisterDto(1L, "martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure",
+            false,false);
+
+    private final UserCreateDto userCreateDtoActual =
+        new UserCreateDto(1L, "martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure",
+            false,false);
     @Autowired
     private UserMapper userMapper;
 
@@ -41,6 +47,22 @@ public class UserRegisterMappingTest {
             () -> assertEquals(userRegisterDtoActual.areaCode(), userRegisterDtoMapped.areaCode()),
             () -> assertEquals(userRegisterDtoActual.cityName(), userRegisterDtoMapped.cityName()),
             () -> assertEquals(userRegisterDtoActual.password(), userRegisterDtoMapped.password())
+        );
+    }
+
+    @Test
+    public void givenAUserCreateDto_WhenMapped() {
+        UserCreateDto userCreateDtoMapped = userMapper.entityToUserCreateDto(applicationUser);
+
+        assertAll(
+            () -> assertEquals(userCreateDtoActual.email(), userCreateDtoMapped.email()),
+            () -> assertEquals(userCreateDtoActual.firstName(), userCreateDtoMapped.firstName()),
+            () -> assertEquals(userCreateDtoActual.lastName(), userCreateDtoMapped.lastName()),
+            () -> assertEquals(userCreateDtoActual.birthdate(), userCreateDtoMapped.birthdate()),
+            () -> assertEquals(userCreateDtoActual.address(), userCreateDtoMapped.address()),
+            () -> assertEquals(userCreateDtoActual.areaCode(), userCreateDtoMapped.areaCode()),
+            () -> assertEquals(userCreateDtoActual.cityName(), userCreateDtoMapped.cityName()),
+            () -> assertEquals(userCreateDtoActual.password(), userCreateDtoMapped.password())
         );
     }
 

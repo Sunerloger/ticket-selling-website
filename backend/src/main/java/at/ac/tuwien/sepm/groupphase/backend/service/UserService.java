@@ -1,11 +1,19 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserUnBlockDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import jakarta.xml.bind.ValidationException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 public interface UserService extends UserDetailsService {
 
@@ -31,13 +39,30 @@ public interface UserService extends UserDetailsService {
     ApplicationUser findApplicationUserByEmail(String email);
 
     /**
+     * Check for application user based on the email address.
+     *
+     * @param email the email address
+     */
+    void checkForExistingUserByEmail(String email) throws ValidationException;
+
+    /**
      * Log in a user.
      *
      * @param userLoginDto login credentials
      * @return the JWT, if successful
      * @throws org.springframework.security.authentication.BadCredentialsException if credentials are bad
      */
-    String login(UserLoginDto userLoginDto);
+    String login(UserLoginDto userLoginDto) throws BadCredentialsException;
 
-    ApplicationUser register(ApplicationUser applicationUser);
+    ApplicationUser register(ApplicationUser applicationUser) throws ValidationException;
+
+    ApplicationUser edit(ApplicationUser userDetailDtoToEntity, String token);
+
+    ApplicationUser getUser(String token);
+
+    void delete(Long id, String email, String password);
+
+    void block(ApplicationUser userUnBlockDtoToEntity);
+
+    List<ApplicationUser> getBlockedUsers(ApplicationUser applicationUser);
 }

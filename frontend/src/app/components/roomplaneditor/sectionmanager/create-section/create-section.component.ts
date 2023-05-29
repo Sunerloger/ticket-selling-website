@@ -11,7 +11,7 @@ const defaultColorOptions: ColorItem[] = [
     backgroundColor: '#DC965A',
   },
   {
-    backgroundColor: '#242325',
+    backgroundColor: '#6f6778',
   },
   {
     backgroundColor: '#BC69AA',
@@ -27,7 +27,17 @@ const defaultColorOptions: ColorItem[] = [
   },
   {
     backgroundColor: '#3D348B'
-  }
+  },
+  //new
+  {
+    backgroundColor: '#d17df0'
+  },
+  {
+    backgroundColor: '#bf8aa7'
+  },
+  {
+    backgroundColor: '#b5835c'
+  },
 ];
 
 export interface CreateSectionPayload {
