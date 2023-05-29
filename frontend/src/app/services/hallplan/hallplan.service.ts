@@ -17,10 +17,10 @@ export class HallplanService {
 
     getAllHallplans() {
         return this.http.get<Hallplan[]>(
-          `${this.baseUrl}`  
+          `${this.baseUrl}`
         );
     }
-    
+
     getHallplanById(id: number){
         return this.http.get<PersistedHallplan>(
             `${this.baseUrl}/${id}`

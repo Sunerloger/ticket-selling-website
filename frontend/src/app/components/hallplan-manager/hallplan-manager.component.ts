@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit  } from '@angular/core';
 import { Hallplan } from 'src/app/dtos/hallplan/hallplan';
 import { HallplanService } from 'src/app/services/hallplan/hallplan.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
   templateUrl: './hallplan-manager.component.html',
   styleUrls: ['./hallplan-manager.component.scss']
 })
-export class HallplanManagerComponent {
+export class HallplanManagerComponent implements OnInit {
 
   hallPlans: Hallplan[];
 
