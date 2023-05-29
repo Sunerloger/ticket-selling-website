@@ -137,14 +137,13 @@ public class News {
             && Objects.equals(title, news.title)
             && Objects.equals(shortText, news.shortText)
             && Objects.equals(fullText, news.fullText)
-            && Objects.equals(createdAt, news.createdAt)
             && Objects.equals(coverImage, news.coverImage)
             && Objects.equals(event, news.event);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, shortText, fullText, createdAt, coverImage, event);
+        return Objects.hash(id, title, shortText, fullText, coverImage, event);
     }
 
     @Override

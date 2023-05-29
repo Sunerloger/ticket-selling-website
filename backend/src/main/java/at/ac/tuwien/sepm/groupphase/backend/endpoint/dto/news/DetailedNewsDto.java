@@ -92,14 +92,13 @@ public class DetailedNewsDto {
         return Objects.equals(id, that.id)
             && Objects.equals(title, that.title)
             && Objects.equals(fullText, that.fullText)
-            && Objects.equals(createdAt, that.createdAt)
             && Objects.equals(coverImage, that.coverImage)
             && Objects.equals(eventId, that.eventId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, fullText, createdAt, coverImage, eventId);
+        return Objects.hash(id, title, fullText, coverImage, eventId);
     }
 
     @Override
