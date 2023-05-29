@@ -42,7 +42,7 @@ const routes: Routes = [
   {path: 'purchases/:id', component: PurchaseDetailComponent},
   {path: 'reservations/:id/checkout', component: ReservationCheckoutComponent},
   {path: 'hallplans/manage', canActivate: [AuthGuard], component: HallplanManagerComponent},
-  {path: 'events', canActivate: [AdminRouteGuard], component: EventsComponent},
+  {path: 'events/create', canActivate: [AdminRouteGuard], component: EventsComponent},
   {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
   {
     path: 'news', canActivate: [AuthGuard], children: [
