@@ -15,20 +15,16 @@
 
   <div class="navbar-nav collapse navbar-collapse" id="navbarSupportedContent">
     <div class="navbar-subcontainer" style="margin-left:2rem">
+      <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()" routerLink="/events"
+        routerLinkActive="active">Events
+      </a>
       <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()" routerLink="/news"
-        routerLinkActive="active">News</a>
+        routerLinkActive="active">News
+      </a>
 
-      <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()"
-         routerLink="/cart"
-         routerLinkActive="active">Cart</a>
-
-      <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()"
-         routerLink="/reservations"
-         routerLinkActive="active">Reservations</a>
-
-      <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()"
-         routerLink="/purchases"
-         routerLinkActive="active">Purchases</a>
+      <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()" routerLink="/cart"
+        routerLinkActive="active">Cart
+      </a>
     </div>
     <div class="navbar-subcontainer">
       <a class="nav-link animated-text-custom" *ngIf="!authService.isLoggedIn()" routerLink="/register"
@@ -45,6 +41,7 @@
           aria-labelledby="dropdownMenuButton">
           <a class="dropdown-item" routerLink="/hallplans/manage">HallPlan
             Manager </a>
+          <a class="dropdown-item" routerLink="/events/create">Event Creation </a>
           <a class="dropdown-item" href="#">Account Manager</a>
         </div>
       </div>

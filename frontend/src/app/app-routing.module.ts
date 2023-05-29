@@ -29,6 +29,7 @@ import {
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
+  {path: 'events', component: EventOverviewComponent},
   {path: 'login', component: LoginComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'roomplancart', component: RoomplanCartComponent},
@@ -44,7 +45,8 @@ const routes: Routes = [
   {path: 'purchases/:id', component: PurchaseDetailComponent},
   {path: 'reservations/:id/checkout', component: ReservationCheckoutComponent},
   {path: 'hallplans/manage', canActivate: [AuthGuard], component: HallplanManagerComponent},
-  {path: 'events', canActivate: [AdminRouteGuard], component: EventsComponent},
+  {path: 'events/create', canActivate: [AdminRouteGuard], component: EventsComponent},
+  {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
   {
     path: 'news', canActivate: [AuthGuard], children: [
       {path: '', component: NewsOverviewComponent},
@@ -61,8 +63,6 @@ const routes: Routes = [
   {path: 'hallplans/:id/edit', component: RoomplaneditorComponent},
   {path: 'performance-tickets/:id', canActivate: [AuthGuard], component: PerformanceTicketSelctionComponent},
   {path: '**', redirectTo: 'news'},
-  {path: 'hallplans/:id/edit', component: RoomplaneditorComponent},
-  {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
 ];
 
 @NgModule({
