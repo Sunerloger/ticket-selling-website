@@ -5,12 +5,13 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.DetailedNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.NewsInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.entity.NewsImage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.Mapping;
 
-import java.util.LinkedList;
 import java.util.List;
+import java.util.LinkedList;
 
 @Mapper
 public interface NewsMapper {
@@ -39,14 +40,24 @@ public interface NewsMapper {
         return stringImages;
     }
 
+    @Named("eventToEventId")
+    static Long eventToEventId(Event event) {
+        if (event == null) {
+            return null;
+        }
+        return event.getId();
+    }
+
     AbbreviatedNewsDto newsToAbbreviatedNewsDto(News news);
 
     @Mapping(source = "images", target = "images", qualifiedByName = "newsImageListToStringList")
+    @Mapping(source = "event", target = "eventId", qualifiedByName = "eventToEventId")
     DetailedNewsDto newsToDetailedNewsDto(News news);
 
     @Mapping(source = "images", target = "images", qualifiedByName = "stringListToNewsImageList")
-    News newsInquiryDtoWithImagesToNews(NewsInquiryDto newsInquiryDto);
+    News newsInquiryDtoWithImagesToNewsWithoutEvent(NewsInquiryDto newsInquiryDto);
 
     @Mapping(source = "images", target = "images", qualifiedByName = "newsImageListToStringList")
+    @Mapping(source = "event", target = "eventId", qualifiedByName = "eventToEventId")
     NewsInquiryDto newsToNewsInquiryDto(News news);
 }

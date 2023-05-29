@@ -12,6 +12,7 @@ import {AdminRouteGuard} from './guards/admin-route.guard';
 import {NewsDetailComponent} from './components/news/news-detail/news-detail.component';
 import { RoomplaneditorComponent } from './components/roomplaneditor/roomplaneditor.component';
 import {EventOverviewComponent} from './components/event-overview/event-overview.component';
+import {NewsResolver} from './components/news/news.resolver';
 
 
 const routes: Routes = [
@@ -20,22 +21,22 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'events', canActivate: [AdminRouteGuard], component: EventsComponent},
+      {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
   {path: 'news', canActivate: [AuthGuard], children: [
       {path: '', component: NewsOverviewComponent},
-      {path: ':id/info', component: NewsDetailComponent/*, resolve: {
+      {path: ':id/info', component: NewsDetailComponent, resolve: {
           news: NewsResolver
-        }*/},
+        }},
       {path: 'create', canActivate: [AdminRouteGuard], component: NewsCreateComponent},
     ]},
   {path: 'roomplan/:id/edit', component: RoomplaneditorComponent },
   {path: 'hallplans/:id/edit', component: RoomplaneditorComponent },
   {path: '**', redirectTo: 'news'},
-    {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
 ];
 
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  imports: [RouterModule.forRoot(routes, { useHash: true, scrollPositionRestoration: 'enabled'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {

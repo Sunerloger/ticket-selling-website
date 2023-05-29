@@ -29,7 +29,8 @@ public class UserRegisterRepositoryTest {
     @Test
     public void givenAUser_whenSaveUser_thenFindUser() {
         ApplicationUser applicationUser =
-            new ApplicationUser("martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure");
+            new ApplicationUser("martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure",
+                false);
         applicationUserRepository.save(applicationUser);
 
         Optional<ApplicationUser> testApplicationUser = applicationUserRepository.findById(applicationUser.getId());

@@ -8,7 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 
-import java.util.stream.Collectors;
+import jakarta.xml.bind.ValidationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +65,7 @@ public class CustomUserDetailService implements UserService {
     @Override
     public ApplicationUser findApplicationUserByEmail(String email) {
         LOGGER.debug("Find application user by email");
-        ApplicationUser applicationUser = userRepository.findUserByEmail(email);
+        ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(email);
         if (applicationUser != null) {
             return applicationUser;
         }
@@ -73,27 +73,42 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public String login(UserLoginDto userLoginDto) {
-        UserDetails userDetails = loadUserByUsername(userLoginDto.getEmail());
-        if (userDetails != null
-            && userDetails.isAccountNonExpired()
-            && userDetails.isAccountNonLocked()
-            && userDetails.isCredentialsNonExpired()
-            && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
-        ) {
-            List<String> roles = userDetails.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .toList();
-            return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
+    public void checkForExistingUserByEmail(String email) throws ValidationException {
+        LOGGER.debug("Check application user by email");
+        ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(email);
+        if (applicationUser != null) {
+            throw new ValidationException("Email already in use!");
         }
-        throw new BadCredentialsException("Username or password is incorrect or account is locked");
     }
 
     @Override
-    public ApplicationUser register(ApplicationUser applicationUser) {
+    public String login(UserLoginDto userLoginDto) {
+        try {
+            UserDetails userDetails = loadUserByUsername(userLoginDto.getEmail());
+            if (userDetails != null
+                && userDetails.isAccountNonExpired()
+                && userDetails.isAccountNonLocked()
+                && userDetails.isCredentialsNonExpired()
+                && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
+            ) {
+                List<String> roles = userDetails.getAuthorities()
+                    .stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .toList();
+                return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
+            }
+        } catch (UsernameNotFoundException e) {
+            throw new BadCredentialsException("Email or password is incorrect or account is locked");
+        }
+        throw new BadCredentialsException("Email or password is incorrect or account is locked");
+    }
+
+    //Validation Exception is thrown if user already exists
+    @Override
+    public ApplicationUser register(ApplicationUser applicationUser) throws ValidationException {
         String encodedPassword = passwordEncoder.encode(applicationUser.getPassword());
         applicationUser.setPassword(encodedPassword);
+        checkForExistingUserByEmail(applicationUser.getEmail());
         return applicationUserRepository.save(applicationUser);
     }
 }

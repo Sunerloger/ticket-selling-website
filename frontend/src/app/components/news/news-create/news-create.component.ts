@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, NgForm} from '@angular/forms';
-import {NewsService} from '../../../services/news.service';
+import {NewsService} from '../../../services/news/news.service';
 import {News} from '../../../dtos/news';
 import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
+import {EventService} from '../../../services/event.service';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class NewsCreateComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private service: NewsService,
+              private eventService: EventService,
               private notification: ToastrService,
               private router: Router) {
   }
@@ -32,6 +34,9 @@ export class NewsCreateComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  /**
+   * Load cover image as a base64 string and store it in the news
+   */
   onCoverImageSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
@@ -43,13 +48,21 @@ export class NewsCreateComponent implements OnInit {
     }
   }
 
+  /**
+   * Load images as base64 strings and store them in the news
+   */
   onAdditionalImagesSelected(event: any) {
     this.selectedFiles = event.target.files;
     for (const file of this.selectedFiles) {
-      this.convertToBase64(file);
+      this.convertToBase64AndAddToImages(file);
     }
   }
 
+  /**
+   * Validates form with news entry and persists it in the backend
+   *
+   * @param form The form with the data of the news entry
+   */
   public onSubmit(form: NgForm): void {
     console.log('is form valid?', form.valid, this.news);
 
@@ -74,7 +87,10 @@ export class NewsCreateComponent implements OnInit {
         },
         error: error => {
           console.error(`Error creating news`, error, this.news);
-          this.notification.error('Could not create news. Errorcode: ' + error.status + ', Errortext: ' + error.error.errors);
+          const errorMessage = error.status === 0
+            ? 'No connection to server'
+            : error.message.message;
+          this.notification.error(errorMessage, `Could not create news`);
         }
       });
     } else {
@@ -82,15 +98,39 @@ export class NewsCreateComponent implements OnInit {
     }
   }
 
+  /**
+   * Set cover image to null
+   */
   public removeCoverImage() {
     this.news.coverImage = null;
   }
 
-  public removeImages(i: number) {
-    this.news.images.splice(i,1);
+  /**
+   * Remove image with index 'i' from list. The given index has to be a
+   * valid index in the list, otherwise, an error is displayed.
+   *
+   * @param i The index of the image to remove
+   */
+  public removeImage(i: number) {
+    if (i < this.news.images.length) {
+      this.news.images.splice(i,1);
+    } else {
+      this.notification.error('The index of the image could not be found in the given list of images',
+        'The specified image could not be removed');
+    }
   }
 
-  private convertToBase64(file: File) {
+  /*public formatEventTitle(event: Event | null | undefined): string {
+    return (event == null)
+      ? ''
+      : `${event.title}`;
+  }
+
+  eventSuggestions = (input: string): Observable<string[]> => (input === '')
+    ? of([])
+    : this.eventService.searchEventByName(input, 5);*/
+
+  private convertToBase64AndAddToImages(file: File) {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
@@ -98,7 +138,7 @@ export class NewsCreateComponent implements OnInit {
       this.news.images.push(base64String);
     };
     reader.onerror = (error) => {
-      this.notification.error('Could not process Image');
+      this.notification.error('File could not be converted to base64 format', 'Could not process Image');
       console.error('Error converting file to base64:', error);
     };
   }

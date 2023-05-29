@@ -78,6 +78,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     BsDatepickerModule,
     MatPaginatorModule,
     InfiniteScrollModule,
+    NgbModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

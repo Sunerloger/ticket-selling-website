@@ -7,5 +7,19 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ApplicationUserRepository extends JpaRepository<ApplicationUser, Long> {
 
+    /**
+     * Saves the specified user in the database.
+     *
+     * @param applicationUser the user which will be persisted
+     * @return the user which was persisted in the database
+     */
     ApplicationUser save(ApplicationUser applicationUser);
+
+    /**
+     * Find user with the specified email.
+     *
+     * @param email the users email address
+     * @return the user with the specified email
+     */
+    ApplicationUser findUserByEmail(String email);
 }

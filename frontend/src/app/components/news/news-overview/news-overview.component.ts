@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../../../services/auth.service';
-import {NewsService} from '../../../services/news.service';
+import {NewsService} from '../../../services/news/news.service';
 import {AbbreviatedNews} from '../../../dtos/news';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-news',
@@ -16,7 +17,8 @@ export class NewsOverviewComponent implements OnInit {
   news: AbbreviatedNews[] = [];
 
   constructor(private authService: AuthService,
-              private newsService: NewsService) {}
+              private newsService: NewsService,
+              private notification: ToastrService) {}
 
   ngOnInit() {
     this.initializeLoadedPages();
@@ -27,13 +29,22 @@ export class NewsOverviewComponent implements OnInit {
    */
   initializeLoadedPages() {
     this.pageIndex = 0;
-    this.newsService.getPage(0).subscribe((news: AbbreviatedNews[]) => {
-      this.news = news;
+    this.newsService.getPage(0).subscribe({
+      next: (news: AbbreviatedNews[]) => {
+        this.news = news;
+      },
+      error: error => {
+        console.error('Error fetching news entries', error);
+        const errorMessage = error.status === 0
+          ? 'No connection to server'
+          : error.message.message;
+        this.notification.error(errorMessage, 'Could not fetch news entries');
+      },
     });
   }
 
   /**
-   * Returns true if the authenticated user is an admin
+   * @return Returns true if the authenticated user is an admin
    */
   isAdmin(): boolean {
     return this.authService.isAdmin();
@@ -49,10 +60,16 @@ export class NewsOverviewComponent implements OnInit {
     });
   }
 
+  /**
+   * Formats the date/time of creation of a given news entry as a date string and leaves out the time
+   */
   dateOfCreationAsLocaleDate(entry: AbbreviatedNews): string {
     return new Date(entry.createdAt).toLocaleDateString();
   }
 
+  /**
+   * Formats the date/time of creation of a given news entry as a time string and leaves out the date
+   */
   timeOfCreationAsLocaleTime(entry: AbbreviatedNews): string {
     return new Date(entry.createdAt).toLocaleTimeString();
   }

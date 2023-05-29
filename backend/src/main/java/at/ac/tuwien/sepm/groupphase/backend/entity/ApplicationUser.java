@@ -6,21 +6,27 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDate;
 
 //TODO: replace this class with a correct ApplicationUser Entity implementation
 @Entity
-@Table(name = "applicationuser")
+@Table(name = "applicationuser") /*, uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"email"})
+}*/
 public class ApplicationUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String email;
 
+    @Pattern(regexp = "[ÄÖÜA-Zäöüa-z]*")
     private String firstName;
 
+    @Pattern(regexp = "[ÄÖÜA-Zäöüa-z]*")
     private String lastName;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -30,8 +36,11 @@ public class ApplicationUser {
 
     private Long areaCode;
 
+    @Pattern(regexp = "[ÄÖÜA-Zäöüa-z]*")
     private String cityName;
+
     private String password;
+
     private Boolean admin;
 
     public ApplicationUser() {
@@ -45,7 +54,7 @@ public class ApplicationUser {
     }
 
     public ApplicationUser(String email, String firstName, String lastName, LocalDate birthdate, String address, Long areaCode, String cityName,
-                           String password) {
+                           String password, Boolean admin) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -54,6 +63,7 @@ public class ApplicationUser {
         this.areaCode = areaCode;
         this.cityName = cityName;
         this.password = password;
+        this.admin = admin;
     }
 
     public String getEmail() {
