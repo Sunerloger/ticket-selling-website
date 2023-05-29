@@ -122,5 +122,16 @@
 }
 
 .dropdown-item:hover {
-  background-color: lightblue;
+  text-decoration: underline;
+  background-color: transparent;
+}
+
+/* Set color when dropdown is clicked */
+.dropdown-toggle[aria-expanded="true"].animated-text-custom {
+  color: #dbdbdb;
+}
+
+/* Set color when mouse hovers away */
+.dropdown-toggle.animated-text-custom:hover:not([aria-expanded="true"]) {
+  color: #ffffff;
 }
