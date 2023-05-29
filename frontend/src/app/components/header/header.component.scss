@@ -3,6 +3,9 @@
   font-size: 24px;
   padding-right: 10px;
 }
+.navbar .navbar-nav .nav-link.active {
+  color: white;
+}
 .navbar-brand{
   font-size: 36px;
   font-family: 'Oleo Script';
@@ -30,6 +33,16 @@
 .nav-link {
   color: white;
 }
+.nav-link:active {
+  color:green;
+}
+
+.remove-dropdown-caret::after {
+  display: none !important;
+}
+.remove-dropdown-corners {
+  border-radius: 0;
+}
 
 .navbar-brand-style {
   color: white;
@@ -43,7 +56,7 @@
 }
 
 .custom-animated-text {
-	background: linear-gradient(-45deg, #233166,#ffffff);
+	background: linear-gradient(-45deg, red,#ffffff);
 	background-size: 400% 400%;
 	background-clip: text;
 	-webkit-background-clip: text;
@@ -52,7 +65,7 @@
 }
 
 .animated-text-custom {
-  color: #ebebeb; /* Initial color */
+  color: #dbdbdb; /* Initial color */
   transition: color 0.5s ease; /* Transition duration and easing */
 }
 
