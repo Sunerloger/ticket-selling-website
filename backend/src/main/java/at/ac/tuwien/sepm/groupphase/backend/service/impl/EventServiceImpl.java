@@ -42,10 +42,14 @@ public class EventServiceImpl implements EventService {
     @Override
     public Event create(EventDetailDto event) throws ValidationException {
         LOG.trace("create({})", event);
-        Optional<Event> existingEvent = eventRepository.findById(event.getId());
-        if (existingEvent.isPresent()) {
-            throw new ValidationException("Event with id:" + event.getId() + " already exists");
+        Optional<Event> existingEvent;
+        if (event.getId() != null) {
+            existingEvent = eventRepository.findById(event.getId());
+            if (existingEvent.isPresent()) {
+                throw new ValidationException("Event with id:" + event.getId() + " already exists");
+            }
         }
+
         for (EventDateDto ed : event.getEventDatesLocation()) {
             Optional<HallPlan> existingHallplan = hallPlanRepository.findById(ed.getRoom());
             if (existingHallplan.isEmpty()) {

@@ -38,4 +38,16 @@ VALUES ('FREE', 'SEAT', 1, 1, 1, 1, 1),
        ('RESERVED', 'SEAT', 2, 2, 2, 1, 1),
        ('FREE', 'SEAT', 1, 3, 3, 2, 3);
 
+INSERT INTO Event (id, title, duration, category, description, image, artist)
+VALUES (1, 'Example Event', '02:00', 'Example Category', 'This is an example event description.', 'base64-encoded-image', 'John');
+
+INSERT INTO Event (id, title, duration, category, description, image, artist)
+VALUES (2, 'Rock Night', '03:30', 'Rock', 'Join us for a night of electrifying rock music!', 'base64-encoded-image', 'The Rockers');
+
+INSERT INTO Event_Date (id, date, starting_time, area_code, address, city, hallplan_id, event_id)
+VALUES (1, '2023-05-21', '02:15', 12345, '123 Example Street', 'Example City', 2, 1);
+
+INSERT INTO Event_Date (id, date, starting_time, area_code, address, city, hallplan_id, event_id)
+VALUES (2, '2023-05-22', '02:15', 54321, '404 Example Street', 'Sampleville', 3, 1);
+
 
