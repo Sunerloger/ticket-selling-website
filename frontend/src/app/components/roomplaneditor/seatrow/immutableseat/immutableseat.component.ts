@@ -1,10 +1,15 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PersistedSeat, SeatStatus, SeatType } from 'src/app/dtos/hallplan/hallplan';
 import { Section } from 'src/app/dtos/hallplan/section';
 
 interface Size {
   width: number;
   height: number;
+}
+
+export interface SeatSelectionPayload{
+  seat: PersistedSeat,
+  isSelected: boolean
 }
 
 @Component({
@@ -18,18 +23,33 @@ export class ImmutableseatComponent {
 
   seatTypeEnum = SeatType;
 
+  @Output() seatSelectionChangeEvent = new EventEmitter<SeatSelectionPayload>();
+
   /**
    * If this seat is of type "seat" or "standingSeat" then it toggles its selected status
    */
   handleSeatClick(){
-    this.isSelected = !this.isSelected;
+    const newSelectStatus = !this.isSelected;
+    
+    //update state
+    this.isSelected = newSelectStatus;
+    
+    //emit event
+    this.seatSelectionChangeEvent.emit({
+      seat: this.seat,
+      isSelected: newSelectStatus
+    });
   }
 
-  isReserved(){
+  /**
+   * Returns true if this seat is available for buy/reservation process
+   * @returns false if this seat has status free otherwise true
+   */
+  isAvailable(){
     if(Array.isArray(this.seat.status)){
       return this.seat.status.length > 0;
     }else{
-      return this.seat.status !== SeatStatus.free;
+      return this.seat.status === SeatStatus.free;
     }
   }
 

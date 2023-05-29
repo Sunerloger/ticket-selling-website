@@ -45,6 +45,7 @@
             />
             <!-- Immutable Seat -->
             <app-immutableseat 
+                (seatSelectionChangeEvent)="this.seatSelectionChangeEvent.emit($event)"
                 *ngIf="renderAsImmutable === true" 
                 [seat]="seat"
             />

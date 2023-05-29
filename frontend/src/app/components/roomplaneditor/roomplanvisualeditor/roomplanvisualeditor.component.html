@@ -29,6 +29,7 @@
                     [seatRow]="seatrow"
                     [showRowNr]="this.showRowNr"
                     [showSeatNr]="this.showSeatNr"
+                    (seatSelectionChangeEvent)="this.seatSelectionChangeEvent.emit($event)"
                     (seatRemoval)="this.seatRemovalEvent.emit($event)"
                     (seatRowDeletion)="this.seatRowDeletionEvent.emit($event)"
                     (seatCreationEvent)="onAddSeat($event)"
