@@ -25,6 +25,7 @@
 .navbar-subcontainer {
   display:flex;
   flex-direction: row;
+  gap: 0.9rem;
 }
 
 .header-links-margins {
@@ -85,4 +86,10 @@
 
 .right-item {
   margin-left: auto;
+}
+
+.logo_container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
