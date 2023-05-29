@@ -17,7 +17,7 @@ export class NewsService {
 
 
   /**
-   * Persists news to the backend
+   * Persists news with images to the backend
    *
    * @param news to persist
    * @return an Observable for the created news
@@ -44,8 +44,9 @@ export class NewsService {
 
 
   /**
-   * Get the news with the id "id" stored in the system
+   * Fetch the news with the id "id" stored in the system
    *
+   * @param id The id of the news to fetch
    * @return observable of found news.
    */
   getById(id: number): Observable<News> {

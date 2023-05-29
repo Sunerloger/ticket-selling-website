@@ -36,7 +36,7 @@ export class NewsOverviewComponent implements OnInit {
       error: error => {
         console.error('Error fetching news entries', error);
         const errorMessage = error.status === 0
-          ? 'Is the backend up?'
+          ? 'No connection to server'
           : error.message.message;
         this.notification.error(errorMessage, 'Could not fetch news entries');
       },
@@ -44,7 +44,7 @@ export class NewsOverviewComponent implements OnInit {
   }
 
   /**
-   * Returns true if the authenticated user is an admin
+   * @return Returns true if the authenticated user is an admin
    */
   isAdmin(): boolean {
     return this.authService.isAdmin();
@@ -60,10 +60,16 @@ export class NewsOverviewComponent implements OnInit {
     });
   }
 
+  /**
+   * Formats the date/time of creation of a given news entry as a date string and leaves out the time
+   */
   dateOfCreationAsLocaleDate(entry: AbbreviatedNews): string {
     return new Date(entry.createdAt).toLocaleDateString();
   }
 
+  /**
+   * Formats the date/time of creation of a given news entry as a time string and leaves out the date
+   */
   timeOfCreationAsLocaleTime(entry: AbbreviatedNews): string {
     return new Date(entry.createdAt).toLocaleTimeString();
   }

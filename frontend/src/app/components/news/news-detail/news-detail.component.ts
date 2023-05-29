@@ -12,8 +12,8 @@ import {AuthService} from '../../../services/auth.service';
 })
 export class NewsDetailComponent implements OnInit {
   news: News = {
-    title: 'wrong title',
-    fullText: 'wrong full text',
+    title: 'no title',
+    fullText: '',
     coverImage: null,
     images: [],
   };
@@ -28,46 +28,78 @@ export class NewsDetailComponent implements OnInit {
   ) {
   }
 
+  /**
+   * Loads the data for the selected news entry from the resolver and sets the cover image as the first image in the carousel
+   */
   ngOnInit(): void {
-    this.route.data.subscribe(data => {
+    this.route.data.subscribe({
+      next: data => {
       if (data.news != null) {
         this.news = data.news;
         if (this.news.coverImage != null) {
           this.news.images.unshift(this.news.coverImage);
         }
       }
-      // TODO error
-    });
+    }
+  });
   }
 
+  /**
+   * Sets the currently shown image in the carousel to the next image in the list. If the current image is the last image
+   * in the list, the first image (= cover image) is shown next.
+   */
   nextImage(): void {
     this.selectedIndex = (++this.selectedIndex) % this.news.images.length;
   }
 
+  /**
+   * Sets the currently shown image in the carousel to the previous image in the list. If the current image is the first image
+   * in the list (= cover image), the last image is shown next.
+   */
   previousImage(): void {
     const listLength = this.news.images.length;
     this.selectedIndex = (((--this.selectedIndex) % listLength) + listLength) % listLength;
   }
 
+  /**
+   * Sets the currently shown image in the carousel to image in the list with index 'index'. The given index has to be a
+   * valid index in the list, otherwise, an error is displayed.
+   *
+   * @param index the index of the image in the list, which should be displayed in the carousel
+   */
   setImage(index: number): void {
-    this.selectedIndex = index;
+    if (index < this.news.images.length) {
+      this.selectedIndex = index;
+    } else {
+      this.notification.error('The index of the image could not be found in the given list of images',
+        'The specified image could not be loaded');
+    }
   }
 
+  /**
+   * Formats the date/time of creation of a given news entry as a date string and leaves out the time
+   */
   dateOfCreationAsLocaleDate(): string {
     return new Date(this.news.createdAt).toLocaleDateString();
   }
 
+  /**
+   * Formats the date/time of creation of a given news entry as a time string and leaves out the date
+   */
   timeOfCreationAsLocaleTime(): string {
     return new Date(this.news.createdAt).toLocaleTimeString();
   }
 
   /**
-   * Returns true if the authenticated user is an admin
+   * @return Returns true if the authenticated user is an admin
    */
   isAdmin(): boolean {
     return this.authService.isAdmin();
   }
 
+  /**
+   * Deletes the currently displayed news entry and all its images from the backend
+   */
   public onDelete(): void {
     const observable = this.service.deleteById(this.news.id);
     observable.subscribe({
@@ -78,7 +110,7 @@ export class NewsDetailComponent implements OnInit {
       error: error => {
         console.error(`Error deleting news`, error);
         const errorMessage = error.status === 0
-          ? 'Is the backend up?'
+          ? 'No connection to server'
           : error.message.message;
         this.notification.error(errorMessage, `Could not delete news`);
       }

@@ -31,15 +31,15 @@
            [ngClass]="{'active' : i===selectedIndex}"><i class="fa fa-solid fa-circle indicator-circle"></i></div>
     </div>
   </div>
-  <div class="row d-flex flex-row justify-content-between w-auto mt-5">
+  <div *ngIf="isAdmin() || news.eventId" class="row d-flex flex-row justify-content-between w-auto mt-5">
     <div class="col-auto pt-2">
       <button *ngIf="isAdmin()" type="button" class="btn btn-danger delete-button" (click)="onDelete()">
         Delete
       </button>
     </div>
-    <div *ngIf="news.eventId" class="col-auto pt-2">
-      <button type="button" class="btn btn-secondary event-button" [routerLink]="['/events', news.eventId, 'info']">
-        Tickets
+    <div class="col-auto pt-2">
+      <button *ngIf="news.eventId" type="button" class="btn btn-secondary event-button" [routerLink]="['/events', news.eventId, 'info']">
+        Show Event
       </button>
     </div>
   </div>
