@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
+import java.util.Objects;
+
 public class HallPlanSectionDto {
     private Long id;
 
@@ -124,5 +126,27 @@ public class HallPlanSectionDto {
         }
 
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        HallPlanSectionDto other = (HallPlanSectionDto) o;
+        return Objects.equals(name, other.name)
+            && Objects.equals(color, other.color)
+            && Objects.equals(price, other.price)
+            && Objects.equals(hallPlanId, other.hallPlanId)
+            && Objects.equals(count, other.count);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, color, price, hallPlanId, count);
+    }
+
 
 }

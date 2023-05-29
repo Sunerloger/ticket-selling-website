@@ -1,30 +1,107 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDateDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.xml.bind.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.beans.Expression;
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.List;
+import java.time.LocalDate;
+import java.util.Optional;
 
 @Service
 public class EventServiceImpl implements EventService {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
+    private final HallPlanRepository hallPlanRepository;
 
-    public EventServiceImpl(EventRepository eventRepository, EventMapper eventMapper) {
+    public EventServiceImpl(EventRepository eventRepository, EventMapper eventMapper, HallPlanRepository hallPlanRepository) {
         this.eventRepository = eventRepository;
         this.eventMapper = eventMapper;
+        this.hallPlanRepository = hallPlanRepository;
     }
 
     @Override
-    public Event create(EventDetailDto event) {
+    public Event create(EventDetailDto event) throws ValidationException {
         LOG.trace("create({})", event);
-        return eventRepository.save(eventMapper.eventDetailDtoToEvent(event));
+        Optional<Event> existingEvent;
+        if (event.getId() != null) {
+            existingEvent = eventRepository.findById(event.getId());
+            if (existingEvent.isPresent()) {
+                throw new ValidationException("Event with id:" + event.getId() + " already exists");
+            }
+        }
+
+        for (EventDateDto ed : event.getEventDatesLocation()) {
+            Optional<HallPlan> existingHallplan = hallPlanRepository.findById(ed.getRoom());
+            if (existingHallplan.isEmpty()) {
+                throw new ValidationException("Event can not find place in the Hallplan with id:" + ed.getRoom() + ","
+                    + " because it does not exist");
+            }
+        }
+        Event debug = eventMapper.eventDetailDtoToEvent(event);
+        return eventRepository.save(debug);
     }
+
+    @Override
+    public Page<Event> findAllPagesByDate(int pageIndex) {
+        Pageable pageable = PageRequest.of(pageIndex, 20, Sort.by("title").ascending());
+
+        LOG.debug("Find all event entries by pageable: {}", pageable);
+        return eventRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Event> findAllPagesByDateAndAuthorAndLocation(int pageIndex, LocalDate fromDate, LocalDate toDate, String artist, String location) {
+        Pageable pageable = PageRequest.of(pageIndex, 20, Sort.by("title").ascending());
+        String eventDatesLocation = "eventDatesLocation";
+        Specification<Event> specification = (root, query, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.isTrue(root.get("id"));
+            if (fromDate != null) {
+                predicate = criteriaBuilder.greaterThanOrEqualTo(root.join(eventDatesLocation).get("date"), fromDate);
+            }
+
+            if (toDate != null) {
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.lessThanOrEqualTo(root.join(eventDatesLocation).get("date"), toDate));
+            }
+
+            if (artist != null) {
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.get("artist"), "%" + artist + "%"));
+            }
+
+            if (location != null) {
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.join(eventDatesLocation).get("address"), "%" + location + "%"));
+            }
+
+            return predicate;
+        };
+        return eventRepository.findAll(specification, pageable);
+    }
+
+    @Override
+    public EventDetailDto getEventById(Long id) {
+        LOG.trace("getEventById({})", id);
+        List<Event> events = new ArrayList<>();
+        events.add(eventRepository.getEventById(id));
+        return eventMapper.eventToEventDetailDto(events).get(0);
+    }
+
 }

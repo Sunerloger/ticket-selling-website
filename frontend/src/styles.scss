@@ -9,9 +9,9 @@ body {
 :root {
   --primary-color: #63A5B6;
   --monochromatic: #36889D;
-  --secondary-color: #B67C63;
-  --split-secondary-color-1: #B69163;
-  --split-secondary-color-2: #B66763;
+  --secondary-color: #4679c0;
+  --split-secondary-color-1: #4679c0;
+  --split-secondary-color-2: #4679c0;
   --analog-1: #6B63B6;
   --analog-2: #63B674;
   --triade-1: #B6A563;
@@ -21,7 +21,7 @@ body {
 button.btn.btn-primary {
   background-color: var(--primary-color);
   color: white; // text color
-  border-color: #6c757d;
+  border-color: transparent;
   &:hover {
     box-shadow: inset 0 0 0 20rem var(--monochromatic);
   }
@@ -30,6 +30,7 @@ button.btn.btn-primary {
 button.btn.btn-secondary {
   background-color: var(--secondary-color);
   color: white; // text color
+  border: none;
   &:hover {
     box-shadow: inset 0 0 0 20rem var(--split-secondary-color-2);
   }
@@ -37,4 +38,15 @@ button.btn.btn-secondary {
 
 .primary {
   color: var(--primary-color);
+}
+
+
+.logo-fontstyle {
+  font-family: 'OleoScript', cursive;
+  font-size: 36px;
+}
+
+@font-face {
+  font-family: 'OleoScript';
+  src: url('./assets/OleoScript-Regular.ttf') format('truetype');
 }

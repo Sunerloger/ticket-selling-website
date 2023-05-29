@@ -2,6 +2,8 @@ import { Component, EventEmitter, Output } from '@angular/core';
 
 export enum ToolbarItem {
   detailedView,
+  showSeatRowNr,
+  showSeatNr
 }
 
 @Component({

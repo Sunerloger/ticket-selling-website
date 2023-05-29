@@ -106,5 +106,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         return Jwts.parserBuilder().setSigningKey(signingKey).build()
             .parseClaimsJws(token.replace(securityProperties.getAuthTokenPrefix(), ""))
             .getBody();
+
     }
 }

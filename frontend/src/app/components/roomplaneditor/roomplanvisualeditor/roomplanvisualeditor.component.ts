@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PersistedHallplan } from 'src/app/dtos/hallplan/hallplan';
 import { SeatCreationEvent, SeatRemovalPayload } from '../seatrow/seatrow.component';
 import { ToolbarItem } from '../toolbar/toolbar.component';
+import { SeatSelectionPayload } from '../seatrow/immutableseat/immutableseat.component';
 
 @Component({
   selector: 'app-roomplanvisualeditor',
@@ -9,18 +10,30 @@ import { ToolbarItem } from '../toolbar/toolbar.component';
   styleUrls: ['./roomplanvisualeditor.component.scss']
 })
 export class RoomplanvisualeditorComponent {
+  @Input() renderAsImmutable = false;
   @Input() roomplan: PersistedHallplan;
 
   @Output() addRowEvent = new EventEmitter<{ rowNr: number }>();
   @Output() addSeatEvent = new EventEmitter<SeatCreationEvent>();
   @Output() seatRowDeletionEvent = new EventEmitter<number>();
   @Output() seatRemovalEvent = new EventEmitter<SeatRemovalPayload>();
+  @Output() seatSelectionChangeEvent = new EventEmitter<SeatSelectionPayload>();
 
   isDetailedView = false;
+  showRowNr = false;
+  showSeatNr = false;
 
   handleToolbarItemClick(clickedItem: ToolbarItem) {
-    if (clickedItem === ToolbarItem.detailedView) {
-      this.isDetailedView = !this.isDetailedView;
+    switch(clickedItem){
+      case ToolbarItem.detailedView:
+        this.isDetailedView = !this.isDetailedView;
+        break;
+      case ToolbarItem.showSeatRowNr:
+        this.showRowNr = !this.showRowNr;
+        break;
+      case ToolbarItem.showSeatNr:
+        this.showSeatNr = !this.showSeatNr;
+        break;
     }
   }
 

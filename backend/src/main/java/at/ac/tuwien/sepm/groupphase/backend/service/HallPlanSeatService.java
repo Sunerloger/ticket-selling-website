@@ -1,7 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatBulkDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatDto;
+import jakarta.transaction.Transactional;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatBulkDto;
+import jakarta.xml.bind.ValidationException;
 
 import java.util.List;
 
@@ -38,7 +40,7 @@ public interface HallPlanSeatService {
      * @param seatDto the seatDto containing the updated information
      * @return the updated seatDto
      */
-    HallPlanSeatDto updateSeat(HallPlanSeatDto seatDto);
+    HallPlanSeatDto updateSeat(HallPlanSeatDto seatDto) throws ValidationException;
 
     /**
      * Deletes a seat by its ID.
@@ -46,6 +48,19 @@ public interface HallPlanSeatService {
      * @param seatId the ID of the seat to delete
      */
     void deleteSeat(Long seatId);
+
+    boolean doesSeatExist(Long seatId);
+
+    boolean purchaseReservedSeat(Long seatId);
+
+    boolean tryReserveSeat(Long seatId);
+
+    @Transactional
+    boolean cancelReservation(Long seatId);
+
+    //TODO: Update This Method to support new Database Model (standing seats)
+    @Transactional
+    boolean freePurchasedSeat(Long seatId);
 
     /**
      * Adds multiple seats to the hall plan.

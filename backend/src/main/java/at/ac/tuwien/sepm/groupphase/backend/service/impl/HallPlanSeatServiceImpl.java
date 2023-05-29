@@ -8,14 +8,21 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSeatRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRowRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanSeatService;
+import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatStatus;
+import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatType;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.LockModeType;
+import jakarta.transaction.Transactional;
+import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -63,9 +70,16 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
     }
 
     @Override
-    public HallPlanSeatDto updateSeat(HallPlanSeatDto seatDto) {
+    public HallPlanSeatDto updateSeat(HallPlanSeatDto seatDto) throws ValidationException {
         LOGGER.debug("Update seat by ID");
         HallPlanSeat seat = seatMapper.toEntity(seatDto);
+
+        List<HallPlanSeat> existingSeat = seatRepository.findAllBySeatRowIdAndSeatNr(seatDto.getSeatrowId(), seatDto.getSeatNr());
+
+        if (!existingSeat.isEmpty() && existingSeat.get(0) != null && (!Objects.equals(seatDto.getSeatNr(), existingSeat.get(0).getSeatNr()))) {
+            throw new ValidationException("SeatRow with seatrowId " + seatDto.getSeatrowId() + " and seatNr " + seatDto.getSeatNr() + " already exists");
+        }
+
         seatRepository.save(seat);
         return seatMapper.toDto(seat);
     }
@@ -94,6 +108,98 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
             seatRepository.save(seatMapper.toEntity(seat));
         }
         return bulkDto.getSeats();
+    }
+
+    //TODO: Update This Method to support new Database Model (standing seats)
+    @Override
+    public boolean doesSeatExist(Long seatId) {
+        Optional<HallPlanSeat> optionalHallPlanSeat = seatRepository.getSeatById(seatId);
+        if (optionalHallPlanSeat.isEmpty()) {
+            return false;
+        }
+        HallPlanSeat seat = optionalHallPlanSeat.get();
+        if (HallPlanSeatType.VACANT_SEAT.equals(seat.getType())) {
+            return false;
+        }
+        return true;
+    }
+
+    //TODO: Update This Method to support new Database Model (standing seats)
+    @Override
+    @Transactional
+    public boolean purchaseReservedSeat(Long seatId) {
+        Optional<HallPlanSeat> optionalHallPlanSeat = seatRepository.getSeatById(seatId);
+        if (optionalHallPlanSeat.isEmpty()) {
+            return false;
+        }
+        HallPlanSeat seat = optionalHallPlanSeat.get();
+        if (HallPlanSeatType.VACANT_SEAT.equals(seat.getType())) {
+            return false;
+        }
+        seat.setStatus(HallPlanSeatStatus.OCCUPIED);
+        seatRepository.save(seat);
+        return true;
+    }
+
+    //TODO: Update This Method to support new Database Model (standing seats)
+    @Override
+    @Transactional
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    public boolean tryReserveSeat(Long seatId) {
+        Optional<HallPlanSeat> optionalHallPlanSeat = seatRepository.getSeatById(seatId);
+        if (optionalHallPlanSeat.isEmpty()) {
+            return false;
+        }
+        HallPlanSeat seat = optionalHallPlanSeat.get();
+        if (HallPlanSeatType.VACANT_SEAT.equals(seat.getType())) {
+            return false;
+        }
+        if (!HallPlanSeatStatus.FREE.equals(seat.getStatus())) {
+            return false;
+        }
+        seat.setStatus(HallPlanSeatStatus.RESERVED);
+        seatRepository.save(seat);
+        return true;
+    }
+
+    //TODO: Update This Method to support new Database Model (standing seats)
+    @Override
+    @Transactional
+    public boolean cancelReservation(Long seatId) {
+        Optional<HallPlanSeat> optionalHallPlanSeat = seatRepository.getSeatById(seatId);
+        if (optionalHallPlanSeat.isEmpty()) {
+            return false;
+        }
+        HallPlanSeat seat = optionalHallPlanSeat.get();
+        if (HallPlanSeatType.VACANT_SEAT.equals(seat.getType())) {
+            return false;
+        }
+        if (!HallPlanSeatStatus.RESERVED.equals(seat.getStatus())) {
+            return false;
+        }
+        seat.setStatus(HallPlanSeatStatus.FREE);
+        seatRepository.save(seat);
+        return true;
+    }
+
+    //TODO: Update This Method to support new Database Model (standing seats)
+    @Override
+    @Transactional
+    public boolean freePurchasedSeat(Long seatId) {
+        Optional<HallPlanSeat> optionalHallPlanSeat = seatRepository.getSeatById(seatId);
+        if (optionalHallPlanSeat.isEmpty()) {
+            return false;
+        }
+        HallPlanSeat seat = optionalHallPlanSeat.get();
+        if (HallPlanSeatType.VACANT_SEAT.equals(seat.getType())) {
+            return false;
+        }
+        if (!HallPlanSeatStatus.OCCUPIED.equals(seat.getStatus())) {
+            return false;
+        }
+        seat.setStatus(HallPlanSeatStatus.FREE);
+        seatRepository.save(seat);
+        return true;
     }
 
 }

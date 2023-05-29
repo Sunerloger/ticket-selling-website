@@ -16,6 +16,9 @@ public interface HallPlanSeatRepository extends JpaRepository<HallPlanSeat, Long
 
     List<HallPlanSeat> findAllBySection(Long section);
 
+    @Query("SELECT s FROM HallPlanSeat s WHERE s.seatrowId = :seatRowId AND s.seatNr = :seatNr")
+    List<HallPlanSeat> findAllBySeatRowIdAndSeatNr(@Param("seatRowId") Long seatRowId, @Param("seatNr") Long seatNr);
+
     @Query("SELECT s FROM HallPlanSeat s JOIN FETCH s.section WHERE s.id = :id")
     Optional<HallPlanSeat> getSeatById(@Param("id") Long id);
 }

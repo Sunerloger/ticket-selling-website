@@ -4,19 +4,21 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.security.PermitAll;
+import jakarta.validation.Valid;
+import jakarta.xml.bind.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 
 @RestController
@@ -39,8 +41,12 @@ public class RegisterEndpoint {
     @PostMapping
     @PermitAll
     @Operation(summary = "Register a new user")
-    public UserRegisterDto post(@RequestBody UserRegisterDto userRegisterDto) {
+    public UserRegisterDto post(@Valid @RequestBody UserRegisterDto userRegisterDto) {
         LOGGER.info("POST: {}", userRegisterDto);
-        return userMapper.entityToDto(userService.register(userMapper.dtoToEntity(userRegisterDto)));
+        try {
+            return userMapper.entityToDto(userService.register(userMapper.dtoToEntity(userRegisterDto)));
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
     }
 }
