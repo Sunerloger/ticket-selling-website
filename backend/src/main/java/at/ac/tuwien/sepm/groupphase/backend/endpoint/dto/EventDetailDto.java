@@ -1,21 +1,25 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
 public class EventDetailDto {
     private Long id;
     private String title;
-    private List<LocalDate> date;
-    private LocalTime startTime;
-    private String cityname;
-    private int areaCode;
+    private List<EventDateDto> eventDatesLocation;
     private LocalTime duration;
     private String category;
-    private String address;
     private String description;
     private String image;
+    private String artist;
+
+    public List<EventDateDto> getEventDatesLocation() {
+        return eventDatesLocation;
+    }
+
+    public void setEventDatesLocation(List<EventDateDto> eventDatesLocation) {
+        this.eventDatesLocation = eventDatesLocation;
+    }
 
     public Long getId() {
         return id;
@@ -31,38 +35,6 @@ public class EventDetailDto {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public List<LocalDate> getDate() {
-        return date;
-    }
-
-    public void setDate(List<LocalDate> date) {
-        this.date = date;
-    }
-
-    public LocalTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getCityname() {
-        return cityname;
-    }
-
-    public void setCityname(String cityname) {
-        this.cityname = cityname;
-    }
-
-    public int getAreaCode() {
-        return areaCode;
-    }
-
-    public void setAreaCode(int areaCode) {
-        this.areaCode = areaCode;
     }
 
     public LocalTime getDuration() {
@@ -81,14 +53,6 @@ public class EventDetailDto {
         this.category = category;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -103,6 +67,14 @@ public class EventDetailDto {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getArtist() {
+        return artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
     }
 }
 

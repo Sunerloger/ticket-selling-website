@@ -295,7 +295,7 @@ public class HallPlanEndpoint {
     @Secured("ROLE_ADMIN")
     @PutMapping("{hallPlanId}/seatrows/{seatRowId}/seats/{id}")
     @Operation(summary = "Update a seat by id in a seat row")
-    public ResponseEntity<HallPlanSeatDto> updateSeat(@PathVariable Long hallPlanId, @PathVariable Long seatRowId, @PathVariable Long id, @Valid @RequestBody HallPlanSeatDto seatDto) {
+    public ResponseEntity<HallPlanSeatDto> updateSeat(@PathVariable Long hallPlanId, @PathVariable Long seatRowId, @PathVariable Long id, @Valid @RequestBody HallPlanSeatDto seatDto) throws ValidationException {
         LOGGER.info("PUT /api/v1/hallplans/{}/seatrows/{}/seats/{}", hallPlanId, seatRowId, id);
         seatDto.setId(id);
         seatDto.setSeatrowId(seatRowId);
