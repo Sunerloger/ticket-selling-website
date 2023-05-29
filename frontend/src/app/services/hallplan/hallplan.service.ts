@@ -3,8 +3,8 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import { Globals } from '../../global/globals';
 import { PersistedHallplan, PersistedSeat, PersistedSeatRow, Seat, SeatRow } from 'src/app/dtos/hallplan/hallplan';
 import { PersistedSection, Section } from 'src/app/dtos/hallplan/section';
-import {Observable} from "rxjs";
-import {AbbreviatedHallplan} from "../../dtos/hallplan/abbreviatedHallplan";
+import {Observable} from 'rxjs';
+import {AbbreviatedHallplan} from '../../dtos/hallplan/abbreviatedHallplan';
 
 
 @Injectable({

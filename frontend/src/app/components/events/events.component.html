@@ -27,14 +27,20 @@
         <div *ngIf="eventForm.submitted && eventForm.controls['address'].invalid" class="text-danger">Address is required.</div>
         <label for="room">Room: <span class="text-danger">*</span></label>
         <input type="number" class="form-control" id="room" name="room" [(ngModel)]="event.eventDatesLocation[i].room" required>
-        <div class="form-group" infinite-scroll
-             [infiniteScrollDistance]="distance"
-             [infiniteScrollThrottle]="throttle"
-             (scrolled)="onScroll()">
-          <label for="dropdown">Roomplan:</label>
-          <select size="3" class="form-control" id="dropdown" name="dropdown" [(ngModel)]="event.eventDatesLocation[i].room" (click)="openDropdownRoomplan()" >
-            <option *ngFor="let roomplan of roomplans" [value]="roomplan.optionValue">{{ roomplan.name }} </option>
-          </select>
+        <div class="form-group">
+          <label for="hallplan">Hallplan:</label>
+          <input
+            type="text"
+            class="form-control"
+            name="hallplan"
+            id="hallplan"
+            [(ngModel)]="event.eventDatesLocation[i].room"
+            (click)="openDropdownRoomplan()"
+            (change)="fetchOptionsRoomplan()"
+          />
+          <ul class="dropdown-menu">
+            <li *ngFor="let roomplan of roomplans">{{ roomplan.name }}</li>
+          </ul>
         </div>
         <div *ngIf="eventForm.submitted && eventForm.controls['room'].invalid" class="text-danger">Room is required.</div>
         <button *ngIf="i !== 0" type="button" class="btn btn-danger custom-button-margin" (click)="deleteEntry(i)">

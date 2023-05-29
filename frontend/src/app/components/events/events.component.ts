@@ -57,6 +57,7 @@ export class EventsComponent implements OnInit {
       description: [''],
       image: ['']
     });
+    this.fetchOptionsRoomplan();
   }
 
   onFileSelected(event: any) {
@@ -125,10 +126,6 @@ export class EventsComponent implements OnInit {
   }
   openDropdownRoomplan() {
     console.log('Roomplans: '+this.roomplans);
-    this.fetchOptionsRoomplan();
-  }
-  onScroll(): void {
-    this.currentPage++;
     this.fetchOptionsRoomplan();
   }
 }

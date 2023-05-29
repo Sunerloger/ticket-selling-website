@@ -87,7 +87,7 @@ public class EventTest implements TestData {
         assertThrows(ConstraintViolationException.class, () -> eventRepository.save(event));
     }
 
-    
+
 
     @Test
     public void testSaveInvalidEventRoomThrows() throws ConstraintViolationException {
