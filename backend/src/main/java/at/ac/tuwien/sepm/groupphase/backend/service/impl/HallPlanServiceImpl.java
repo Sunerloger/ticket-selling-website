@@ -151,7 +151,6 @@ public class HallPlanServiceImpl implements HallPlanService {
     @Override
     public List<HallPlanSection> getAllSections() {
         LOGGER.debug("Get all hall plan sections");
-        List<HallPlanSection> sections = hallPlanRepository.findAllSectionsByHallPlanId(1L);
         return hallPlanSectionRepository.findAll();
     }
 

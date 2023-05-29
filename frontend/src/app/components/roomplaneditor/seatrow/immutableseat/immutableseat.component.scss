@@ -1,0 +1,63 @@
+.container{
+    padding: 0.1rem;
+}
+
+/*
+    Seat & Vacant Seat Common
+*/
+.seat, .vacant_seat{
+    padding: 0.1rem;
+    border: 3px solid;
+    box-sizing: content-box;
+    border-radius: 7px;
+
+    width: 30px;
+    height: 30px;
+}
+
+/*
+    Seat
+*/
+.seat {
+    margin: 0;
+    background-color: rgb(240, 240, 240);
+}
+
+.seat:not([disabled]):hover{
+   background-color: lightgrey;
+}
+
+.seat_number{
+    font-size: 0.8rem;
+}
+
+/* 
+    StandingSeat
+*/
+.standing_seat {
+    border-radius: 5px;
+    display: flex;
+    justify-content: left;
+
+    min-width: 2.3rem;
+    /* ensure that inline styling does not destroy layout */
+    min-height: 1.5rem;
+    max-height: 20rem;
+    max-width: 35rem;
+}
+
+.capacity_display {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    font-size: 1.15rem;
+}
+
+/*
+    Vacant Seat
+*/
+.vacant_seat{
+    width: 2rem;
+    border-color: transparent;
+}
