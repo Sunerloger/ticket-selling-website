@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 import java.beans.Expression;
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.List;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -89,4 +91,13 @@ public class EventServiceImpl implements EventService {
         };
         return eventRepository.findAll(specification, pageable);
     }
+
+    @Override
+    public EventDetailDto getEventById(Long id) {
+        LOG.trace("getEventById({})", id);
+        List<Event> events = new ArrayList<>();
+        events.add(eventRepository.getEventById(id));
+        return eventMapper.eventToEventDetailDto(events).get(0);
+    }
+
 }

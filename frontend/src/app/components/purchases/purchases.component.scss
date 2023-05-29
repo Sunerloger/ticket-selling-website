@@ -1,0 +1,36 @@
+.card-header {
+  padding-bottom: 5px;
+}
+
+.card-headline {
+  color: black;
+  font-size: 36px;
+}
+
+.card-border {
+  color: black;
+  border-color: transparent;
+}
+
+.form-group {
+  font-size: 15px;
+  color: black;
+}
+
+.purchase {
+  display: flex;
+  justify-content: space-between;
+}
+
+.other-info {
+  text-align: right;
+}
+
+.purchase{
+  margin-bottom: 1rem;
+
+}
+
+.billing-info > button {
+  margin-top: 0.3rem;
+}
