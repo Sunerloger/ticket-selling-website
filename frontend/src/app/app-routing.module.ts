@@ -9,10 +9,11 @@ import {RegisterComponent} from './components/register/register.component';
 import {NewsCreateComponent} from './components/news/news-create/news-create.component';
 import {NewsOverviewComponent} from './components/news/news-overview/news-overview.component';
 import {AdminRouteGuard} from './guards/admin-route.guard';
-import {RoomplaneditorComponent} from './components/roomplaneditor/roomplaneditor.component';
 import {EditComponent} from './components/edit/edit.component';
 import {NewsDetailComponent} from './components/news/news-detail/news-detail.component';
 import {AdminBlockUnblockComponent} from './components/admin-block-unblock/admin-block-unblock.component';
+import { RoomplaneditorComponent } from './components/roomplaneditor/roomplaneditor.component';
+import {EventOverviewComponent} from './components/event-overview/event-overview.component';
 
 
 const routes: Routes = [
@@ -36,8 +37,9 @@ const routes: Routes = [
   {path: 'edit', component: EditComponent},
   {path: 'roomplan/:id/edit', component: RoomplaneditorComponent},
   {path: 'hallplans/:id/edit', component: RoomplaneditorComponent},
-  {path: '**', redirectTo: 'news'}
-
+  {path: '**', redirectTo: 'news'},
+  {path: 'hallplans/:id/edit', component: RoomplaneditorComponent },
+    {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
 ];
 
 

@@ -20,27 +20,26 @@ import {ToastrModule} from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgOptimizedImage} from '@angular/common';
 import {InfiniteScrollModule} from 'ngx-infinite-scroll';
-import {NewsDetailComponent} from './components/news/news-detail/news-detail.component';
-import {TextareaAutoresizeDirective} from './directives/textarea-autoresize.directive';
-import {RoomplaneditorComponent} from './components/roomplaneditor/roomplaneditor.component';
-import {
-  RoomplanvisualeditorComponent
-} from './components/roomplaneditor/roomplanvisualeditor/roomplanvisualeditor.component';
-import {SeatrowComponent} from './components/roomplaneditor/seatrow/seatrow.component';
-import {ContextmenuComponent} from './components/roomplaneditor/seatrow/contextmenu/contextmenu.component';
-import {ToolbarComponent} from './components/roomplaneditor/toolbar/toolbar.component';
-import {AddrowbtnComponent} from './components/roomplaneditor/seatrow/addrowbtn/addrowbtn.component';
-import {SeatComponent} from './components/roomplaneditor/seatrow/seat/seat.component';
-import {SectionmanagerComponent} from './components/roomplaneditor/sectionmanager/sectionmanager.component';
-import {
-  CreateSectionComponent
-} from './components/roomplaneditor/sectionmanager/create-section/create-section.component';
-import {
-  ManageSectionComponent
-} from './components/roomplaneditor/sectionmanager/manage-section/manage-section.component';
+
 import {EditComponent} from './components/edit/edit.component';
-import {EditableSectionComponent}
+
+import { NewsDetailComponent } from './components/news/news-detail/news-detail.component';
+import { TextareaAutoresizeDirective } from './directives/textarea-autoresize.directive';
+import { RoomplaneditorComponent } from './components/roomplaneditor/roomplaneditor.component';
+import { RoomplanvisualeditorComponent } from './components/roomplaneditor/roomplanvisualeditor/roomplanvisualeditor.component';
+import { SeatrowComponent } from './components/roomplaneditor/seatrow/seatrow.component';
+import { ContextmenuComponent } from './components/roomplaneditor/seatrow/contextmenu/contextmenu.component';
+import { ToolbarComponent } from './components/roomplaneditor/toolbar/toolbar.component';
+import { AddrowbtnComponent } from './components/roomplaneditor/seatrow/addrowbtn/addrowbtn.component';
+import { SeatComponent } from './components/roomplaneditor/seatrow/seat/seat.component';
+import { SectionmanagerComponent } from './components/roomplaneditor/sectionmanager/sectionmanager.component';
+import { CreateSectionComponent } from './components/roomplaneditor/sectionmanager/create-section/create-section.component';
+import { ManageSectionComponent } from './components/roomplaneditor/sectionmanager/manage-section/manage-section.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { EditableSectionComponent }
   from './components/roomplaneditor/sectionmanager/manage-section/editable-section/editable-section.component';
+import { EventOverviewComponent } from './components/event-overview/event-overview.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import {AdminBlockUnblockComponent} from './components/admin-block-unblock/admin-block-unblock.component';
 
 @NgModule({
@@ -70,6 +69,7 @@ import {AdminBlockUnblockComponent} from './components/admin-block-unblock/admin
     EditComponent,
     EditableSectionComponent,
     AdminBlockUnblockComponent,
+    EventOverviewComponent,
   ],
   imports: [
     BrowserModule,
@@ -81,6 +81,9 @@ import {AdminBlockUnblockComponent} from './components/admin-block-unblock/admin
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
     NgOptimizedImage,
+    InfiniteScrollModule,
+    BsDatepickerModule,
+    MatPaginatorModule,
     InfiniteScrollModule,
   ],
   providers: [httpInterceptorProviders],
