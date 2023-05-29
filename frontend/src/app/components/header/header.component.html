@@ -17,6 +17,18 @@
     <div class="navbar-subcontainer" style="margin-left:2rem">
       <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()" routerLink="/news"
         routerLinkActive="active">News</a>
+
+      <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()"
+         routerLink="/cart"
+         routerLinkActive="active">Cart</a>
+
+      <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()"
+         routerLink="/reservations"
+         routerLinkActive="active">Reservations</a>
+
+      <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()"
+         routerLink="/purchases"
+         routerLinkActive="active">Purchases</a>
     </div>
     <div class="navbar-subcontainer">
       <a class="nav-link animated-text-custom" *ngIf="!authService.isLoggedIn()" routerLink="/register"
@@ -29,7 +41,7 @@
         <a class="dropdown-toggle dropdown-toggle-no-caret nav-link animated-text-custom remove-dropdown-caret w-100"
           type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false"
           *ngIf="authService.getUserRole() === 'ADMIN'">Administration</a>
-        <div class="dropdown-menu dropdown-menu-right remove-dropdown-corners w-100"
+        <div class="dropdown-menu dropdown_menu dropdown-menu-right remove-dropdown-corners w-100"
           aria-labelledby="dropdownMenuButton">
           <a class="dropdown-item" routerLink="/hallplans/manage">HallPlan
             Manager </a>
