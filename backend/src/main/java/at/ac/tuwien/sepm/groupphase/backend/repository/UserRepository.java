@@ -20,6 +20,7 @@ public class UserRepository {
     }
 
     public ApplicationUser findUserByEmail(String email) {
+
         if (email.equals(user.getEmail())) {
             return user;
         }

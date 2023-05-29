@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
-
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserCreateDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.time.LocalDate;
 
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_ROLES;
@@ -36,7 +35,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class UserRegisterEndpointTest {
+public class AdminCreateEndpointTest {
+
 
     @Autowired
     private MockMvc mockMvc;
@@ -56,19 +56,20 @@ public class UserRegisterEndpointTest {
     @Autowired
     private SecurityProperties securityProperties;
 
-    static final String BASE_PATH = "/api/v1/register";
+    static final String BASE_PATH = "/api/v1/admin";
 
 
     private final ApplicationUser applicationUser =
-        new ApplicationUser("martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure", false,false);
+        new ApplicationUser("marty@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure", false,
+            false);
 
 
     @Transactional
     @Test
     public void givenOneApplicationuser_whenSave_UserIsCreated() throws Exception {
 
-        UserRegisterDto userRegisterDto = userMapper.entityToDto(applicationUser);
-        String body = objectMapper.writeValueAsString(userRegisterDto);
+        UserCreateDto userCreateDto = userMapper.entityToUserCreateDto(applicationUser);
+        String body = objectMapper.writeValueAsString(userCreateDto);
 
         MvcResult mvcResult = this.mockMvc.perform(post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
