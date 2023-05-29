@@ -9,6 +9,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSeatRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRowRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanSeatService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.xml.bind.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -63,9 +65,16 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
     }
 
     @Override
-    public HallPlanSeatDto updateSeat(HallPlanSeatDto seatDto) {
+    public HallPlanSeatDto updateSeat(HallPlanSeatDto seatDto) throws ValidationException {
         LOGGER.debug("Update seat by ID");
         HallPlanSeat seat = seatMapper.toEntity(seatDto);
+
+        List<HallPlanSeat> existingSeat = seatRepository.findAllBySeatRowIdAndSeatNr(seatDto.getSeatrowId(), seatDto.getSeatNr());
+
+        if (!existingSeat.isEmpty() && existingSeat.get(0) != null && (!Objects.equals(seatDto.getSeatNr(), existingSeat.get(0).getSeatNr()))) {
+            throw new ValidationException("SeatRow with seatrowId " + seatDto.getSeatrowId() + " and seatNr " + seatDto.getSeatNr() + " already exists");
+        }
+
         seatRepository.save(seat);
         return seatMapper.toDto(seat);
     }

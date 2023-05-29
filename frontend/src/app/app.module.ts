@@ -36,6 +36,7 @@ import { EditableSectionComponent }
   from './components/roomplaneditor/sectionmanager/manage-section/editable-section/editable-section.component';
 import { EventOverviewComponent } from './components/event-overview/event-overview.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { HallplanManagerComponent } from './components/hallplan-manager/hallplan-manager.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     ManageSectionComponent,
     EditableSectionComponent,
     EventOverviewComponent,
+    HallplanManagerComponent,
   ],
   imports: [
     BrowserModule,

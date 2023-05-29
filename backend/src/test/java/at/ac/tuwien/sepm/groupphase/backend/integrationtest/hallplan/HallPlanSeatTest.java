@@ -68,7 +68,7 @@ public class HallPlanSeatTest {
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    public void testAddSeat() throws Exception {
+    public void givenOneSeat_WhenPost_ThenCreateSeat() throws Exception {
         // Create a HallPlanSeatDto for the request body
         HallPlanSeatDto seatDto = new HallPlanSeatDto();
         seatDto.setId(SEAT_ID);
@@ -97,7 +97,7 @@ public class HallPlanSeatTest {
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    public void testDeleteSeat() throws Exception {
+    public void givenNothing_WhenDelete_ThenDeleteSeatFromSystem() throws Exception {
         // Perform DELETE request
         mockMvc.perform(MockMvcRequestBuilders.delete(BASE_URL + HALL_PLAN_ID + "/seatrows/" + SEAT_ROW_ID + "/seats/" + SEAT_ID))
             .andExpect(status().isNoContent());
@@ -109,7 +109,7 @@ public class HallPlanSeatTest {
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN", "USER"})
-    public void testUpdateSeat() throws Exception {
+    public void givenOneSeat_WhenPut_ThenUpdateSeatInSystem() throws Exception {
 
         // Create a HallPlanSeatDto for the request body
         HallPlanSeatDto seatDto = new HallPlanSeatDto();
