@@ -6,7 +6,6 @@ import {ToastrService} from 'ngx-toastr';
 import {EventDate} from 'src/app/dtos/eventDate';
 import {AbbreviatedHallplan} from '../../dtos/hallplan/abbreviatedHallplan';
 import {HallplanService} from '../../services/hallplan/hallplan.service';
-import {AbbreviatedEvent} from "../../dtos/abbreviatedEvents";
 
 @Component({
   selector: 'app-events',

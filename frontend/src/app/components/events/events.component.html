@@ -32,7 +32,7 @@
              [infiniteScrollThrottle]="throttle"
              (scrolled)="onScroll()">
           <label for="dropdown">Roomplan:</label>
-          <select class="form-control" id="dropdown" name="dropdown" [(ngModel)]="event.eventDatesLocation[i].room" (click)="openDropdownRoomplan()" >
+          <select size="3" class="form-control" id="dropdown" name="dropdown" [(ngModel)]="event.eventDatesLocation[i].room" (click)="openDropdownRoomplan()" >
             <option *ngFor="let roomplan of roomplans" [value]="roomplan.optionValue">{{ roomplan.name }} </option>
           </select>
         </div>

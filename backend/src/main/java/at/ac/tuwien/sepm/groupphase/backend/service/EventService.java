@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import jakarta.xml.bind.ValidationException;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;
@@ -13,7 +14,7 @@ public interface EventService {
      * @param event the event to create
      * @return the created event
      */
-    Event create(EventDetailDto event);
+    Event create(EventDetailDto event) throws ValidationException;
 
     /**
      * Finds all pages of events sorted by Date.

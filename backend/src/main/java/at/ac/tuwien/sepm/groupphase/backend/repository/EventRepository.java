@@ -24,5 +24,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @NonNull
     Page<Event> findAll(@NonNull  Specification<Event> specification, @NonNull Pageable pageable);
+
+    Event findById(long id);
 }
 
