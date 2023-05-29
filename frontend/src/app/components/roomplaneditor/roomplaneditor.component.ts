@@ -309,7 +309,7 @@ export class RoomplaneditorComponent implements OnInit {
             break;
           case SeatType.standingSeat:
             newSeats.push(
-              await this.createEmptySeat(type, 1, amountSeat)
+              await this.createEmptySeat(type, 1, 1, amountSeat)
             );
             break;
           default:
@@ -335,7 +335,7 @@ export class RoomplaneditorComponent implements OnInit {
             break;
           case SeatType.standingSeat:
             newSeats.push(
-              await this.createEmptySeat(type, initialSeatNr, amountSeat)
+              await this.createEmptySeat(type, initialOrderNr, initialSeatNr, amountSeat)
             );
             break;
           default:
