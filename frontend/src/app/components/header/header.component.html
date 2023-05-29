@@ -25,6 +25,18 @@
 
       <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()"
         routerLink="/message" routerLinkActive="active">Message</a>
+
+      <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()"
+         routerLink="/cart"
+         routerLinkActive="active">Cart</a>
+
+      <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()"
+         routerLink="/reservations"
+         routerLinkActive="active">Reservations</a>
+
+      <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()"
+         routerLink="/purchases"
+         routerLinkActive="active">Purchases</a>
     </div>
     <div class="navbar-subcontainer">
       <a class="nav-link animated-text-custom" *ngIf="!authService.isLoggedIn()"
