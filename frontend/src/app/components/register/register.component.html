@@ -18,7 +18,7 @@
               <label for="email">Email</label>
               <input type="email" class="form-control"
                      id="email" name="email" [(ngModel)]="user.email" #email="ngModel" required
-                     pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$">
+                     pattern="^[a-zA-Z0-9\_\.\+\-\ äöüÄÖÜ]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$">
               <div *ngIf="registerForm.submitted &&registerForm.controls['email'].invalid" class="text-danger">
                 <span class="validation-info"
                       *ngIf="email.errors?.required">
@@ -34,7 +34,7 @@
             <div class="form-group"
                  [class.has-error]="firstName.invalid && firstName.touched">
               <label for="firstName" class="control-label">First Name</label>
-              <input type="text" class="form-control" id="firstName" name="firstName" pattern="[A-Za-z]*"
+              <input type="text" class="form-control" id="firstName" name="firstName" pattern="[A-Za-zäöüÄÖÜ]*"
                      [(ngModel)]="user.firstName"
                      #firstName="ngModel" required>
               <div *ngIf="registerForm.submitted &&registerForm.controls['firstName'].invalid" class="text-danger">
@@ -53,7 +53,7 @@
             <div class="form-group"
                  [class.has-error]="lastName.invalid && lastName.touched">
               <label for="lastName">Last Name</label>
-              <input type="text" class="form-control" id="lastName" name="lastName" pattern="[A-Za-z]*"
+              <input type="text" class="form-control" id="lastName" name="lastName" pattern="[A-Za-zäöüÄÖÜ]*"
                      [(ngModel)]="user.lastName"
                      #lastName="ngModel" required>
               <div *ngIf="registerForm.submitted &&registerForm.controls['lastName'].invalid" class="text-danger">Last
@@ -124,7 +124,7 @@
             <div class="form-group"
                  [class.has-error]="cityName.invalid && cityName.touched">
               <label for="cityName">CityName</label>
-              <input type="text" class="form-control" id="cityName" name="cityName" pattern="[A-Za-z]+"
+              <input type="text" class="form-control" id="cityName" name="cityName" pattern="[A-Za-zäöüÄÖÜ]+"
                      [(ngModel)]="user.cityName"
                      #cityName="ngModel" required>
               <div *ngIf="registerForm.submitted &&registerForm.controls['cityName'].invalid" class="text-danger">City
