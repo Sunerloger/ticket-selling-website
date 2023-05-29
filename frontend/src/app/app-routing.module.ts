@@ -26,6 +26,7 @@ import { HallplanManagerComponent } from './components/hallplan-manager/hallplan
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
+  {path: 'events', component: EventOverviewComponent},
   {path: 'login', component: LoginComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'roomplancart', component: RoomplanCartComponent},
