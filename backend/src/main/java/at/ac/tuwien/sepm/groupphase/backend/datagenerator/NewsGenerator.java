@@ -13,7 +13,7 @@ import java.lang.invoke.MethodHandles;
 import java.sql.SQLException;
 
 /**
- * This component is only created, if the profile {@code datagen} is active
+ * This component is only created, if the profile {@code datagen} is active.
  * You can activate this profile by adding {@code -Dspring.profiles.active=datagen} to your maven command line
  */
 @Component
