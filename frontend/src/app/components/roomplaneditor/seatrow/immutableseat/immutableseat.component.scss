@@ -20,9 +20,10 @@
 */
 .seat {
     margin: 0;
+    background-color: rgb(240, 240, 240);
 }
 
-.seat:hover{
+.seat:not([disabled]):hover{
    background-color: lightgrey;
 }
 

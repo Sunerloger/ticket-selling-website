@@ -11,6 +11,7 @@
         class="seat"
         (click)="handleSeatClick()"
         [ngStyle]="{'border-color': this.seat.section.color}" 
+        [disabled]="!this.isAvailable()"
     >
         <span class="temp"></span> <!-- To ensure consistent height --> 
         <svg 
