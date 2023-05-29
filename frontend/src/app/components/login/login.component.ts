@@ -3,7 +3,7 @@ import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {AuthRequest} from '../../dtos/auth-request';
-import {ToastrService} from "ngx-toastr";
+import {ToastrService} from 'ngx-toastr';
 
 
 @Component({
@@ -20,7 +20,8 @@ export class LoginComponent implements OnInit {
   error = false;
   errorMessage = '';
 
-  constructor(private formBuilder: UntypedFormBuilder, private authService: AuthService, private router: Router, private notification: ToastrService) {
+  constructor(private formBuilder: UntypedFormBuilder, private authService: AuthService, private router: Router,
+              private notification: ToastrService) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]]
