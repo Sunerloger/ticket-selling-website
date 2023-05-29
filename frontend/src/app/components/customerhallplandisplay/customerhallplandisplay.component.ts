@@ -11,7 +11,7 @@ import { SeatSelectionPayload } from '../roomplaneditor/seatrow/immutableseat/im
 })
 export class CustomerhallplandisplayComponent implements OnInit {
   @Input() hallplanId: number;
-  @Output() selectionChangeEvent = new EventEmitter<PersistedSeat[]>
+  @Output() selectionChangeEvent = new EventEmitter<PersistedSeat[]>();
 
   roomplan: PersistedHallplan = {
     id: 0,
@@ -19,7 +19,7 @@ export class CustomerhallplandisplayComponent implements OnInit {
     name: '',
     description: ''
   };
-  selectedSeats: Map<PersistedSeat["id"], PersistedSeat> = new Map();
+  selectedSeats: Map<PersistedSeat['id'], PersistedSeat> = new Map();
 
   constructor(
     private service: HallplanService,
@@ -28,9 +28,10 @@ export class CustomerhallplandisplayComponent implements OnInit {
   }
 
   /**
-   * Given SeatSelectionPayload is inserted or removed from internal selectedSeats map. 
+   * Given SeatSelectionPayload is inserted or removed from internal selectedSeats map.
    * Emits an seatSelectionChangeEvent with a list of all currently selected seats
-   * @param payload 
+   *
+   * @param payload
    */
   handleSeatSelectionEvent(payload: SeatSelectionPayload) {
     const clonedSelectedSeats = new Map(this.selectedSeats);
