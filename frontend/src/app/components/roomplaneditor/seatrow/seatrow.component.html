@@ -1,4 +1,5 @@
 <div class="seat_row">
+    <span *ngIf="this.showRowNr">{{this.seatRow.rowNr}}</span>
     <!-- (Optional) Delete Row Button -->
     <button 
         *ngIf="showDeleteRowBtn === true" 
@@ -11,7 +12,7 @@
     <!-- Plus Btn -->
     <button 
         class="add_seat_btn" 
-        *ngIf="showCreationMenuLeft === false"
+        *ngIf="showCreationMenuLeft === false && renderAsImmutable === false"
         (click)="showCreationMenuLeft = true"
     >
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-plus-circle"
@@ -29,20 +30,30 @@
     <!-- Seat -->
     <div class="seat_container">
         <div 
-            class="seat"
             *ngFor="let seat of seatRow.seats"
         >
-           <app-seat
-                (seatRemoval)="handleSeatRemoval($event)"
-                [type]="seat.type"
-                [id]="seat.id"
-                [section]="seat.section"
-           />
+            <!-- Muteable Seat -->
+            <app-seat
+                    *ngIf="renderAsImmutable === false"
+                    (seatRemoval)="handleSeatRemoval($event)"
+                    [type]="seat.type"
+                    [id]="seat.id"
+                    [seatNr]="seat.seatNr"
+                    [capacity]="seat.capacity"
+                    [section]="seat.section"
+                    [showSeatNr]="this.showSeatNr"
+            />
+            <!-- Immutable Seat -->
+            <app-immutableseat 
+                (seatSelectionChangeEvent)="this.seatSelectionChangeEvent.emit($event)"
+                *ngIf="renderAsImmutable === true" 
+                [seat]="seat"
+            />
         </div>
     </div>
     <!-- Plus Btn -->
     <button 
-        *ngIf="showCreationMenuRight === false && this.seatRow.seats.length !== 0" 
+        *ngIf="showCreationMenuRight === false && this.seatRow.seats.length !== 0 && renderAsImmutable === false" 
         class="add_seat_btn" 
         (click)="showCreationMenuRight = true"
     >

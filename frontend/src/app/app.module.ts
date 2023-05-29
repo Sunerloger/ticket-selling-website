@@ -37,6 +37,8 @@ import { EditableSectionComponent }
 import { EventOverviewComponent } from './components/event-overview/event-overview.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { HallplanManagerComponent } from './components/hallplan-manager/hallplan-manager.component';
+import { CustomerhallplandisplayComponent } from './components/customerhallplandisplay/customerhallplandisplay.component';
+import { ImmutableseatComponent } from './components/roomplaneditor/seatrow/immutableseat/immutableseat.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +67,8 @@ import { HallplanManagerComponent } from './components/hallplan-manager/hallplan
     EditableSectionComponent,
     EventOverviewComponent,
     HallplanManagerComponent,
+    CustomerhallplandisplayComponent,
+    ImmutableseatComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,15 +1,16 @@
 .toolbar{
-    display: inline-flex;
+    display: flex;
     flex-direction: row;
 
-    border: 1px solid grey;
-    border-radius: 10px;
+    gap: 1rem;
 }
 
 .toolbar_item{
+    border: 1px solid grey;
+    border-radius: 10px;
+   
     background-color: white;
     outline: none;
-    border: none;
     border-radius: 10px;
 }
 

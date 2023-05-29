@@ -73,6 +73,7 @@ public class HallPlanSeatTest {
         HallPlanSeatDto seatDto = new HallPlanSeatDto();
         seatDto.setId(SEAT_ID);
         seatDto.setSeatrowId(SEAT_ROW_ID);
+        seatDto.setOrderNr(7L);
         seatDto.setSeatNr(7L);
         seatDto.setCapacity(1L);
         Optional<HallPlanSection> section = hallPlanSectionRepository.findById(1L);
@@ -113,6 +114,7 @@ public class HallPlanSeatTest {
 
         // Create a HallPlanSeatDto for the request body
         HallPlanSeatDto seatDto = new HallPlanSeatDto();
+        seatDto.setOrderNr(7L);
         seatDto.setSeatNr(7L);
         seatDto.setCapacity(1L);
         seatDto.setSection(null);
