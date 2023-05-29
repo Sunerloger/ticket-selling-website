@@ -4,7 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.AbbreviatedNewsDto
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.DetailedNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.NewsInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
-import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
+import at.ac.tuwien.sepm.groupphase.backend.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -33,11 +33,13 @@ public class NewsEndpoint {
     static final String BASE_PATH = "/api/v1/news";
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final NewsService newsService;
+    private final UserService userService;
     private final NewsMapper newsMapper;
 
     @Autowired
-    public NewsEndpoint(NewsService newsService, NewsMapper newsMapper) {
+    public NewsEndpoint(NewsService newsService, NewsMapper newsMapper, UserService userService) {
         this.newsService = newsService;
+        this.userService = userService;
         this.newsMapper = newsMapper;
     }
 
@@ -56,10 +58,11 @@ public class NewsEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
     @Operation(summary = "Get list of news without details", security = @SecurityRequirement(name = "apiKey"))
-    public List<AbbreviatedNewsDto> findAll(@RequestParam(defaultValue = "0") int pageIndex) {
-        LOGGER.info("GET {}", BASE_PATH);
+    public List<AbbreviatedNewsDto> findAll(@RequestParam(defaultValue = "0") int pageIndex, @RequestParam boolean loadAlreadyRead,
+                                            @RequestParam String token) {
+        LOGGER.info("GET {}?pageIndex={}&loadAlreadyRead={}", BASE_PATH, pageIndex, loadAlreadyRead);
 
-        return newsService.findAllPagedByCreatedAt(pageIndex).map(newsMapper::newsToAbbreviatedNewsDto).toList();
+        return newsService.findAllPagedByCreatedAt(pageIndex, loadAlreadyRead, userService.getUser(token)).map(newsMapper::newsToAbbreviatedNewsDto).toList();
     }
 
     @Secured("ROLE_USER")

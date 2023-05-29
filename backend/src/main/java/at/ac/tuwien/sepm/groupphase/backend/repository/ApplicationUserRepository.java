@@ -22,4 +22,7 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
      * @return the user with the specified email
      */
     ApplicationUser findUserByEmail(String email);
+
+    @Override
+    void deleteById(Long id);
 }

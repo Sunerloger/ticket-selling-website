@@ -48,4 +48,10 @@ public interface UserService extends UserDetailsService {
     String login(UserLoginDto userLoginDto) throws BadCredentialsException;
 
     ApplicationUser register(ApplicationUser applicationUser) throws ValidationException;
+
+    ApplicationUser edit(ApplicationUser userDetailDtoToEntity, String token);
+
+    ApplicationUser getUser(String token);
+
+    void delete(Long id, String email, String password);
 }

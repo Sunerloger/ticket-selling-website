@@ -10,9 +10,10 @@ import {NewsCreateComponent} from './components/news/news-create/news-create.com
 import {NewsOverviewComponent} from './components/news/news-overview/news-overview.component';
 import {AdminRouteGuard} from './guards/admin-route.guard';
 import {NewsDetailComponent} from './components/news/news-detail/news-detail.component';
-import { RoomplaneditorComponent } from './components/roomplaneditor/roomplaneditor.component';
+import {RoomplaneditorComponent} from './components/roomplaneditor/roomplaneditor.component';
 import {EventOverviewComponent} from './components/event-overview/event-overview.component';
 import {NewsResolver} from './components/news/news.resolver';
+import {EditComponent} from './components/edit/edit.component';
 
 
 const routes: Routes = [
@@ -29,6 +30,7 @@ const routes: Routes = [
         }},
       {path: 'create', canActivate: [AdminRouteGuard], component: NewsCreateComponent},
     ]},
+  {path: 'edit', component: EditComponent},
   {path: 'roomplan/:id/edit', component: RoomplaneditorComponent },
   {path: 'hallplans/:id/edit', component: RoomplaneditorComponent },
   {path: '**', redirectTo: 'news'},
@@ -36,7 +38,7 @@ const routes: Routes = [
 
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true, scrollPositionRestoration: 'enabled'})],
+  imports: [RouterModule.forRoot(routes, {useHash: true, scrollPositionRestoration: 'enabled'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {
