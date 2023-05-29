@@ -13,7 +13,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import java.time.LocalTime;
-import java.util.*;
+import java.util.List;
+import java.util.LinkedList;
 
 @Entity
 @Table(name = "event")

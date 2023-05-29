@@ -1,12 +1,15 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.*;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.*;
-import at.ac.tuwien.sepm.groupphase.backend.entity.*;
-import at.ac.tuwien.sepm.groupphase.backend.exception.*;
-import at.ac.tuwien.sepm.groupphase.backend.repository.*;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.NewsInquiryDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.News;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.NewsImage;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
-import jakarta.transaction.*;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -16,7 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
-import java.util.*;
+import java.util.Optional;
 
 @Service
 public class SimpleNewsService implements NewsService {
@@ -40,7 +43,7 @@ public class SimpleNewsService implements NewsService {
 
         News news = newsMapper.newsInquiryDtoWithImagesToNewsWithoutEvent(newsDto);
 
-        if (!(eventId == null)) {
+        if (eventId != null) {
 
             if (!eventRepository.existsById(eventId)) {
                 throw new NotFoundException("Event not found with id: " + eventId);

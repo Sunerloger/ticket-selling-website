@@ -3,10 +3,15 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.AbbreviatedNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.DetailedNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.NewsInquiryDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.*;
-import org.mapstruct.*;
+import at.ac.tuwien.sepm.groupphase.backend.entity.News;
+import at.ac.tuwien.sepm.groupphase.backend.entity.NewsImage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import org.mapstruct.Mapper;
+import org.mapstruct.Named;
+import org.mapstruct.Mapping;
 
-import java.util.*;
+import java.util.List;
+import java.util.LinkedList;
 
 @Mapper
 public interface NewsMapper {
