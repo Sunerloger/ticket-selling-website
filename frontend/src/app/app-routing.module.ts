@@ -14,6 +14,7 @@ import {NewsDetailComponent} from './components/news/news-detail/news-detail.com
 import {AdminBlockUnblockComponent} from './components/admin-block-unblock/admin-block-unblock.component';
 import { RoomplaneditorComponent } from './components/roomplaneditor/roomplaneditor.component';
 import {EventOverviewComponent} from './components/event-overview/event-overview.component';
+import { HallplanManagerComponent } from './components/hallplan-manager/hallplan-manager.component';
 
 
 const routes: Routes = [
@@ -22,6 +23,7 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: 'block', component: AdminBlockUnblockComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
+  {path: 'hallplans/manage', canActivate: [AuthGuard], component: HallplanManagerComponent},
   {path: 'events', canActivate: [AdminRouteGuard], component: EventsComponent},
   {
     path: 'news', canActivate: [AuthGuard], children: [

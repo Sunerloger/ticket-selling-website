@@ -41,6 +41,7 @@ import { EditableSectionComponent }
 import { EventOverviewComponent } from './components/event-overview/event-overview.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import {AdminBlockUnblockComponent} from './components/admin-block-unblock/admin-block-unblock.component';
+import { HallplanManagerComponent } from './components/hallplan-manager/hallplan-manager.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import {AdminBlockUnblockComponent} from './components/admin-block-unblock/admin
     EditableSectionComponent,
     AdminBlockUnblockComponent,
     EventOverviewComponent,
+    HallplanManagerComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,27 @@
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Hall Plans</h1>
+        <button class="btn btn-primary">Create</button>
+    </div>
+
+    <ul class="list-group">
+        <li class="list-group-item" *ngFor="let hallPlan of hallPlans">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <div class="mb-2">
+                        <span style="font-size:1.3rem">{{
+                            hallPlan.name }}</span>
+                    </div>
+                    <div>
+                        <span>{{ hallPlan.description }}</span>
+                    </div>
+                </div>
+                <button class="btn btn-secondary btn-sm mt-2"
+                    routerLink="['/hallplans', hallPlan.id, 'edit']">Edit</button>
+            </div>
+
+            <!-- Add more properties as needed -->
+
+        </li>
+    </ul>
+</div>

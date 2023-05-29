@@ -50,7 +50,7 @@ public class SeatRowTest {
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    public void testCreateSeatRow() throws Exception {
+    public void givenSeatRow_WhenPost_ThenCreateNewSeatRow() throws Exception {
         // Create a SeatRowDto for the request body
         SeatRowDto seatRowDto = new SeatRowDto();
         seatRowDto.setRowNr(18L);
@@ -69,7 +69,7 @@ public class SeatRowTest {
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    public void testDeleteSeatRow() throws Exception {
+    public void givenId_WhenDelete_ThenRemoveSeatRowWithIdFromSystem() throws Exception {
         // Create a SeatRow entity in the database
         SeatRow seatRow = new SeatRow();
         seatRow.setRowNr(1L);
@@ -88,7 +88,7 @@ public class SeatRowTest {
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    public void testUpdateSeatRow() throws Exception {
+    public void givenOneSeatRow_WhenPut_ThenUpdateSeatRow() throws Exception {
         // Create a SeatRow entity in the database
         SeatRow seatRow = new SeatRow();
         seatRow.setRowNr(1L);
