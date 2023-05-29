@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,8 +8,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -19,35 +22,36 @@ import java.util.LinkedList;
 @Entity
 @Table(name = "event")
 public class Event {
+    private static final String base64Pattern = "^data:image/(gif|png|jpeg|webp|svg\\+xml);base64,.*={0,2}$";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     private String title;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "event_id")
-    private List<EventDate> date;
+    private List<EventDate> eventDatesLocation;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "event")
     private List<News> newsEntries = new LinkedList<>();
 
-    private LocalTime startTime;
-
-    private String cityname;
-
-    private int areaCode;
-
+    @NotNull
     private LocalTime duration;
 
+    @NotBlank
     private String category;
-
-    private String address;
 
     private String description;
 
-    @Column(columnDefinition = "TEXT")
+    @NotBlank
+    private String artist;
+
+    @Lob
+    @Pattern(regexp = base64Pattern)
+    @Column(columnDefinition = "BLOB")
     private String image;
 
     public Event() {
@@ -56,29 +60,21 @@ public class Event {
     public Event(
         Long id,
         String title,
-        List<EventDate> date,
-        LocalTime startTime,
-        String cityname,
-        int areaCode,
+        List<EventDate> eventDatesLocation,
         LocalTime duration,
         String category,
-        String address,
         String description,
-        String image) {
+        String image,
+        String artist) {
         this.id = id;
         this.title = title;
-        this.date = date;
-        this.startTime = startTime;
-        this.cityname = cityname;
-        this.areaCode = areaCode;
+        this.eventDatesLocation = eventDatesLocation;
         this.duration = duration;
         this.category = category;
-        this.address = address;
         this.description = description;
         this.image = image;
+        this.artist = artist;
     }
-
-    // getters and setters
 
     public Long getId() {
         return id;
@@ -96,36 +92,12 @@ public class Event {
         this.title = title;
     }
 
-    public List<EventDate> getDate() {
-        return date;
+    public List<EventDate> getEventDatesLocation() {
+        return eventDatesLocation;
     }
 
-    public void setDate(List<EventDate> date) {
-        this.date = date;
-    }
-
-    public LocalTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getCityname() {
-        return cityname;
-    }
-
-    public void setCityname(String cityname) {
-        this.cityname = cityname;
-    }
-
-    public int getAreaCode() {
-        return areaCode;
-    }
-
-    public void setAreaCode(int areaCode) {
-        this.areaCode = areaCode;
+    public void setEventDatesLocation(List<EventDate> eventsDatesLocation) {
+        this.eventDatesLocation = eventsDatesLocation;
     }
 
     public LocalTime getDuration() {
@@ -144,14 +116,6 @@ public class Event {
         this.category = category;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -166,6 +130,14 @@ public class Event {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getArtist() {
+        return artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
     }
 
     public List<News> getNewsEntries() {

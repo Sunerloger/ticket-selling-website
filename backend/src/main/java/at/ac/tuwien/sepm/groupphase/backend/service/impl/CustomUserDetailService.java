@@ -5,12 +5,12 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ApplicationUserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.security.JwtAuthorizationFilter;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 
 import jakarta.xml.bind.ValidationException;
 
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,14 +34,16 @@ public class CustomUserDetailService implements UserService {
     private final UserRepository userRepository;
     private final ApplicationUserRepository applicationUserRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtAuthorizationFilter jwtAuthorizationFilter;
     private final JwtTokenizer jwtTokenizer;
 
     @Autowired
     public CustomUserDetailService(ApplicationUserRepository applicationUserRepository, UserRepository userRepository, PasswordEncoder passwordEncoder,
-                                   JwtTokenizer jwtTokenizer) {
+                                   JwtTokenizer jwtTokenizer, JwtAuthorizationFilter jwtAuthorizationFilter) {
         this.applicationUserRepository = applicationUserRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtAuthorizationFilter = jwtAuthorizationFilter;
         this.jwtTokenizer = jwtTokenizer;
     }
 
@@ -83,8 +85,6 @@ public class CustomUserDetailService implements UserService {
         }
     }
 
-    ;
-
     @Override
     public String login(UserLoginDto userLoginDto) {
         try {
@@ -114,5 +114,48 @@ public class CustomUserDetailService implements UserService {
         applicationUser.setPassword(encodedPassword);
         checkForExistingUserByEmail(applicationUser.getEmail());
         return applicationUserRepository.save(applicationUser);
+    }
+
+    @Override
+    public ApplicationUser edit(ApplicationUser applicationUser, String token) {
+        //TODO: Dont let user change password
+        UserDetails currentUser = loadUserByUsername(applicationUser.getEmail());
+        if (passwordEncoder.matches(applicationUser.getPassword(), currentUser.getPassword())) {
+            String encodedPassword = passwordEncoder.encode(applicationUser.getPassword());
+            applicationUser.setPassword(encodedPassword);
+            return applicationUserRepository.save(applicationUser);
+        }
+        throw new BadCredentialsException("Password was wrong!");
+    }
+
+    @Override
+    public ApplicationUser getUser(String token) {
+        String email = jwtAuthorizationFilter.getUsernameFromToken(token);
+        return applicationUserRepository.findUserByEmail(email);
+    }
+
+    @Override
+    public void delete(Long id, String email, String password) {
+        UserDetails userDetails = loadUserByUsername(email);
+        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+            throw new BadCredentialsException("Password is incorrect");
+        }
+        applicationUserRepository.deleteById(id);
+
+    }
+
+    @Override
+    public void block(ApplicationUser applicationUser) {
+        applicationUserRepository.updateIsLocked(applicationUser.getEmail(), applicationUser.getLocked());
+    }
+
+    @Override
+    public List<ApplicationUser> getBlockedUsers(ApplicationUser applicationUser) {
+        if (applicationUser.getLocked().equals(Boolean.TRUE)) {
+            return applicationUserRepository.findUserByIsLockedIsTrueAndEmailContainingIgnoreCase(applicationUser.getEmail());
+        } else {
+            return applicationUserRepository.findUserByIsLockedIsFalseAndEmailContainingIgnoreCase(applicationUser.getEmail());
+        }
+
     }
 }

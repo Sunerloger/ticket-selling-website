@@ -7,7 +7,6 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanSectionMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SeatRowMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
-import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSection;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
@@ -19,8 +18,11 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.xml.bind.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
@@ -146,7 +148,6 @@ public class HallPlanServiceImpl implements HallPlanService {
     @Override
     public List<HallPlanSection> getAllSections() {
         LOGGER.debug("Get all hall plan sections");
-        List<HallPlanSection> sections = hallPlanRepository.findAllSectionsByHallPlanId(1L);
         return hallPlanSectionRepository.findAll();
     }
 
@@ -186,6 +187,12 @@ public class HallPlanServiceImpl implements HallPlanService {
         }
         List<HallPlanSectionDto> list = hallPlanSectionMapper.toDto(sections);
         return list;
+    }
+
+    @Override
+    public Page<HallPlan> findPageOfHallplans(int pageIndex) {
+        Pageable pageable = PageRequest.of(pageIndex, 5, Sort.by("name").ascending());
+        return hallPlanRepository.findAll(pageable);
     }
 
     @Override

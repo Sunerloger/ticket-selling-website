@@ -1,14 +1,12 @@
+import {EventDate} from './eventDate';
 
 export interface Event {
   id?: number;
   title: string;
-  date: Date[];
-  startTime: string;
-  cityname: string;
-  areaCode: string;
+  eventDatesLocation: EventDate[];
   duration: string;
   category: string;
-  address: string;
+  artist: string;
   description?: string;
   image?: string;
 }

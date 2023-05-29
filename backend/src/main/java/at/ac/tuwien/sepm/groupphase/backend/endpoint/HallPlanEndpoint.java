@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.AbbreviatedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.DetailedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatBulkDto;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,6 +110,17 @@ public class HallPlanEndpoint {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(updatedHallPlanDto);
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping("/search")
+    @Operation(summary = "Get list of events without details", security = @SecurityRequirement(name = "apiKey"))
+    public List<AbbreviatedHallPlanDto> searchHallPlanPages(@RequestParam(defaultValue = "0") int pageIndex) {
+        LOGGER.info("GET {}/hallplansForSearch");
+        LOGGER.info("called without param");
+        return hallPlanService.findPageOfHallplans(pageIndex)
+            .map(hallPlanMapper::hallPlanToAbbreviatedHallPlanDto)
+            .toList();
     }
 
     //*******************************************************
@@ -295,7 +308,7 @@ public class HallPlanEndpoint {
     @Secured("ROLE_ADMIN")
     @PutMapping("{hallPlanId}/seatrows/{seatRowId}/seats/{id}")
     @Operation(summary = "Update a seat by id in a seat row")
-    public ResponseEntity<HallPlanSeatDto> updateSeat(@PathVariable Long hallPlanId, @PathVariable Long seatRowId, @PathVariable Long id, @Valid @RequestBody HallPlanSeatDto seatDto) {
+    public ResponseEntity<HallPlanSeatDto> updateSeat(@PathVariable Long hallPlanId, @PathVariable Long seatRowId, @PathVariable Long id, @Valid @RequestBody HallPlanSeatDto seatDto) throws ValidationException {
         LOGGER.info("PUT /api/v1/hallplans/{}/seatrows/{}/seats/{}", hallPlanId, seatRowId, id);
         seatDto.setId(id);
         seatDto.setSeatrowId(seatRowId);

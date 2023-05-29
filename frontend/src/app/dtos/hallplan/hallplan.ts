@@ -40,6 +40,7 @@ export interface Seat {
     status: SeatStatus;
     section: Section;
     capacity: number;
+    orderNr: number;
 }
 
 export interface PersistedSeat extends Seat {

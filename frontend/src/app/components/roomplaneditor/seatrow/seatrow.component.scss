@@ -6,7 +6,6 @@
     align-items: center;
     gap: 0.5rem;
 
-    max-height: 2rem;
 }
 
 .add_seat_btn {
@@ -31,6 +30,7 @@
 .seat_container{
     display: flex;
     flex-direction: row;
+    align-items: center;
     gap: 0.5rem;
     overflow: none;
 }
