@@ -70,8 +70,8 @@ public class AdminCreateEndpoint {
 
     @GetMapping
     @Secured("ROLE_ADMIN")
-    public List<UserUnBlockDto> getBlockedUsers() {
+    public List<UserUnBlockDto> getBlockedUsers(UserUnBlockDto userUnBlockDto) {
         LOGGER.info("Get blocked users " + BASE_PATH);
-        return userMapper.entityToStreamUserUnBlockDto(userService.getBlockedUsers());
+        return userMapper.entityToStreamUserUnBlockDto(userService.getBlockedUsers(userMapper.userUnBlockDtoToEntity(userUnBlockDto)));
     }
 }

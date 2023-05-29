@@ -155,7 +155,12 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public List<ApplicationUser> getBlockedUsers() {
-        return applicationUserRepository.findUserByIsLockedIsTrue();
+    public List<ApplicationUser> getBlockedUsers(ApplicationUser applicationUser) {
+        if (applicationUser.getLocked().equals(Boolean.TRUE)) {
+            return applicationUserRepository.findUserByIsLockedIsTrueAndEmailContainingIgnoreCase(applicationUser.getEmail());
+        } else {
+            return applicationUserRepository.findUserByIsLockedIsFalseAndEmailContainingIgnoreCase(applicationUser.getEmail());
+        }
+
     }
 }

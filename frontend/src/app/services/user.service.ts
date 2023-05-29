@@ -64,4 +64,21 @@ export class UserService {
     console.log(blockUser.isLocked);
     return this.http.put(this.adminBaseUri, blockUser);
   }
+
+  getBlockedUser(user: BlockUser): Observable<BlockUser[]> {
+    let params = new HttpParams();
+    if (user.email) {
+      params = params.append('email', user.email);
+    }
+    params = params.append('isLocked', user.isLocked);
+    return this.http.get<BlockUser[]>(this.adminBaseUri, {params});
+  }
+
+  unblockUser(unblockUser: BlockUser) {
+    console.log(unblockUser.email);
+    console.log(unblockUser.isLocked);
+    return this.http.put(this.adminBaseUri, unblockUser);
+  }
+
 }
+

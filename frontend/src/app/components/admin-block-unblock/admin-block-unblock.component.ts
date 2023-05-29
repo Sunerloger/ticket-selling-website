@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {BlockUser, User} from '../../dtos/user';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {UserService} from '../../services/user.service';
 import {AuthService} from '../../services/auth.service';
 import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';
-import {Observable} from 'rxjs';
+import {debounceTime, Observable} from 'rxjs';
 
 
 export enum BlockUnblockMode {
@@ -28,7 +28,12 @@ export class AdminBlockUnblockComponent implements OnInit {
 
   };
 
-  blockForm: FormGroup;
+  users: BlockUser[] = [];
+
+  blockForm = new FormGroup({
+    email: new FormControl(''),
+    isLocked: new FormControl(null)
+  });
   submitted = false;
   //Error flag
   error = false;
@@ -57,15 +62,24 @@ export class AdminBlockUnblockComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.blockForm = this.formBuilder.group({
-      email: ['', Validators.required],
-      isLocked: ['']
+    this.blockForm.get('email').valueChanges.pipe(debounceTime(100)).subscribe(dataValue => {
+      this.onChange();
     });
   }
 
-  blockUser() {
-    this.blockForm.controls['email'].setValue(this.user.email);
-    this.blockForm.controls['isLocked'].setValue(true);
+  blockUser(email: string) {
+    switch (this.mode) {
+      case BlockUnblockMode.block:
+        this.blockForm.controls['email'].setValue(email);
+        this.blockForm.controls['isLocked'].setValue(true);
+        break;
+      case BlockUnblockMode.unblock:
+        this.blockForm.controls['email'].setValue(email);
+        this.blockForm.controls['isLocked'].setValue(false);
+        break;
+      default:
+        console.error('Unknown Mode');
+    }
     const user: BlockUser = new BlockUser(this.blockForm.controls['email'].value, this.blockForm.controls['isLocked'].value);
     if (this.blockForm.valid && this.authService.isAdmin()) {
       let observable: Observable<any>;
@@ -74,6 +88,7 @@ export class AdminBlockUnblockComponent implements OnInit {
           observable = this.userService.blockUser(user);
           break;
         case BlockUnblockMode.unblock:
+          observable = this.userService.unblockUser(user);
           break;
         default:
           console.error('Unknown Mode');
@@ -101,7 +116,23 @@ export class AdminBlockUnblockComponent implements OnInit {
     }
   }
 
-  getBlockedUsers() {
+  onChange() {
+    const user = new BlockUser(this.blockForm.controls['email'].value, null);
+    console.log(user);
+    if (this.mode === 0) {
+      user.isLocked = false;
+      this.userService.getBlockedUser(user).subscribe((value) => this.users = value);
+    } else {
+      user.isLocked = true;
+      this.userService.getBlockedUser(user).subscribe((value) => this.users = value);
+    }
+  }
 
+  changeMode() {
+    if (this.mode === 0) {
+      this.mode = 1;
+    } else {
+      this.mode = 0;
+    }
   }
 }

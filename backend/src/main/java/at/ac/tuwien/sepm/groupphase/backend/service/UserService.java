@@ -64,5 +64,5 @@ public interface UserService extends UserDetailsService {
 
     void block(ApplicationUser userUnBlockDtoToEntity);
 
-    List<ApplicationUser> getBlockedUsers();
+    List<ApplicationUser> getBlockedUsers(ApplicationUser applicationUser);
 }
