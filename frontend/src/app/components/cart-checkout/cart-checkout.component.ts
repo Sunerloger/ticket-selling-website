@@ -12,14 +12,19 @@ import {SeatDetail} from '../../dtos/seatDetail';
   templateUrl: './cart-checkout.component.html',
   styleUrls: ['./cart-checkout.component.scss']
 })
-export class CartCheckoutComponent implements OnInit{
+export class CartCheckoutComponent implements OnInit {
 
   items: CartItem[] = [];
   creationItem: CreatePurchase = {} as CreatePurchase;
+  total = 0;
+  withoutTaxes = 0;
+  taxes = 0;
+
   constructor(private service: CartService,
               private notification: ToastrService,
               private router: Router) {
   }
+
   ngOnInit(): void {
     this.getItems();
     this.creationItem.useUserAddress = false;
@@ -27,7 +32,8 @@ export class CartCheckoutComponent implements OnInit{
     this.creationItem.areaCode = 0;
     this.creationItem.city = '';
   }
-  getItems(){
+
+  getItems() {
     const observable: Observable<CartItem[]> = this.service.getCart();
     observable.subscribe({
       next: data => {
@@ -37,6 +43,7 @@ export class CartCheckoutComponent implements OnInit{
       }
     });
   }
+
   formatTime(time: string): Date {
     const parts = time.split(':');
     const hours = Number(parts[0]);
@@ -50,14 +57,18 @@ export class CartCheckoutComponent implements OnInit{
 
   sumOfItems(): number {
     let sum = 0;
-    this.items.forEach((element) =>{
+    this.items.forEach((element) => {
       sum += element.seat.price;
     });
-    return sum;
+    this.total = sum;
+    this.taxes = sum * 0.2;
+    this.withoutTaxes = this.total - this.taxes;
+    return this.total;
   }
-  purchase(): void{
+
+  purchase(): void {
     this.creationItem.seats = [];
-    this.items.forEach((element) =>{
+    this.items.forEach((element) => {
       const seat: SeatDetail = {} as SeatDetail;
       seat.seatNr = element.seat.seatNr;
       seat.price = element.seat.price;
