@@ -38,10 +38,10 @@
 
       <div class="dropdown">
 
-        <a class="dropdown-toggle dropdown-toggle-no-caret nav-link animated-text-custom remove-dropdown-caret w-100"
+        <a class="nav-link animated-text-custom dropdown_base_btn"
           type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false"
           *ngIf="authService.getUserRole() === 'ADMIN'">Administration</a>
-        <div class="dropdown-menu dropdown-menu-right remove-dropdown-corners w-100"
+        <div class="dropdown-menu dropdown_menu dropdown-menu-right remove-dropdown-corners w-100"
           aria-labelledby="dropdownMenuButton">
           <a class="dropdown-item" routerLink="/hallplans/manage">HallPlan
             Manager </a>
