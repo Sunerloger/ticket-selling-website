@@ -15,21 +15,21 @@ import java.sql.SQLException;
 
 @Component
 @Profile("datagen")
-public class HallPlanGenerator {
+public class DataGeneratorBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final DataSource dataSource;
 
-    public HallPlanGenerator(DataSource dataSource) {
+    public DataGeneratorBean(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
     @PostConstruct
-    public void generateHallPlanData() throws SQLException {
+    public void generateData() throws SQLException {
         LOGGER.info("Generating hall plan data...");
         try (var connection = dataSource.getConnection()) {
-            ScriptUtils.executeSqlScript(connection, new ClassPathResource("sql/insertHallPlanData.sql"));
+            ScriptUtils.executeSqlScript(connection, new ClassPathResource("sql/insertData.sql"));
             LOGGER.info("Finished generating data without error.");
         }
     }
