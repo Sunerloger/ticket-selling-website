@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {News} from '../../../dtos/news';
 import {AuthService} from '../../../services/auth.service';
+import {catchError, EMPTY} from 'rxjs';
 
 @Component({
   selector: 'app-news-detail',
@@ -16,6 +17,7 @@ export class NewsDetailComponent implements OnInit {
     fullText: '',
     coverImage: null,
     images: [],
+    shortText: null
   };
   selectedIndex = 0;
 

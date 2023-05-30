@@ -1,27 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Column;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "news")
@@ -55,11 +40,14 @@ public class News {
     private String coverImage;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "news")
-    private List<NewsImage> images = new LinkedList<>();
+    private List<NewsImage> images;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id")
     private Event event;
+
+    @ManyToMany(cascade = CascadeType.MERGE, mappedBy = "readNews")
+    Set<ApplicationUser> readByUsers;
 
     public Long getId() {
         return id;
@@ -123,6 +111,13 @@ public class News {
 
     public void setEvent(Event event) {
         this.event = event;
+    }
+
+    /**
+     * @return true if the element was not present in the set
+    */
+    public boolean addUser(ApplicationUser user) {
+        return readByUsers.add(user);
     }
 
     @Override

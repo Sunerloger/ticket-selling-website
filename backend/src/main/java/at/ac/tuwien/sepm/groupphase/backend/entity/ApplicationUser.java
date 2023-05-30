@@ -1,14 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDate;
+import java.util.*;
 
 //TODO: replace this class with a correct ApplicationUser Entity implementation
 @Entity
@@ -42,6 +39,14 @@ public class ApplicationUser {
     private String password;
 
     private Boolean admin;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "news_read",
+        joinColumns = @JoinColumn(name = "applicationuser_id"),
+        inverseJoinColumns = @JoinColumn(name = "news_id")
+    )
+    Set<News> readNews;
 
     public ApplicationUser() {
     }
@@ -144,5 +149,13 @@ public class ApplicationUser {
 
     public void setCityName(String cityName) {
         this.cityName = cityName;
+    }
+
+    public boolean hasRead(News news) {
+        return this.readNews.contains(news);
+    }
+
+    public void addNews(News news) {
+        this.readNews.add(news);
     }
 }
