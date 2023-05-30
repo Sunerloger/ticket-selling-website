@@ -37,4 +37,6 @@ public interface EventService {
      * @return page of max 20 events sorted by date
      */
     Page<Event> findAllPagesByDateAndAuthorAndLocation(int pageIndex, LocalDate fromDate, LocalDate toDate, String author, String location);
+
+    EventDetailDto getEventFromHallplanId(Long hallplanId);
 }
