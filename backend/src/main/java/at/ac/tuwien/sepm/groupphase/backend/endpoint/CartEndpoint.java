@@ -14,7 +14,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -42,7 +49,7 @@ public class CartEndpoint {
         LOGGER.info("GET /api/v1/cart");
 
         Long userId = userService.getUserIdFromToken(token);
-        if (userId == null){
+        if (userId == null) {
             return null;
         }
 
@@ -56,7 +63,7 @@ public class CartEndpoint {
         LOGGER.info("Post /api/v1/cart");
 
         Long userId = userService.getUserIdFromToken(token);
-        if (userId == null){
+        if (userId == null) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -75,7 +82,7 @@ public class CartEndpoint {
         LOGGER.info("Delete /api/v1/cart/{}", id);
 
         Long userId = userService.getUserIdFromToken(token);
-        if (userId == null){
+        if (userId == null) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -94,7 +101,7 @@ public class CartEndpoint {
         LOGGER.info("Post /api/v1/cart/purchase");
 
         Long userId = userService.getUserIdFromToken(token);
-        if (userId == null){
+        if (userId == null) {
             return ResponseEntity.badRequest().build();
         }
 
