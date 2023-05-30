@@ -39,8 +39,10 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
     void updateIsLocked(@Param(value = "email") String email, @Param(value = "isLocked") boolean isLocked);
 
     @Transactional(readOnly = true)
-    List<ApplicationUser> findUserByIsLockedIsTrueAndEmailContainingIgnoreCase(String email);
+    @Query("SELECT u FROM ApplicationUser u WHERE u.isLocked = TRUE AND u.email LIKE %:email% AND u.email NOT LIKE %:admin%")
+    List<ApplicationUser> findUserByIsLockedIsTrueAndEmail(@Param(value = "email") String email, @Param(value="admin") String admin);
 
     @Transactional(readOnly = true)
-    List<ApplicationUser> findUserByIsLockedIsFalseAndEmailContainingIgnoreCase(String email);
+    @Query("SELECT u FROM ApplicationUser u WHERE u.isLocked = FALSE AND u.email LIKE %:email% AND u.email NOT LIKE %:admin%")
+    List<ApplicationUser> findUserByIsLockedIsFalseAndEmail(@Param(value = "email") String email,@Param(value="admin") String admin);
 }

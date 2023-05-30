@@ -67,11 +67,9 @@ export class UserService {
 
   getBlockedUser(user: BlockUser): Observable<BlockUser[]> {
     let params = new HttpParams();
-    if (user.email) {
-      params = params.append('email', user.email);
-    }
+    params = params.append('email', user.email);
     params = params.append('isLocked', user.isLocked);
-    return this.http.get<BlockUser[]>(this.adminBaseUri, {params});
+    return this.http.get<BlockUser[]>(this.adminBaseUri + '?token=' + this.authService.getToken(), {params});
   }
 
   unblockUser(unblockUser: BlockUser) {
