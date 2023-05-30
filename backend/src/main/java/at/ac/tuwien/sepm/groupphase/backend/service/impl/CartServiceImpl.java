@@ -86,8 +86,6 @@ public class CartServiceImpl implements CartService {
             return;
         }
 
-        //TODO: change this to not use itemID aka SeatID but a different identifier to allow multiple items of the same id in the same cart.
-
         seatService.cancelReservation(itemId);
         cartRepository.deleteCartById(cart.getId());
     }
