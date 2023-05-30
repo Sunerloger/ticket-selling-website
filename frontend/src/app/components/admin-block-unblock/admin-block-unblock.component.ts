@@ -61,6 +61,17 @@ export class AdminBlockUnblockComponent implements OnInit {
     }
   }
 
+  public get buttonDescription(): string {
+    switch (this.mode) {
+      case BlockUnblockMode.block:
+        return 'Unblock User';
+      case BlockUnblockMode.unblock:
+        return 'Block User';
+      default:
+        return '?';
+    }
+  }
+
   ngOnInit() {
     this.onChange();
     this.blockForm.valueChanges.pipe(debounceTime(200)).subscribe(dataValue => {
@@ -116,6 +127,7 @@ export class AdminBlockUnblockComponent implements OnInit {
       });
     }
   }
+
 
   onChange() {
     const x = this.blockForm.value;
