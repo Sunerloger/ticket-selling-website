@@ -13,7 +13,7 @@
   <div class="row d-flex flex-row justify-content-between w-auto">
     <div class="col-auto mt-3">
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="showReadNews" [ngModel]="showAlreadyReadNews" (ngModelChange)="initializeLoadedPages()">
+        <input class="form-check-input" type="checkbox" value="" id="showReadNews" [checked]="showAlreadyReadNews" (change)="toggleMode()">
         <label class="form-check-label" for="showReadNews">
           Show already read news
         </label>

@@ -4,24 +4,27 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.AbbreviatedNewsDto
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.DetailedNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.NewsInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
-import at.ac.tuwien.sepm.groupphase.backend.service.*;
+import at.ac.tuwien.sepm.groupphase.backend.entity.*;
+import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -62,7 +65,7 @@ public class NewsEndpoint {
                                             @RequestParam String token) {
         LOGGER.info("GET {}?pageIndex={}&loadAlreadyRead={}", BASE_PATH, pageIndex, loadAlreadyRead);
 
-        return newsService.findAllPagedByCreatedAt(pageIndex, loadAlreadyRead, userService.getUser(token)).map(newsMapper::newsToAbbreviatedNewsDto).toList();
+        return newsService.findAllPagedByCreatedAt(pageIndex, loadAlreadyRead, userService.getUser(token).getId()).map(newsMapper::newsToAbbreviatedNewsDto).toList();
     }
 
     @Secured("ROLE_USER")
@@ -82,5 +85,15 @@ public class NewsEndpoint {
     public void deleteOneById(@PathVariable Long id) {
         LOGGER.info("DELETE {}/{}", BASE_PATH, id);
         newsService.deleteById(id);
+    }
+
+    @Secured("ROLE_USER")
+    @PutMapping("{id}")
+    @Operation(summary = "Set news entry relation to user", security = @SecurityRequirement(name = "apiKey"))
+    public ResponseEntity<Void> putRelation(@PathVariable Long id, @RequestParam String token) {
+        LOGGER.info("PUT {}/{}", BASE_PATH, id);
+
+        ApplicationUser user = userService.getUser(token);
+        return newsService.putRelation(id, user);
     }
 }

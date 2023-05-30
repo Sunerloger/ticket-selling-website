@@ -29,7 +29,7 @@ export class NewsOverviewComponent implements OnInit {
    */
   initializeLoadedPages() {
     this.pageIndex = 0;
-    this.newsService.getPage(0).subscribe({
+    this.newsService.getPage(0, this.showAlreadyReadNews, this.authService.getToken()).subscribe({
       next: (news: AbbreviatedNews[]) => {
         this.news = news;
       },
@@ -54,7 +54,8 @@ export class NewsOverviewComponent implements OnInit {
    * Loads the next page of news from the backend
    */
   onScroll(): void {
-    this.newsService.getPage(++this.pageIndex).subscribe((news: AbbreviatedNews[]) => {
+    this.newsService.getPage(++this.pageIndex, this.showAlreadyReadNews, this.authService.getToken())
+      .subscribe((news: AbbreviatedNews[]) => {
       console.log('GET page ' + this.pageIndex);
       this.news.push(...news);
     });
@@ -72,5 +73,13 @@ export class NewsOverviewComponent implements OnInit {
    */
   timeOfCreationAsLocaleTime(entry: AbbreviatedNews): string {
     return new Date(entry.createdAt).toLocaleTimeString();
+  }
+
+  /**
+   * Toggles if already read or not read news are shown and reloads all news entries
+   */
+  toggleMode(): void {
+    this.showAlreadyReadNews = !this.showAlreadyReadNews;
+    this.initializeLoadedPages();
   }
 }
