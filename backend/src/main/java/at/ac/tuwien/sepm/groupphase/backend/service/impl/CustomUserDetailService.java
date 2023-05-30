@@ -11,6 +11,7 @@ import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 
 import jakarta.xml.bind.ValidationException;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,4 +144,18 @@ public class CustomUserDetailService implements UserService {
 
     }
 
+    @Override
+    public void block(ApplicationUser applicationUser) {
+        applicationUserRepository.updateIsLocked(applicationUser.getEmail(), applicationUser.getLocked());
+    }
+
+    @Override
+    public List<ApplicationUser> getBlockedUsers(ApplicationUser applicationUser) {
+        if (applicationUser.getLocked().equals(Boolean.TRUE)) {
+            return applicationUserRepository.findUserByIsLockedIsTrueAndEmailContainingIgnoreCase(applicationUser.getEmail());
+        } else {
+            return applicationUserRepository.findUserByIsLockedIsFalseAndEmailContainingIgnoreCase(applicationUser.getEmail());
+        }
+
+    }
 }

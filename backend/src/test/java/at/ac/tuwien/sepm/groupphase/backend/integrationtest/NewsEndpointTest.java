@@ -22,7 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.time.LocalDateTime;
+import java.time.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -76,6 +76,10 @@ public class NewsEndpointTest implements TestData {
         newsImageRepository.deleteAll();
         eventRepository.deleteAll();
 
+        event.setCategory("Rock");
+        event.setArtist("Queen");
+        event.setDuration(LocalTime.now());
+        event.setTitle("Live Aid");
         eventRepository.save(event);
 
         news = News.NewsBuilder.aNews()

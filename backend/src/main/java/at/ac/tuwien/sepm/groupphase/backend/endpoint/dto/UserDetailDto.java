@@ -32,6 +32,9 @@ public record UserDetailDto(
     String cityName,
 
     @Column(nullable = false)
-    String password
+    String password,
+
+    @Column(nullable = false)
+    Boolean isLocked
 ) {
 }

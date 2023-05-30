@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.AbbreviatedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.DetailedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatDto;
@@ -49,6 +50,7 @@ public interface HallPlanMapper {
             .collect(Collectors.toList());
     }
 
+
     default SeatRowDto mapSeatRow(SeatRow seatRow) {
         SeatRowDto seatRowDto = new SeatRowDto();
         seatRowDto.setId(seatRow.getId());
@@ -86,8 +88,11 @@ public interface HallPlanMapper {
         seatDto.setSeatNr(seat.getSeatNr());
         seatDto.setSection(mapHallPlanSection(seat.getSection()));
         seatDto.setSeatrowId(seat.getSeatrowId());
+        seatDto.setOrderNr(seat.getOrderNr());
         return seatDto;
     }
+
+    AbbreviatedHallPlanDto hallPlanToAbbreviatedHallPlanDto(HallPlan hallPlan);
 
 }
 

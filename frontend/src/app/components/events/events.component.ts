@@ -1,9 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {Event} from 'src/app/dtos/event';
 import {EventService} from '../../services/event.service';
 import {ToastrService} from 'ngx-toastr';
 import {EventDate} from 'src/app/dtos/eventDate';
+import {AbbreviatedHallplan} from '../../dtos/hallplan/abbreviatedHallplan';
+import {HallplanService} from '../../services/hallplan/hallplan.service';
 
 @Component({
   selector: 'app-events',
@@ -30,10 +32,17 @@ export class EventsComponent implements OnInit {
   };
   today: Date;
   eventForm: FormGroup;
-
+  currentPage = 0;
+  pageSize = 5;
+  roomplanIsLoading = false;
+  selectedRoomplan = '';
+  roomplans = [];
+  distance = 1;
+  throttle = 2;
 
   constructor(private fb: FormBuilder,
               private service: EventService,
+              private hallplanService: HallplanService,
               private notification: ToastrService) {
     this.today = new Date(new Date().toISOString().split('T')[0]);
   }
@@ -48,8 +57,8 @@ export class EventsComponent implements OnInit {
       description: [''],
       image: ['']
     });
+    this.fetchOptionsRoomplan();
   }
-
 
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
@@ -98,5 +107,25 @@ export class EventsComponent implements OnInit {
       this.eventForm.markAllAsTouched();
     }
 
+  }
+  fetchOptionsRoomplan() {
+    this.roomplanIsLoading = true;
+    // Make an HTTP request to fetch the options using pagination
+    // Adjust the API endpoint and parameters based on your backend implementation
+    // Example: this.http.get(`/api/options?page=${this.currentPage}&pageSize=${this.pageSize}`)
+    //   .subscribe((response: any) => {
+    //     this.options = this.options.concat(response.options);
+    //     this.isLoading = false;
+    //   });
+    const observable = this.hallplanService.getRoomplans(this.currentPage);
+    observable.subscribe((data: AbbreviatedHallplan[]) => {
+      console.log(data);
+      this.roomplans = data;
+      console.log(this.roomplans);
+    });
+  }
+  openDropdownRoomplan() {
+    console.log('Roomplans: '+this.roomplans);
+    this.fetchOptionsRoomplan();
   }
 }

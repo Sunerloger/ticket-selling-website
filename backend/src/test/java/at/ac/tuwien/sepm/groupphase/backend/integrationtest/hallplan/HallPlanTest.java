@@ -54,7 +54,7 @@ public class HallPlanTest {
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    public void testDeleteHallPlanById() throws Exception {
+    public void givenId_WhenDelete_ThenDeleteHallplanWithId() throws Exception {
         // Create a test hall plan
         HallPlan hallPlan = new HallPlan();
         hallPlan.setName("Test Hall Plan");
@@ -70,7 +70,7 @@ public class HallPlanTest {
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    public void testCreateHallPlan() throws Exception {
+    public void givenOneHallPlan_whenPost_thenHallPlanWithAllPropertiesSet() throws Exception {
         // Create a HallPlanDto for the request body
         HallPlanDto hallPlanDto = new HallPlanDto();
         hallPlanDto.setName("Test Hall Plan");
@@ -89,7 +89,7 @@ public class HallPlanTest {
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN", "USER"})
-    public void testGetHallPlanById() throws Exception {
+    public void givenId_WhenGet_ThenReturnHallPlanById() throws Exception {
         Long validId = Long.valueOf(1);
         // Perform GET request
         byte[] body = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/hallplans/{id}", validId).accept(MediaType.APPLICATION_JSON)
@@ -107,7 +107,7 @@ public class HallPlanTest {
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN", "USER"})
-    public void testUpdateHallPlanById() throws Exception {
+    public void givenHallPlan_WhenUpdate_ThenUpdatedHallPlanFields() throws Exception {
         // Create a test hall plan
         HallPlan hallPlan = new HallPlan();
         hallPlan.setName("Test Hall Plan");

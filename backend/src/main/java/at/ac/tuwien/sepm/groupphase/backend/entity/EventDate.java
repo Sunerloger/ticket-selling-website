@@ -6,6 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.GenerationType;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,20 +21,25 @@ public class EventDate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     private LocalDate date;
 
+    @NotNull
     private LocalTime startingTime;
 
     @Column(name = "event_id")
     private Long event;
 
+    @NotNull
     private int areaCode;
 
+    @NotBlank
     private String address;
 
+    @NotBlank
     private String city;
 
-    @Column(name = "roomplan_id")
+    @Column(name = "hallplan_id")
     private Long room;
 
     public EventDate() {

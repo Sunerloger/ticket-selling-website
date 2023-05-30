@@ -47,7 +47,6 @@ export class RoomplaneditorComponent implements OnInit {
   fetchAllSections(hallplanId: number){
     this.service.getAllSections(hallplanId).subscribe({
       next: data => {
-        console.log(data, ' get all sections');
         this.sections = data;
       },
       error: error => {
@@ -63,7 +62,6 @@ export class RoomplaneditorComponent implements OnInit {
   fetchHallplanWithId(id: number){
     this.service.getHallplanById(id).subscribe({
       next: data => {
-        console.log(data);
         this.roomplan = data;
       },
       error: error => {
@@ -263,11 +261,18 @@ export class RoomplaneditorComponent implements OnInit {
    });
   }
 
+  /**
+   * Add and persist given SeatCreationEvent payload. Note amountSeat equals to
+   * capacity of seat when type is StandingSeat
+   *
+   * @param payload of seatcreationevent
+   */
   async handleAddSeats(payload: SeatCreationEvent) {
     console.log('addSeat rowNr=', payload.rowNr, ',type=', payload.type, ',direction=', payload.type);
     const { rowNr, type, direction, amountSeat } = payload;
 
     const initialSeatNr = this.getLatestSeatNrFromDirectionAndRowNr(direction, rowNr);
+    const initialOrderNr = this.getLatestOrderNrFromDirectionAndRowNr(direction, rowNr);
     const newSeats: Seat[] = [];
 
     // --- create seats that needs to be created
@@ -281,31 +286,62 @@ export class RoomplaneditorComponent implements OnInit {
           updateSeats.push({ ...seat, seatNr: seatNrOfOldSeat });
           seatNrOfOldSeat++;
         }
+        console.log(updateSeats);
         // persist
         if(updateSeats.length > 0){
           await this.updateSeatsBulk(updateSeats, 'Failed to add seats. Please try again.');
         }
 
 
-        // --- generate seats that needs to be persisted
-        let newSeatNr = 1;
-        for(let i = 0; i < amountSeat; i++){
-          newSeats.push(
-            await this.createEmptySeat(type, newSeatNr)
-          );
-          newSeatNr++;
+        // --- generate the new seat(s=) from the payload that needs to be persisted
+        switch(type){
+          case SeatType.seat:
+          case SeatType.vacantSeat:
+            let newSeatNr = 1;
+            let newOrderNr = 1;
+            for (let i = 1; i <= amountSeat; i++) {
+              newSeats.push(
+                await this.createEmptySeat(type, newOrderNr, newSeatNr)
+              );
+              newSeatNr++;
+              newOrderNr++;
+            }
+            break;
+          case SeatType.standingSeat:
+            newSeats.push(
+              await this.createEmptySeat(type, 1, 1, amountSeat)
+            );
+            break;
+          default:
+            console.log('Unsupported Seat Type', type);
         }
+
         break;
       case CreationMenuDirection.right:
-        // --- generate seats that needs to be persisted
-        let highestSeatNr = initialSeatNr;
-        for (let i = 0; i < amountSeat; i++) {
-          newSeats.push(
-            await this.createEmptySeat(type, highestSeatNr)
-          );
-          highestSeatNr++;
+        // --- generate the new seat(s=) from the payload that needs to be persisted
+        switch (type) {
+          case SeatType.seat:
+          case SeatType.vacantSeat:
+            let highestSeatNr = initialSeatNr;
+            let highestOrderNr = initialOrderNr;
+
+            for (let i = 0; i < amountSeat; i++) {
+              newSeats.push(
+                await this.createEmptySeat(type, highestOrderNr, highestSeatNr)
+              );
+              highestSeatNr++;
+              highestOrderNr++;
+            }
+            break;
+          case SeatType.standingSeat:
+            newSeats.push(
+              await this.createEmptySeat(type, initialOrderNr, initialSeatNr, amountSeat)
+            );
+            break;
+          default:
+            console.log('Unsupported Seat Type: ', type);
         }
-        break;
+
     }
 
     // --- persist newly created seats
@@ -339,16 +375,28 @@ export class RoomplaneditorComponent implements OnInit {
     for (let i = 0; i < clonedSeats.length; i++) {
       if (clonedSeats[i].id === id) {
         deletedSeatIndex = i;
-        clonedSeats.splice(i, 1);
         continue;
       }
-      //update the seatnumbers after deleted seats
+      //update the seatnumbers after deletedSeat was found during previous iterations
+      //... to optimize performance
       if(deletedSeatIndex !== -1){
         //we already found the deletedseat after that all seats should have their seat nr adjusted
-        clonedSeats[i].seatNr--;
+        if(clonedSeats[i].type !== SeatType.vacantSeat){
+          //a vacant seat always has the seatNr -1 so no need to update
+          if(clonedSeats[deletedSeatIndex].type !== SeatType.vacantSeat){
+            //... verify that the deleted seat was not a vacant seat.
+            //If a vacant seat was deleted, the successor seats should not have their seat number updated
+            clonedSeats[i].seatNr--;
+          }
+        }
+        clonedSeats[i].orderNr--; //every seat has its orderNr pushed back by 1
         updatedSeatsWithNewSeatNr.push(clonedSeats[i]);
       }
     }
+    console.log(updatedSeatsWithNewSeatNr);
+
+    //delete seat
+    clonedSeats.splice(deletedSeatIndex, 1);
 
     //persist new seats
     await this.updateSeatsBulk(updatedSeatsWithNewSeatNr, 'Failed to remove seat. Please try again');
@@ -368,15 +416,19 @@ export class RoomplaneditorComponent implements OnInit {
   }
 
   /**
-   * Return empty seat with default section
+   * Return empty seat
+   * Section is assigned specified default section
+   * Depending on type given seatNr is ignored and instead -1 is assigned to seatNr.
+   * OrderNr is infered from seatNr
    *
    * @param type
    * @param seatNr
    * @param capacity
    * @returns
    */
-  async createEmptySeat(type: SeatType, seatNr: number, capacity?: number): Promise<Seat> {
+  async createEmptySeat(type: SeatType, orderNr: number, seatNr: number, capacity?: number): Promise<Seat> {
     const defaultSection = await this.retrieveDefaultSection();
+    let overridenSeatNr = seatNr;
 
     switch(type){
       case SeatType.seat:
@@ -384,6 +436,7 @@ export class RoomplaneditorComponent implements OnInit {
         break;
       case SeatType.vacantSeat:
         capacity = 0;
+        overridenSeatNr = -1;
         break;
       case SeatType.standingSeat:
         capacity = capacity ?? 100;
@@ -393,15 +446,31 @@ export class RoomplaneditorComponent implements OnInit {
     }
     const emptySeat: Seat = {
       type,
-      seatNr,
+      seatNr: overridenSeatNr,
       status: SeatStatus.free,
       section: defaultSection,
+      orderNr,
       capacity
     };
     return emptySeat;
   }
 
   getLatestSeatNrFromDirectionAndRowNr(direction: CreationMenuDirection, rowNr: number) {
+    switch (direction) {
+      case CreationMenuDirection.left:
+        return 0;
+      case CreationMenuDirection.right:
+        let totalSeats = 0;
+        for(const seat of this.roomplan.seatRows[rowNr - 1].seats){
+          if(seat.type !== SeatType.vacantSeat){
+            totalSeats++;
+          }
+        }
+        return totalSeats + 1;
+    }
+  }
+
+  getLatestOrderNrFromDirectionAndRowNr(direction: CreationMenuDirection, rowNr: number){
     switch (direction) {
       case CreationMenuDirection.left:
         return 0;

@@ -29,6 +29,7 @@ export class EditComponent implements OnInit {
     areaCode: null,
     cityName: '',
     password: '',
+    isLocked: false
 
   };
 

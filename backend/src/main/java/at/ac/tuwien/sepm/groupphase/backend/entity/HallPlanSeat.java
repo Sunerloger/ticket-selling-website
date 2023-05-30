@@ -42,6 +42,10 @@ public class HallPlanSeat {
     private Long seatNr;
 
     @NotNull
+    @Column(name = "order_nr", nullable = false)
+    private Long orderNr;
+
+    @NotNull
     @Column(name = "seatrow_id")
     private Long seatrowId;
 
@@ -49,6 +53,14 @@ public class HallPlanSeat {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "section_id")
     private HallPlanSection section;
+
+    public Long getOrderNr() {
+        return orderNr;
+    }
+
+    public void setOrderNr(Long orderNr) {
+        this.orderNr = orderNr;
+    }
 
     public Long getSeatNr() {
         return seatNr;

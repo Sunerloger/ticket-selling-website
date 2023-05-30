@@ -3,10 +3,13 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserCreateDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserUnBlockDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
@@ -25,6 +28,14 @@ public interface UserMapper {
     UserDetailDto entityToUserDetailDto(ApplicationUser user);
 
 
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "isLocked", source = "locked")
+    UserUnBlockDto entityToUserUnBlockDto(ApplicationUser applicationUser);
+
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "isLocked", source = "locked")
+    List<UserUnBlockDto> entityToStreamUserUnBlockDto(List<ApplicationUser> applicationUserStream);
+
     @Mapping(target = "id", source = "id")
     ApplicationUser dtoToEntity(UserRegisterDto userRegisterDto);
 
@@ -33,6 +44,10 @@ public interface UserMapper {
 
     @Mapping(target = "id", source = "id")
     ApplicationUser userDetailDtoToEntity(UserDetailDto userDetailDto);
+
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "locked", source = "isLocked")
+    ApplicationUser userUnBlockDtoToEntity(UserUnBlockDto userUnBlockDto);
 
 
 }

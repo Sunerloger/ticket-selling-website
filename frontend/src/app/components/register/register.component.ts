@@ -22,6 +22,7 @@ export class RegisterComponent implements OnInit {
     areaCode: null,
     cityName: '',
     password: '',
+    isLocked: false
 
   };
   registerForm: FormGroup;

@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {EventService} from '../../services/event.service';
 import {ToastrService} from 'ngx-toastr';
 import {AbbreviatedEvent} from '../../dtos/abbreviatedEvents';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-event-overview',
@@ -19,7 +20,8 @@ export class EventOverviewComponent implements OnInit{
   location = '';
 
   constructor(private service: EventService,
-              private notification: ToastrService) { }
+              private notification: ToastrService,
+              private authService: AuthService) { }
 
   ngOnInit(): void {
     this.getEntities();

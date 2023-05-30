@@ -9,24 +9,6 @@
         </div>
         <form (ngSubmit)="editUser()" #editForm="ngForm">
           <div id="input">
-            <div class="form-group">
-              <!--
-              <label for="email">Email</label>
-              <input type="email" class="form-control"
-                     id="email" name="email" [(ngModel)]="user.email" #email="ngModel" required
-                     pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$">
-              <div *ngIf="editForm.submitted &&editForm.controls['email'].invalid" class="text-danger">
-                <span class="validation-info"
-                      *ngIf="email.errors?.required">
-                 Email is required!
-               </span>
-                <span class="validation-info"
-                      *ngIf="email.errors?.pattern">
-                 Email is invalid!
-               </span>
-              </div>
-              -->
-            </div>
             <div *ngIf="mode === 0">
               <div class="form-group"
                    [class.has-error]="firstName.invalid && firstName.touched">

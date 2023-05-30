@@ -2,13 +2,11 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.DetailedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatBulkDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSection;
 import jakarta.xml.bind.ValidationException;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -116,5 +114,13 @@ public interface HallPlanService {
      * @return the sections of the hallplan
      */
     List<HallPlanSectionDto> findAllSectionsByHallPlanIdWithCounts(Long hallplanId);
+
+    /**
+     * Retrieves a page containing 5 Hallplans.
+     *
+     * @param pageIndex index of the page
+     * @return a list of hallplans
+     */
+    Page<HallPlan> findPageOfHallplans(int pageIndex);
 
 }

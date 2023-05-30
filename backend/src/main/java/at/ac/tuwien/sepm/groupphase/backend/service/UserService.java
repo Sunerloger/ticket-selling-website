@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.List;
+
 public interface UserService extends UserDetailsService {
 
     /**
@@ -54,4 +56,8 @@ public interface UserService extends UserDetailsService {
     ApplicationUser getUser(String token);
 
     void delete(Long id, String email, String password);
+
+    void block(ApplicationUser userUnBlockDtoToEntity);
+
+    List<ApplicationUser> getBlockedUsers(ApplicationUser applicationUser);
 }

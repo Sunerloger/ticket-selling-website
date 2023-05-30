@@ -30,6 +30,9 @@ public class HallPlanSeatDto {
     @Min(value = 1, message = "seatNr must be greater than or equal to {value}")
     private Long seatNr;
 
+    @NotNull(message = "orderNr must be specified")
+    private Long orderNr;
+
     @Valid
     private HallPlanSectionDto section;
 
@@ -43,6 +46,13 @@ public class HallPlanSeatDto {
         this.id = id;
     }
 
+    public Long getOrderNr() {
+        return orderNr;
+    }
+
+    public void setOrderNr(Long orderNr) {
+        this.orderNr = orderNr;
+    }
 
     public Long getCapacity() {
         return capacity;
@@ -99,6 +109,7 @@ public class HallPlanSeatDto {
         private HallPlanSeatType type;
         private Long capacity;
         private Long seatNr;
+        private Long orderNr;
         private Long sectionId;
 
         private SeatDtoBuilder() {
@@ -133,6 +144,11 @@ public class HallPlanSeatDto {
             return this;
         }
 
+        public SeatDtoBuilder withOrderNr(Long orderNr) {
+            this.orderNr = orderNr;
+            return this;
+        }
+
         public SeatDtoBuilder withSectionId(Long sectionId) {
             this.sectionId = sectionId;
             return this;
@@ -145,6 +161,7 @@ public class HallPlanSeatDto {
             seatDto.setType(type);
             seatDto.setCapacity(capacity);
             seatDto.setSeatNr(seatNr);
+            seatDto.setOrderNr(orderNr);
             //seatDto.setHa
             return seatDto;
         }

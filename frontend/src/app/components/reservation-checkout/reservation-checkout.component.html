@@ -1,0 +1,96 @@
+<div class="pt-5">
+  <div class="card-header">
+    <h3 class="card-headline">Checkout</h3>
+  </div>
+  <div class="billing-info-box">
+    <div class="billing-info">
+      <h4>Billing Information</h4>
+      <span> Markus, Haslinger</span><br>
+      <span> Linzer Straße 12/18 </span><br>
+      <span> WIEN, 1150</span><br>
+      <br>
+
+      <div class="form-group custom-billing">
+        <input type="checkbox" class="checkbox" id="billing-info" name="admin">
+        <label for="billing-info">Use different billing Adress</label>
+      </div>
+
+      <div class="form-group">
+        <label for="cityName">City</label>
+        <input type="text" class="form-control" id="cityName" name="cityName" required>
+      </div>
+
+      <div class="form-group">
+        <label for="areaCode">Area Code</label>
+        <input type="text" class="form-control" id="areaCode" name="cityName" required>
+      </div>
+
+      <div class="form-group">
+        <label for="address">Address</label>
+        <input type="text" class="form-control" id="address" name="cityName" required>
+      </div>
+      <div class="infobox">
+
+        <h4>Payment Information</h4>
+
+        <div class="form-group">
+          <label for="cardNum">Card number</label>
+          <input type="number" class="form-control" id="cardNum" name="cityName" required>
+        </div>
+
+        <div class="form-group">
+          <label for="expirationDate">Exopiration date: (MM/YY)</label>
+          <input type="date" class="form-control" id="expirationDate" name="cityName" required>
+        </div>
+
+        <div class="form-group">
+          <label for="securityCode">Security Code</label>
+          <input type="number" class="form-control" id="securityCode" name="cityName" required>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="order-overview">
+      <h4>Order Overview</h4>
+      <div class="overview-row">
+        <span>Articles</span>
+        <span>35,22 €</span>
+      </div>
+      <div class="overview-row">
+        <span>Taxes</span>
+        <span>6,76 €</span>
+      </div>
+      <hr>
+      <div class="overview-row">
+        <h5>Total</h5>
+        <h5>41,98 €</h5>
+      </div>
+    </div>
+  </div>
+
+  <div class="infobox">
+
+
+  </div>
+
+  <div class="infobox">
+    <h4>Item Overview</h4>
+
+    <div *ngIf="item !== undefined">
+      <div *ngFor="let reservation of item.reservedSeats; let i = index">
+        <div class="item-list">
+          <input type="checkbox" class="checkbox" name="admin" [(ngModel)]="checkboxList[i]">
+          <app-ticket-list-item [event]="item.event" [seat]="reservation" style="flex: auto"></app-ticket-list-item>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="Total-Price infobox">
+    <h4>Total: {{ (sumOfCheckedItems()| number:'1.2-2').replace('.', ',') }} €</h4>
+  </div>
+  <button id="checkout" type="button" class="btn btn-primary" (click)="purchase()">&nbsp;Buy Now&nbsp;</button>
+</div>

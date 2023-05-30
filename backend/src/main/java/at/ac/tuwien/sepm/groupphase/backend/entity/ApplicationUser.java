@@ -1,6 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 
@@ -38,7 +43,9 @@ public class ApplicationUser {
 
     private String password;
 
-    private Boolean admin;
+    private Boolean admin = false;
+
+    private Boolean isLocked = false;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -58,8 +65,9 @@ public class ApplicationUser {
         this.admin = admin;
     }
 
+
     public ApplicationUser(String email, String firstName, String lastName, LocalDate birthdate, String address, Long areaCode, String cityName,
-                           String password, Boolean admin) {
+                           String password, Boolean admin, Boolean isLocked, Set<News> readNews) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -69,6 +77,13 @@ public class ApplicationUser {
         this.cityName = cityName;
         this.password = password;
         this.admin = admin;
+        this.isLocked = isLocked;
+        this.readNews = readNews;
+    }
+
+    public ApplicationUser(String email, Boolean isLocked) {
+        this.email = email;
+        this.isLocked = isLocked;
     }
 
     public String getEmail() {
@@ -149,6 +164,14 @@ public class ApplicationUser {
 
     public void setCityName(String cityName) {
         this.cityName = cityName;
+    }
+
+    public Boolean getLocked() {
+        return isLocked;
+    }
+
+    public void setLocked(Boolean locked) {
+        isLocked = locked;
     }
 
     public boolean hasRead(News news) {
