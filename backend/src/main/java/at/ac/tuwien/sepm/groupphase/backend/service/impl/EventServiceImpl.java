@@ -4,7 +4,9 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDateDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.EventDate;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
+import at.ac.tuwien.sepm.groupphase.backend.repository.EventDateRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
@@ -19,11 +21,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.beans.Expression;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -32,11 +33,13 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
     private final HallPlanRepository hallPlanRepository;
+    private final EventDateRepository eventDateRepository;
 
-    public EventServiceImpl(EventRepository eventRepository, EventMapper eventMapper, HallPlanRepository hallPlanRepository) {
+    public EventServiceImpl(EventRepository eventRepository, EventMapper eventMapper, HallPlanRepository hallPlanRepository, EventDateRepository eventDateRepository) {
         this.eventRepository = eventRepository;
         this.eventMapper = eventMapper;
         this.hallPlanRepository = hallPlanRepository;
+        this.eventDateRepository = eventDateRepository;
     }
 
     @Override
@@ -99,9 +102,19 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventDetailDto getEventById(Long id) {
         LOG.trace("getEventById({})", id);
-        List<Event> events = new ArrayList<>();
-        events.add(eventRepository.getEventById(id));
-        return eventMapper.eventToEventDetailDto(events).get(0);
+        Event event = eventRepository.getEventById(id);
+        return eventMapper.eventToEventDetailDto(event);
+    }
+
+    @Override
+    public EventDetailDto getEventFromHallplanId(Long hallplanId) {
+        EventDate eventDate = eventDateRepository.getEventDateByRoom(hallplanId);
+        Event event = eventRepository.getEventById(eventDate.getEvent());
+
+        List<EventDate> eventDateList = new ArrayList<>();
+        eventDateList.add(eventDate);
+        event.setEventDatesLocation(eventDateList);
+        return eventMapper.eventToEventDetailDto(event);
     }
 
 }

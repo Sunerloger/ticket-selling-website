@@ -16,6 +16,12 @@ public interface EventService {
      */
     Event create(EventDetailDto event) throws ValidationException;
 
+    /**
+     * Fetches the Event with the corresponding id.
+     *
+     * @param id the id of the event
+     * @return the found EventDetailDto or NULL if the event doesn't exist
+     */
     EventDetailDto getEventById(Long id);
 
     /**
@@ -37,4 +43,13 @@ public interface EventService {
      * @return page of max 20 events sorted by date
      */
     Page<Event> findAllPagesByDateAndAuthorAndLocation(int pageIndex, LocalDate fromDate, LocalDate toDate, String author, String location);
+
+
+    /**
+     * Fetches the Event that has an Eventdate with the given hallplanId.
+     *
+     * @param hallplanId the id of the hallplan
+     * @return returns the EventDetailDto corresponding to the hallplanId
+     */
+    EventDetailDto getEventFromHallplanId(Long hallplanId);
 }

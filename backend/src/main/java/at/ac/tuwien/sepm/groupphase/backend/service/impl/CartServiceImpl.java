@@ -5,7 +5,6 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CartItemDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatRowDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDetailDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Cart;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CartRepository;
@@ -22,19 +21,17 @@ import java.util.List;
 
 @Service
 public class CartServiceImpl implements CartService {
-    private CartRepository cartRepository;
-    private EventService eventService;
-    private HallPlanSeatService seatService;
-    private SeatRowService seatRowService;
-    private CustomUserDetailService userDetailService;
+    private final CartRepository cartRepository;
+    private final EventService eventService;
+    private final HallPlanSeatService seatService;
+    private final SeatRowService seatRowService;
 
     @Autowired
-    public CartServiceImpl(CartRepository cartRepository, EventService eventService, HallPlanSeatService seatService, SeatRowService seatRowService, CustomUserDetailService userDetailService) {
+    public CartServiceImpl(CartRepository cartRepository, EventService eventService, HallPlanSeatService seatService, SeatRowService seatRowService) {
         this.cartRepository = cartRepository;
         this.eventService = eventService;
         this.seatService = seatService;
         this.seatRowService = seatRowService;
-        this.userDetailService = userDetailService;
     }
 
     @Override
@@ -66,7 +63,9 @@ public class CartServiceImpl implements CartService {
         for (Cart cart : cartItemList) {
             HallPlanSeatDto hallPlanSeatDto = seatService.getSeatById(cart.getSeatId());
             SeatRowDto rowDto = seatRowService.getSeatRowById(hallPlanSeatDto.getSeatrowId());
-            EventDetailDto eventDto = eventService.getEventById(1L); //TODO:get correct Event
+
+            EventDetailDto eventDto = eventService.getEventFromHallplanId(rowDto.getHallPlanId());
+
             SeatDto seatDto = new SeatDto(hallPlanSeatDto, rowDto);
 
             itemList.add(new CartItemDto(seatDto, eventDto, cart.getId()));
