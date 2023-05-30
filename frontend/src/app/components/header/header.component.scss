@@ -4,28 +4,31 @@
   padding-right: 20px;
   padding-left: 20px;
 }
+
 .navbar .navbar-nav .nav-link.active {
   color: white;
 }
-.navbar-brand{
+
+.navbar-brand {
   font-size: 36px;
   font-family: 'Oleo Script';
 }
+
 .navbar-nav-right {
-  margin-left:auto;
+  margin-left: auto;
 }
 
 .navbar-nav {
-  display:flex;
-  justify-content:space-between;
+  display: flex;
+  justify-content: space-between;
   flex-direction: row;
-
 }
 
 .navbar-subcontainer {
-  display:flex;
+  display: flex;
   flex-direction: row;
   gap: 0.9rem;
+  flex-wrap: wrap;
 }
 
 .header-links-margins {
@@ -35,13 +38,11 @@
 .nav-link {
   color: white;
 }
-.nav-link:active {
-  color:green;
-}
 
 .remove-dropdown-caret::after {
   display: none !important;
 }
+
 .remove-dropdown-corners {
   border-radius: 0;
 }
@@ -58,21 +59,24 @@
 }
 
 .custom-animated-text {
-	background: linear-gradient(-45deg, red,#ffffff);
-	background-size: 400% 400%;
-	background-clip: text;
-	-webkit-background-clip: text;
+  background: linear-gradient(-45deg, red, #ffffff);
+  background-size: 400% 400%;
+  background-clip: text;
+  -webkit-background-clip: text;
   color: transparent;
 
 }
 
 .animated-text-custom {
-  color: #dbdbdb; /* Initial color */
-  transition: color 0.5s ease; /* Transition duration and easing */
+  color: #dbdbdb;
+  /* Initial color */
+  transition: color 0.5s ease;
+  /* Transition duration and easing */
 }
 
 .animated-text-custom:hover {
-  color: #ffffff; /* Color to transition to on hover */
+  color: #ffffff;
+  /* Color to transition to on hover */
 }
 
 .flex-container {
@@ -88,8 +92,46 @@
   margin-left: auto;
 }
 
-.logo_container{
+.logo_container {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/*
+  Dropdown
+*/
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown_menu {
+  position: absolute;
+  border-radius: 10px;
+  border: none;
+  background-color: rgb(35, 166, 213, 1);
+
+  box-shadow: -1px 1px 27px -8px rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: -1px 1px 27px -8px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: -1px 1px 27px -8px rgba(0, 0, 0, 0.75);
+}
+
+.dropdown-item {
+  color: white;
+}
+
+.dropdown-item:hover {
+  text-decoration: underline;
+  background-color: transparent;
+}
+
+/* Set color when dropdown is clicked */
+.dropdown-toggle[aria-expanded="true"].animated-text-custom {
+  color: #dbdbdb;
+}
+
+/* Set color when mouse hovers away */
+.dropdown-toggle.animated-text-custom:hover:not([aria-expanded="true"]) {
+  color: #ffffff;
 }

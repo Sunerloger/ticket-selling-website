@@ -1,0 +1,46 @@
+.pt-5{
+  margin-bottom: 3rem;
+}
+
+.card-header {
+  padding-bottom: 5px;
+}
+
+.card-headline {
+  color: black;
+  font-size: 36px;
+}
+
+.billing-info-box {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+}
+
+.billing-info {
+  flex-grow: 4;
+  flex-basis: 0;
+  padding-right: 20%;
+}
+
+.order-overview {
+  flex-grow: 0;
+  flex-basis: 300px;
+}
+
+.overview-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.infobox {
+  margin-top: 2rem;
+}
+
+.custom-billing > input {
+  margin-right: 0.3rem;
+}
+
+.item-list {
+  margin-bottom: 0.5rem;
+}

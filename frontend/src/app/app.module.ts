@@ -12,10 +12,12 @@ import {LoginComponent} from './components/login/login.component';
 import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
-import {EventsComponent} from './components/events/events.component';
-import {RegisterComponent} from './components/register/register.component';
+import {RoomplanCartComponent} from './components/roomplan-cart/roomplan-cart.component';
+import {ShoppingCartComponent} from './components/shopping-cart/shopping-cart.component';
 import {NewsCreateComponent} from './components/news/news-create/news-create.component';
+import {RegisterComponent} from './components/register/register.component';
 import {NewsOverviewComponent} from './components/news/news-overview/news-overview.component';
+import {EventsComponent} from './components/events/events.component';
 import {ToastrModule} from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgOptimizedImage} from '@angular/common';
@@ -35,6 +37,12 @@ import { SeatComponent } from './components/roomplaneditor/seatrow/seat/seat.com
 import { SectionmanagerComponent } from './components/roomplaneditor/sectionmanager/sectionmanager.component';
 import { CreateSectionComponent } from './components/roomplaneditor/sectionmanager/create-section/create-section.component';
 import { ManageSectionComponent } from './components/roomplaneditor/sectionmanager/manage-section/manage-section.component';
+import { ReservationsComponent } from './components/reservations/reservations.component';
+import { CartCheckoutComponent } from './components/cart-checkout/cart-checkout.component';
+import { PurchasesComponent } from './components/purchases/purchases.component';
+import { PurchaseDetailComponent } from './components/purchase-detail/purchase-detail.component';
+import { TicketListItemComponent } from './components/ticket-list-item/ticket-list-item.component';
+import { ReservationCheckoutComponent } from './components/reservation-checkout/reservation-checkout.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { EditableSectionComponent }
   from './components/roomplaneditor/sectionmanager/manage-section/editable-section/editable-section.component';
@@ -53,6 +61,8 @@ import { ImmutableseatComponent } from './components/roomplaneditor/seatrow/immu
     HomeComponent,
     LoginComponent,
     MessageComponent,
+    RoomplanCartComponent,
+    ShoppingCartComponent,
     EventsComponent,
     RegisterComponent,
     NewsCreateComponent,
@@ -69,6 +79,12 @@ import { ImmutableseatComponent } from './components/roomplaneditor/seatrow/immu
     SectionmanagerComponent,
     CreateSectionComponent,
     ManageSectionComponent,
+    ReservationsComponent,
+    CartCheckoutComponent,
+    PurchasesComponent,
+    PurchaseDetailComponent,
+    TicketListItemComponent,
+    ReservationCheckoutComponent,
     EditComponent,
     EditableSectionComponent,
     AdminBlockUnblockComponent,

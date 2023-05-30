@@ -20,6 +20,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.List;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -39,10 +41,14 @@ public class EventServiceImpl implements EventService {
     @Override
     public Event create(EventDetailDto event) throws ValidationException {
         LOG.trace("create({})", event);
-        Optional<Event> existingEvent = eventRepository.findById(event.getId());
-        if (existingEvent.isPresent()) {
-            throw new ValidationException("Event with id:" + event.getId() + " already exists");
+        Optional<Event> existingEvent;
+        if (event.getId() != null) {
+            existingEvent = eventRepository.findById(event.getId());
+            if (existingEvent.isPresent()) {
+                throw new ValidationException("Event with id:" + event.getId() + " already exists");
+            }
         }
+
         for (EventDateDto ed : event.getEventDatesLocation()) {
             Optional<HallPlan> existingHallplan = hallPlanRepository.findById(ed.getRoom());
             if (existingHallplan.isEmpty()) {
@@ -88,4 +94,13 @@ public class EventServiceImpl implements EventService {
         };
         return eventRepository.findAll(specification, pageable);
     }
+
+    @Override
+    public EventDetailDto getEventById(Long id) {
+        LOG.trace("getEventById({})", id);
+        List<Event> events = new ArrayList<>();
+        events.add(eventRepository.getEventById(id));
+        return eventMapper.eventToEventDetailDto(events).get(0);
+    }
+
 }

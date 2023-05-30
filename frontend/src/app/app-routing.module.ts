@@ -4,6 +4,8 @@ import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
 import {AuthGuard} from './guards/auth.guard';
 import {MessageComponent} from './components/message/message.component';
+import {RoomplanCartComponent} from './components/roomplan-cart/roomplan-cart.component';
+import {ShoppingCartComponent} from './components/shopping-cart/shopping-cart.component';
 import {EventsComponent} from './components/events/events.component';
 import {RegisterComponent} from './components/register/register.component';
 import {NewsCreateComponent} from './components/news/news-create/news-create.component';
@@ -13,6 +15,11 @@ import {EditComponent} from './components/edit/edit.component';
 import {NewsDetailComponent} from './components/news/news-detail/news-detail.component';
 import {AdminBlockUnblockComponent} from './components/admin-block-unblock/admin-block-unblock.component';
 import { RoomplaneditorComponent } from './components/roomplaneditor/roomplaneditor.component';
+import {ReservationsComponent} from './components/reservations/reservations.component';
+import {CartCheckoutComponent} from './components/cart-checkout/cart-checkout.component';
+import {PurchasesComponent} from './components/purchases/purchases.component';
+import {PurchaseDetailComponent} from './components/purchase-detail/purchase-detail.component';
+import {ReservationCheckoutComponent} from './components/reservation-checkout/reservation-checkout.component';
 import {EventOverviewComponent} from './components/event-overview/event-overview.component';
 import { HallplanManagerComponent } from './components/hallplan-manager/hallplan-manager.component';
 import {NewsResolver} from './components/news/news.resolver';
@@ -20,26 +27,42 @@ import {NewsResolver} from './components/news/news.resolver';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
-  {path: 'login', component: LoginComponent},
-  {path: 'register', component: RegisterComponent},
-  {path: 'block', component: AdminBlockUnblockComponent},
+
+  {path: 'events', component: EventOverviewComponent},
+  {path: 'events/create', canActivate: [AdminRouteGuard], component: EventsComponent},
+  {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
+
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
+
+  {path: 'cart', component: ShoppingCartComponent},
+  {path: 'cart/checkout', component: CartCheckoutComponent},
+  {path: 'roomplancart', component: RoomplanCartComponent},
+
+  {path: 'register', component: RegisterComponent},
+  {path: 'login', component: LoginComponent},
+  {path: 'edit', component: EditComponent},
+  {path: 'block', component: AdminBlockUnblockComponent},
+
+  {path: 'reservations', component: ReservationsComponent},
+  {path: 'reservations/:id/checkout', component: ReservationCheckoutComponent},
+
+  {path: 'purchases', component: PurchasesComponent},
+  {path: 'purchases/:id', component: PurchaseDetailComponent},
+
+  {path: 'roomplan/:id/edit', component: RoomplaneditorComponent},
+  {path: 'hallplans/:id/edit', component: RoomplaneditorComponent},
   {path: 'hallplans/manage', canActivate: [AuthGuard], component: HallplanManagerComponent},
-  {path: 'events', canActivate: [AdminRouteGuard], component: EventsComponent},
+
   {path: 'news', canActivate: [AuthGuard], children: [
       {path: '', component: NewsOverviewComponent},
       {path: ':id/info', component: NewsDetailComponent, resolve: {
-          news: NewsResolver
+        news: NewsResolver
         }},
       {path: 'create', canActivate: [AdminRouteGuard], component: NewsCreateComponent},
     ]},
-  {path: 'edit', component: EditComponent},
-  {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
-  {path: 'roomplan/:id/edit', component: RoomplaneditorComponent },
-  {path: 'hallplans/:id/edit', component: RoomplaneditorComponent },
+
   {path: '**', redirectTo: 'news'},
 ];
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { useHash: true, scrollPositionRestoration: 'enabled'})],

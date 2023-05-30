@@ -22,7 +22,7 @@ import java.util.LinkedList;
 @Entity
 @Table(name = "event")
 public class Event {
-    private static final String base64Pattern = "^data:image/(gif|png|jpeg|webp|svg\\+xml);base64,.*={0,2}$";
+    private static final String base64Pattern = "^(data:image/(gif|png|jpeg|webp|svg\\+xml);base64,.*={0,2})?$";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
