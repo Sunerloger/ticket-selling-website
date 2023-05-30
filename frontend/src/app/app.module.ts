@@ -52,6 +52,7 @@ import {AdminBlockUnblockComponent} from './components/admin-block-unblock/admin
 import { HallplanManagerComponent } from './components/hallplan-manager/hallplan-manager.component';
 import { CustomerhallplandisplayComponent } from './components/customerhallplandisplay/customerhallplandisplay.component';
 import { ImmutableseatComponent } from './components/roomplaneditor/seatrow/immutableseat/immutableseat.component';
+import { TicketPdfPrintComponent } from './components/ticket-pdf-print/ticket-pdf-print.component';
 
 @NgModule({
   declarations: [
@@ -92,6 +93,7 @@ import { ImmutableseatComponent } from './components/roomplaneditor/seatrow/immu
     HallplanManagerComponent,
     CustomerhallplandisplayComponent,
     ImmutableseatComponent,
+    TicketPdfPrintComponent,
   ],
   imports: [
     BrowserModule,
