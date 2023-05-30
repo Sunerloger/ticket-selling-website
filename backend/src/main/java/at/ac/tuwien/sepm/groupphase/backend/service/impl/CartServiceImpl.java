@@ -21,10 +21,10 @@ import java.util.List;
 
 @Service
 public class CartServiceImpl implements CartService {
-    private CartRepository cartRepository;
-    private EventService eventService;
-    private HallPlanSeatService seatService;
-    private SeatRowService seatRowService;
+    private final CartRepository cartRepository;
+    private final EventService eventService;
+    private final HallPlanSeatService seatService;
+    private final SeatRowService seatRowService;
 
 
     @Autowired
@@ -64,7 +64,9 @@ public class CartServiceImpl implements CartService {
         for (Cart cart : cartItemList) {
             HallPlanSeatDto hallPlanSeatDto = seatService.getSeatById(cart.getSeatId());
             SeatRowDto rowDto = seatRowService.getSeatRowById(hallPlanSeatDto.getSeatrowId());
-            EventDetailDto eventDto = eventService.getEventById(1L); //TODO:get correct Event
+
+            EventDetailDto eventDto = eventService.getEventFromHallplanId(rowDto.getHallPlanId());
+
             SeatDto seatDto = new SeatDto(hallPlanSeatDto, rowDto);
 
             itemList.add(new CartItemDto(seatDto, eventDto, cart.getId()));
