@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,6 +39,11 @@ public class NewsRepositoryTest implements TestData {
         newsRepository.deleteAll();
         newsImageRepository.deleteAll();
         eventRepository.deleteAll();
+
+        event.setCategory("Rock");
+        event.setArtist("Queen");
+        event.setDuration(LocalTime.now());
+        event.setTitle("Live Aid");
         eventRepository.save(event);
     }
 
