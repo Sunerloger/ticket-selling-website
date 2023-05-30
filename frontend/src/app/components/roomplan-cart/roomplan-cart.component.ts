@@ -57,7 +57,10 @@ export class RoomplanCartComponent {
         this.router.navigate(['/reservations']);
       }
     );
+  }
 
+  buttonMessage(): string {
+    return 'lol';
   }
 
 
