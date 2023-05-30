@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface CartService {
     /**
-     * Adds a List of items to the Cart of the given user
+     * Adds a List of items to the Cart of the given user.
      *
      * @param seatDtoList the list of Seats to add to the cart
      * @param userId      the id of the user
@@ -17,7 +17,7 @@ public interface CartService {
     void addItemList(List<SeatDto> seatDtoList, Long userId) throws NotFoundException;
 
     /**
-     * Fetches a list of all the items in the given users cart
+     * Fetches a list of all the items in the given users cart.
      *
      * @param userId the id of the user
      * @return a List of CartItemDtos of the given user
@@ -25,7 +25,7 @@ public interface CartService {
     List<CartItemDto> getItems(Long userId);
 
     /**
-     * removes a seat from the cart of the given user
+     * removes a seat from the cart of the given user.
      *
      * @param itemId the id of the to delete seat
      * @param userId the id of the user

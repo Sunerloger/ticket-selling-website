@@ -9,7 +9,7 @@ import java.util.List;
 public interface ReservationService {
 
     /**
-     * Fetches all the Reservations of a given user
+     * Fetches all the Reservations of a given user.
      *
      * @param userId the id of the user
      * @return a List of ReservationDtos

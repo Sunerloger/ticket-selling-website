@@ -6,7 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 public interface TicketService {
 
     /**
-     * Creates a TicketDto from a given Ticket
+     * Creates a TicketDto from a given Ticket.
      *
      * @param ticket the Ticket to be converted
      * @return the built TicketDto
