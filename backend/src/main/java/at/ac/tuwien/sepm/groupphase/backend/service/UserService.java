@@ -1,19 +1,14 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserUnBlockDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import jakarta.xml.bind.ValidationException;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 public interface UserService extends UserDetailsService {
 
@@ -65,4 +60,6 @@ public interface UserService extends UserDetailsService {
     void block(ApplicationUser userUnBlockDtoToEntity);
 
     List<ApplicationUser> getBlockedUsers(ApplicationUser applicationUser);
+
+    Long getUserIdFromToken(String token);
 }

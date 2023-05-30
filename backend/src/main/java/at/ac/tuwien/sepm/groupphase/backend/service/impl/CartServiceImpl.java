@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CartItemDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatRowDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDetailDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Cart;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CartRepository;
@@ -25,14 +26,15 @@ public class CartServiceImpl implements CartService {
     private EventService eventService;
     private HallPlanSeatService seatService;
     private SeatRowService seatRowService;
-
+    private CustomUserDetailService userDetailService;
 
     @Autowired
-    public CartServiceImpl(CartRepository cartRepository, EventService eventService, HallPlanSeatService seatService, SeatRowService seatRowService) {
+    public CartServiceImpl(CartRepository cartRepository, EventService eventService, HallPlanSeatService seatService, SeatRowService seatRowService, CustomUserDetailService userDetailService) {
         this.cartRepository = cartRepository;
         this.eventService = eventService;
         this.seatService = seatService;
         this.seatRowService = seatRowService;
+        this.userDetailService = userDetailService;
     }
 
     @Override
