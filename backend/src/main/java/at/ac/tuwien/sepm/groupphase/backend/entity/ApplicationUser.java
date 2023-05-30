@@ -67,7 +67,7 @@ public class ApplicationUser {
 
 
     public ApplicationUser(String email, String firstName, String lastName, LocalDate birthdate, String address, Long areaCode, String cityName,
-                           String password, Boolean admin, Boolean isLocked, Set<News> readNews) {
+                           String password, Boolean admin, Boolean isLocked) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -78,7 +78,6 @@ public class ApplicationUser {
         this.password = password;
         this.admin = admin;
         this.isLocked = isLocked;
-        this.readNews = readNews;
     }
 
     public ApplicationUser(String email, Boolean isLocked) {
