@@ -4,12 +4,16 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.NewsInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.*;
+import at.ac.tuwien.sepm.groupphase.backend.entity.News;
+import at.ac.tuwien.sepm.groupphase.backend.entity.NewsImage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ApplicationUserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsImageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -46,6 +50,9 @@ public class NewsSecurityTest implements TestData {
     private NewsRepository newsRepository;
 
     @Autowired
+    private ApplicationUserRepository userRepository;
+
+    @Autowired
     private NewsImageRepository newsImageRepository;
 
     @Autowired
@@ -66,6 +73,7 @@ public class NewsSecurityTest implements TestData {
     public void beforeEach() {
         newsRepository.deleteAll();
         newsImageRepository.deleteAll();
+        userRepository.deleteAll();
         news = News.NewsBuilder.aNews()
             .withTitle(TEST_NEWS_TITLE)
             .withShortText(TEST_NEWS_SUMMARY)
@@ -80,13 +88,26 @@ public class NewsSecurityTest implements TestData {
         List<NewsImage> testImageList = new LinkedList<>(Arrays.asList(img1,img2,img3));
 
         news.setImages(testImageList);
+
+        // TODO: why does the order matter here???
+        ApplicationUser user = new ApplicationUser();
+        user.setEmail(ADMIN_USER);
+        user.setAdmin(true);
+
+        ApplicationUser admin = new ApplicationUser();
+        user.setEmail(DEFAULT_USER);
+        user.setAdmin(false);
+
+        userRepository.save(user);
+        userRepository.save(admin);
     }
 
     @Test
     public void givenUserLoggedIn_whenFindAll_then200() throws Exception {
         // default pageIndex is 0
         MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES))
+                .param("loadAlreadyRead","true"))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -100,7 +121,7 @@ public class NewsSecurityTest implements TestData {
     @Test
     public void givenNoOneLoggedIn_whenFindAll_then403() throws Exception {
         // default pageIndex is 0
-        MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI))
+        MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI).param("loadAlreadyRead", "true"))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();

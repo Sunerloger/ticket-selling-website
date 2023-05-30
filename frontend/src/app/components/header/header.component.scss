@@ -1,5 +1,5 @@
 .navbar {
-  background-color: #23a6d5;
+  background-color: var(--primary-color);
   font-size: 24px;
   padding-right: 20px;
   padding-left: 20px;
@@ -75,7 +75,7 @@
 }
 
 .animated-text-custom:hover {
-  color: #ffffff;
+  color: white;
   /* Color to transition to on hover */
 }
 
@@ -110,7 +110,7 @@
   position: absolute;
   border-radius: 10px;
   border: none;
-  background-color: rgb(35, 166, 213, 1);
+  background-color: var(--primary-color);
 
   box-shadow: -1px 1px 27px -8px rgba(0, 0, 0, 0.75);
   -webkit-box-shadow: -1px 1px 27px -8px rgba(0, 0, 0, 0.75);
@@ -133,5 +133,5 @@
 
 /* Set color when mouse hovers away */
 .dropdown-toggle.animated-text-custom:hover:not([aria-expanded="true"]) {
-  color: #ffffff;
+  color: white;
 }

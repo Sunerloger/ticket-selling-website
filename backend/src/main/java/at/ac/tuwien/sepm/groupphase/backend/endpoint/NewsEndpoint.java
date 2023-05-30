@@ -4,7 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.AbbreviatedNewsDto
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.DetailedNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.NewsInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.*;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,8 +13,10 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,10 +64,10 @@ public class NewsEndpoint {
     @GetMapping
     @Operation(summary = "Get list of news without details", security = @SecurityRequirement(name = "apiKey"))
     public List<AbbreviatedNewsDto> findAll(@RequestParam(defaultValue = "0") int pageIndex, @RequestParam boolean loadAlreadyRead,
-                                            @RequestParam String token) {
+                                            @RequestHeader(value = "Authorization", required = false) String token) {
         LOGGER.info("GET {}?pageIndex={}&loadAlreadyRead={}", BASE_PATH, pageIndex, loadAlreadyRead);
 
-        return newsService.findAllPagedByCreatedAt(pageIndex, loadAlreadyRead, userService.getUser(token).getId()).map(newsMapper::newsToAbbreviatedNewsDto).toList();
+        return newsService.findAllPagedByCreatedAt(pageIndex, loadAlreadyRead, userService.getUser(token)).map(newsMapper::newsToAbbreviatedNewsDto).toList();
     }
 
     @Secured("ROLE_USER")
@@ -90,7 +92,8 @@ public class NewsEndpoint {
     @Secured("ROLE_USER")
     @PutMapping("{id}")
     @Operation(summary = "Set news entry relation to user", security = @SecurityRequirement(name = "apiKey"))
-    public ResponseEntity<Void> putRelation(@PathVariable Long id, @RequestParam String token) {
+    public ResponseEntity<Void> putRelation(@PathVariable Long id,
+                                            @RequestHeader(value = "Authorization", required = false) String token) {
         LOGGER.info("PUT {}/{}", BASE_PATH, id);
 
         ApplicationUser user = userService.getUser(token);

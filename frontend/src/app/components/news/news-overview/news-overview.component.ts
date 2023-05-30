@@ -29,7 +29,7 @@ export class NewsOverviewComponent implements OnInit {
    */
   initializeLoadedPages() {
     this.pageIndex = 0;
-    this.newsService.getPage(0, this.showAlreadyReadNews, this.authService.getToken()).subscribe({
+    this.newsService.getPage(0, this.showAlreadyReadNews).subscribe({
       next: (news: AbbreviatedNews[]) => {
         this.news = news;
       },
@@ -54,7 +54,7 @@ export class NewsOverviewComponent implements OnInit {
    * Loads the next page of news from the backend
    */
   onScroll(): void {
-    this.newsService.getPage(++this.pageIndex, this.showAlreadyReadNews, this.authService.getToken())
+    this.newsService.getPage(++this.pageIndex, this.showAlreadyReadNews)
       .subscribe((news: AbbreviatedNews[]) => {
       console.log('GET page ' + this.pageIndex);
       this.news.push(...news);

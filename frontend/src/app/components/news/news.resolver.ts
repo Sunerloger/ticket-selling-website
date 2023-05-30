@@ -27,7 +27,7 @@ export class NewsResolver implements Resolve<News> {
    */
   resolve(route: ActivatedRouteSnapshot): Observable<News> {
     console.log('Resolve Route');
-    const news = this.newsService.getById(route.params?.id, this.authService.getToken()).pipe(
+    const news = this.newsService.getById(route.params?.id).pipe(
       catchError(error => {
         console.error(`Error loading news`, error);
         const errorMessage = error.status === 0
@@ -38,7 +38,7 @@ export class NewsResolver implements Resolve<News> {
         return EMPTY;
       })
     );
-    const observable = this.newsService.putNewsRead(route.params?.id, this.authService.getToken());
+    const observable = this.newsService.putNewsRead(route.params?.id);
     observable.subscribe({
       next: () => {},
       error: error => {

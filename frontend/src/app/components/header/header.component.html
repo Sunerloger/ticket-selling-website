@@ -39,9 +39,10 @@
           *ngIf="authService.getUserRole() === 'ADMIN'">Administration</a>
         <div class="dropdown-menu dropdown_menu dropdown-menu-right remove-dropdown-corners w-100"
           aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" routerLink="/events/create">Event Creation </a>
+          <a class="dropdown-item" routerLink="/news/create">News Creation </a>
           <a class="dropdown-item" routerLink="/hallplans/manage">HallPlan
             Manager </a>
-          <a class="dropdown-item" routerLink="/events/create">Event Creation </a>
           <a class="dropdown-item" href="#">Account Manager</a>
         </div>
       </div>

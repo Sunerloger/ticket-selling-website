@@ -2,9 +2,13 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.NewsInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.*;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.News;
+import at.ac.tuwien.sepm.groupphase.backend.entity.NewsImage;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepm.groupphase.backend.repository.*;
+import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -13,12 +17,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.support.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.lang.invoke.MethodHandles;
-import java.net.*;
+import java.net.URI;
 import java.util.Optional;
 
 @Service
@@ -73,8 +77,14 @@ public class SimpleNewsService implements NewsService {
 
     @Override
     @Transactional
-    public Page<News> findAllPagedByCreatedAt(int pageIndex, boolean loadAlreadyRead, Long userId) {
+    public Page<News> findAllPagedByCreatedAt(int pageIndex, boolean loadAlreadyRead, ApplicationUser user) {
         Pageable pageable = PageRequest.of(pageIndex, 20, Sort.by("createdAt").descending());
+
+        if (user == null) {
+            throw new NotFoundException("The user specified by the token was not found");
+        }
+
+        Long userId = user.getId();
 
         LOGGER.debug("Find all news entries by pageable: {}, userId: {}, loadAlreadyRead: {}", pageable, userId, loadAlreadyRead);
 
