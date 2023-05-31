@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.FetchType;
 import jakarta.validation.constraints.Pattern;
+
 import java.util.Objects;
 
 @Entity

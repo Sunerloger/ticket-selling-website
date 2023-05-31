@@ -14,7 +14,6 @@ public interface NewsRepository extends JpaRepository<News, Long> {
      * Find all news entries specified by {@code pageable}.
      *
      * @param pageable specifies parameters and index of page
-     *
      * @return ordered page of news entries
      */
     @NonNull
