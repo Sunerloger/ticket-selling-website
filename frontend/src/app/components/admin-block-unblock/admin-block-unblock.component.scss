@@ -2,6 +2,13 @@
   background-color: red;
   border-color: transparent;
   margin-top: 10px;
+  margin-left: 10px;
+}
+
+.btn-warning {
+  border-color: transparent;
+  margin-top: 10px;
+  margin-left: 10px;
 }
 
 .card-header {
@@ -18,5 +25,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.search-field {
+  display: flex;
+  align-items: baseline;
+  flex-direction: row;
 }
 

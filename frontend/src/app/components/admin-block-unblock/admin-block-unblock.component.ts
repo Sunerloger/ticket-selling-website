@@ -153,4 +153,8 @@ export class AdminBlockUnblockComponent implements OnInit {
       this.onChange();
     }
   }
+
+  resetBlockForm() {
+    this.blockForm.controls['email'].setValue('');
+  }
 }
