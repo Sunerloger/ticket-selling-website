@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.entity.NewsImage;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ApplicationUserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
@@ -23,7 +24,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class SimpleNewsService implements NewsService {
@@ -31,13 +34,16 @@ public class SimpleNewsService implements NewsService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final NewsRepository newsRepository;
     private final EventRepository eventRepository;
+    private final ApplicationUserRepository userRepository;
     private final NewsMapper newsMapper;
 
     public SimpleNewsService(NewsRepository newsRepository,
                              EventRepository eventRepository,
+                             ApplicationUserRepository userRepository,
                              NewsMapper newsMapper) {
         this.newsRepository = newsRepository;
         this.eventRepository = eventRepository;
+        this.userRepository = userRepository;
         this.newsMapper = newsMapper;
     }
 
@@ -114,10 +120,25 @@ public class SimpleNewsService implements NewsService {
     public void deleteById(Long id) {
         LOGGER.debug("Delete news by id {}", id);
 
-        if (!newsRepository.existsById(id)) {
+        Optional<News> newsOpt = newsRepository.findById(id);
+
+        if (newsOpt.isEmpty()) {
             throw new NotFoundException(String.format("News not found with id: %d", id));
         }
 
+        News news = newsOpt.get();
+
+        // get all users who read this news
+        Set<ApplicationUser> users = new HashSet<>(news.getUsers());
+
+        for (ApplicationUser user : users) {
+            user.remove(news);
+            news.remove(user);
+
+            userRepository.save(user);
+        }
+
+        newsRepository.save(news);
         newsRepository.deleteById(id);
     }
 

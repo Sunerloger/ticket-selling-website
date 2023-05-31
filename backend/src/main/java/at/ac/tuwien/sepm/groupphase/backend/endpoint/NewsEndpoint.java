@@ -86,6 +86,7 @@ public class NewsEndpoint {
     @Operation(summary = "Delete news entry with the given id", security = @SecurityRequirement(name = "apiKey"))
     public void deleteOneById(@PathVariable Long id) {
         LOGGER.info("DELETE {}/{}", BASE_PATH, id);
+
         newsService.deleteById(id);
     }
 

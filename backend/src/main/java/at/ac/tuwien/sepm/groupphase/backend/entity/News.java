@@ -133,6 +133,14 @@ public class News {
         readByUsers.add(user);
     }
 
+    public void remove(ApplicationUser user) {
+        readByUsers.remove(user);
+    }
+
+    public Set<ApplicationUser> getUsers() {
+        return readByUsers;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -144,13 +152,12 @@ public class News {
         return Objects.equals(id, news.id)
             && Objects.equals(title, news.title)
             && Objects.equals(shortText, news.shortText)
-            && Objects.equals(fullText, news.fullText)
-            && Objects.equals(coverImage, news.coverImage);
+            && Objects.equals(fullText, news.fullText);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, shortText, fullText, coverImage);
+        return Objects.hash(id, title, shortText, fullText);
     }
 
     @Override

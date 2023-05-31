@@ -15,6 +15,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Set;
 
 //TODO: replace this class with a correct ApplicationUser Entity implementation
@@ -51,6 +52,19 @@ public class ApplicationUser {
     private Boolean admin = false;
 
     private Boolean isLocked = false;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ApplicationUser that = (ApplicationUser) o;
+        return Objects.equals(id, that.id) && Objects.equals(email, that.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email);
+    }
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -184,5 +198,9 @@ public class ApplicationUser {
 
     public void addNews(News news) {
         this.readNews.add(news);
+    }
+
+    public void remove(News news) {
+        this.readNews.remove(news);
     }
 }
