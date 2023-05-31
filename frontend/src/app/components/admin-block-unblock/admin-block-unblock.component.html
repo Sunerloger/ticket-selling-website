@@ -5,12 +5,12 @@
 
       <div class="card-border">
         <div class="card-header">
-          <h3 class="card-headline">{{heading}}</h3>
+          <h1 class="card-headline">{{heading}}</h1>
           <button class="btn btn-primary" (click)="changeMode()">{{buttonDescription}}</button>
         </div>
         <div id="input-field">
           <form [formGroup]="blockForm">
-            <label for="email">Email</label>
+            <label for="email">Searching for email</label>
             <div class="search-field">
               <input type="email" class="form-control" formControlName="email"
                      id="email" name="email" [(ngModel)]="user.email"
