@@ -1,6 +1,6 @@
 <div 
 class="seat_row" 
-[ngStyle]="{'max-height': renderAsImmutable === true ? '4rem' : '2rem'}"
+[ngStyle]="{'max-height': (renderAsImmutable === true || showSeatNr === true) ? '4rem' : '2rem'}"
 >
     <span *ngIf="this.showRowNr">{{this.seatRow.rowNr}}</span>
     <!-- (Optional) Delete Row Button -->
