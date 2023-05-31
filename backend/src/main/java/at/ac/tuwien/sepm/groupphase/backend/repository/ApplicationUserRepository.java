@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 @Repository
 public interface ApplicationUserRepository extends JpaRepository<ApplicationUser, Long> {
@@ -32,18 +31,45 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
      */
     ApplicationUser findUserByEmail(String email);
 
+    /**
+     * Delete user by id.
+     *
+     * @param id the users id
+     */
     @Override
     void deleteById(Long id);
 
+    /**
+     * Change isLocked status for user
+     *
+     * @param email    the email of the user
+     * @param isLocked the boolean to change
+     */
     @Transactional
     @Modifying
     @Query("update ApplicationUser u set u.isLocked = :isLocked where u.email = :email")
     void updateIsLocked(@Param(value = "email") String email, @Param(value = "isLocked") boolean isLocked);
 
+    /**
+     * Returns locked users
+     *
+     * @param email    search parameter
+     * @param admin    current logged-in admin
+     * @param pageable specifies parameters and index of page
+     * @return ordered page of user entries
+     */
     @Transactional(readOnly = true)
     @Query("SELECT u FROM ApplicationUser u WHERE u.isLocked = TRUE AND u.email LIKE %:email% AND u.email NOT LIKE %:admin%")
     List<ApplicationUser> findUserByIsLockedIsTrueAndEmail(@Param(value = "email") String email, @Param(value = "admin") String admin, @NonNull Pageable pageable);
 
+    /**
+     * Returns unlocked users
+     *
+     * @param email    search parameter
+     * @param admin    current logged-in admin
+     * @param pageable specifies parameters and index of page
+     * @return ordered page of user entries
+     */
     @Transactional(readOnly = true)
     @Query("SELECT u FROM ApplicationUser u WHERE u.isLocked = FALSE AND u.email LIKE %:email% AND u.email NOT LIKE %:admin%")
     List<ApplicationUser> findUserByIsLockedIsFalseAndEmail(@Param(value = "email") String email, @Param(value = "admin") String admin, @NonNull Pageable pageable);

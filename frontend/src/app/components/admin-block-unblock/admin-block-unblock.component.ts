@@ -134,21 +134,7 @@ export class AdminBlockUnblockComponent implements OnInit {
 
 
   onChange() {
-
     this.pageIndex = 0;
-    /*
-    const x = this.blockForm.value;
-    const user = new BlockUser(x.email, x.isLocked);
-    console.log(user);
-    if (this.mode === 0) {
-      user.isLocked = false;
-      this.userService.getBlockedUser(user, 0).subscribe((value => this.users = value));
-    } else {
-      user.isLocked = true;
-      this.userService.getBlockedUser(user, 0).subscribe((value) => this.users = value);
-    }
-*/
-
     const x = this.blockForm.value;
     const user = new BlockUser(x.email, x.isLocked);
     console.log(user);
@@ -180,12 +166,7 @@ export class AdminBlockUnblockComponent implements OnInit {
   onScroll(): void {
     const x = this.blockForm.value;
     const user = new BlockUser(x.email, x.isLocked);
-    /*
-    this.userService.getBlockedUser(user, ++this.pageIndex).subscribe((value) => {
-      console.log('GET page ' + this.pageIndex);
-      this.users.push(...value);
-    });
-*/
+
     if (this.mode === 0) {
       user.isLocked = false;
       this.userService.getBlockedUser(user, ++this.pageIndex).subscribe((value) => {
