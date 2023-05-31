@@ -11,7 +11,6 @@ import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 
 import jakarta.xml.bind.ValidationException;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -158,4 +157,11 @@ public class CustomUserDetailService implements UserService {
         }
 
     }
+
+    @Override
+    public Long getUserIdFromToken(String token) {
+        ApplicationUser user = this.getUser(token);
+        return user == null ? null : user.getId();
+    }
+
 }
