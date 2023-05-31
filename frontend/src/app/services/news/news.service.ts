@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Globals} from '../../global/globals';
 import {AbbreviatedNews, News} from '../../dtos/news';
@@ -66,9 +66,11 @@ export class NewsService {
   }
 
   /**
+   * Create a relation "news_read" between the user and the news with the id "id" if it hasn't existed already
    *
+   * @param id The id of the news that was read
+   * @return Not Found Exception if news with id "id" was not found
    */
-  // TODO
   putNewsRead(id: number): Observable<any> {
     return this.httpClient.put<News>(this.newsBaseUri + `/${id}`, null);
   }
