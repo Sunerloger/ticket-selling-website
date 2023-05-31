@@ -4,7 +4,6 @@ import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
 import {AuthGuard} from './guards/auth.guard';
 import {MessageComponent} from './components/message/message.component';
-import {RoomplanCartComponent} from './components/roomplan-cart/roomplan-cart.component';
 import {ShoppingCartComponent} from './components/shopping-cart/shopping-cart.component';
 import {EventsComponent} from './components/events/events.component';
 import {RegisterComponent} from './components/register/register.component';
@@ -32,18 +31,17 @@ const routes: Routes = [
   {path: 'events', component: EventOverviewComponent},
   {path: 'login', component: LoginComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
-  {path: 'roomplancart', component: RoomplanCartComponent},
-  {path: 'cart', component: ShoppingCartComponent},
+  {path: 'cart', canActivate: [AuthGuard], component: ShoppingCartComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'block', component: AdminBlockUnblockComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'news/create', canActivate: [AdminRouteGuard], component: NewsCreateComponent},
   {path: 'roomplan/:id/edit', component: RoomplaneditorComponent},
-  {path: 'reservations', component: ReservationsComponent},
-  {path: 'cart/checkout', component: CartCheckoutComponent},
-  {path: 'purchases', component: PurchasesComponent},
-  {path: 'purchases/:id', component: PurchaseDetailComponent},
-  {path: 'reservations/:id/checkout', component: ReservationCheckoutComponent},
+  {path: 'reservations', canActivate: [AuthGuard], component: ReservationsComponent},
+  {path: 'cart/checkout', canActivate: [AuthGuard], component: CartCheckoutComponent},
+  {path: 'purchases', canActivate: [AuthGuard], component: PurchasesComponent},
+  {path: 'purchases/:id', canActivate: [AuthGuard], component: PurchaseDetailComponent},
+  {path: 'reservations/:id/checkout', canActivate: [AuthGuard], component: ReservationCheckoutComponent},
   {path: 'hallplans/manage', canActivate: [AuthGuard], component: HallplanManagerComponent},
   {path: 'events/create', canActivate: [AdminRouteGuard], component: EventsComponent},
   {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},

@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AbbreviatedEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDetailDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,12 +14,7 @@ import jakarta.xml.bind.ValidationException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
@@ -48,6 +44,14 @@ public class EventEndpoint {
         } catch (ValidationException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping("/performance/{id}")
+    @Operation(summary = "Get Information of Performance", security = @SecurityRequirement(name = "apiKey"))
+    public PerformanceDto getPerformance(@PathVariable Long id) {
+        LOG.info("GET /api/v1/events/performance/{}", id);
+        return eventService.getPerformanceFromHallplanId(id);
     }
 
     @Secured("ROLE_USER")

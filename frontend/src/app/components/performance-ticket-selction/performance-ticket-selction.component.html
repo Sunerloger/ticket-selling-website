@@ -3,8 +3,12 @@
     <h3 class="card-headline"> Pick your seats </h3>
   </div>
 
-<app-customerhallplandisplay [hallplanId]="this.hallplanId"  (selectionChangeEvent)="handleEvent($event)"></app-customerhallplandisplay>
+  <h4> {{this.performance.title}}
+    - {{this.performance.performanceDate.date | date }} {{ formatTime(this.performance.performanceDate.startingTime) | date: 'shortTime' }}  </h4>
+
+  <app-customerhallplandisplay [hallplanId]="this.hallplanId"
+                               (selectionChangeEvent)="handleEvent($event)"></app-customerhallplandisplay>
   <div class="component-seperator"></div>
-<app-roomplan-cart [items]="selectedSeats"></app-roomplan-cart>
+  <app-roomplan-cart [items]="selectedSeats"></app-roomplan-cart>
 
 </div>

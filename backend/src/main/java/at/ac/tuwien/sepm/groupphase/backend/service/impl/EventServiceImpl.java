@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDateDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDetailDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventDate;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -115,6 +117,13 @@ public class EventServiceImpl implements EventService {
         eventDateList.add(eventDate);
         event.setEventDatesLocation(eventDateList);
         return eventMapper.eventToEventDetailDto(event);
+    }
+
+    @Override
+    public PerformanceDto getPerformanceFromHallplanId(Long hallplanId) {
+        EventDate eventDate = eventDateRepository.getEventDateByRoom(hallplanId);
+        Event event = eventRepository.getEventById(eventDate.getEvent());
+        return new PerformanceDto(event, eventDate);
     }
 
 }
