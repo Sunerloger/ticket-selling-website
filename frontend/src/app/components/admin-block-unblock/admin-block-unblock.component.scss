@@ -1,13 +1,17 @@
 .btn-danger {
   background-color: red;
   border-color: transparent;
+  margin-left: 10px;
+}
+
+.btn-warning {
+  border-color: transparent;
   margin-top: 10px;
+  margin-left: 10px;
 }
 
 .card-header {
   padding-bottom: 5px;
-
-
 }
 
 .btn-primary {
@@ -15,3 +19,21 @@
   border-color: transparent;
   margin-top: 10px;
 }
+
+.blocked-users {
+  margin-top: 10px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid rgba(0, 0, 0, .25);
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.search-field {
+  display: flex;
+  align-items: baseline;
+  flex-direction: row;
+}
+

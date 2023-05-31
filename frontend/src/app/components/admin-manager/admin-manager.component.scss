@@ -1,0 +1,16 @@
+.admin-tools {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+}
+
+.card-header {
+  padding-bottom: 5px;
+}
+
+.btn-primary {
+  background-color: #00BA8B;
+  border-color: transparent;
+  margin-top: 10px;
+}

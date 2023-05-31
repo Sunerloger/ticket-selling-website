@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -66,8 +67,8 @@ public class AdminCreateEndpoint {
 
     @GetMapping
     @Secured("ROLE_ADMIN")
-    public List<UserUnBlockDto> getBlockedUsers(UserUnBlockDto userUnBlockDto) {
+    public List<UserUnBlockDto> getBlockedUsers(UserUnBlockDto userUnBlockDto, @RequestParam(defaultValue = "0") int pageIndex, @RequestParam(value = "token") String token) {
         LOGGER.info("Get blocked users " + BASE_PATH);
-        return userMapper.entityToStreamUserUnBlockDto(userService.getBlockedUsers(userMapper.userUnBlockDtoToEntity(userUnBlockDto)));
+        return userMapper.entityToStreamUserUnBlockDto(userService.getBlockedUsers(userMapper.userUnBlockDtoToEntity(userUnBlockDto), token, pageIndex));
     }
 }

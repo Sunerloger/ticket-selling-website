@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -18,11 +17,8 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Set;
 
-//TODO: replace this class with a correct ApplicationUser Entity implementation
 @Entity
-@Table(name = "applicationuser") /*, uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"email"})
-}*/
+@Table(name = "applicationuser")
 public class ApplicationUser {
 
     @Id

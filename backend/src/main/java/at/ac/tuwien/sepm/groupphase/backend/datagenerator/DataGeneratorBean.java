@@ -48,7 +48,7 @@ public class DataGeneratorBean {
         ApplicationUser initialAdmin =
             new ApplicationUser("adminTest@email.com", "Admin", "Admin", LocalDate.parse("1999-12-12"), "Adminstreet", 1010L, "Vienna", "password", true, false);
         ApplicationUser initialUser =
-            new ApplicationUser("userTest@email.com", "Admin", "Admin", LocalDate.parse("1999-12-12"), "Adminstreet", 1010L, "Vienna", "password", false, false);
+            new ApplicationUser("userTest@email.com", "User", "User", LocalDate.parse("1999-12-12"), "Userstreet", 1010L, "Vienna", "password", false, false);
         try (var connection = dataSource.getConnection()) {
             ScriptUtils.executeSqlScript(connection, new ClassPathResource("sql/deleteAllUsers.sql"));
             userDetailService.register(initialAdmin);

@@ -51,6 +51,9 @@ import {AdminBlockUnblockComponent} from './components/admin-block-unblock/admin
 import { HallplanManagerComponent } from './components/hallplan-manager/hallplan-manager.component';
 import { CustomerhallplandisplayComponent } from './components/customerhallplandisplay/customerhallplandisplay.component';
 import { ImmutableseatComponent } from './components/roomplaneditor/seatrow/immutableseat/immutableseat.component';
+import { EventDetailComponent } from './components/event-detail/event-detail.component';
+import { AdminManagerComponent } from './components/admin-manager/admin-manager.component';
+import { PerformanceTicketSelctionComponent } from './components/performance-ticket-selction/performance-ticket-selction.component';
 
 @NgModule({
   declarations: [
@@ -90,6 +93,9 @@ import { ImmutableseatComponent } from './components/roomplaneditor/seatrow/immu
     HallplanManagerComponent,
     CustomerhallplandisplayComponent,
     ImmutableseatComponent,
+    EventDetailComponent,
+    AdminManagerComponent,
+    PerformanceTicketSelctionComponent,
   ],
   imports: [
     BrowserModule,
@@ -105,7 +111,6 @@ import { ImmutableseatComponent } from './components/roomplaneditor/seatrow/immu
     BsDatepickerModule,
     MatPaginatorModule,
     InfiniteScrollModule,
-    NgbModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

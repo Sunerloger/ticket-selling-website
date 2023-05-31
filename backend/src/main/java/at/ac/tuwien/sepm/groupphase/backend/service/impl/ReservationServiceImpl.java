@@ -12,10 +12,8 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.ReservationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanSeatService;
 import at.ac.tuwien.sepm.groupphase.backend.service.ReservationService;
-import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -24,10 +22,10 @@ import java.util.List;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
-    private ReservationRepository repository;
-    private HallPlanSeatService seatService;
-    private EventService eventService;
-    private SeatRowServiceImpl rowService;
+    private final ReservationRepository repository;
+    private final HallPlanSeatService seatService;
+    private final EventService eventService;
+    private final SeatRowServiceImpl rowService;
 
     @Autowired
     public ReservationServiceImpl(ReservationRepository repository, HallPlanSeatService seatService, EventService eventService, SeatRowServiceImpl rowService) {
@@ -47,25 +45,7 @@ public class ReservationServiceImpl implements ReservationService {
                 break; //TODO: actually this shouldnt happen (every reservation should have seats)
             }
 
-            List<SeatDto> seatDtoList = new ArrayList<>();
-            List<ReservationSeat> reservationSeatList = reservation.getReservationSeatsList();
-
-            for (ReservationSeat reservationSeat : reservationSeatList) {
-                HallPlanSeatDto hallPlanSeatDto = seatService.getSeatById(reservationSeat.getSeatId());
-                SeatRowDto rowDto = rowService.getSeatRowById(hallPlanSeatDto.getSeatrowId());
-                seatDtoList.add(new SeatDto(hallPlanSeatDto, rowDto));
-            }
-
-            ReservationDto reservationDto = new ReservationDto();
-            reservationDto.setReservedSeats(seatDtoList);
-
-            EventDetailDto event = eventService.getEventById(1L); //TODO: get correct Event
-            reservationDto.setEvent(event);
-
-            reservationDto.setReservationDate(reservation.getDate());
-            reservationDto.setReservationNr(reservation.getReservationNr());
-
-            reservationDtoList.add(reservationDto);
+            reservationDtoList.add(getReservationOfUser(reservation.getReservationNr(), userId));
         }
 
         return reservationDtoList;
@@ -84,17 +64,21 @@ public class ReservationServiceImpl implements ReservationService {
 
         List<SeatDto> seatDtoList = new ArrayList<>();
         List<ReservationSeat> reservationSeatList = reservation.getReservationSeatsList();
-
+        SeatRowDto rowDto = null;
         for (ReservationSeat reservationSeat : reservationSeatList) {
             HallPlanSeatDto hallPlanSeatDto = seatService.getSeatById(reservationSeat.getSeatId());
-            SeatRowDto rowDto = rowService.getSeatRowById(hallPlanSeatDto.getSeatrowId());
+            rowDto = rowService.getSeatRowById(hallPlanSeatDto.getSeatrowId());
             seatDtoList.add(new SeatDto(hallPlanSeatDto, rowDto));
         }
 
         ReservationDto reservationDto = new ReservationDto();
         reservationDto.setReservedSeats(seatDtoList);
 
-        EventDetailDto event = eventService.getEventById(1L); //TODO: get correct Event
+        if (rowDto == null) {
+            return reservationDto;
+        }
+
+        EventDetailDto event = eventService.getEventFromHallplanId(rowDto.getHallPlanId());
         reservationDto.setEvent(event);
 
         reservationDto.setReservationDate(reservation.getDate());
@@ -124,7 +108,6 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public void addReservation(List<SeatDto> itemDtoList, Long userId) {
         if (itemDtoList.isEmpty()) {
             return;

@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.AbbreviatedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.DetailedHallPlanDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.AbbreviatedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatBulkDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatRowBulkDto;
@@ -121,6 +121,16 @@ public class HallPlanEndpoint {
         return hallPlanService.findPageOfHallplans(pageIndex)
             .map(hallPlanMapper::hallPlanToAbbreviatedHallPlanDto)
             .toList();
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping("/byId")
+    @Operation(summary = "Get list of events without details", security = @SecurityRequirement(name = "apiKey"))
+    public AbbreviatedHallPlanDto getAbbreviatedHallPlanById(@RequestParam(required = true) Long id) {
+        LOGGER.info("GET {}/getByIdAbbreviatedHallPlan", id);
+        LOGGER.info("called without param");
+        return hallPlanMapper.hallPlanToAbbreviatedHallPlanDto(hallPlanMapper.detailedHallPlanDtoToHallPlan(hallPlanService.getHallPlanById(id)));
+
     }
 
     //*******************************************************

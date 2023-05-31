@@ -45,7 +45,6 @@ public class HallPlanSeat {
     @Column(name = "order_nr", nullable = false)
     private Long orderNr;
 
-    @NotNull
     @Column(name = "seatrow_id")
     private Long seatrowId;
 
