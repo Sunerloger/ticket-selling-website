@@ -25,7 +25,7 @@ public interface PurchaseService {
      * @param userId the id of the user that tries to delete the purchase
      */
     void deletePurchase(Long purchaseNr, Long userId);
-    
+
     /**
      * Fetches all the Purchases of a given user.
      *
