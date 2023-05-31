@@ -73,14 +73,11 @@ public class PurchaseServiceImpl implements PurchaseService {
         repository.deletePurchaseByPurchaseNr(purchaseNr);
     }
 
+
     @Override
-    public List<PurchaseDto> getPurchasesOfUser(String token) {
-        //Retrieve userId
-        ApplicationUser user = customUserDetailService.getUser(token);
-        if (user == null) {
-            throw new NotFoundException("User associated with token " + token + " was not found!");
-        }
-        List<Purchase> purchaseList = repository.findPurchasesByUserIdOrderByPurchaseDate(user.getId());
+    public List<PurchaseDto> getPurchasesOfUser(Long id) {
+
+        List<Purchase> purchaseList = repository.findPurchasesByUserIdOrderByPurchaseDate(id);
         List<PurchaseDto> purchaseDtoList = new ArrayList<>();
 
         //TODO: check if purchase belong to user cart
