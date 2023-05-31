@@ -36,7 +36,8 @@ public class DataGeneratorBean {
     public void generateData() throws SQLException {
         LOGGER.info("Generating hall plan data...");
         try (var connection = dataSource.getConnection()) {
-            ScriptUtils.executeSqlScript(connection, new ClassPathResource("sql/insertData.sql"));
+           // ScriptUtils.executeSqlScript(connection, new ClassPathResource("sql/insertData.sql"));
+            ScriptUtils.executeSqlScript(connection, new ClassPathResource("sql/insertNewsEntries.sql"));
             LOGGER.info("Finished generating data without error.");
         }
     }
@@ -45,10 +46,14 @@ public class DataGeneratorBean {
     public void generateInitialAdmin() throws SQLException, ValidationException {
         LOGGER.info("Generating initial admin...");
         ApplicationUser initialAdmin =
-            new ApplicationUser("admin@email.com", "Admin", "Admin", LocalDate.parse("1999-12-12"), "Adminstreet", 1010L, "Vienna", "password", true, false);
+            new ApplicationUser("adminTest@email.com", "Admin", "Admin", LocalDate.parse("1999-12-12"), "Adminstreet", 1010L, "Vienna", "password", true, false);
+        ApplicationUser initialUser =
+            new ApplicationUser("userTest@email.com", "Admin", "Admin", LocalDate.parse("1999-12-12"), "Adminstreet", 1010L, "Vienna", "password", false, false);
         try (var connection = dataSource.getConnection()) {
+            ScriptUtils.executeSqlScript(connection, new ClassPathResource("sql/deleteAllUsers.sql"));
             userDetailService.register(initialAdmin);
+            userDetailService.register(initialUser);
         }
-        LOGGER.info("Finished generating admin without error.");
+        LOGGER.info("Finished generating admin and user without error.");
     }
 }
