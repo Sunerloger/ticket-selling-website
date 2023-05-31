@@ -17,23 +17,31 @@
                      pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$">
               <button class="btn btn-warning" (click)="resetBlockForm()">Reset</button>
             </div>
-            <div id="user-overview">
-              <div *ngIf="mode === 1">
-                <tr *ngFor="let user of users" class="center-td blocked-users">
-                  <td>{{user.email}}</td>
-                  <td>
-                    <button type="submit" class="btn btn-danger" (click)="blockUser(user.email)">Unblock</button>
-                  </td>
-                </tr>
+
+            <div infinite-scroll
+                 [infiniteScrollDistance]="distance"
+                 [infiniteScrollThrottle]="throttle"
+                 (scrolled)="onScroll()">
+
+              <div id="user-overview">
+                <div *ngIf="mode === 1">
+                  <tr *ngFor="let user of users" class="center-td blocked-users">
+                    <td>{{user.email}}</td>
+                    <td>
+                      <button type="submit" class="btn btn-danger" (click)="blockUser(user.email)">Unblock</button>
+                    </td>
+                  </tr>
+                </div>
+                <div *ngIf="mode === 0">
+                  <tr *ngFor="let user of users" class="center-td blocked-users">
+                    <td>{{user.email}}</td>
+                    <td>
+                      <button type="submit" class="btn btn-danger" (click)="blockUser(user.email)">Block</button>
+                    </td>
+                  </tr>
+                </div>
               </div>
-              <div *ngIf="mode === 0">
-                <tr *ngFor="let user of users" class="center-td blocked-users">
-                  <td>{{user.email}}</td>
-                  <td>
-                    <button type="submit" class="btn btn-danger" (click)="blockUser(user.email)">Block</button>
-                  </td>
-                </tr>
-              </div>
+
             </div>
 
 

@@ -65,10 +65,18 @@ export class UserService {
     return this.http.put(this.adminBaseUri, blockUser);
   }
 
-  getBlockedUser(user: BlockUser): Observable<BlockUser[]> {
+  /**
+   * Loads a blocked/unblocked user-page from the backend
+   *
+   * @param user the search options with email and isLocked status that should be fetched
+   * @param pageIndex index of the page that should fetched
+   * @return an Observable for the fetched page of the user entries
+   * */
+  getBlockedUser(user: BlockUser, pageIndex: number): Observable<BlockUser[]> {
     let params = new HttpParams();
     params = params.append('email', user.email);
     params = params.append('isLocked', user.isLocked);
+    params = params.append('pageIndex', pageIndex);
     return this.http.get<BlockUser[]>(this.adminBaseUri + '?token=' + this.authService.getToken(), {params});
   }
 

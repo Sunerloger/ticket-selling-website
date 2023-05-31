@@ -17,6 +17,9 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -155,12 +158,13 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public List<ApplicationUser> getBlockedUsers(ApplicationUser applicationUser, String token) {
+    public List<ApplicationUser> getBlockedUsers(ApplicationUser applicationUser, String token, int pageIndex) {
         ApplicationUser admin = getUser(token);
+        Pageable pageable = PageRequest.of(pageIndex, 20, Sort.by("email").ascending());
         if (applicationUser.getLocked().equals(Boolean.TRUE)) {
-            return applicationUserRepository.findUserByIsLockedIsTrueAndEmail(applicationUser.getEmail(), admin.getEmail());
+            return applicationUserRepository.findUserByIsLockedIsTrueAndEmail(applicationUser.getEmail(), admin.getEmail(), pageable);
         } else {
-            return applicationUserRepository.findUserByIsLockedIsFalseAndEmail(applicationUser.getEmail(), admin.getEmail());
+            return applicationUserRepository.findUserByIsLockedIsFalseAndEmail(applicationUser.getEmail(), admin.getEmail(), pageable);
         }
 
     }

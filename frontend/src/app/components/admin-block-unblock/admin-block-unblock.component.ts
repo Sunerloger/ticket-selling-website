@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {BlockUser, User} from '../../dtos/user';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {UserService} from '../../services/user.service';
 import {AuthService} from '../../services/auth.service';
 import {ToastrService} from 'ngx-toastr';
@@ -40,6 +40,9 @@ export class AdminBlockUnblockComponent implements OnInit {
   //Error flag
   error = false;
   errorMessage = '';
+  pageIndex = 0;
+  distance = 1;
+  throttle = 100; // ms
 
   mode: BlockUnblockMode = BlockUnblockMode.unblock;
 
@@ -75,7 +78,6 @@ export class AdminBlockUnblockComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.onChange();
     this.blockForm.valueChanges.pipe(debounceTime(200)).subscribe(dataValue => {
       this.onChange();
     });
@@ -132,16 +134,33 @@ export class AdminBlockUnblockComponent implements OnInit {
 
 
   onChange() {
+
+    this.pageIndex = 0;
+    /*
     const x = this.blockForm.value;
     const user = new BlockUser(x.email, x.isLocked);
     console.log(user);
     if (this.mode === 0) {
       user.isLocked = false;
-      this.userService.getBlockedUser(user).subscribe((value) => this.users = value);
+      this.userService.getBlockedUser(user, 0).subscribe((value => this.users = value));
     } else {
       user.isLocked = true;
-      this.userService.getBlockedUser(user).subscribe((value) => this.users = value);
+      this.userService.getBlockedUser(user, 0).subscribe((value) => this.users = value);
     }
+*/
+
+    const x = this.blockForm.value;
+    const user = new BlockUser(x.email, x.isLocked);
+    console.log(user);
+    if (this.mode === 0) {
+      user.isLocked = false;
+      this.userService.getBlockedUser(user, 0).subscribe((value) => this.users = value);
+    } else {
+      user.isLocked = true;
+      this.userService.getBlockedUser(user, 0).subscribe((value) => this.users = value);
+    }
+
+
   }
 
   changeMode() {
@@ -156,5 +175,30 @@ export class AdminBlockUnblockComponent implements OnInit {
 
   resetBlockForm() {
     this.blockForm.controls['email'].setValue('');
+  }
+
+  onScroll(): void {
+    const x = this.blockForm.value;
+    const user = new BlockUser(x.email, x.isLocked);
+    /*
+    this.userService.getBlockedUser(user, ++this.pageIndex).subscribe((value) => {
+      console.log('GET page ' + this.pageIndex);
+      this.users.push(...value);
+    });
+*/
+    if (this.mode === 0) {
+      user.isLocked = false;
+      this.userService.getBlockedUser(user, ++this.pageIndex).subscribe((value) => {
+        console.log('GET page ' + this.pageIndex);
+        this.users.push(...value);
+      });
+    } else {
+      user.isLocked = true;
+      this.userService.getBlockedUser(user, ++this.pageIndex).subscribe((value) => {
+        console.log('GET page ' + this.pageIndex);
+        this.users.push(...value);
+      });
+
+    }
   }
 }
