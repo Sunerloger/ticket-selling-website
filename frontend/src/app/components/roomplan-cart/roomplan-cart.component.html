@@ -1,6 +1,6 @@
 <div id="roomplan-cart">
   <h5>
-    {{ selectedSeats() }} tickets selected
+    {{ selectedSeats() }} ticket{{items.length === 0 ? 's' : ''}} selected
   </h5>
   <div *ngFor="let item of items">
 

@@ -3,9 +3,10 @@
     <h3 class="card-headline"> Pick your seats </h3>
   </div>
 
+  <div *ngIf="performance.performanceDate !== undefined">
   <h4> {{this.performance.title}}
     - {{this.performance.performanceDate.date | date }} {{ formatTime(this.performance.performanceDate.startingTime) | date: 'shortTime' }}  </h4>
-
+  </div>
   <app-customerhallplandisplay [hallplanId]="this.hallplanId"
                                (selectionChangeEvent)="handleEvent($event)"></app-customerhallplandisplay>
   <div class="component-seperator"></div>
