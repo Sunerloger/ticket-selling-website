@@ -1,3 +1,15 @@
+<div class="pt-5">
+  <div class="card-header">
+    <h3 class="card-headline"> Pick your seats </h3>
+  </div>
 
-<app-customerhallplandisplay [hallplanId]="this.hallplanId"  (selectionChangeEvent)="handleEvent($event)"></app-customerhallplandisplay>
-<app-roomplan-cart [items]="selectedSeats"></app-roomplan-cart>
+  <div *ngIf="performance.performanceDate !== undefined">
+  <h4> {{this.performance.title}}
+    - {{this.performance.performanceDate.date | date }} {{ formatTime(this.performance.performanceDate.startingTime) | date: 'shortTime' }}  </h4>
+  </div>
+  <app-customerhallplandisplay [hallplanId]="this.hallplanId"
+                               (selectionChangeEvent)="handleEvent($event)"></app-customerhallplandisplay>
+  <div class="component-seperator"></div>
+  <app-roomplan-cart [items]="selectedSeats"></app-roomplan-cart>
+
+</div>

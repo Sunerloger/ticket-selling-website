@@ -10,3 +10,14 @@ export interface Event {
   description?: string;
   image?: string;
 }
+
+export interface Performance {
+  id?: number;
+  title: string;
+  performanceDate: EventDate;
+  duration: string;
+  category: string;
+  artist: string;
+  description?: string;
+  image?: string;
+}
