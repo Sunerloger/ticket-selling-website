@@ -1,53 +1,53 @@
 <link rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,300,0,0" />
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,300,0,0"/>
 
 <nav class="navbar navbar-expand-lg gradient-background">
   <div class="logo_container">
     <a class="logo-fontstyle navbar-brand-style ml-lg-5" href>Ticketline</a>
     <span class="material-symbols-outlined"
-      style="font-size: 40px; transform: rotate(90deg); color:#f7f7f7; transform: scaleX(0.8); transform: scaleY(1.1); font-weight: 10;">
+          style="font-size: 40px; transform: rotate(90deg); color:#f7f7f7; transform: scaleX(0.8); transform: scaleY(1.1); font-weight: 10;">
       confirmation_number
     </span>
   </div>
 
   <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,300,0,0" />
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,300,0,0"/>
 
   <div class="navbar-nav collapse navbar-collapse" id="navbarSupportedContent">
     <div class="navbar-subcontainer" style="margin-left:2rem">
       <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()" routerLink="/events"
-        routerLinkActive="active">Events
+         routerLinkActive="active">Events
       </a>
       <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()" routerLink="/news"
-        routerLinkActive="active">News
+         routerLinkActive="active">News
       </a>
 
       <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()" routerLink="/cart"
-        routerLinkActive="active">Cart
+         routerLinkActive="active">Cart
       </a>
     </div>
     <div class="navbar-subcontainer">
       <a class="nav-link animated-text-custom" *ngIf="!authService.isLoggedIn()" routerLink="/register"
-        routerLinkActive="active">Register</a>
+         routerLinkActive="active">Register</a>
       <a class="nav-link animated-text-custom" *ngIf="!authService.isLoggedIn()" routerLink="/login"
-        routerLinkActive="active">Login</a>
+         routerLinkActive="active">Login</a>
 
       <div class="dropdown">
 
         <a class="dropdown-toggle dropdown-toggle-no-caret nav-link animated-text-custom remove-dropdown-caret w-100"
-          type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false"
-          *ngIf="authService.getUserRole() === 'ADMIN'">Administration</a>
+           type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false"
+           *ngIf="authService.getUserRole() === 'ADMIN'">Administration</a>
         <div class="dropdown-menu dropdown_menu dropdown-menu-right remove-dropdown-corners w-100"
-          aria-labelledby="dropdownMenuButton">
+             aria-labelledby="dropdownMenuButton">
           <a class="dropdown-item" routerLink="/hallplans/manage">HallPlan
             Manager </a>
           <a class="dropdown-item" routerLink="/events/create">Event Creation </a>
-          <a class="dropdown-item" href="#">Account Manager</a>
+          <a class="dropdown-item" routerLink="/admin">Account Manager</a>
         </div>
       </div>
 
       <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()" routerLink="/"
-        (click)="authService.logoutUser()">Logout</a>
+         (click)="authService.logoutUser()">Logout</a>
 
     </div>
 

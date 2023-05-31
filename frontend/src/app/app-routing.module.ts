@@ -21,6 +21,7 @@ import {PurchaseDetailComponent} from './components/purchase-detail/purchase-det
 import {ReservationCheckoutComponent} from './components/reservation-checkout/reservation-checkout.component';
 import {EventOverviewComponent} from './components/event-overview/event-overview.component';
 import {HallplanManagerComponent} from './components/hallplan-manager/hallplan-manager.component';
+import {AdminManagerComponent} from './components/admin-manager/admin-manager.component';
 import {
   PerformanceTicketSelctionComponent
 } from './components/performance-ticket-selction/performance-ticket-selction.component';
@@ -33,7 +34,13 @@ const routes: Routes = [
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'cart', canActivate: [AuthGuard], component: ShoppingCartComponent},
   {path: 'register', component: RegisterComponent},
-  {path: 'block', component: AdminBlockUnblockComponent},
+  {
+    path: 'admin', canActivate: [AdminRouteGuard], children: [
+      {path: '', component: AdminManagerComponent},
+      {path: 'block', canActivate: [AdminRouteGuard], component: AdminBlockUnblockComponent},
+      {path: 'register', canActivate: [AdminRouteGuard], component: RegisterComponent},
+    ]
+  },
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'news/create', canActivate: [AdminRouteGuard], component: NewsCreateComponent},
   {path: 'roomplan/:id/edit', component: RoomplaneditorComponent},
@@ -61,6 +68,7 @@ const routes: Routes = [
   {path: 'hallplans/:id/edit', component: RoomplaneditorComponent},
   {path: 'performance-tickets/:id', canActivate: [AuthGuard], component: PerformanceTicketSelctionComponent},
   {path: '**', redirectTo: 'news'},
+  {path: 'hallplans/:id/edit', component: RoomplaneditorComponent}
 ];
 
 @NgModule({

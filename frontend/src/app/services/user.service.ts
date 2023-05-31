@@ -22,6 +22,12 @@ export class UserService {
   ) {
   }
 
+  /**
+   * Register a new user.
+   *
+   * @param user the user which should be persisted in the database
+   * @return an Observable of the user which has been registered
+   * */
   registerUser(user: User): Observable<User> {
     if (this.authService.isLoggedIn() && this.authService.getUserRole() === 'ADMIN') {
       return this.http.post<User>(
@@ -34,6 +40,11 @@ export class UserService {
     }
   }
 
+  /**
+   * Get a user.
+   *
+   * @return an Observable of the user which was retrieved
+   * */
   getUser(token: string): Observable<User> {
     if (this.authService.isLoggedIn()) {
       return this.http.get<User>(
@@ -42,6 +53,12 @@ export class UserService {
     }
   }
 
+  /**
+   * Edit a user in the database.
+   *
+   * @param user the values which should be edited
+   * @return an Observable of the user which was edited
+   * */
   editUser(user: User, token: string): Observable<User> {
     if (this.authService.isLoggedIn()) {
       return this.http.put<User>(
@@ -50,6 +67,13 @@ export class UserService {
     }
   }
 
+  /**
+   * Delete a user in the database.
+   *
+   * @param id the id of the user which will be deleted
+   * @param email the email of the user
+   * @param password the password of the user
+   * */
   delete(id: number, email: string, password: string) {
     console.log(id + email + password);
     let params = new HttpParams();
@@ -59,24 +83,36 @@ export class UserService {
     return this.http.delete(this.userGetUri, {params});
   }
 
+  /**
+   * Block|Unblock a user in the database
+   *
+   * @param blockUser the user which will be blocked
+   * */
   blockUser(blockUser: BlockUser) {
-    console.log(blockUser.email);
-    console.log(blockUser.isLocked);
     return this.http.put(this.adminBaseUri, blockUser);
   }
 
-  getBlockedUser(user: BlockUser): Observable<BlockUser[]> {
+  /**
+   * Loads a blocked/unblocked user-page from the backend.
+   *
+   * @param user the search options with email and isLocked status that should be fetched
+   * @param pageIndex index of the page that should fetched
+   * @return an Observable for the fetched page of the user entries
+   * */
+  getBlockedUser(user: BlockUser, pageIndex: number): Observable<BlockUser[]> {
     let params = new HttpParams();
-    if (user.email) {
-      params = params.append('email', user.email);
-    }
+    params = params.append('email', user.email);
     params = params.append('isLocked', user.isLocked);
-    return this.http.get<BlockUser[]>(this.adminBaseUri, {params});
+    params = params.append('pageIndex', pageIndex);
+    return this.http.get<BlockUser[]>(this.adminBaseUri + '?token=' + this.authService.getToken(), {params});
   }
 
+  /**
+   * Block|Unblock a user in the database
+   *
+   * @param unblockUser the user which will be unblocked
+   * */
   unblockUser(unblockUser: BlockUser) {
-    console.log(unblockUser.email);
-    console.log(unblockUser.isLocked);
     return this.http.put(this.adminBaseUri, unblockUser);
   }
 
