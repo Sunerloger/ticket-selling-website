@@ -55,8 +55,12 @@ public class ApplicationUser {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ApplicationUser that = (ApplicationUser) o;
         return Objects.equals(id, that.id) && Objects.equals(email, that.email);
     }
