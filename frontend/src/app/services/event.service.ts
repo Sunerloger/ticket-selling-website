@@ -70,10 +70,10 @@ export class EventService {
     return this.http.get<Event>(baseUri+'/byId', {params});
   }
    /**
-   * Get a Performance by HallplanId.
-   *
-   * @return performance.
-   */
+    * Get a Performance by HallplanId.
+    *
+    * @return performance.
+    */
   getPerformance(hallplanId: number): Observable<Performance> {
     return this.http.get<any>(baseUri + '/performance/' + hallplanId);
   }
