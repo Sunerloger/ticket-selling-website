@@ -160,4 +160,11 @@ public class CustomUserDetailService implements UserService {
         }
 
     }
+
+    @Override
+    public Long getUserIdFromToken(String token) {
+        ApplicationUser user = this.getUser(token);
+        return user == null ? null : user.getId();
+    }
+
 }

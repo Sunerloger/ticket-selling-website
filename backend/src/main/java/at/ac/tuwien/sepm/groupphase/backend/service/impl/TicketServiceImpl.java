@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class TicketServiceImpl implements TicketService {
-    private HallPlanSeatService seatService;
-    private SeatRowService rowService;
-    private EventService eventService;
+    private final HallPlanSeatService seatService;
+    private final SeatRowService rowService;
+    private final EventService eventService;
 
     public TicketServiceImpl(HallPlanSeatService seatService, SeatRowService rowService, EventService eventService) {
         this.seatService = seatService;
@@ -28,7 +28,8 @@ public class TicketServiceImpl implements TicketService {
     public TicketDto ticketDtoFromTicket(Ticket ticket) {
         HallPlanSeatDto hallPlanSeatDto = seatService.getSeatById(ticket.getSeatId());
         SeatRowDto rowDto = rowService.getSeatRowById(hallPlanSeatDto.getSeatrowId());
-        EventDetailDto eventDetailDto = eventService.getEventById(1L); //TODO: get correct Event
+
+        EventDetailDto eventDetailDto = eventService.getEventFromHallplanId(rowDto.getHallPlanId());
 
         SeatDto seatDto = new SeatDto(hallPlanSeatDto, rowDto);
         TicketDto ticketDto = new TicketDto();

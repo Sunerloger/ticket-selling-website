@@ -50,4 +50,7 @@ VALUES (1, '2023-05-21', '02:15', 12345, '123 Example Street', 'Example City', 2
 INSERT INTO Event_Date (id, date, starting_time, area_code, address, city, hallplan_id, event_id)
 VALUES (2, '2023-05-22', '02:15', 54321, '404 Example Street', 'Sampleville', 3, 1);
 
+INSERT INTO Event_Date (id, date, starting_time, area_code, address, city, hallplan_id, event_id)
+VALUES (3, '2023-05-21', '02:15', 12345, '123 Example Street', 'Example City', 1, 1);
+
 

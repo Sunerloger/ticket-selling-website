@@ -100,4 +100,6 @@ public interface UserService extends UserDetailsService {
      * @return page of 20 user entries ordered ascending by the email
      */
     List<ApplicationUser> getBlockedUsers(ApplicationUser applicationUser, String token, int pageIndex);
+
+    Long getUserIdFromToken(String token);
 }
