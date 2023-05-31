@@ -140,8 +140,7 @@ export class RoomplaneditorComponent implements OnInit {
           const errorMessage = error.status === 0
             ? 'Server not reachable'
             : error.message.message;
-          this.notification.error(errorMessage, 'Could not create seatrow. Please try again.');
-          this.router.navigate(['/hallplans']);
+          this.notification.error(errorMessage, 'Could not delete seatrow. Please try again.');
         }
       }
     );
