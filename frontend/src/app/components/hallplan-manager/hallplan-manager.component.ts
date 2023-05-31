@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
 })
 export class HallplanManagerComponent implements OnInit {
 
-  hallPlans: Hallplan[];
+  hallPlans: Hallplan[] = [];
 
   constructor(
     private hallPlanService: HallplanService,
