@@ -60,4 +60,6 @@ public interface UserService extends UserDetailsService {
     void block(ApplicationUser userUnBlockDtoToEntity);
 
     List<ApplicationUser> getBlockedUsers(ApplicationUser applicationUser);
+
+    Long getUserIdFromToken(String token);
 }
