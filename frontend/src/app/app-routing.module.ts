@@ -36,7 +36,6 @@ const routes: Routes = [
 
   {path: 'cart', canActivate: [AuthGuard], component: ShoppingCartComponent},
   {path: 'cart/checkout', canActivate: [AuthGuard], component: CartCheckoutComponent},
-  {path: 'performance-tickets/:id', canActivate: [AuthGuard], component: PerformanceTicketSelctionComponent},
 
   {path: 'admin', canActivate: [AdminRouteGuard], children: [
       {path: '', component: AdminManagerComponent},
@@ -53,10 +52,11 @@ const routes: Routes = [
 
   {path: 'purchases', canActivate: [AuthGuard], component: PurchasesComponent},
   {path: 'purchases/:id', canActivate: [AuthGuard], component: PurchaseDetailComponent},
+  {path: 'performance-tickets/:id', canActivate: [AuthGuard], component: PerformanceTicketSelctionComponent},
 
   {path: 'roomplan/:id/edit', canActivate: [AdminRouteGuard], component: RoomplaneditorComponent},
   {path: 'hallplans/:id/edit', canActivate: [AdminRouteGuard], component: RoomplaneditorComponent},
-  {path: 'hallplans/manage', canActivate: [AdminRouteGuard], component: HallplanManagerComponent},
+  {path: 'hallplans/manage', canActivate: [AuthGuard], component: HallplanManagerComponent},
 
   {path: 'news', canActivate: [AuthGuard], children: [
       {path: '', component: NewsOverviewComponent},

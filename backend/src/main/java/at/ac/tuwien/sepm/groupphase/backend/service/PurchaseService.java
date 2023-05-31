@@ -55,4 +55,5 @@ public interface PurchaseService {
      * @param userId the id of the user
      */
     void purchaseReservationOfUser(Long purchaseCreationDto, PurchaseCreationDto reservationNr, Long userId);
+
 }

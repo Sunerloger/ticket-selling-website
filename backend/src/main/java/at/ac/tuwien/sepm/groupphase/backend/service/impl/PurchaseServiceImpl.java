@@ -27,14 +27,16 @@ public class PurchaseServiceImpl implements PurchaseService {
     private TicketService ticketService;
     private CartService cartService;
     private ReservationService reservationService;
+    private CustomUserDetailService customUserDetailService;
 
     @Autowired
-    public PurchaseServiceImpl(PurchaseRepository repository, HallPlanSeatService seatService, TicketService ticketService, CartService cartService, ReservationService reservationService) {
+    public PurchaseServiceImpl(PurchaseRepository repository, HallPlanSeatService seatService, TicketService ticketService, CartService cartService, ReservationService reservationService, CustomUserDetailService customerUserDetailService) {
         this.repository = repository;
         this.seatService = seatService;
         this.cartService = cartService;
         this.ticketService = ticketService;
         this.reservationService = reservationService;
+        this.customUserDetailService = customerUserDetailService;
     }
 
     @Override
@@ -69,9 +71,11 @@ public class PurchaseServiceImpl implements PurchaseService {
         repository.deletePurchaseByPurchaseNr(purchaseNr);
     }
 
+
     @Override
-    public List<PurchaseDto> getPurchasesOfUser(Long userId) {
-        List<Purchase> purchaseList = repository.findPurchasesByUserIdOrderByPurchaseDate(userId);
+    public List<PurchaseDto> getPurchasesOfUser(Long id) {
+
+        List<Purchase> purchaseList = repository.findPurchasesByUserIdOrderByPurchaseDate(id);
         List<PurchaseDto> purchaseDtoList = new ArrayList<>();
 
         //TODO: check if purchase belong to user cart

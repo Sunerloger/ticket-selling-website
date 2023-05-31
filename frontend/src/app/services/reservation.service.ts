@@ -4,7 +4,6 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {Reservation} from '../dtos/reservation';
-import {SeatDetail} from '../dtos/seatDetail';
 import {CreatePurchase} from '../dtos/purchases';
 import {PersistedSeat} from '../dtos/hallplan/hallplan';
 
