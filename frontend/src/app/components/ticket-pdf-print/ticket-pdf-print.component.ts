@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, OnInit, Input } from '@angular/core';
 import * as QRCode from 'qrcode';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -13,11 +13,16 @@ import { TicketSeat } from 'src/app/dtos/ticket';
 })
 export class TicketPdfPrintComponent implements AfterViewInit, OnInit {
   @ViewChild('pdfContent') pdfContent: ElementRef;
+
+  @Input()
+  ticket: TicketSeat;
+
   fonts = {
       // eslint-disable-next-line
       Roboto: {
-      normal: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf',
-      bold: `${window.location.origin}/assets/OleoScript-Regular.ttf`
+        normal: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf',
+        bold: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Medium.ttf',
+        italics: `${window.location.origin}/assets/OleoScript-Regular.ttf`
       },
       // eslint-disable-next-line
       OleoScript: { 
@@ -27,38 +32,11 @@ export class TicketPdfPrintComponent implements AfterViewInit, OnInit {
     };
   showPdfContent = false;
   url = '';
-  ticket: TicketSeat = {
-  ticketNr: 1,
-  seat: {
-    id: 1,
-    price: 10.99,
-    type: 'VIP',
-    seatNr: 5,
-    sectionName: 'Front Section',
-    seatRowNr: 2,
-  },
-  event: {
-    title: 'Concert',
-    eventDatesLocation: [
-      {
-        date: new Date('2023-06-01'),
-        city: 'City Name',
-        areaCode: 'ABC',
-        address: '123 Main St',
-        room: 1,
-        startingTime: '7:30 PM',
-      },
-    ],
-    duration: '2 hours',
-    category: 'Music',
-    artist: 'John Doe',
-    description: 'Enjoy an evening of live music with John Doe.',
-    image: 'https://example.com/concert-image.jpg',
-  },
-};
+
+
 
   ngOnInit() {
-     QRCode.toDataURL('amazon.com', (err, url) => {
+     QRCode.toDataURL('website.com', (err, url) => {
       console.log(url);
       this.url = url;
     });
@@ -71,9 +49,18 @@ export class TicketPdfPrintComponent implements AfterViewInit, OnInit {
 
   public generateTicketPdf() {
     //Retrieve pdf template code from component.html
-    //const pdfContent = this.pdfContent.nativeElement.innerHTML;
+    let seatType =  '';
+    switch(this.ticket.seat.type) {
+      case 'SEAT':
+        seatType = 'Seat';
+        break;
+      case 'STANDING_SEAT':
+        seatType = 'Standing Seat';
+        break;
+
+    }
     const pdfContent: any = `<div #pdfContent >
-    <b style="font-size:36px; color:#23a6d5">Ticketline </b>
+    <i style="font-size:48px; color:#23a6d5">Ticketline </i>
     <b> ------------------------------------------------------</b>
     <h2>${this.ticket.event.title}</h2>
     <p>
@@ -81,19 +68,19 @@ export class TicketPdfPrintComponent implements AfterViewInit, OnInit {
         |
         <strong>Area Code:</strong> ${this.ticket.event.eventDatesLocation[0].areaCode} |
         <strong>Address:</strong> ${this.ticket.event.eventDatesLocation[0].address} |
-        <strong>Room:</strong> ${this.ticket.event.eventDatesLocation[0].room} |
-        <strong>Starting Time:</strong> ${this.ticket.event.eventDatesLocation[0].startingTime}
+        <strong>Room:</strong> ${this.ticket.event.eventDatesLocation[0].room}
     </p>
     <p>
-        <strong>Duration:</strong> ${this.ticket.event.duration} |
-        <strong>Category:</strong> ${this.ticket.event.category}
+      <strong>Starting Time:</strong> ${this.ticket.event.eventDatesLocation[0].startingTime} |
+      <strong>Duration:</strong> ${this.ticket.event.duration} |
+      <strong>Category:</strong> ${this.ticket.event.category}
     </p>
     <p><strong>Artist:</strong> ${this.ticket.event.artist}</p>
 
-    <h3>Ticket Details</h3>
-    <p><strong>Ticket Number:</strong> ${this.ticket.ticketNr}</p>
-    <p>
-        <strong>Seat Type:</strong> ${this.ticket.seat.type} |
+    <h3 style="margin-bottom: 0px">Ticket Details</h3>
+    <p style="margin-bottom: 5px"><strong>Ticket Number:</strong> ${this.ticket.ticketNr}</p>
+    <p style="margin-top: 0px">
+        <strong>Seat Type:</strong> ${seatType} |
         <strong>Seat Number:</strong> ${this.ticket.seat.seatNr} |
         <strong>Section:</strong> ${this.ticket.seat.sectionName} |
         <strong>Row Number:</strong> ${this.ticket.seat.seatRowNr}
@@ -101,9 +88,7 @@ export class TicketPdfPrintComponent implements AfterViewInit, OnInit {
 
 </div>`;
     //Create documentDefinition for content
-
-
-    fetch('url')
+    fetch(`${this.url}`)
     .then(response => response.blob())
     .then(blob => {
       const reader = new FileReader();
@@ -125,8 +110,12 @@ export class TicketPdfPrintComponent implements AfterViewInit, OnInit {
 
     //Set Font Dependencies
     const vfs = pdfFonts.pdfMake.vfs;
-    pdfMake.createPdf(doc,null, this.fonts, vfs).download('ticket.pdf');
+    pdfMake.createPdf(doc,null, this.fonts, vfs).download(`eTicket${this.ticket.ticketNr}.pdf`);
 
+  }
+
+  ticketPresent(): boolean {
+    return this.ticket ? true : false;
   }
 }
 

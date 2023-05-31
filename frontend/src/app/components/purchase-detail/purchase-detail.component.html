@@ -2,30 +2,39 @@
   <div *ngIf="item">
 
     <div class="card-header">
-      <h3 class="card-headline">Purchase from: {{ item.purchaseDate | date:'dd.MM.yy' }}</h3>
+      <h3 class="card-headline">Purchase from: {{ item.purchaseDate | date:'dd.MM.yy'
+        }}</h3>
     </div>
 
     <div class="billing-info">
-    <h4>Bill number: {{item.purchaseNr}} </h4>
-    <h4>Total: {{ (sumOfItems(item)| number:'1.2-2').replace('.', ',') }} € </h4>
+      <h4>Bill number: {{item.purchaseNr}} </h4>
+      <h4>Total: {{ (sumOfItems(item)| number:'1.2-2').replace('.', ',') }} €
+      </h4>
     </div>
-      <button type="button" class="btn btn-primary" (click)="deletePurchase(item.purchaseNr)">Refund Purchase</button>
-
+    <button type="button" class="btn btn-primary"
+      (click)="deletePurchase(item.purchaseNr)">Refund Purchase</button>
 
     <div class="infobox">
-    <h4>Billing Information </h4>
-    <span>Fistname, Lastname</span><br>
-    <span>{{item.billAddress}}</span><br>
-    <span>{{item.billCityName}}, {{item.billAreaCode}}</span><br>
+      <h4>Billing Information </h4>
+      <span>Fistname, Lastname</span><br>
+      <span>{{item.billAddress}}</span><br>
+      <span>{{item.billCityName}}, {{item.billAreaCode}}</span><br>
     </div>
 
     <div class="item-overview infobox">
       <h4>Item Overview</h4>
 
       <div *ngFor="let ticket of item.ticketList; let i = index">
-        <div class="item-list">
-          <app-ticket-list-item [event]="ticket.event" [seat]="ticket.seat" [ticketnr]="ticket.ticketNr" style="flex: auto"></app-ticket-list-item>
+        <div style="display: flex; align-items: stretch;">
+          <div class="item-list" style="width:100%">
+            <app-ticket-list-item [event]="ticket.event" [seat]="ticket.seat"
+              [ticketnr]="ticket.ticketNr"></app-ticket-list-item>
+          </div>
+
+          <app-ticket-pdf-print [ticket]="ticket"></app-ticket-pdf-print>
+
         </div>
+
       </div>
 
     </div>

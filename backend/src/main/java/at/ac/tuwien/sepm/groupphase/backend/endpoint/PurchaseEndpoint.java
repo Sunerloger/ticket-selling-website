@@ -9,11 +9,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
@@ -31,11 +35,12 @@ public class PurchaseEndpoint {
     @Secured("ROLE_USER")
     @GetMapping
     @Operation(summary = "Gets a list of all Purchases from that user", security = @SecurityRequirement(name = "apiKey"))
-    public List<PurchaseDto> getPurchases() {
+    public List<PurchaseDto> getPurchases(@RequestHeader("Authorization") String authToken) {
         LOGGER.info("GET /api/v1/purchase");
         //TODO: acquire UserID
         //TODO: use real UserID
-        return service.getPurchasesOfUser(1L);
+
+        return service.getPurchasesOfUser(authToken);
     }
 
     @Secured("ROLE_USER")
@@ -59,6 +64,17 @@ public class PurchaseEndpoint {
 
         service.deletePurchase(purchaseNr, 1L);
         return ResponseEntity.noContent().build();
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping("/token")
+    @Operation(summary = "Gets a list of all Purchases from that user", security = @SecurityRequirement(name = "apiKey"))
+    public List<PurchaseDto> getPurchasesByUserToken(@RequestBody String token) {
+        LOGGER.info("GET /api/v1/purchase");
+        //TODO: acquire UserID
+        //TODO: use real UserID
+
+        return service.getPurchasesOfUser(token);
     }
 
 }

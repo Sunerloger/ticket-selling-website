@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.exceptionhandler;
 
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
-import jakarta.xml.bind.ValidationException;
+import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;

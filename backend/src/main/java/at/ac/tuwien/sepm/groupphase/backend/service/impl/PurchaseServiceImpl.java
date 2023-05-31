@@ -4,8 +4,10 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PurchaseCreationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PurchaseDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Purchase;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PurchaseRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.PurchaseService;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanSeatService;
@@ -27,14 +29,16 @@ public class PurchaseServiceImpl implements PurchaseService {
     private TicketService ticketService;
     private CartService cartService;
     private ReservationService reservationService;
+    private CustomUserDetailService customUserDetailService;
 
     @Autowired
-    public PurchaseServiceImpl(PurchaseRepository repository, HallPlanSeatService seatService, TicketService ticketService, CartService cartService, ReservationService reservationService) {
+    public PurchaseServiceImpl(PurchaseRepository repository, HallPlanSeatService seatService, TicketService ticketService, CartService cartService, ReservationService reservationService, CustomUserDetailService customerUserDetailService) {
         this.repository = repository;
         this.seatService = seatService;
         this.cartService = cartService;
         this.ticketService = ticketService;
         this.reservationService = reservationService;
+        this.customUserDetailService = customerUserDetailService;
     }
 
     @Override
@@ -70,8 +74,13 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    public List<PurchaseDto> getPurchasesOfUser(Long userId) {
-        List<Purchase> purchaseList = repository.findPurchasesByUserIdOrderByPurchaseDate(userId);
+    public List<PurchaseDto> getPurchasesOfUser(String token) {
+        //Retrieve userId
+        ApplicationUser user = customUserDetailService.getUser(token);
+        if (user == null) {
+            throw new NotFoundException("User associated with token " + token + " was not found!");
+        }
+        List<Purchase> purchaseList = repository.findPurchasesByUserIdOrderByPurchaseDate(user.getId());
         List<PurchaseDto> purchaseDtoList = new ArrayList<>();
 
         //TODO: check if purchase belong to user cart

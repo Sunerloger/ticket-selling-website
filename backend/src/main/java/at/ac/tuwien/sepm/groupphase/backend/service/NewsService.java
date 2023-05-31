@@ -17,7 +17,6 @@ public interface NewsService {
      * Find 20 news entries ordered by published at date (descending) on the page specified by {@code pageIndex}.
      *
      * @param pageIndex index of page to load
-     *
      * @return page of 20 news entries ordered descending by the date of creation specified by {@code pageIndex}
      */
     Page<News> findAllPagedByCreatedAt(int pageIndex);

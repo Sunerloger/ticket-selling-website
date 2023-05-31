@@ -11,9 +11,10 @@ public interface PurchaseService {
 
     void deletePurchase(Long purchaseNr, Long userId);
 
-    List<PurchaseDto> getPurchasesOfUser(Long userId);
+    List<PurchaseDto> getPurchasesOfUser(String token);
 
     void purchaseCartOfUser(Long userId, PurchaseCreationDto purchaseCreationDto);
 
     void purchaseReservationOfUser(Long purchaseCreationDto, PurchaseCreationDto reservationNr, Long userId);
+
 }
