@@ -30,8 +30,8 @@
               <h6>Venue: <span class="text-muted"></span>{{eventDate.room}}</h6>
               <h6>Location: <span class="text-muted"></span>{{eventDate.address}}, {{eventDate.areaCode}}
                 {{eventDate.city}}</h6>
-              <div class="ticket-btn">
-                <a href="#" class="btn btn-primary">Tickets</a>
+              <div class="ticket-btn" [routerLink]="['../../performance-tickets', eventDate.room]">
+                <button class="btn btn-primary">Tickets</button>
               </div>
             </div>
           </div>
