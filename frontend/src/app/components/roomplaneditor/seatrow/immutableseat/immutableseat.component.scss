@@ -1,5 +1,9 @@
 .container{
-    padding: 0.1rem;
+    padding: 0rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 /*
@@ -29,6 +33,21 @@
 
 .seat_number{
     font-size: 0.8rem;
+}
+
+.seat_icon_wrapper{
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.select_overlay{
+    position: absolute;
+    background-color: #23a6d5;
+    width: 2rem;
+    margin-top: 2.2rem;
+    height: 0.2rem;
+    border-radius: 5px;
 }
 
 /* 

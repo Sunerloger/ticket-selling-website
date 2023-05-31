@@ -1,9 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import java.time.LocalDate;
-
 public class CartItemDto {
     private SeatDto seat;
     private EventDetailDto event;

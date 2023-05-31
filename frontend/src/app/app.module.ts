@@ -53,6 +53,9 @@ import { HallplanManagerComponent } from './components/hallplan-manager/hallplan
 import { CustomerhallplandisplayComponent } from './components/customerhallplandisplay/customerhallplandisplay.component';
 import { ImmutableseatComponent } from './components/roomplaneditor/seatrow/immutableseat/immutableseat.component';
 import { TicketPdfPrintComponent } from './components/ticket-pdf-print/ticket-pdf-print.component';
+import { EventDetailComponent } from './components/event-detail/event-detail.component';
+import { AdminManagerComponent } from './components/admin-manager/admin-manager.component';
+import { PerformanceTicketSelctionComponent } from './components/performance-ticket-selction/performance-ticket-selction.component';
 
 @NgModule({
   declarations: [
@@ -94,6 +97,9 @@ import { TicketPdfPrintComponent } from './components/ticket-pdf-print/ticket-pd
     CustomerhallplandisplayComponent,
     ImmutableseatComponent,
     TicketPdfPrintComponent,
+    EventDetailComponent,
+    AdminManagerComponent,
+    PerformanceTicketSelctionComponent,
   ],
   imports: [
     BrowserModule,
@@ -109,6 +115,7 @@ import { TicketPdfPrintComponent } from './components/ticket-pdf-print/ticket-pd
     BsDatepickerModule,
     MatPaginatorModule,
     InfiniteScrollModule,
+    NgbModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

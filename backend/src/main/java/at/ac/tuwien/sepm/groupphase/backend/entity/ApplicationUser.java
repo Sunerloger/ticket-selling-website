@@ -1,27 +1,18 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.Column;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DialectOverride;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDate;
 
-//TODO: replace this class with a correct ApplicationUser Entity implementation
 @Entity
-@Table(name = "applicationuser") /*, uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"email"})
-}*/
+@Table(name = "applicationuser")
 public class ApplicationUser {
 
     @Id

@@ -1,11 +1,10 @@
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {from, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {environment} from 'src/environments/environment';
 const baseUri = environment.backendUrl + '/api/v1/events';
-import {Event} from 'src/app/dtos/event';
+import {Event, Performance} from 'src/app/dtos/event';
 import {AbbreviatedEvent} from '../dtos/abbreviatedEvents';
-import {AbbreviatedHallplan} from '../dtos/hallplan/abbreviatedHallplan';
 @Injectable({
   providedIn: 'root'
 })
@@ -58,5 +57,24 @@ export class EventService {
       params = params.set('location', location);
     }
     return this.http.get<AbbreviatedEvent[]>(baseUri, {params});
+  }
+
+  /**
+   * Get all events stored in the system.
+   *
+   * @return observable list of found events.
+   */
+  getById(id: number): Observable<Event> {
+    let params: HttpParams = new HttpParams();
+    params = params.set('id', id);
+    return this.http.get<Event>(baseUri+'/byId', {params});
+  }
+   /**
+    * Get a Performance by HallplanId.
+    *
+    * @return performance.
+    */
+  getPerformance(hallplanId: number): Observable<Performance> {
+    return this.http.get<any>(baseUri + '/performance/' + hallplanId);
   }
 }

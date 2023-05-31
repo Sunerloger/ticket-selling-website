@@ -56,16 +56,16 @@
       <h4>Order Overview</h4>
       <div class="overview-row">
         <span>Articles</span>
-        <span>35,22 €</span>
+        <span>{{ ( this.withoutTaxes | number:'1.2-2').replace('.', ',') }} €</span>
       </div>
       <div class="overview-row">
         <span>Taxes</span>
-        <span>6,76 €</span>
+        <span>{{ ( this.taxes | number:'1.2-2').replace('.', ',') }} €</span>
       </div>
       <hr>
       <div class="overview-row">
         <h5>Total</h5>
-        <h5>41,98 €</h5>
+        <h5>{{ ( this.total | number:'1.2-2').replace('.', ',') }} €</h5>
       </div>
     </div>
   </div>
@@ -87,7 +87,7 @@
   </div>
 
   <div class="Total-Price infobox">
-    <h4>Total: {{ (sumOfItems()| number:'1.2-2').replace('.', ',') }} €</h4>
+    <h4>Total: {{ (sumOfItems() | number:'1.2-2').replace('.', ',') }} €</h4>
   </div>
   <button id="checkout" type="button" class="btn btn-primary" (click)="purchase()">&nbsp;Buy Now&nbsp;</button>
 </div>

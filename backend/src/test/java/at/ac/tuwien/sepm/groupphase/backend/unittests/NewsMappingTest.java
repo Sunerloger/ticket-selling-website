@@ -5,8 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.AbbreviatedNewsDto
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.DetailedNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.NewsInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.News;
-import at.ac.tuwien.sepm.groupphase.backend.entity.NewsImage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 public class NewsMappingTest implements TestData {
 
+    private static final Event event = new Event();
+
     private static final News news = News.NewsBuilder.aNews()
         .withId(ID)
         .withTitle(TEST_NEWS_TITLE)
@@ -34,6 +35,7 @@ public class NewsMappingTest implements TestData {
         .withFullText(TEST_NEWS_TEXT)
         .withCreatedAt(TEST_NEWS_PUBLISHED_AT)
         .withCoverImage(TEST_COVER_IMAGE)
+        .withEvent(event)
         .build();
 
     private static final NewsInquiryDto newsInquiryDto = NewsInquiryDto.NewsInquiryDtoBuilder.aNewsInquiryDto()
@@ -42,19 +44,23 @@ public class NewsMappingTest implements TestData {
         .withFullText(TEST_NEWS_TEXT)
         .withCoverImage(TEST_COVER_IMAGE)
         .withImages(TEST_NEWS_IMAGE_DATA_LIST)
+        .withEventId(-1L)
         .build();
 
     @Autowired
     private NewsMapper newsMapper;
 
     @BeforeAll
-    public static void setImagesForNews() {
+    public static void beforeAll() {
+        event.setId(-1L);
+
         NewsImage img1 = NewsImage.NewsImageBuilder.aNewsImage().withNews(news).withImageData(TEST_NEWS_IMAGE_DATA_LIST.get(0)).build();
         NewsImage img2 = NewsImage.NewsImageBuilder.aNewsImage().withNews(news).withImageData(TEST_NEWS_IMAGE_DATA_LIST.get(1)).build();
         NewsImage img3 = NewsImage.NewsImageBuilder.aNewsImage().withNews(news).withImageData(TEST_NEWS_IMAGE_DATA_LIST.get(2)).build();
         List<NewsImage> testImageList = new LinkedList<>(Arrays.asList(img1,img2,img3));
 
         news.setImages(testImageList);
+        news.setEvent(event);
     }
 
     @Test
@@ -67,7 +73,8 @@ public class NewsMappingTest implements TestData {
             () -> assertEquals(TEST_NEWS_PUBLISHED_AT, detailedNewsDto.getCreatedAt()),
             () -> assertEquals(TEST_COVER_IMAGE, detailedNewsDto.getCoverImage()),
             () -> assertEquals(3, detailedNewsDto.getImages().size()),
-            () -> assertEquals(TEST_NEWS_IMAGE_DATA_LIST, detailedNewsDto.getImages())
+            () -> assertEquals(TEST_NEWS_IMAGE_DATA_LIST, detailedNewsDto.getImages()),
+            () -> assertEquals(event.getId(), detailedNewsDto.getEventId())
         );
     }
 
@@ -90,20 +97,36 @@ public class NewsMappingTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenMapNewsInquiryDtoToNewsEntity_thenEntityHasAllPropertiesExceptIdAndCreatedAtAndImagesAreStoredInNewsImageEntities() {
-        News newsEntity = newsMapper.newsInquiryDtoWithImagesToNews(newsInquiryDto);
+    public void givenNothing_whenMapNewsInquiryDtoToNewsEntity_thenEntityHasAllPropertiesExceptIdCreatedAtAndEventAndImagesAreStoredInNewsImageEntities() {
+        News newsEntity = newsMapper.newsInquiryDtoWithImagesToNewsWithoutEvent(newsInquiryDto);
 
         // entity not yet persisted in db
         assertAll(
             () -> assertNull(newsEntity.getId()),
             () -> assertEquals(TEST_NEWS_TITLE, newsEntity.getTitle()),
+            () -> assertEquals(TEST_NEWS_SUMMARY, newsEntity.getShortText()),
             () -> assertEquals(TEST_NEWS_TEXT, newsEntity.getFullText()),
             () -> assertNull(newsEntity.getCreatedAt()),
             () -> assertEquals(TEST_COVER_IMAGE, newsEntity.getCoverImage()),
             () -> assertEquals(3, newsEntity.getImages().size()),
-            () -> assertEquals(TEST_NEWS_IMAGE_DATA_LIST, newsEntity.getImages().stream().map(NewsImage::getImageData).toList())
+            () -> assertEquals(TEST_NEWS_IMAGE_DATA_LIST, newsEntity.getImages().stream().map(NewsImage::getImageData).toList()),
+            () -> assertNull(newsEntity.getEvent())
         );
     }
 
+    @Test
+    public void givenNothing_whenMapNewsEntityToNewsInquiryDto_thenEntityHasAllProperties() {
+        NewsInquiryDto newsInquiryDto = newsMapper.newsToNewsInquiryDto(news);
 
+        // entity not yet persisted in db
+        assertAll(
+            () -> assertEquals(TEST_NEWS_TITLE, newsInquiryDto.getTitle()),
+            () -> assertEquals(TEST_NEWS_SUMMARY, newsInquiryDto.getShortText()),
+            () -> assertEquals(TEST_NEWS_TEXT, newsInquiryDto.getFullText()),
+            () -> assertEquals(TEST_COVER_IMAGE, newsInquiryDto.getCoverImage()),
+            () -> assertEquals(3, newsInquiryDto.getImages().size()),
+            () -> assertEquals(TEST_NEWS_IMAGE_DATA_LIST, newsInquiryDto.getImages()),
+            () -> assertEquals(event.getId(), newsInquiryDto.getEventId())
+        );
+    }
 }

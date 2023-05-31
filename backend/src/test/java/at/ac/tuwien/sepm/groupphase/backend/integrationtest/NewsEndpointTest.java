@@ -4,10 +4,8 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.news.*;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.News;
-import at.ac.tuwien.sepm.groupphase.backend.entity.NewsImage;
-import at.ac.tuwien.sepm.groupphase.backend.repository.NewsImageRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
+import at.ac.tuwien.sepm.groupphase.backend.entity.*;
+import at.ac.tuwien.sepm.groupphase.backend.repository.*;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.time.LocalDateTime;
+import java.time.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -53,6 +52,9 @@ public class NewsEndpointTest implements TestData {
     private NewsImageRepository newsImageRepository;
 
     @Autowired
+    private EventRepository eventRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
@@ -66,15 +68,26 @@ public class NewsEndpointTest implements TestData {
 
     private News news;
 
+    private final Event event = new Event();
+
     @BeforeEach
     public void beforeEach() {
         newsRepository.deleteAll();
         newsImageRepository.deleteAll();
+        eventRepository.deleteAll();
+
+        event.setCategory("Rock");
+        event.setArtist("Queen");
+        event.setDuration(LocalTime.now());
+        event.setTitle("Live Aid");
+        eventRepository.save(event);
+
         news = News.NewsBuilder.aNews()
             .withTitle(TEST_NEWS_TITLE)
             .withShortText(TEST_NEWS_SUMMARY)
             .withFullText(TEST_NEWS_TEXT)
             .withCoverImage(TEST_COVER_IMAGE)
+            .withEvent(event)
             .build();
 
         NewsImage img1 = NewsImage.NewsImageBuilder.aNewsImage().withNews(news).withImageData(TEST_NEWS_IMAGE_DATA_LIST.get(0)).build();
@@ -172,8 +185,6 @@ public class NewsEndpointTest implements TestData {
         assertEquals(1, abbreviatedNewsDtos.size());
     }
 
-    /* // TODO (not implemented yet)
-
     @Test
     public void givenOneNews_whenFindById_thenNewsWithAllPropertiesExceptShortText() throws Exception {
         newsRepository.save(news);
@@ -199,10 +210,8 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
-    public void givenOneNews_whenFindByNonExistingId_then404() throws Exception {
-        newsRepository.save(news);
-
-        MvcResult mvcResult = this.mockMvc.perform(get(MESSAGE_BASE_URI + "/{id}", -1)
+    public void givenNothing_whenFindByNonExistingId_then404() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI + "/{id}", -1)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
             .andReturn();
@@ -210,13 +219,48 @@ public class NewsEndpointTest implements TestData {
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
     }
 
-    */
+    @Test
+    public void givenOneNews_whenDeleteById_thenGetAllLengthIs0And200() throws Exception {
+        newsRepository.save(news);
 
-    // TODO: Test getById and delete
+        MvcResult mvcResult = this.mockMvc.perform(delete(NEWS_BASE_URI + "/{id}", news.getId())
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+
+        // default pageIndex is 0
+        mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        // response in json format:
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        // map json string to list:
+        List<AbbreviatedNewsDto> abbreviatedNewsDtos = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
+            AbbreviatedNewsDto[].class));
+
+        assertEquals(0, abbreviatedNewsDtos.size());
+    }
+
+    @Test
+    public void givenNothing_whenDeleteByNonExistingId_then404() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(delete(NEWS_BASE_URI + "/{id}", -1)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+    }
 
     @Test
     public void givenNothing_whenPost_thenNewsWithAllSetPropertiesPlusIdAndPublishedDate() throws Exception {
-        news.setCreatedAt(null);
         NewsInquiryDto newsInquiryDto = newsMapper.newsToNewsInquiryDto(news);
         String body = objectMapper.writeValueAsString(newsInquiryDto);
 
@@ -323,8 +367,8 @@ public class NewsEndpointTest implements TestData {
                 String content = response.getContentAsString();
                 content = content.substring(content.indexOf('[') + 1, content.indexOf(']'));
                 String[] errors = content.split(",");
-                // check if title is not null and not blank, short description not null and not blank
-                // and FullText not null => 5 errors
+                // check if title is not null and not blank, short description not null and not blank,
+                // fullText not null and cover image valid => 6 errors
                 assertEquals(6, errors.length);
             }
         );
@@ -351,8 +395,57 @@ public class NewsEndpointTest implements TestData {
                 String content = response.getContentAsString();
                 content = content.substring(content.indexOf('[') + 1, content.indexOf(']'));
                 String[] errors = content.split(",");
-                // check if title is not null and not blank, short description not null and not blank
-                // and FullText not null => 5 errors
+                assertEquals(1, errors.length);
+            }
+        );
+    }
+
+    @Test
+    public void givenNothing_whenPostInvalidImages_then422() throws Exception {
+        NewsInquiryDto newsInquiryDto = newsMapper.newsToNewsInquiryDto(news);
+        newsInquiryDto.setImages(Arrays.asList("I_AM_IMAGE_ONE", "I_AM_IMAGE_TWO", "I_AM_IMAGE_THREE"));
+        String body = objectMapper.writeValueAsString(newsInquiryDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(post(NEWS_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertAll(
+            () -> assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus()),
+            () -> {
+                //Reads the errors from the body
+                String content = response.getContentAsString();
+                content = content.substring(content.indexOf('[') + 1, content.indexOf(']'));
+                String[] errors = content.split(",");
+                assertEquals(1, errors.length);
+            }
+        );
+    }
+
+    @Test
+    public void givenNothing_whenPostInvalidEventId_then404() throws Exception {
+        NewsInquiryDto newsInquiryDto = newsMapper.newsToNewsInquiryDto(news);
+        newsInquiryDto.setEventId(-420L);
+        String body = objectMapper.writeValueAsString(newsInquiryDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(post(NEWS_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertAll(
+            () -> assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus()),
+            () -> {
+                //Reads the errors from the body
+                String content = response.getContentAsString();
+                String[] errors = content.split(",");
                 assertEquals(1, errors.length);
             }
         );

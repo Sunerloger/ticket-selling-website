@@ -4,9 +4,6 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventDate;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
-import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
-import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSection;
-import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanRepository;
 import jakarta.validation.ConstraintViolationException;
@@ -20,7 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

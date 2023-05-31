@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {FormsModule} from '@angular/forms';
 import {CreatePurchase} from '../../dtos/purchases';
 import {ToastrService} from 'ngx-toastr';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -17,6 +16,9 @@ export class ReservationCheckoutComponent implements OnInit {
   checkboxList: boolean[] = [];
   item: Reservation;
   creationItem: CreatePurchase = {} as CreatePurchase;
+  total = 0;
+  withoutTaxes = 0;
+  taxes = 0;
 
   constructor(private route: ActivatedRoute,
               private service: ReservationService,
@@ -60,7 +62,10 @@ export class ReservationCheckoutComponent implements OnInit {
         sum += element.price;
       }
     });
-    return sum;
+    this.total = sum;
+    this.taxes = sum * 0.2;
+    this.withoutTaxes = this.total - this.taxes;
+    return this.total;
   }
   purchase(): void {
     this.creationItem.seats = [];
