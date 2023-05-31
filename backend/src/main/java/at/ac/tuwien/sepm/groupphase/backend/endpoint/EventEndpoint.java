@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AbbreviatedEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -82,6 +83,19 @@ public class EventEndpoint {
             return eventService.findAllPagesByDate(pageIndex)
                 .map(eventMapper::eventToAbbreviatedEventDto)
                 .toList();
+        }
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping("/byId")
+    @Operation(summary = "Get an event by id", security = @SecurityRequirement(name = "apiKey"))
+    public EventDetailDto findById(
+        @RequestParam(required = true) Long id
+    ) {
+        try {
+            return eventService.getEventById(id);
+        } catch (NotFoundException e) {
+            throw new NotFoundException(e);
         }
     }
 }

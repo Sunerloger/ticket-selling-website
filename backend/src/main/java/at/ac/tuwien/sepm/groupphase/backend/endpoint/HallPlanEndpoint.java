@@ -126,6 +126,16 @@ public class HallPlanEndpoint {
             .toList();
     }
 
+    @Secured("ROLE_USER")
+    @GetMapping("/byId")
+    @Operation(summary = "Get list of events without details", security = @SecurityRequirement(name = "apiKey"))
+    public AbbreviatedHallPlanDto getAbbreviatedHallPlanById(@RequestParam(required = true) Long id) {
+        LOGGER.info("GET {}/getByIdAbbreviatedHallPlan", id);
+        LOGGER.info("called without param");
+        return hallPlanMapper.hallPlanToAbbreviatedHallPlanDto(hallPlanMapper.detailedHallPlanDtoToHallPlan(hallPlanService.getHallPlanById(id)));
+
+    }
+
     //*******************************************************
     //*                  SeatRow Mappings                   *
     //*******************************************************

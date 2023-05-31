@@ -60,10 +60,20 @@ export class EventService {
   }
 
   /**
-   * Get a Performance by HallplanId.
+   * Get all events stored in the system.
    *
-   * @return performance.
+   * @return observable list of found events.
    */
+  getById(id: number): Observable<Event> {
+    let params: HttpParams = new HttpParams();
+    params = params.set('id', id);
+    return this.http.get<Event>(baseUri+'/byId', {params});
+  }
+   /**
+    * Get a Performance by HallplanId.
+    *
+    * @return performance.
+    */
   getPerformance(hallplanId: number): Observable<Performance> {
     return this.http.get<any>(baseUri + '/performance/' + hallplanId);
   }

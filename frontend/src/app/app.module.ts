@@ -52,6 +52,7 @@ import {AdminBlockUnblockComponent} from './components/admin-block-unblock/admin
 import { HallplanManagerComponent } from './components/hallplan-manager/hallplan-manager.component';
 import { CustomerhallplandisplayComponent } from './components/customerhallplandisplay/customerhallplandisplay.component';
 import { ImmutableseatComponent } from './components/roomplaneditor/seatrow/immutableseat/immutableseat.component';
+import { EventDetailComponent } from './components/event-detail/event-detail.component';
 import { AdminManagerComponent } from './components/admin-manager/admin-manager.component';
 import { PerformanceTicketSelctionComponent } from './components/performance-ticket-selction/performance-ticket-selction.component';
 
@@ -94,6 +95,7 @@ import { PerformanceTicketSelctionComponent } from './components/performance-tic
     HallplanManagerComponent,
     CustomerhallplandisplayComponent,
     ImmutableseatComponent,
+    EventDetailComponent,
     AdminManagerComponent,
     PerformanceTicketSelctionComponent,
   ],
