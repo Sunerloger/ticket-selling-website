@@ -40,7 +40,7 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
     void deleteById(Long id);
 
     /**
-     * Change isLocked status for user
+     * Change isLocked status for user.
      *
      * @param email    the email of the user
      * @param isLocked the boolean to change
@@ -51,7 +51,7 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
     void updateIsLocked(@Param(value = "email") String email, @Param(value = "isLocked") boolean isLocked);
 
     /**
-     * Returns locked users
+     * Returns locked users.
      *
      * @param email    search parameter
      * @param admin    current logged-in admin
@@ -63,7 +63,7 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
     List<ApplicationUser> findUserByIsLockedIsTrueAndEmail(@Param(value = "email") String email, @Param(value = "admin") String admin, @NonNull Pageable pageable);
 
     /**
-     * Returns unlocked users
+     * Returns unlocked users.
      *
      * @param email    search parameter
      * @param admin    current logged-in admin

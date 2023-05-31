@@ -60,7 +60,7 @@ public interface UserService extends UserDetailsService {
     ApplicationUser register(ApplicationUser applicationUser) throws ValidationException;
 
     /**
-     * Edit a user
+     * Edit a user.
      *
      * @param applicationUser holds the values to update a user
      * @return the Applicationuser that was edited
@@ -68,13 +68,15 @@ public interface UserService extends UserDetailsService {
     ApplicationUser edit(ApplicationUser applicationUser, String token);
 
     /**
+     * Retrieve user from token.
+     *
      * @param token which is used to retrieve the corresponding user
      * @return the applicationuser
      */
     ApplicationUser getUser(String token);
 
     /**
-     * Delete a user
+     * Delete a user.
      *
      * @param id       the user which should be deleted
      * @param email    which is used to check if the user exists in database
@@ -83,11 +85,15 @@ public interface UserService extends UserDetailsService {
     void delete(Long id, String email, String password);
 
     /**
+     * Block|Unblock a user in the system.
+     *
      * @param applicationUser the applicationuser which should be blocked in database
      */
     void block(ApplicationUser applicationUser);
 
     /**
+     * Get a list of users depending on their isLocked status.
+     *
      * @param applicationUser the values to search for in database
      * @param token           the token of the logged-in admin
      * @param pageIndex       index of page to load
