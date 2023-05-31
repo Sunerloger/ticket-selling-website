@@ -1,0 +1,5 @@
+DELETE FROM news_read WHERE 1=1;
+DELETE FROM news_image WHERE 1=1;
+DELETE FROM news WHERE 1=1;
+DELETE FROM event_date WHERE 1=1;
+DELETE FROM event WHERE 1=1;
