@@ -113,6 +113,7 @@ import { PerformanceTicketSelctionComponent } from './components/performance-tic
     BsDatepickerModule,
     MatPaginatorModule,
     InfiniteScrollModule,
+    NgbModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

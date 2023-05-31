@@ -34,6 +34,7 @@ public class NewsInquiryDto {
     private List<@Pattern(regexp = base64Pattern, message = "An additional image is not a valid base64 picture")
         String> images = new LinkedList<>();
 
+    private Long eventId;
 
     public String getTitle() {
         return title;
@@ -75,6 +76,14 @@ public class NewsInquiryDto {
         this.images = images;
     }
 
+    public Long getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -86,12 +95,13 @@ public class NewsInquiryDto {
         return Objects.equals(title, that.title)
             && Objects.equals(shortText, that.shortText)
             && Objects.equals(fullText, that.fullText)
-            && Objects.equals(coverImage, that.coverImage);
+            && Objects.equals(coverImage, that.coverImage)
+            && Objects.equals(eventId, that.eventId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, shortText, fullText, coverImage);
+        return Objects.hash(title, shortText, fullText, coverImage, eventId);
     }
 
     @Override
@@ -100,6 +110,7 @@ public class NewsInquiryDto {
             + "title='" + title + '\''
             + ", shortText='" + shortText + '\''
             + ", fullText='" + fullText + '\''
+            + ", eventId='" + eventId
             + '}';
     }
 
@@ -110,6 +121,7 @@ public class NewsInquiryDto {
         private String fullText;
         private String coverImage;
         private List<String> images;
+        private Long eventId;
 
         private NewsInquiryDtoBuilder() {
         }
@@ -143,6 +155,11 @@ public class NewsInquiryDto {
             return this;
         }
 
+        public NewsInquiryDto.NewsInquiryDtoBuilder withEventId(Long eventId) {
+            this.eventId = eventId;
+            return this;
+        }
+
         public NewsInquiryDto build() {
             NewsInquiryDto newsInquiryDto = new NewsInquiryDto();
             newsInquiryDto.setTitle(title);
@@ -150,6 +167,7 @@ public class NewsInquiryDto {
             newsInquiryDto.setFullText(fullText);
             newsInquiryDto.setCoverImage(coverImage);
             newsInquiryDto.setImages(images);
+            newsInquiryDto.setEventId(eventId);
             return newsInquiryDto;
         }
     }

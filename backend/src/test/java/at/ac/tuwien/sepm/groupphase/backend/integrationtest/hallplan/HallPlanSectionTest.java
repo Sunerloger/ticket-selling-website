@@ -33,7 +33,6 @@ import java.util.Optional;
 
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_ROLES;
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_USER;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

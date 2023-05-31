@@ -3,11 +3,6 @@
   min-height: 50px;
 }
 
-mat-grid-tile {
-  border: 1px solid var(--primary-color);
-  background-color: black;
-}
-
 .btn-remove-image {
   position: absolute;
   cursor: pointer;
@@ -49,10 +44,6 @@ mat-grid-tile {
 
 .card-styling {
   width: 560px;
-}
-
-.mat-form-field {
-  width: 100%;
 }
 
 textarea,textarea-autosize {

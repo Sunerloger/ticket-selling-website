@@ -3,7 +3,6 @@ import {CartService} from '../../services/cart.service';
 import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';
 import {ReservationService} from '../../services/reservation.service';
-import {SeatDetail} from '../../dtos/seatDetail';
 import {PersistedSeat} from '../../dtos/hallplan/hallplan';
 
 @Component({

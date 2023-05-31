@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {BlockUser, User} from '../../dtos/user';
+import {BlockUser} from '../../dtos/user';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {UserService} from '../../services/user.service';
 import {AuthService} from '../../services/auth.service';

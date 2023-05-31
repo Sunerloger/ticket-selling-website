@@ -66,13 +66,12 @@ public class AbbreviatedNewsDto {
         return Objects.equals(id, that.id)
             && Objects.equals(title, that.title)
             && Objects.equals(shortText, that.shortText)
-            && Objects.equals(createdAt, that.createdAt)
             && Objects.equals(coverImage, that.coverImage);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, shortText, createdAt, coverImage);
+        return Objects.hash(id, title, shortText, coverImage);
     }
 
     @Override

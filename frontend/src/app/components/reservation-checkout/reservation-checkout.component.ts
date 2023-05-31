@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {FormsModule} from '@angular/forms';
 import {CreatePurchase} from '../../dtos/purchases';
 import {ToastrService} from 'ngx-toastr';
 import {ActivatedRoute, Router} from '@angular/router';

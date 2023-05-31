@@ -17,6 +17,7 @@ import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.LinkedList;
 
 @Entity
 @Table(name = "event")
@@ -33,6 +34,9 @@ public class Event {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "event_id")
     private List<EventDate> eventDatesLocation;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "event")
+    private List<News> newsEntries = new LinkedList<>();
 
     @NotNull
     private LocalTime duration;
@@ -134,5 +138,17 @@ public class Event {
 
     public void setArtist(String artist) {
         this.artist = artist;
+    }
+
+    public List<News> getNewsEntries() {
+        return newsEntries;
+    }
+
+    public void setNewsEntries(List<News> newsEntries) {
+        this.newsEntries = newsEntries;
+    }
+
+    public void addNewsEntry(News newsEntry) {
+        this.newsEntries.add(newsEntry);
     }
 }

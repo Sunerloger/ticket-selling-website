@@ -21,6 +21,7 @@ import {PurchaseDetailComponent} from './components/purchase-detail/purchase-det
 import {ReservationCheckoutComponent} from './components/reservation-checkout/reservation-checkout.component';
 import {EventOverviewComponent} from './components/event-overview/event-overview.component';
 import { HallplanManagerComponent } from './components/hallplan-manager/hallplan-manager.component';
+import {NewsResolver} from './components/news/news.resolver';
 import {EventDetailComponent} from './components/event-detail/event-detail.component';
 import {AdminManagerComponent} from './components/admin-manager/admin-manager.component';
 import {PerformanceTicketSelctionComponent} from './components/performance-ticket-selction/performance-ticket-selction.component';
@@ -28,11 +29,17 @@ import {PerformanceTicketSelctionComponent} from './components/performance-ticke
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
+
   {path: 'events', component: EventOverviewComponent},
-  {path: 'login', component: LoginComponent},
+  {path: 'event/:id', canActivate: [AuthGuard], component: EventDetailComponent},
+  {path: 'events/create', canActivate: [AdminRouteGuard], component: EventsComponent},
+  {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
+
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
+
   {path: 'cart', canActivate: [AuthGuard], component: ShoppingCartComponent},
-  {path: 'register', component: RegisterComponent},
+  {path: 'cart/checkout', canActivate: [AuthGuard], component: CartCheckoutComponent},
+
   {
     path: 'admin', canActivate: [AdminRouteGuard], children: [
       {path: '', component: AdminManagerComponent},
@@ -40,39 +47,35 @@ const routes: Routes = [
       {path: 'register', canActivate: [AdminRouteGuard], component: RegisterComponent},
     ]
   },
-  {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
-  {path: 'news/create', canActivate: [AdminRouteGuard], component: NewsCreateComponent},
-  {path: 'roomplan/:id/edit', component: RoomplaneditorComponent},
+
+  {path: 'register', component: RegisterComponent},
+  {path: 'login', component: LoginComponent},
+  {path: 'edit', component: EditComponent},
+
   {path: 'reservations', canActivate: [AuthGuard], component: ReservationsComponent},
-  {path: 'cart/checkout', canActivate: [AuthGuard], component: CartCheckoutComponent},
+  {path: 'reservations/:id/checkout', canActivate: [AuthGuard], component: ReservationCheckoutComponent},
+
   {path: 'purchases', canActivate: [AuthGuard], component: PurchasesComponent},
   {path: 'purchases/:id', canActivate: [AuthGuard], component: PurchaseDetailComponent},
-  {path: 'reservations/:id/checkout', canActivate: [AuthGuard], component: ReservationCheckoutComponent},
-  {path: 'hallplans/manage', canActivate: [AuthGuard], component: HallplanManagerComponent},
-  {path: 'event/:id', canActivate: [AuthGuard], component: EventDetailComponent},
-  {path: 'events/create', canActivate: [AdminRouteGuard], component: EventsComponent},
-  {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
-  {
-    path: 'news', canActivate: [AuthGuard], children: [
-      {path: '', component: NewsOverviewComponent},
-      {
-        path: ':id/info', component: NewsDetailComponent/*, resolve: {
-        news: NewsResolver
-      }*/
-      },
-      {path: 'create', canActivate: [AdminRouteGuard], component: NewsCreateComponent},
-    ]
-  },
-  {path: 'edit', component: EditComponent},
+  {path: 'performance-tickets/:id', canActivate: [AuthGuard], component: PerformanceTicketSelctionComponent},
+
   {path: 'roomplan/:id/edit', component: RoomplaneditorComponent},
   {path: 'hallplans/:id/edit', component: RoomplaneditorComponent},
-  {path: 'performance-tickets/:id', canActivate: [AuthGuard], component: PerformanceTicketSelctionComponent},
+  {path: 'hallplans/manage', canActivate: [AuthGuard], component: HallplanManagerComponent},
+
+  {path: 'news', canActivate: [AuthGuard], children: [
+      {path: '', component: NewsOverviewComponent},
+      {path: ':id/info', component: NewsDetailComponent, resolve: {
+        news: NewsResolver
+        }},
+      {path: 'create', canActivate: [AdminRouteGuard], component: NewsCreateComponent},
+    ]},
+
   {path: '**', redirectTo: 'news'},
-  {path: 'hallplans/:id/edit', component: RoomplaneditorComponent}
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {useHash: true})],
+  imports: [RouterModule.forRoot(routes, { useHash: true, scrollPositionRestoration: 'enabled'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {
