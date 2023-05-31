@@ -1,0 +1,10 @@
+<div class="card-header">
+  <div *ngIf="authService.isLoggedIn && authService.getUserRole() === 'ADMIN'">
+    <h3 class="card-headline">Manager</h3>
+  </div>
+
+  <div class="admin-tools">
+    <button class="btn btn-primary" routerLink="block">View Blocked Users</button>
+    <button class="btn btn-primary" routerLink="register">Create User</button>
+  </div>
+</div>

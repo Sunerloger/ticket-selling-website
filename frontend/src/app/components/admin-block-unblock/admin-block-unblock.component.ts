@@ -11,6 +11,8 @@ import {debounceTime, Observable} from 'rxjs';
 export enum BlockUnblockMode {
   block,
   unblock
+
+
 }
 
 @Component({
@@ -39,7 +41,7 @@ export class AdminBlockUnblockComponent implements OnInit {
   error = false;
   errorMessage = '';
 
-  mode: BlockUnblockMode = BlockUnblockMode.block;
+  mode: BlockUnblockMode = BlockUnblockMode.unblock;
 
 
   constructor(private formBuilder: FormBuilder,
