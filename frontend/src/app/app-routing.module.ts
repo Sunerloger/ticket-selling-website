@@ -23,6 +23,9 @@ import {ReservationCheckoutComponent} from './components/reservation-checkout/re
 import {EventOverviewComponent} from './components/event-overview/event-overview.component';
 import {HallplanManagerComponent} from './components/hallplan-manager/hallplan-manager.component';
 import {AdminManagerComponent} from './components/admin-manager/admin-manager.component';
+import {
+  PerformanceTicketSelctionComponent
+} from './components/performance-ticket-selction/performance-ticket-selction.component';
 
 
 const routes: Routes = [
@@ -65,6 +68,7 @@ const routes: Routes = [
   {path: 'edit', component: EditComponent},
   {path: 'roomplan/:id/edit', component: RoomplaneditorComponent},
   {path: 'hallplans/:id/edit', component: RoomplaneditorComponent},
+  {path: 'performance-tickets/:id', canActivate: [AuthGuard], component: PerformanceTicketSelctionComponent},
   {path: '**', redirectTo: 'news'},
   {path: 'hallplans/:id/edit', component: RoomplaneditorComponent}
 ];

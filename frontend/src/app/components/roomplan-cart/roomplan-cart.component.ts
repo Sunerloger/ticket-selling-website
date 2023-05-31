@@ -4,6 +4,7 @@ import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';
 import {ReservationService} from '../../services/reservation.service';
 import {SeatDetail} from '../../dtos/seatDetail';
+import {PersistedSeat} from '../../dtos/hallplan/hallplan';
 
 @Component({
   selector: 'app-roomplan-cart',
@@ -12,26 +13,7 @@ import {SeatDetail} from '../../dtos/seatDetail';
 })
 
 export class RoomplanCartComponent {
-  /**
-  @Input() items?: RoomplanItem[];
-   */
-  item1: SeatDetail = {
-    id: 6,
-    price: 40,
-    type: 'STANDING_SEAT',
-    seatNr: 1,
-    sectionName: 'lol',
-    seatRowNr: 3
-  };
-  item2: SeatDetail = {
-    id: 1,
-    price: 12,
-    type: 'SEAT',
-    seatNr: 1,
-    sectionName: 'VIP',
-    seatRowNr: 1
-  };
-  items = [this.item1, this.item2];
+  @Input() items?: PersistedSeat[] = [];
 
   constructor(private cartService: CartService,
               private reservationService: ReservationService,
@@ -45,7 +27,7 @@ export class RoomplanCartComponent {
       : this.items.length.toString();
   }
 
-  addToCart(seatList: SeatDetail[]){
+  addToCart(seatList: PersistedSeat[]) {
     //Todo: something with response
     this.cartService.addToCart(seatList).subscribe(
       (response) => {
@@ -57,11 +39,11 @@ export class RoomplanCartComponent {
         this.notification.error(`Something went wrong... please try again!`);
       }, () => {
         this.router.navigate(['/cart']);
-    }
+      }
     );
   }
 
-  reserveSeats(seatList: SeatDetail[]){
+  reserveSeats(seatList: PersistedSeat[]) {
     //Todo: something with response
     this.reservationService.createReservation(seatList).subscribe(
       (response) => {

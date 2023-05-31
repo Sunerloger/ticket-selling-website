@@ -53,6 +53,7 @@ import { HallplanManagerComponent } from './components/hallplan-manager/hallplan
 import { CustomerhallplandisplayComponent } from './components/customerhallplandisplay/customerhallplandisplay.component';
 import { ImmutableseatComponent } from './components/roomplaneditor/seatrow/immutableseat/immutableseat.component';
 import { AdminManagerComponent } from './components/admin-manager/admin-manager.component';
+import { PerformanceTicketSelctionComponent } from './components/performance-ticket-selction/performance-ticket-selction.component';
 
 @NgModule({
   declarations: [
@@ -94,6 +95,7 @@ import { AdminManagerComponent } from './components/admin-manager/admin-manager.
     CustomerhallplandisplayComponent,
     ImmutableseatComponent,
     AdminManagerComponent,
+    PerformanceTicketSelctionComponent,
   ],
   imports: [
     BrowserModule,
