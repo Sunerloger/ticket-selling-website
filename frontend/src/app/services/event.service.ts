@@ -59,4 +59,15 @@ export class EventService {
     }
     return this.http.get<AbbreviatedEvent[]>(baseUri, {params});
   }
+
+  /**
+   * Get all events stored in the system.
+   *
+   * @return observable list of found events.
+   */
+  getById(id: number): Observable<Event> {
+    let params: HttpParams = new HttpParams();
+    params = params.set('id', id);
+    return this.http.get<Event>(baseUri+'/byId', {params});
+  }
 }

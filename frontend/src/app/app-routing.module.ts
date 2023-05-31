@@ -22,6 +22,7 @@ import {PurchaseDetailComponent} from './components/purchase-detail/purchase-det
 import {ReservationCheckoutComponent} from './components/reservation-checkout/reservation-checkout.component';
 import {EventOverviewComponent} from './components/event-overview/event-overview.component';
 import { HallplanManagerComponent } from './components/hallplan-manager/hallplan-manager.component';
+import {EventDetailComponent} from './components/event-detail/event-detail.component';
 
 
 const routes: Routes = [
@@ -42,6 +43,7 @@ const routes: Routes = [
   {path: 'purchases/:id', component: PurchaseDetailComponent},
   {path: 'reservations/:id/checkout', component: ReservationCheckoutComponent},
   {path: 'hallplans/manage', canActivate: [AuthGuard], component: HallplanManagerComponent},
+  {path: 'event/:id', canActivate: [AuthGuard], component: EventDetailComponent},
   {path: 'events/create', canActivate: [AdminRouteGuard], component: EventsComponent},
   {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
   {

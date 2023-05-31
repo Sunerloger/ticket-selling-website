@@ -52,6 +52,7 @@ import {AdminBlockUnblockComponent} from './components/admin-block-unblock/admin
 import { HallplanManagerComponent } from './components/hallplan-manager/hallplan-manager.component';
 import { CustomerhallplandisplayComponent } from './components/customerhallplandisplay/customerhallplandisplay.component';
 import { ImmutableseatComponent } from './components/roomplaneditor/seatrow/immutableseat/immutableseat.component';
+import { EventDetailComponent } from './components/event-detail/event-detail.component';
 
 @NgModule({
   declarations: [
@@ -92,6 +93,7 @@ import { ImmutableseatComponent } from './components/roomplaneditor/seatrow/immu
     HallplanManagerComponent,
     CustomerhallplandisplayComponent,
     ImmutableseatComponent,
+    EventDetailComponent,
   ],
   imports: [
     BrowserModule,

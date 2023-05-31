@@ -38,6 +38,8 @@ VALUES ('FREE', 'SEAT', 1, 1, 1, 1, 1),
        ('RESERVED', 'SEAT', 2, 2, 2, 1, 1),
        ('FREE', 'SEAT', 1, 3, 3, 2, 3);
 
+DELETE FROM Event_Date;
+DELETE FROM EVENT;
 INSERT INTO Event (id, title, duration, category, description, image, artist)
 VALUES (1, 'Example Event', '02:00', 'Example Category', 'This is an example event description.', 'base64-encoded-image', 'John');
 

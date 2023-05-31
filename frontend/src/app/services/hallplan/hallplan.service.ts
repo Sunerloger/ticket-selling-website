@@ -113,4 +113,15 @@ export class HallplanService {
     params = params.set('pageIndex', pageIndex);
     return this.http.get<AbbreviatedHallplan[]>(this.baseUrl+'/search', {params});
   }
+
+  /**
+   * Get a AbbreviatedHallplan by its id.
+   *
+   * @param id the id of the needed hallplan
+   */
+  getByIdAbbreviated(id: number): Observable<AbbreviatedHallplan> {
+    let params: HttpParams = new HttpParams();
+    params = params.set('id', id);
+    return this.http.get<AbbreviatedHallplan>(this.baseUrl+'/byId', {params});
+  }
 }
