@@ -106,8 +106,8 @@ public class NewsEndpointTest implements TestData {
         user.setAdmin(false);
 
         ApplicationUser admin = new ApplicationUser();
-        user.setEmail(ADMIN_USER);
-        user.setAdmin(true);
+        admin.setEmail(ADMIN_USER);
+        admin.setAdmin(true);
 
         userRepository.save(user);
         userRepository.save(admin);

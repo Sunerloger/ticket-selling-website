@@ -89,14 +89,13 @@ public class NewsSecurityTest implements TestData {
 
         news.setImages(testImageList);
 
-        // TODO: why does the order matter here???
         ApplicationUser user = new ApplicationUser();
         user.setEmail(ADMIN_USER);
         user.setAdmin(true);
 
         ApplicationUser admin = new ApplicationUser();
-        user.setEmail(DEFAULT_USER);
-        user.setAdmin(false);
+        admin.setEmail(DEFAULT_USER);
+        admin.setAdmin(false);
 
         userRepository.save(user);
         userRepository.save(admin);
