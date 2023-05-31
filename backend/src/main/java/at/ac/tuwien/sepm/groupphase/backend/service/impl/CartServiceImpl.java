@@ -26,7 +26,6 @@ public class CartServiceImpl implements CartService {
     private final HallPlanSeatService seatService;
     private final SeatRowService seatRowService;
 
-
     @Autowired
     public CartServiceImpl(CartRepository cartRepository, EventService eventService, HallPlanSeatService seatService, SeatRowService seatRowService) {
         this.cartRepository = cartRepository;
