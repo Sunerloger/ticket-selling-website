@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDetailDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import jakarta.xml.bind.ValidationException;
 import org.springframework.data.domain.Page;
@@ -52,4 +53,6 @@ public interface EventService {
      * @return returns the EventDetailDto corresponding to the hallplanId
      */
     EventDetailDto getEventFromHallplanId(Long hallplanId);
+
+    PerformanceDto getPerformanceFromHallplanId(Long hallplanId);
 }

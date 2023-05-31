@@ -2,10 +2,12 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDateDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDetailDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventDate;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventDateRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanRepository;
@@ -100,8 +102,12 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventDetailDto getEventById(Long id) {
+    public EventDetailDto getEventById(Long id) throws NotFoundException {
         LOG.trace("getEventById({})", id);
+        Optional<Event> existingEvent = eventRepository.findById(id);
+        if (existingEvent.isEmpty()) {
+            throw new NotFoundException("Event with id: " + id + " can not be found!");
+        }
         Event event = eventRepository.getEventById(id);
         return eventMapper.eventToEventDetailDto(event);
     }
@@ -115,6 +121,13 @@ public class EventServiceImpl implements EventService {
         eventDateList.add(eventDate);
         event.setEventDatesLocation(eventDateList);
         return eventMapper.eventToEventDetailDto(event);
+    }
+
+    @Override
+    public PerformanceDto getPerformanceFromHallplanId(Long hallplanId) {
+        EventDate eventDate = eventDateRepository.getEventDateByRoom(hallplanId);
+        Event event = eventRepository.getEventById(eventDate.getEvent());
+        return new PerformanceDto(event, eventDate);
     }
 
 }

@@ -4,16 +4,19 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ApplicationUserRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtAuthorizationFilter;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 
 import jakarta.xml.bind.ValidationException;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -30,17 +33,15 @@ import java.util.List;
 public class CustomUserDetailService implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final UserRepository userRepository;
     private final ApplicationUserRepository applicationUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
     private final JwtTokenizer jwtTokenizer;
 
     @Autowired
-    public CustomUserDetailService(ApplicationUserRepository applicationUserRepository, UserRepository userRepository, PasswordEncoder passwordEncoder,
+    public CustomUserDetailService(ApplicationUserRepository applicationUserRepository, PasswordEncoder passwordEncoder,
                                    JwtTokenizer jwtTokenizer, JwtAuthorizationFilter jwtAuthorizationFilter) {
         this.applicationUserRepository = applicationUserRepository;
-        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtAuthorizationFilter = jwtAuthorizationFilter;
         this.jwtTokenizer = jwtTokenizer;
@@ -106,7 +107,6 @@ public class CustomUserDetailService implements UserService {
         throw new BadCredentialsException("Email or password is incorrect or account is locked");
     }
 
-    //Validation Exception is thrown if user already exists
     @Override
     public ApplicationUser register(ApplicationUser applicationUser) throws ValidationException {
         String encodedPassword = passwordEncoder.encode(applicationUser.getPassword());
@@ -117,7 +117,6 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public ApplicationUser edit(ApplicationUser applicationUser, String token) {
-        //TODO: Dont let user change password
         UserDetails currentUser = loadUserByUsername(applicationUser.getEmail());
         if (passwordEncoder.matches(applicationUser.getPassword(), currentUser.getPassword())) {
             String encodedPassword = passwordEncoder.encode(applicationUser.getPassword());
@@ -149,11 +148,13 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public List<ApplicationUser> getBlockedUsers(ApplicationUser applicationUser) {
+    public List<ApplicationUser> getBlockedUsers(ApplicationUser applicationUser, String token, int pageIndex) {
+        ApplicationUser admin = getUser(token);
+        Pageable pageable = PageRequest.of(pageIndex, 20, Sort.by("email").ascending());
         if (applicationUser.getLocked().equals(Boolean.TRUE)) {
-            return applicationUserRepository.findUserByIsLockedIsTrueAndEmailContainingIgnoreCase(applicationUser.getEmail());
+            return applicationUserRepository.findUserByIsLockedIsTrueAndEmail(applicationUser.getEmail(), admin.getEmail(), pageable);
         } else {
-            return applicationUserRepository.findUserByIsLockedIsFalseAndEmailContainingIgnoreCase(applicationUser.getEmail());
+            return applicationUserRepository.findUserByIsLockedIsFalseAndEmail(applicationUser.getEmail(), admin.getEmail(), pageable);
         }
 
     }

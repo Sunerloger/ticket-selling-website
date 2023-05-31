@@ -3,8 +3,8 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {CartItem} from '../dtos/cartItem';
-import {SeatDetail} from '../dtos/seatDetail';
 import {CreatePurchase} from '../dtos/purchases';
+import {PersistedSeat} from '../dtos/hallplan/hallplan';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,7 @@ export class CartService {
     return this.httpClient.delete<any>(this.cartBaseUri + '/' + id);
   }
 
-  addToCart(seatList: SeatDetail[]): Observable<HttpResponse<any>>{
+  addToCart(seatList: PersistedSeat[]): Observable<HttpResponse<any>>{
     return this.httpClient.post<any>(this.cartBaseUri, seatList);
   }
   purchaseCart(purchaseItem: CreatePurchase): Observable<HttpResponse<any>>{

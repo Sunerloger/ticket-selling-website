@@ -56,16 +56,16 @@
       <h4>Order Overview</h4>
       <div class="overview-row">
         <span>Articles</span>
-        <span>35,22 €</span>
+        <span>{{ ( this.withoutTaxes | number:'1.2-2').replace('.', ',') }} €</span>
       </div>
       <div class="overview-row">
         <span>Taxes</span>
-        <span>6,76 €</span>
+        <span>{{ ( this.taxes | number:'1.2-2').replace('.', ',') }} €</span>
       </div>
       <hr>
       <div class="overview-row">
         <h5>Total</h5>
-        <h5>41,98 €</h5>
+        <h5>{{ ( this.total | number:'1.2-2').replace('.', ',') }} €</h5>
       </div>
     </div>
   </div>
@@ -81,7 +81,7 @@
     <div *ngIf="item !== undefined">
       <div *ngFor="let reservation of item.reservedSeats; let i = index">
         <div class="item-list">
-          <input type="checkbox" class="checkbox" name="admin" [(ngModel)]="checkboxList[i]">
+          <input type="checkbox" class="checkbox" name="admin" (change)="sumOfCheckedItems()" [(ngModel)]="checkboxList[i]">
           <app-ticket-list-item [event]="item.event" [seat]="reservation" style="flex: auto"></app-ticket-list-item>
         </div>
       </div>
