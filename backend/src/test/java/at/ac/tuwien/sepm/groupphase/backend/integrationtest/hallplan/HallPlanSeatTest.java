@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @EnableWebMvc
 @Transactional
-@ActiveProfiles({"test", "datagen"})
+@ActiveProfiles({"test", "hallplan"})
 public class HallPlanSeatTest {
 
     @Autowired
