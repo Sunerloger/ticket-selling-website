@@ -27,20 +27,13 @@
       </a>
     </div>
     <div class="navbar-subcontainer">
+      <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()" routerLink="/edit"
+         routerLinkActive="active">Account</a>
       <a class="nav-link animated-text-custom" *ngIf="!authService.isLoggedIn()" routerLink="/register"
          routerLinkActive="active">Register</a>
       <a class="nav-link animated-text-custom" *ngIf="!authService.isLoggedIn()" routerLink="/login"
          routerLinkActive="active">Login</a>
 
-      <div class="dropdown">
-        <a class="dropdown-toggle dropdown-toggle-no-caret nav-link animated-text-custom remove-dropdown-caret w-100"
-           type="button" id="dropdownAccountButton" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false"
-           *ngIf="authService.isLoggedIn()">Account</a>
-        <div class="dropdown-menu dropdown_menu dropdown-menu-right remove-dropdown-corners w-100"
-             aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" routerLink="/edit">Edit Account</a>
-        </div>
-      </div>
       <div class="dropdown">
         <a class="dropdown-toggle dropdown-toggle-no-caret nav-link animated-text-custom remove-dropdown-caret w-100"
            type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false"
