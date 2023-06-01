@@ -1,5 +1,6 @@
 INSERT INTO applicationuser (id, email, first_name, last_name, birthdate, address, area_code, city_name, admin, is_Locked, password)
 VALUES
+    (-1, 'admin@email.com', 'Ad', 'Min', '1990-01-01', 'Kanawastigasse 12', 1337, 'Hintertupfingen', true, false, '{password}'),
     (-101, 'schneiderjohann@example.com', 'Johann', 'Schneider', '1990-01-01', 'Stephansplatz 1', 1010, 'Vienna', false, false, '{password}'),
     (-102, 'weberjana@example.com', 'Jana', 'Weber', '1991-02-02', 'Karlsplatz 2', 1040, 'Vienna', false, false, '{password}'),
     (-103, 'mullerdavid@example.com', 'David', 'Müller', '1992-03-03', 'Praterstraße 3', 1020, 'Vienna', false, false, '{password}'),
