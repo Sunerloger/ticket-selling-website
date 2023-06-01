@@ -74,5 +74,5 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
     @Query("SELECT u FROM ApplicationUser u WHERE u.isLocked = FALSE AND u.email LIKE %:email% AND u.email NOT LIKE %:admin%")
     List<ApplicationUser> findUserByIsLockedIsFalseAndEmail(@Param(value = "email") String email, @Param(value = "admin") String admin, @NonNull Pageable pageable);
 
-    ApplicationUser getApplicationUserById (Long id);
+    ApplicationUser getApplicationUserById(Long id);
 }

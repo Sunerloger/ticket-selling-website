@@ -120,7 +120,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchase.setDate(LocalDate.now());
         purchase.setUserId(userId);
 
-        if (!purchaseCreationDto.getUseUserAddress()){
+        if (!purchaseCreationDto.getUseUserAddress()) {
             ApplicationUser user = customUserDetailService.getUserById(userId);
             purchase.setBillAddress(user.getAddress());
             purchase.setBillAreaCode(user.getAreaCode());
@@ -157,7 +157,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchase.setDate(LocalDate.now());
         purchase.setUserId(userId);
 
-        if (!purchaseCreationDto.getUseUserAddress()){
+        if (!purchaseCreationDto.getUseUserAddress()) {
             ApplicationUser user = customUserDetailService.getUserById(userId);
             purchase.setBillAddress(user.getAddress());
             purchase.setBillAreaCode(user.getAreaCode());
