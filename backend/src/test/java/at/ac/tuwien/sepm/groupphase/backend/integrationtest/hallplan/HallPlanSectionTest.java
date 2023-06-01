@@ -82,7 +82,7 @@ public class HallPlanSectionTest {
         section.setName("Test Hall Plan");
         section.setColor("Red");
         section.setPrice(100L);
-        section.setHallPlanId(1L);
+        section.setHallPlanId(-1L);
         HallPlanSection sectionEntity = hallPlanSectionRepository.save(section);
 
         // Send a DELETE request to the endpoint
@@ -96,11 +96,11 @@ public class HallPlanSectionTest {
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     public void givenId_WhenGet_thenReturnSectionById() throws Exception {
-        Optional<HallPlanSection> section = hallPlanSectionRepository.findById(1L);
+        Optional<HallPlanSection> section = hallPlanSectionRepository.findById(-1L);
         String body = "";
 
         // Send a GET request to the endpoint sections with id
-        MvcResult mvcResult = this.mockMvc.perform(get(BASE_URI + "sections/" + 1L)
+        MvcResult mvcResult = this.mockMvc.perform(get(BASE_URI + "sections/" + -1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
@@ -158,14 +158,14 @@ public class HallPlanSectionTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     public void givenOneSection_WhenPost_thenCreateNewSection() throws Exception {
         HallPlanSectionDto insertDto = new HallPlanSectionDto();
-        insertDto.setHallPlanId(1L);
+        insertDto.setHallPlanId(-1L);
         insertDto.setColor("red");
         insertDto.setName("VIP Plus");
         insertDto.setPrice(100L);
         String body = objectMapper.writeValueAsString(insertDto);
 
         // Send a GET request to the endpoint sections with id
-        MvcResult mvcResult = this.mockMvc.perform(post(BASE_URI + 1 + "/" + "sections")
+        MvcResult mvcResult = this.mockMvc.perform(post(BASE_URI + -1 + "/" + "sections")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
@@ -190,14 +190,14 @@ public class HallPlanSectionTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     public void givenOneSection_WhenPut_thenUpdateSection() throws Exception {
         HallPlanSectionDto updateDto = new HallPlanSectionDto();
-        updateDto.setHallPlanId(1L);
+        updateDto.setHallPlanId(-1L);
         updateDto.setColor("red");
         updateDto.setName("VIP Plus");
         updateDto.setPrice(100L);
         String body = objectMapper.writeValueAsString(updateDto);
 
         // Send a GET request to the endpoint sections with id
-        MvcResult mvcResult = this.mockMvc.perform(put(BASE_URI + 1 + "/" + "sections" + "/" + 1)
+        MvcResult mvcResult = this.mockMvc.perform(put(BASE_URI + -1 + "/" + "sections" + "/" + -1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))

@@ -54,7 +54,7 @@ public class SeatRowTest {
         seatRowDto.setRowNr(18L);
 
         // Perform POST request
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/hallplans/1/seatrows")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/hallplans/-1/seatrows")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(seatRowDto)))
             .andExpect(status().isOk());
@@ -70,17 +70,17 @@ public class SeatRowTest {
     public void givenId_WhenDelete_ThenRemoveSeatRowWithIdFromSystem() throws Exception {
         // Create a SeatRow entity in the database
         SeatRow seatRow = new SeatRow();
-        seatRow.setRowNr(1L);
-        seatRow.setHallPlanId(1L);
+        seatRow.setRowNr(-1L);
+        seatRow.setHallPlanId(-1L);
         seatRowRepository.save(seatRow);
 
         // Perform DELETE request
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/hallplans/1/seatrows/1")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/hallplans/-1/seatrows/-1")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Check that the seat row was deleted from the database
-        Optional<SeatRow> seatRows = seatRowRepository.findById(1L);
+        Optional<SeatRow> seatRows = seatRowRepository.findById(-1L);
         assertThat(!seatRows.isPresent());
     }
 
@@ -89,23 +89,23 @@ public class SeatRowTest {
     public void givenOneSeatRow_WhenPut_ThenUpdateSeatRow() throws Exception {
         // Create a SeatRow entity in the database
         SeatRow seatRow = new SeatRow();
-        seatRow.setRowNr(1L);
-        seatRow.setHallPlanId(1L);
+        seatRow.setRowNr(-1L);
+        seatRow.setHallPlanId(-1L);
         seatRowRepository.save(seatRow);
 
         // Create a SeatRowDto for the request body
         SeatRowDto seatRowDto = new SeatRowDto();
-        seatRowDto.setRowNr(2L);
+        seatRowDto.setRowNr(-2L);
 
         // Perform PUT request
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/hallplans/1/seatrows/1")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/hallplans/-1/seatrows/-1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(seatRowDto)))
             .andExpect(status().isOk());
 
         // Check that the seat row was updated in the database
-        SeatRow updatedSeatRow = seatRowRepository.getOne(1L);
-        assertThat(updatedSeatRow.getRowNr()).isEqualTo(2L);
+        SeatRow updatedSeatRow = seatRowRepository.getOne(-1L);
+        assertThat(updatedSeatRow.getRowNr()).isEqualTo(-2L);
     }
 
 }
