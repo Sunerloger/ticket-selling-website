@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @EnableWebMvc
 @Transactional
-@ActiveProfiles({"test", "hallplan"})
+@ActiveProfiles({"test", "datagen"})
 public class HallPlanSeatTest {
 
     @Autowired
@@ -74,14 +74,12 @@ public class HallPlanSeatTest {
         seatDto.setOrderNr(7L);
         seatDto.setSeatNr(7L);
         seatDto.setCapacity(1L);
-        seatDto.setOrderNr(1L);
-
         Optional<HallPlanSection> section = hallPlanSectionRepository.findById(-1L);
         if (section.isPresent()) {
             HallPlanSectionDto sectionDto = hallPlanSectionMapper.toDto(section.get());
             seatDto.setSection(sectionDto);
         }
-        seatDto.setSeatrowId(SEAT_ROW_ID);
+        seatDto.setSeatrowId(-1L);
         seatDto.setStatus(HallPlanSeatStatus.FREE);
         seatDto.setType(HallPlanSeatType.SEAT);
 
@@ -118,7 +116,7 @@ public class HallPlanSeatTest {
         seatDto.setSeatNr(7L);
         seatDto.setCapacity(1L);
         seatDto.setSection(null);
-        seatDto.setSeatrowId(1L);
+        seatDto.setSeatrowId(-1L);
         seatDto.setStatus(HallPlanSeatStatus.FREE);
         seatDto.setType(HallPlanSeatType.SEAT);
 

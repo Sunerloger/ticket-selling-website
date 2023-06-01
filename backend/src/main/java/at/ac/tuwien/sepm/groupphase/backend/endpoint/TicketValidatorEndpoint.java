@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketPayloadDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketValidatorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -23,7 +22,6 @@ import java.lang.invoke.MethodHandles;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/ticket-validator")

@@ -3,13 +3,19 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDate;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "applicationuser")
@@ -42,6 +48,31 @@ public class ApplicationUser {
     private Boolean admin = false;
 
     private Boolean isLocked = false;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ApplicationUser that = (ApplicationUser) o;
+        return Objects.equals(id, that.id) && Objects.equals(email, that.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email);
+    }
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "news_read",
+        joinColumns = @JoinColumn(name = "applicationuser_id"),
+        inverseJoinColumns = @JoinColumn(name = "news_id")
+    )
+    Set<News> readNews;
 
     public ApplicationUser() {
     }
@@ -161,4 +192,15 @@ public class ApplicationUser {
         isLocked = locked;
     }
 
+    public boolean hasRead(News news) {
+        return this.readNews.contains(news);
+    }
+
+    public void addNews(News news) {
+        this.readNews.add(news);
+    }
+
+    public void remove(News news) {
+        this.readNews.remove(news);
+    }
 }

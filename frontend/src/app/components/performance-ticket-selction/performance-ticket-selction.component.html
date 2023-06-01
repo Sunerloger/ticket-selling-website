@@ -1,6 +1,6 @@
-<div class="pt-5">
+<div class="component">
   <div class="card-header">
-    <h3 class="card-headline"> Pick your seats </h3>
+    <h1> Pick your seats </h1>
   </div>
 
   <div *ngIf="performance.performanceDate !== undefined">
@@ -10,6 +10,6 @@
   <app-customerhallplandisplay [hallplanId]="this.hallplanId"
                                (selectionChangeEvent)="handleEvent($event)"></app-customerhallplandisplay>
   <div class="component-seperator"></div>
-  <app-roomplan-cart [items]="selectedSeats"></app-roomplan-cart>
+  <app-roomplan-cart [items]="selectedSeats" [event]="performance.id"></app-roomplan-cart>
 
 </div>

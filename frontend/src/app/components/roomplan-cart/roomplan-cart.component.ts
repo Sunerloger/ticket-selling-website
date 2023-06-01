@@ -13,7 +13,7 @@ import {PersistedSeat} from '../../dtos/hallplan/hallplan';
 
 export class RoomplanCartComponent {
   @Input() items?: PersistedSeat[] = [];
-
+  @Input() event?: number;
   constructor(private cartService: CartService,
               private reservationService: ReservationService,
               private notification: ToastrService,

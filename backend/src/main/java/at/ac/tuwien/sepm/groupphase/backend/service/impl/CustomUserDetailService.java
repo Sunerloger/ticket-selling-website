@@ -165,4 +165,10 @@ public class CustomUserDetailService implements UserService {
         return user == null ? null : user.getId();
     }
 
+    @Override
+    public ApplicationUser getUserById(Long id) {
+        return applicationUserRepository.getApplicationUserById(id);
+    }
+
+
 }

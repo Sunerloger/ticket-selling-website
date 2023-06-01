@@ -47,7 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @EnableWebMvc
 @Transactional
-@ActiveProfiles({"test", "hallplan"})
+@ActiveProfiles({"test", "datagen"})
 public class HallPlanSectionTest {
 
     @Autowired
@@ -82,7 +82,7 @@ public class HallPlanSectionTest {
         section.setName("Test Hall Plan");
         section.setColor("Red");
         section.setPrice(100L);
-        section.setHallPlanId(1L);
+        section.setHallPlanId(-1L);
         HallPlanSection sectionEntity = hallPlanSectionRepository.save(section);
 
         // Send a DELETE request to the endpoint
@@ -158,14 +158,14 @@ public class HallPlanSectionTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     public void givenOneSection_WhenPost_thenCreateNewSection() throws Exception {
         HallPlanSectionDto insertDto = new HallPlanSectionDto();
-        insertDto.setHallPlanId(1L);
+        insertDto.setHallPlanId(-1L);
         insertDto.setColor("red");
         insertDto.setName("VIP Plus");
         insertDto.setPrice(100L);
         String body = objectMapper.writeValueAsString(insertDto);
 
         // Send a GET request to the endpoint sections with id
-        MvcResult mvcResult = this.mockMvc.perform(post(BASE_URI + 1 + "/" + "sections")
+        MvcResult mvcResult = this.mockMvc.perform(post(BASE_URI + -1 + "/" + "sections")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))

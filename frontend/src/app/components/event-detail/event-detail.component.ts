@@ -45,7 +45,6 @@ export class EventDetailComponent implements OnInit{
       this.event.id = parseInt(params.get('id'), 10);
       this.executeRequests();
     });
-    console.log('getValue of 1:'+this.getValueForKey(1));
   }
   getData(): Observable<Event> {
     return this.eventService.getById(this.event.id);
@@ -68,7 +67,6 @@ export class EventDetailComponent implements OnInit{
       })
     ).subscribe((result: any) => {
       const rec = { key: result.id, value: result.name };
-      console.log('This is my rec:' + rec.value);
       this.hallPlanNames.push(rec);
     });
   }
@@ -77,8 +75,7 @@ export class EventDetailComponent implements OnInit{
     const observable = this.eventService.getById(this.event.id);
     observable.subscribe({
       next: data => {
-        this.event = data;
-        console.log('This is the Fetched event: '+ this.event.artist);
+        this.event = data;;
       },
       error: error => {
         console.error('Error fetching event', error);
@@ -92,7 +89,6 @@ export class EventDetailComponent implements OnInit{
     observable.subscribe({
       next: data => {
         const rec = { key: id, value: data.name };
-        console.log('This is my rec:' + rec.value);
         this.hallPlanNames.push(rec);
       },
       error: error => {

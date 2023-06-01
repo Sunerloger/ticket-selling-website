@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketPayloadDto;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketValidatorService;
 import jakarta.xml.bind.ValidationException;
 import org.slf4j.Logger;

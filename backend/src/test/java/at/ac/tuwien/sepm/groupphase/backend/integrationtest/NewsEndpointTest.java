@@ -55,6 +55,9 @@ public class NewsEndpointTest implements TestData {
     private EventRepository eventRepository;
 
     @Autowired
+    private ApplicationUserRepository userRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
@@ -75,6 +78,7 @@ public class NewsEndpointTest implements TestData {
         newsRepository.deleteAll();
         newsImageRepository.deleteAll();
         eventRepository.deleteAll();
+        userRepository.deleteAll();
 
         event.setCategory("Rock");
         event.setArtist("Queen");
@@ -96,13 +100,25 @@ public class NewsEndpointTest implements TestData {
         List<NewsImage> testImageList = new LinkedList<>(Arrays.asList(img1,img2,img3));
 
         news.setImages(testImageList);
+
+        ApplicationUser user = new ApplicationUser();
+        user.setEmail(DEFAULT_USER);
+        user.setAdmin(false);
+
+        ApplicationUser admin = new ApplicationUser();
+        admin.setEmail(ADMIN_USER);
+        admin.setAdmin(true);
+
+        userRepository.save(user);
+        userRepository.save(admin);
     }
 
     @Test
     public void givenNothing_whenFindAll_thenEmptyList() throws Exception {
         // default pageIndex is 0
         MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+                .param("loadAlreadyRead","false"))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -125,7 +141,8 @@ public class NewsEndpointTest implements TestData {
         newsRepository.save(news);
 
         MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+            .param("loadAlreadyRead","false"))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -157,7 +174,8 @@ public class NewsEndpointTest implements TestData {
 
         // default pageIndex is 0
         MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+            .param("loadAlreadyRead","false"))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -171,7 +189,8 @@ public class NewsEndpointTest implements TestData {
         assertEquals(20, abbreviatedNewsDtos.size());
 
         mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI).param("pageIndex", "1")
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+            .param("loadAlreadyRead","false"))
             .andDo(print())
             .andReturn();
         response = mvcResult.getResponse();
@@ -233,7 +252,8 @@ public class NewsEndpointTest implements TestData {
 
         // default pageIndex is 0
         mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+            .param("loadAlreadyRead","false"))
             .andDo(print())
             .andReturn();
         response = mvcResult.getResponse();
@@ -376,7 +396,7 @@ public class NewsEndpointTest implements TestData {
 
     @Test
     public void givenNothing_whenPostInvalidCoverImage_then422() throws Exception {
-        news.setCoverImage("IAMACOVERIMAGE");
+        news.setCoverImage("I_AM_A_COVER_IMAGE");
         NewsInquiryDto newsInquiryDto = newsMapper.newsToNewsInquiryDto(news);
         String body = objectMapper.writeValueAsString(newsInquiryDto);
 

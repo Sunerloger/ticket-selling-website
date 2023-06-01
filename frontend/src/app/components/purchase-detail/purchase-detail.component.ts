@@ -4,6 +4,8 @@ import {PurchaseService} from '../../services/purchase.service';
 import {ToastrService} from 'ngx-toastr';
 import {Purchase} from '../../dtos/purchases';
 import {Observable} from 'rxjs';
+import {User} from '../../dtos/user';
+import {UserService} from '../../services/user.service';
 
 @Component({
   selector: 'app-purchase-detail',
@@ -12,13 +14,20 @@ import {Observable} from 'rxjs';
 })
 export class PurchaseDetailComponent implements OnInit {
   item: Purchase;
+  user: User;
+
   constructor(private route: ActivatedRoute,
               private service: PurchaseService,
               private notification: ToastrService,
+              private userService: UserService,
               private router: Router) {
   }
 
   ngOnInit() {
+    this.userService.getSelf().subscribe(data => {
+      this.user = data;
+    });
+
     let purchaseNr;
     this.route.params.subscribe(params => {
       purchaseNr = params['id'];
@@ -28,12 +37,12 @@ export class PurchaseDetailComponent implements OnInit {
       next: data => {
         this.item = data;
       }, error: error => {
-        this.router.navigate(['']);
+        this.router.navigate(['/purchases']);
       }
     });
   }
 
-  deletePurchase(purchaseNr: number){
+  deletePurchase(purchaseNr: number) {
     //Todo: something with response
     this.service.refundPurchase(purchaseNr).subscribe(
       (response) => {
@@ -51,7 +60,7 @@ export class PurchaseDetailComponent implements OnInit {
 
   sumOfItems(purchase: Purchase): number {
     let sum = 0;
-    purchase.ticketList.forEach((element) =>{
+    purchase.ticketList.forEach((element) => {
       sum += element.seat.price;
     });
     return sum;
