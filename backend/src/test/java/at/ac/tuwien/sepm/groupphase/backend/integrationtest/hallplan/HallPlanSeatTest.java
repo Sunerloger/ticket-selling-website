@@ -60,9 +60,9 @@ public class HallPlanSeatTest {
     }
 
     private static final String BASE_URL = "/api/v1/hallplans/";
-    private static final long HALL_PLAN_ID = 1L;
-    private static final long SEAT_ROW_ID = 1L;
-    private static final long SEAT_ID = 1L;
+    private static final long HALL_PLAN_ID = -1L;
+    private static final long SEAT_ROW_ID = -1L;
+    private static final long SEAT_ID = -1L;
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
@@ -74,12 +74,14 @@ public class HallPlanSeatTest {
         seatDto.setOrderNr(7L);
         seatDto.setSeatNr(7L);
         seatDto.setCapacity(1L);
-        Optional<HallPlanSection> section = hallPlanSectionRepository.findById(1L);
+        seatDto.setOrderNr(1L);
+
+        Optional<HallPlanSection> section = hallPlanSectionRepository.findById(-1L);
         if (section.isPresent()) {
             HallPlanSectionDto sectionDto = hallPlanSectionMapper.toDto(section.get());
             seatDto.setSection(sectionDto);
         }
-        seatDto.setSeatrowId(1L);
+        seatDto.setSeatrowId(SEAT_ROW_ID);
         seatDto.setStatus(HallPlanSeatStatus.FREE);
         seatDto.setType(HallPlanSeatType.SEAT);
 
@@ -129,9 +131,9 @@ public class HallPlanSeatTest {
         // Check that the seat was updated in the database
         Optional<HallPlanSeat> updatedSeat = hallPlanSeatRepository.findById(SEAT_ID);
         assertThat(updatedSeat.get().getSeatNr()).isEqualTo(7L);
-        assertThat(updatedSeat.get().getSeatrowId()).isEqualTo(1L);
+        assertThat(updatedSeat.get().getSeatrowId()).isEqualTo(-1L);
         assertThat(updatedSeat.get().getSection()).isEqualTo(null);
-        assertThat(updatedSeat.get().getSeatrowId()).isEqualTo(1L);
+        assertThat(updatedSeat.get().getSeatrowId()).isEqualTo(-1L);
         assertThat(updatedSeat.get().getStatus()).isEqualTo(HallPlanSeatStatus.FREE);
         assertThat(updatedSeat.get().getType()).isEqualTo(HallPlanSeatType.SEAT);
     }
