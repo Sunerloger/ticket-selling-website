@@ -10,6 +10,6 @@
   <app-customerhallplandisplay [hallplanId]="this.hallplanId"
                                (selectionChangeEvent)="handleEvent($event)"></app-customerhallplandisplay>
   <div class="component-seperator"></div>
-  <app-roomplan-cart [items]="selectedSeats"></app-roomplan-cart>
+  <app-roomplan-cart [items]="selectedSeats" [event]="performance.id"></app-roomplan-cart>
 
 </div>
