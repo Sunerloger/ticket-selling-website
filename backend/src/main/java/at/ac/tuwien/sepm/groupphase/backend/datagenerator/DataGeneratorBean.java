@@ -8,12 +8,21 @@ import jakarta.xml.bind.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.sql.DataSource;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
+import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
@@ -27,9 +36,12 @@ public class DataGeneratorBean {
 
     private final CustomUserDetailService userDetailService;
 
-    public DataGeneratorBean(DataSource dataSource, CustomUserDetailService userDetailService) {
+    private final PasswordEncoder passwordEncoder;
+
+    public DataGeneratorBean(DataSource dataSource, CustomUserDetailService userDetailService, PasswordEncoder passwordEncoder) {
         this.dataSource = dataSource;
         this.userDetailService = userDetailService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostConstruct
@@ -55,7 +67,26 @@ public class DataGeneratorBean {
             ScriptUtils.executeSqlScript(connection, new ClassPathResource("sql/deleteAllUsers.sql"));
             userDetailService.register(initialAdmin);
             userDetailService.register(initialUser);
+            executeInsertUsersScript(connection);
         }
         LOGGER.info("Finished generating admin and user without error.");
+    }
+
+    //TODO: Fix for final version
+    private void executeInsertUsersScript(Connection connection) {
+        try {
+            Resource scriptResource = new ClassPathResource("sql/insertUsers.sql");
+            String sqlScript = FileCopyUtils.copyToString(new InputStreamReader(scriptResource.getInputStream(), StandardCharsets.UTF_8));
+
+            String plainTextPassword = "password";
+
+            String hashedPassword = passwordEncoder.encode(plainTextPassword);
+
+            sqlScript = StringUtils.replace(sqlScript, "{password}", hashedPassword);
+
+            ScriptUtils.executeSqlScript(connection, new ByteArrayResource(sqlScript.getBytes(StandardCharsets.UTF_8)));
+        } catch (IOException e) {
+            LOGGER.error("Failed to execute script: {}", e.getMessage());
+        }
     }
 }
