@@ -37,7 +37,8 @@ public class DataGeneratorBean {
         LOGGER.info("Generating hall plan data...");
         try (var connection = dataSource.getConnection()) {
             ScriptUtils.executeSqlScript(connection, new ClassPathResource("sql/deleteAll.sql"));
-            ScriptUtils.executeSqlScript(connection, new ClassPathResource("sql/insertData.sql"));
+            ScriptUtils.executeSqlScript(connection, new ClassPathResource("sql/insertHallplans.sql"));
+            ScriptUtils.executeSqlScript(connection, new ClassPathResource("sql/insertEvents.sql"));
             ScriptUtils.executeSqlScript(connection, new ClassPathResource("sql/insertNewsEntries.sql"));
             LOGGER.info("Finished generating data without error.");
         }
