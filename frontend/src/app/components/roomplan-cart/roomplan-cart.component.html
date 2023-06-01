@@ -22,7 +22,7 @@
 
   <div id="buttons">
     <div>
-      <button type="button" class="btn btn-secondary">Cancel</button>
+      <button type="button" class="btn btn-secondary" [routerLink]="['/event', event]">Cancel</button>
     </div>
     <div id="buttons-right">
       <button type="button" class="btn btn-primary" (click)="reserveSeats(items)" [disabled]="items.length === 0">
