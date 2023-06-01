@@ -29,11 +29,33 @@ VALUES (-1, 'VIP', 'gold', 100, -1),
        (-8, 'Disabled Section', 'pink', 30, -1);
 
 INSERT INTO seat (id, status, type, capacity, order_nr, seat_nr, seatrow_id, section_id)
-VALUES (-1, 'FREE', 'SEAT', 1, 1, 1, -1, -1),
+VALUES (-1, 'OCCUPIED', 'SEAT', 1, 1, 1, -1, -1),
        (-2, 'FREE', 'SEAT', 1, 2, 2, -1, -1),
        (-3, 'FREE', 'SEAT', 1, 3, 3, -1, -2),
        (-4, 'OCCUPIED', 'SEAT', 1, 4, 4, -1, -2),
-       (-5, 'FREE', 'VACANT_SEAT', 1, 1, 1, -2, -3),
-       (-6, 'FREE', 'STANDING_SEAT', 1, 1, 1, -3, -4),
-       (-7, 'RESERVED', 'SEAT', 2, 2, 2, -1, -1),
-       (-8, 'FREE', 'SEAT', 1, 3, 3, -2, -3);
+       (-5, 'RESERVED', 'SEAT', 2, 5, 5, -1, -1),
+       (-6, 'FREE', 'VACANT_SEAT', 1, 6, 1, -1, -3),
+       (-7, 'OCCUPIED', 'SEAT', 1, 7, 6, -1, -1),
+       (-8, 'FREE', 'SEAT', 1, 8, 7, -1, -1),
+       (-9, 'FREE', 'SEAT', 1, 9, 8, -1, -1),
+       (-10, 'FREE', 'SEAT', 1, 10, 9, -1, -1),
+       (-11, 'FREE', 'SEAT', 1, 11, 10, -1, -1),
+
+       (-12, 'FREE', 'SEAT', 1, 2, 2, -2, -2),
+       (-13, 'OCCUPIED', 'SEAT', 1, 4, 4, -2, -2),
+       (-14, 'RESERVED', 'SEAT', 2, 5, 5, -2, -1),
+       (-15, 'RESERVED', 'SEAT', 1, 1, 1, -2, -1),
+       (-16, 'FREE', 'SEAT', 1, 7, 6, -2, -1),
+       (-17, 'FREE', 'SEAT', 1, 8, 7, -2, -1),
+       (-18, 'OCCUPIED', 'SEAT', 1, 9, 8, -2, -1),
+       (-19, 'FREE', 'SEAT', 1, 10, 9, -2, -1),
+       (-20, 'RESERVED', 'SEAT', 1, 11, 10, -2, -3),
+       (-21, 'FREE', 'VACANT_SEAT', 1, 6, 1, -2, -3),
+       (-22, 'FREE', 'SEAT', 1, 3, 3, -2, -3),
+
+       (-23, 'FREE', 'STANDING_SEAT', 10, 1, 1, -3, -4);
+
+
+
+
+
