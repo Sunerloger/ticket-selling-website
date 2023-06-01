@@ -18,7 +18,7 @@
               <label for="email">Email</label>
               <input type="email" class="form-control"
                      id="email" name="email" [(ngModel)]="user.email" #email="ngModel" required
-                     pattern="^[a-zA-Z0-9\_\.\+\-\ äöüÄÖÜ]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$">
+                     pattern="^[a-zA-Z0-9\_\.\+\-\ äöüÄÖÜ]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$" placeholder="Enter email">
               <div *ngIf="registerForm.submitted &&registerForm.controls['email'].invalid" class="text-danger">
                 <span class="validation-info"
                       *ngIf="email.errors?.required">
@@ -36,7 +36,7 @@
               <label for="firstName" class="control-label">First Name</label>
               <input type="text" class="form-control" id="firstName" name="firstName" pattern="[A-Za-zäöüÄÖÜ]*"
                      [(ngModel)]="user.firstName"
-                     #firstName="ngModel" required>
+                     #firstName="ngModel" required placeholder="Enter First Name">
               <div *ngIf="registerForm.submitted &&registerForm.controls['firstName'].invalid" class="text-danger">
                      <span class="validation-info"
                            *ngIf="firstName.errors?.required">
@@ -55,7 +55,7 @@
               <label for="lastName">Last Name</label>
               <input type="text" class="form-control" id="lastName" name="lastName" pattern="[A-Za-zäöüÄÖÜ]*"
                      [(ngModel)]="user.lastName"
-                     #lastName="ngModel" required>
+                     #lastName="ngModel" required placeholder="Enter Last Name">
               <div *ngIf="registerForm.submitted &&registerForm.controls['lastName'].invalid" class="text-danger">Last
                 <span class="validation-info"
                       *ngIf="lastName.errors?.required">
@@ -86,7 +86,7 @@
               <input type="text" class="form-control" id="address" name="address"
                      pattern="([A-Za-z0-9ßäöüÄÖÜ]+[-\s/]?)*"
                      [(ngModel)]="user.address"
-                     #address="ngModel" required>
+                     #address="ngModel" required placeholder="Enter Address">
               <div *ngIf="registerForm.submitted &&registerForm.controls['address'].invalid" class="text-danger">Address
                 is
                 required
@@ -108,7 +108,7 @@
               <label for="areaCode">AreaCode</label>
               <input type="text" class="form-control" id="areaCode" name="areaCode" pattern="[0-9]+"
                      [(ngModel)]="user.areaCode"
-                     #areaCode="ngModel" required>
+                     #areaCode="ngModel" required placeholder="Enter Area Code">
               <div *ngIf="registerForm.submitted &&registerForm.controls['areaCode'].invalid" class="text-danger">
                    <span class="validation-info"
                          *ngIf="areaCode.errors?.required">
@@ -126,7 +126,7 @@
               <label for="cityName">CityName</label>
               <input type="text" class="form-control" id="cityName" name="cityName" pattern="[A-Za-zäöüÄÖÜ]+"
                      [(ngModel)]="user.cityName"
-                     #cityName="ngModel" required>
+                     #cityName="ngModel" required placeholder="Enter City">
               <div *ngIf="registerForm.submitted &&registerForm.controls['cityName'].invalid" class="text-danger">City
                 <span class="validation-info"
                       *ngIf="cityName.errors?.required">
@@ -143,7 +143,7 @@
                  [class.has-error]="password.invalid && password.touched">
               <label for="password">Password</label>
               <input type="password" class="form-control" id="password" name="password" [(ngModel)]="user.password"
-                     #password="ngModel" required minlength="8">
+                     #password="ngModel" required minlength="8" placeholder="Enter a password">
               <div *ngIf="registerForm.submitted && registerForm.controls['password']?.invalid" class="text-danger">
                 <div class="text-danger"
                      *ngIf="password.errors?.minlength">
