@@ -28,7 +28,7 @@ export class PurchaseDetailComponent implements OnInit {
       next: data => {
         this.item = data;
       }, error: error => {
-        this.router.navigate(['']);
+        this.router.navigate(['/purchases']);
       }
     });
   }
@@ -43,7 +43,6 @@ export class PurchaseDetailComponent implements OnInit {
       (error) => {
         console.error('Error:', error);
         this.notification.error(`Something went wrong... please try again!`);
-        this.router.navigate(['/purchases']);
       }, () => {
         this.router.navigate(['/purchases']);
       }
