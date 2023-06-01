@@ -23,17 +23,16 @@
             <img class="card-img-top image-fit" [src]="entry.coverImage" alt="The cover image could not be loaded">
           </div>
           <div class="card-body">
-            <h5 class="card-title d-flex justify-content-center text-break title-styling">{{entry.title}}</h5>
-            <p class="card-text d-flex justify-content-center text-break description-styling">{{entry.shortText}}</p>
+            <h5 class="card-title text-break title-styling">{{entry.title}}</h5>
+            <p class="card-text text-break description-styling">{{entry.shortText}}</p>
           </div>
-          <div class="card-footer d-flex justify-content-center">
+          <div class="card-footer">
             <small class="text-muted">Created on {{dateOfCreationAsLocaleDate(entry)}}
               at {{timeOfCreationAsLocaleTime(entry)}}</small>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </div>
 

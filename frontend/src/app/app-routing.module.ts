@@ -45,7 +45,6 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: 'login', component: LoginComponent},
   {path: 'edit', canActivate: [AuthGuard], component: EditComponent},
-  {path: 'block', canActivate: [AdminRouteGuard], component: AdminBlockUnblockComponent},
 
   {path: 'reservations', canActivate: [AuthGuard], component: ReservationsComponent},
   {path: 'reservations/:id/checkout', canActivate: [AuthGuard], component: ReservationCheckoutComponent},
@@ -56,7 +55,7 @@ const routes: Routes = [
 
   {path: 'roomplan/:id/edit', canActivate: [AdminRouteGuard], component: RoomplaneditorComponent},
   {path: 'hallplans/:id/edit', canActivate: [AdminRouteGuard], component: RoomplaneditorComponent},
-  {path: 'hallplans/manage', canActivate: [AuthGuard], component: HallplanManagerComponent},
+  {path: 'hallplans/manage', canActivate: [AdminRouteGuard], component: HallplanManagerComponent},
 
   {path: 'news', canActivate: [AuthGuard], children: [
       {path: '', component: NewsOverviewComponent},
