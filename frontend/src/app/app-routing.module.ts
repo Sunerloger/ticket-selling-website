@@ -3,7 +3,6 @@ import {RouterModule, Routes} from '@angular/router';
 import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
 import {AuthGuard} from './guards/auth.guard';
-import {MessageComponent} from './components/message/message.component';
 import {ShoppingCartComponent} from './components/shopping-cart/shopping-cart.component';
 import {EventsComponent} from './components/events/events.component';
 import {RegisterComponent} from './components/register/register.component';
@@ -30,27 +29,22 @@ import {PerformanceTicketSelctionComponent} from './components/performance-ticke
 const routes: Routes = [
   {path: '', component: HomeComponent},
 
-  {path: 'events', component: EventOverviewComponent},
+  {path: 'events', canActivate: [AuthGuard], component: EventOverviewComponent},
   {path: 'event/:id', canActivate: [AuthGuard], component: EventDetailComponent},
-  {path: 'events/create', canActivate: [AdminRouteGuard], component: EventsComponent},
   {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
-
-  {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
+  {path: 'events/create', canActivate: [AdminRouteGuard], component: EventsComponent},
 
   {path: 'cart', canActivate: [AuthGuard], component: ShoppingCartComponent},
   {path: 'cart/checkout', canActivate: [AuthGuard], component: CartCheckoutComponent},
 
-  {
-    path: 'admin', canActivate: [AdminRouteGuard], children: [
+  {path: 'admin', canActivate: [AdminRouteGuard], children: [
       {path: '', component: AdminManagerComponent},
       {path: 'block', canActivate: [AdminRouteGuard], component: AdminBlockUnblockComponent},
       {path: 'register', canActivate: [AdminRouteGuard], component: RegisterComponent},
-    ]
-  },
-
+    ]},
   {path: 'register', component: RegisterComponent},
   {path: 'login', component: LoginComponent},
-  {path: 'edit', component: EditComponent},
+  {path: 'edit', canActivate: [AuthGuard], component: EditComponent},
 
   {path: 'reservations', canActivate: [AuthGuard], component: ReservationsComponent},
   {path: 'reservations/:id/checkout', canActivate: [AuthGuard], component: ReservationCheckoutComponent},
@@ -59,9 +53,9 @@ const routes: Routes = [
   {path: 'purchases/:id', canActivate: [AuthGuard], component: PurchaseDetailComponent},
   {path: 'performance-tickets/:id', canActivate: [AuthGuard], component: PerformanceTicketSelctionComponent},
 
-  {path: 'roomplan/:id/edit', component: RoomplaneditorComponent},
-  {path: 'hallplans/:id/edit', component: RoomplaneditorComponent},
-  {path: 'hallplans/manage', canActivate: [AuthGuard], component: HallplanManagerComponent},
+  {path: 'roomplan/:id/edit', canActivate: [AdminRouteGuard], component: RoomplaneditorComponent},
+  {path: 'hallplans/:id/edit', canActivate: [AdminRouteGuard], component: RoomplaneditorComponent},
+  {path: 'hallplans/manage', canActivate: [AdminRouteGuard], component: HallplanManagerComponent},
 
   {path: 'news', canActivate: [AuthGuard], children: [
       {path: '', component: NewsOverviewComponent},

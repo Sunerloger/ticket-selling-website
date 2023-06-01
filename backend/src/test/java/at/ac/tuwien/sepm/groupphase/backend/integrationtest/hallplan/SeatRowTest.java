@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @EnableWebMvc
 @Transactional
-@ActiveProfiles({"test", "hallplan"})
+@ActiveProfiles({"test", "datagen"})
 public class SeatRowTest {
 
     @Autowired
@@ -70,7 +70,7 @@ public class SeatRowTest {
     public void givenId_WhenDelete_ThenRemoveSeatRowWithIdFromSystem() throws Exception {
         // Create a SeatRow entity in the database
         SeatRow seatRow = new SeatRow();
-        seatRow.setRowNr(1L);
+        seatRow.setRowNr(-1L);
         seatRow.setHallPlanId(-1L);
         seatRowRepository.save(seatRow);
 
@@ -80,7 +80,7 @@ public class SeatRowTest {
             .andExpect(status().isNoContent());
 
         // Check that the seat row was deleted from the database
-        Optional<SeatRow> seatRows = seatRowRepository.findById(1L);
+        Optional<SeatRow> seatRows = seatRowRepository.findById(-1L);
         assertThat(!seatRows.isPresent());
     }
 
@@ -89,13 +89,13 @@ public class SeatRowTest {
     public void givenOneSeatRow_WhenPut_ThenUpdateSeatRow() throws Exception {
         // Create a SeatRow entity in the database
         SeatRow seatRow = new SeatRow();
-        seatRow.setRowNr(1L);
+        seatRow.setRowNr(-1L);
         seatRow.setHallPlanId(-1L);
         seatRowRepository.save(seatRow);
 
         // Create a SeatRowDto for the request body
         SeatRowDto seatRowDto = new SeatRowDto();
-        seatRowDto.setRowNr(2L);
+        seatRowDto.setRowNr(-2L);
 
         // Perform PUT request
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/hallplans/-1/seatrows/-1")
@@ -105,7 +105,7 @@ public class SeatRowTest {
 
         // Check that the seat row was updated in the database
         SeatRow updatedSeatRow = seatRowRepository.getOne(-1L);
-        assertThat(updatedSeatRow.getRowNr()).isEqualTo(2L);
+        assertThat(updatedSeatRow.getRowNr()).isEqualTo(-2L);
     }
 
 }
