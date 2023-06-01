@@ -27,13 +27,14 @@
       </a>
     </div>
     <div class="navbar-subcontainer">
+      <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()" routerLink="/edit"
+         routerLinkActive="active">Account</a>
       <a class="nav-link animated-text-custom" *ngIf="!authService.isLoggedIn()" routerLink="/register"
         routerLinkActive="active">Register</a>
       <a class="nav-link animated-text-custom" *ngIf="!authService.isLoggedIn()" routerLink="/login"
         routerLinkActive="active">Login</a>
 
       <div class="dropdown">
-
         <a class="dropdown-toggle dropdown-toggle-no-caret nav-link animated-text-custom remove-dropdown-caret w-100"
           type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false"
           *ngIf="authService.getUserRole() === 'ADMIN'">Administration</a>
@@ -46,6 +47,7 @@
           <a class="dropdown-item" href="#/admin">Account Manager</a>
         </div>
       </div>
+
 
       <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()" routerLink="/"
         (click)="authService.logoutUser()">Logout</a>
