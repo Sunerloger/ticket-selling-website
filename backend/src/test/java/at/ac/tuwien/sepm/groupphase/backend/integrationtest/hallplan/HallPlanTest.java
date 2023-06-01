@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @EnableWebMvc
 @Transactional
-@ActiveProfiles({"test", "datagen"})
+@ActiveProfiles({"test", "hallplan"})
 public class HallPlanTest {
 
     @Autowired
@@ -90,7 +90,7 @@ public class HallPlanTest {
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN", "USER"})
     public void givenId_WhenGet_ThenReturnHallPlanById() throws Exception {
-        Long validId = Long.valueOf(1);
+        Long validId = Long.valueOf(-1);
         // Perform GET request
         byte[] body = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/hallplans/{id}", validId).accept(MediaType.APPLICATION_JSON)
             ).andExpect(status().isOk())
