@@ -6,8 +6,8 @@ import {Router} from '@angular/router';
 import {Observable} from 'rxjs';
 import {CreatePurchase} from '../../dtos/purchases';
 import {SeatDetail} from '../../dtos/seatDetail';
-import {User} from "../../dtos/user";
-import {UserService} from "../../services/user.service";
+import {User} from '../../dtos/user';
+import {UserService} from '../../services/user.service';
 
 @Component({
   selector: 'app-cart-checkout',

@@ -77,7 +77,7 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
     /**
      * get the user with the given id.
      *
-     * @param id    the id of the user
+     * @param id the id of the user
      * @return the user with the id or null of no such user exists
      */
     ApplicationUser getApplicationUserById(Long id);
