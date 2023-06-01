@@ -5,13 +5,13 @@
   <div class="billing-info-box">
     <div class="billing-info">
       <h4>Billing Information</h4>
-      <span> Markus, Haslinger</span><br>
-      <span> Linzer Straße 12/18 </span><br>
-      <span> WIEN, 1150</span><br>
+      <span> {{user.firstName}}, {{user.lastName}}</span><br>
+      <span> {{user.address}} </span><br>
+      <span> {{user.cityName}}, {{user.areaCode}}</span><br>
       <br>
 
       <div class="form-group custom-billing">
-        <input type="checkbox" class="checkbox" id="billing-info" name="admin">
+        <input type="checkbox" class="checkbox" id="billing-info" name="admin" [(ngModel)]="creationItem.useUserAddress">
         <label for="billing-info">Use different billing Adress</label>
       </div>
 

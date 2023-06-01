@@ -6,6 +6,8 @@ import {Router} from '@angular/router';
 import {Observable} from 'rxjs';
 import {CreatePurchase} from '../../dtos/purchases';
 import {SeatDetail} from '../../dtos/seatDetail';
+import {User} from "../../dtos/user";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-cart-checkout',
@@ -19,13 +21,19 @@ export class CartCheckoutComponent implements OnInit {
   total = 0;
   withoutTaxes = 0;
   taxes = 0;
+  user: User;
 
   constructor(private service: CartService,
+              private userService: UserService,
               private notification: ToastrService,
               private router: Router) {
   }
 
   ngOnInit(): void {
+    this.userService.getSelf().subscribe(data => {
+      this.user = data;
+    });
+
     this.getItems();
     this.creationItem.useUserAddress = false;
     this.creationItem.address = '';
