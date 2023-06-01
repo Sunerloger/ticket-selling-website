@@ -54,7 +54,7 @@ public class SeatRowTest {
         seatRowDto.setRowNr(18L);
 
         // Perform POST request
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/hallplans/1/seatrows")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/hallplans/-1/seatrows")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(seatRowDto)))
             .andExpect(status().isOk());
@@ -71,11 +71,11 @@ public class SeatRowTest {
         // Create a SeatRow entity in the database
         SeatRow seatRow = new SeatRow();
         seatRow.setRowNr(1L);
-        seatRow.setHallPlanId(1L);
+        seatRow.setHallPlanId(-1L);
         seatRowRepository.save(seatRow);
 
         // Perform DELETE request
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/hallplans/1/seatrows/1")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/hallplans/-1/seatrows/-1")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
@@ -90,7 +90,7 @@ public class SeatRowTest {
         // Create a SeatRow entity in the database
         SeatRow seatRow = new SeatRow();
         seatRow.setRowNr(1L);
-        seatRow.setHallPlanId(1L);
+        seatRow.setHallPlanId(-1L);
         seatRowRepository.save(seatRow);
 
         // Create a SeatRowDto for the request body
@@ -98,13 +98,13 @@ public class SeatRowTest {
         seatRowDto.setRowNr(2L);
 
         // Perform PUT request
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/hallplans/1/seatrows/1")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/hallplans/-1/seatrows/-1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(seatRowDto)))
             .andExpect(status().isOk());
 
         // Check that the seat row was updated in the database
-        SeatRow updatedSeatRow = seatRowRepository.getOne(1L);
+        SeatRow updatedSeatRow = seatRowRepository.getOne(-1L);
         assertThat(updatedSeatRow.getRowNr()).isEqualTo(2L);
     }
 
