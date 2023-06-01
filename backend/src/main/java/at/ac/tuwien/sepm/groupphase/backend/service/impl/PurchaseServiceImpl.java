@@ -117,12 +117,17 @@ public class PurchaseServiceImpl implements PurchaseService {
         Purchase purchase = new Purchase();
         purchase.setDate(LocalDate.now());
         purchase.setUserId(userId);
-        //TODO: Get UserInfo
-        //TODO: Check if custom address
-        //TODO: create Purchase Object
-        purchase.setBillAddress("not implemented (address)");
-        purchase.setBillAreaCode(1337L);
-        purchase.setBillCityName("not implemented (city)");
+
+        if (!purchaseCreationDto.getUseUserAddress()) {
+            ApplicationUser user = customUserDetailService.getUserById(userId);
+            purchase.setBillAddress(user.getAddress());
+            purchase.setBillAreaCode(user.getAreaCode());
+            purchase.setBillCityName(user.getCityName());
+        } else {
+            purchase.setBillAddress("not implemented (address)");
+            purchase.setBillAreaCode(1337L);
+            purchase.setBillCityName("not implemented (city)");
+        }
         purchase.setTicketList(ticketList);
         repository.save(purchase);
     }
@@ -149,12 +154,17 @@ public class PurchaseServiceImpl implements PurchaseService {
         Purchase purchase = new Purchase();
         purchase.setDate(LocalDate.now());
         purchase.setUserId(userId);
-        //TODO: Get UserInfo
-        //TODO: Check if custom address
-        //TODO: create Purchase Object
-        purchase.setBillAddress("not implemented (address)");
-        purchase.setBillAreaCode(1337L);
-        purchase.setBillCityName("not implemented (city)");
+
+        if (!purchaseCreationDto.getUseUserAddress()) {
+            ApplicationUser user = customUserDetailService.getUserById(userId);
+            purchase.setBillAddress(user.getAddress());
+            purchase.setBillAreaCode(user.getAreaCode());
+            purchase.setBillCityName(user.getCityName());
+        } else {
+            purchase.setBillAddress("not implemented (address)");
+            purchase.setBillAreaCode(1337L);
+            purchase.setBillCityName("not implemented (city)");
+        }
         purchase.setTicketList(ticketList);
         repository.save(purchase);
     }

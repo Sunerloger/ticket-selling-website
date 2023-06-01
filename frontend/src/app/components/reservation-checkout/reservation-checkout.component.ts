@@ -6,6 +6,8 @@ import {Observable} from 'rxjs';
 import {SeatDetail} from '../../dtos/seatDetail';
 import {ReservationService} from '../../services/reservation.service';
 import {Reservation} from '../../dtos/reservation';
+import {User} from '../../dtos/user';
+import {UserService} from '../../services/user.service';
 
 @Component({
   selector: 'app-reservation-checkout',
@@ -19,9 +21,11 @@ export class ReservationCheckoutComponent implements OnInit {
   total = 0;
   withoutTaxes = 0;
   taxes = 0;
+  user: User;
 
   constructor(private route: ActivatedRoute,
               private service: ReservationService,
+              private userService: UserService,
               private notification: ToastrService,
               private router: Router) {
   }
@@ -31,6 +35,11 @@ export class ReservationCheckoutComponent implements OnInit {
     this.route.params.subscribe(params => {
       reservationNr = params['id'];
     });
+
+    this.userService.getSelf().subscribe(data => {
+      this.user = data;
+    });
+
     this.getItem(reservationNr);
     this.creationItem.useUserAddress = false;
     this.creationItem.address = '';
@@ -53,12 +62,12 @@ export class ReservationCheckoutComponent implements OnInit {
   }
 
   sumOfCheckedItems(): number {
-    if (this.item === undefined){
+    if (this.item === undefined) {
       return 0;
     }
     let sum = 0;
     this.item.reservedSeats.forEach((element, index) => {
-      if (this.checkboxList[index] === true){
+      if (this.checkboxList[index] === true) {
         sum += element.price;
       }
     });
@@ -67,17 +76,18 @@ export class ReservationCheckoutComponent implements OnInit {
     this.withoutTaxes = this.total - this.taxes;
     return this.total;
   }
+
   purchase(): void {
     this.creationItem.seats = [];
     this.item.reservedSeats.forEach((element, index) => {
-      if (this.checkboxList[index] === true){
-      const seat: SeatDetail = {} as SeatDetail;
-      seat.seatNr = element.seatNr;
-      seat.price = element.price;
-      seat.type = element.type;
-      seat.seatRowNr = element.seatRowNr;
-      seat.id = element.id;
-      this.creationItem.seats.push(seat);
+      if (this.checkboxList[index] === true) {
+        const seat: SeatDetail = {} as SeatDetail;
+        seat.seatNr = element.seatNr;
+        seat.price = element.price;
+        seat.type = element.type;
+        seat.seatRowNr = element.seatRowNr;
+        seat.id = element.id;
+        this.creationItem.seats.push(seat);
       }
     });
 

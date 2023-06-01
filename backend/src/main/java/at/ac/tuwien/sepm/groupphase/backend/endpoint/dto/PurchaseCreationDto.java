@@ -53,7 +53,7 @@ public class PurchaseCreationDto {
         this.address = address;
     }
 
-    public boolean isUseUserAddress() {
+    public boolean getUseUserAddress() {
         return useUserAddress;
     }
 

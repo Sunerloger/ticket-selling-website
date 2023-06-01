@@ -102,4 +102,6 @@ public interface UserService extends UserDetailsService {
     List<ApplicationUser> getBlockedUsers(ApplicationUser applicationUser, String token, int pageIndex);
 
     Long getUserIdFromToken(String token);
+
+    ApplicationUser getUserById(Long id);
 }
