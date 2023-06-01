@@ -61,9 +61,9 @@ export class LoginComponent implements OnInit {
         console.log(error);
         this.error = true;
         if (typeof error.error === 'object') {
-          this.notification.error(`Email address or password is wrong or account!`);
+          this.notification.error(`Email address or password is wrong or account is locked!`);
         } else {
-          this.notification.error(`Email address or password is wrong or account!`);
+          this.notification.error(`Email address or password is wrong or account is locked!`);
         }
       }
     });

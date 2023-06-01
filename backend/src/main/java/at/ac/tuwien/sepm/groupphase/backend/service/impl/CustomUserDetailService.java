@@ -59,8 +59,13 @@ public class CustomUserDetailService implements UserService {
             } else {
                 grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_USER");
             }
+            if (applicationUser.getLocked()) {
+                return new User(applicationUser.getEmail(), applicationUser.getPassword(), true, true, true, false, grantedAuthorities);
+            } else {
+                return new User(applicationUser.getEmail(), applicationUser.getPassword(), grantedAuthorities);
+            }
 
-            return new User(applicationUser.getEmail(), applicationUser.getPassword(), grantedAuthorities);
+
         } catch (NotFoundException e) {
             throw new UsernameNotFoundException(e.getMessage(), e);
         }
