@@ -97,17 +97,14 @@ public class CustomUserDetailService implements UserService {
     public String login(UserLoginDto userLoginDto) {
         try {
             UserDetails userDetails = loadUserByUsername(userLoginDto.getEmail());
+            ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(userLoginDto.getEmail());
+
             if (userDetails == null) {
                 throw new BadCredentialsException("Email or password is incorrect!");
             }
-            if (!userDetails.isAccountNonLocked()) {
-                throw new LockedException("Account is locked. Contact an administrator!");
-            }
-            if (!userDetails.isCredentialsNonExpired()) {
-                throw new BadCredentialsException("Email or password is incorrect!");
-            }
+
             if (!passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())) {
-                ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(userLoginDto.getEmail());
+
                 applicationUser.setFailedLoginAttempts(applicationUser.getFailedLoginAttempts() + 1);
                 if (applicationUser.getFailedLoginAttempts() >= 5) {
                     applicationUser.setLocked(true);
@@ -118,24 +115,23 @@ public class CustomUserDetailService implements UserService {
                     throw new BadCredentialsException("Email or password is incorrect!");
                 }
             }
-            /*
-            if (userDetails != null
-                && userDetails.isAccountNonExpired()
-                && userDetails.isAccountNonLocked()
-                && userDetails.isCredentialsNonExpired()
-                && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
-            ) {*/
+
+            if (!userDetails.isAccountNonLocked()) {
+                throw new LockedException("Account is locked. Contact an administrator!");
+            }
+            if (!userDetails.isCredentialsNonExpired()) {
+                throw new BadCredentialsException("Email or password is incorrect!");
+            }
+            applicationUser.setFailedLoginAttempts(0);
+            applicationUserRepository.save(applicationUser);
             List<String> roles = userDetails.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .toList();
             return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
-            //}
         } catch (UsernameNotFoundException e) {
             throw new BadCredentialsException("Email or password is incorrect or account is locked");
         }
-        // throw new BadCredentialsException("Email or password is incorrect or account is locked");
-        throw new LockedException("Your account is locked");
     }
 
     @Override
