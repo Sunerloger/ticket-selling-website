@@ -92,7 +92,6 @@ public class CustomUserDetailService implements UserService {
     }
 
 
-    //TODO: Change Login checks
     @Override
     public String login(UserLoginDto userLoginDto) {
         try {
@@ -104,7 +103,9 @@ public class CustomUserDetailService implements UserService {
             }
 
             if (!passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())) {
-
+                if (applicationUser.getAdmin() == Boolean.TRUE) {
+                    throw new BadCredentialsException("Email or password is incorrect");
+                }
                 applicationUser.setFailedLoginAttempts(applicationUser.getFailedLoginAttempts() + 1);
                 if (applicationUser.getFailedLoginAttempts() >= 5) {
                     applicationUser.setLocked(true);
