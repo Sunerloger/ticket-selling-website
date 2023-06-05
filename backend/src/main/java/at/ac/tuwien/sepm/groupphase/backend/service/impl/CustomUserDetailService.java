@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -109,7 +110,7 @@ public class CustomUserDetailService implements UserService {
         } catch (UsernameNotFoundException e) {
             throw new BadCredentialsException("Email or password is incorrect or account is locked");
         }
-        throw new BadCredentialsException("Email or password is incorrect or account is locked");
+        throw new LockedException("Your account is locked");
     }
 
     @Override
