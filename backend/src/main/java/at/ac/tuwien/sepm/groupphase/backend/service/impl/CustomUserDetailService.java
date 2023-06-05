@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -85,26 +86,50 @@ public class CustomUserDetailService implements UserService {
         }
     }
 
+
+    //TODO: Change Login checks
     @Override
     public String login(UserLoginDto userLoginDto) {
         try {
             UserDetails userDetails = loadUserByUsername(userLoginDto.getEmail());
+            if (userDetails == null) {
+                throw new BadCredentialsException("Email or password is incorrect!");
+            }
+            if (!userDetails.isAccountNonLocked()) {
+                throw new LockedException("Account is locked. Contact an administrator!");
+            }
+            if (!userDetails.isCredentialsNonExpired()) {
+                throw new BadCredentialsException("Email or password is incorrect!");
+            }
+            if (!passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())) {
+                ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(userLoginDto.getEmail());
+                applicationUser.setFailedLoginAttempts(applicationUser.getFailedLoginAttempts() + 1);
+                if (applicationUser.getFailedLoginAttempts() >= 5) {
+                    applicationUser.setLocked(true);
+                    applicationUserRepository.save(applicationUser);
+                    throw new LockedException("Too many failed login attempts! Your account is locked. Contact an administrator!");
+                } else {
+                    applicationUserRepository.save(applicationUser);
+                    throw new BadCredentialsException("Email or password is incorrect!");
+                }
+            }
+            /*
             if (userDetails != null
                 && userDetails.isAccountNonExpired()
                 && userDetails.isAccountNonLocked()
                 && userDetails.isCredentialsNonExpired()
                 && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
-            ) {
-                List<String> roles = userDetails.getAuthorities()
-                    .stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .toList();
-                return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
-            }
+            ) {*/
+            List<String> roles = userDetails.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+            return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
+            //}
         } catch (UsernameNotFoundException e) {
             throw new BadCredentialsException("Email or password is incorrect or account is locked");
         }
-        throw new BadCredentialsException("Email or password is incorrect or account is locked");
+        // throw new BadCredentialsException("Email or password is incorrect or account is locked");
     }
 
     @Override
