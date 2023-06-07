@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatType;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
@@ -36,6 +37,14 @@ public class HallPlanSeatDto {
     @Valid
     private HallPlanSectionDto section;
 
+    @NotNull(message = "The number of purchases for this seat must be given!")
+    @Min(value = 0, message = "bought_nr must be greater than or equal to {value}")
+    private Long boughtNr;
+
+    @NotNull(message = "The number of purchases for this seat must be given!")
+    @Min(value = 0, message = "reserved_nr must be greater than or equal to {value}")
+    private Long reservedNr;
+
     private Long seatrowId;
 
     public Long getId() {
@@ -56,6 +65,22 @@ public class HallPlanSeatDto {
 
     public Long getCapacity() {
         return capacity;
+    }
+
+    public Long getBoughtNr() {
+        return boughtNr;
+    }
+
+    public void setBoughtNr(Long boughtNr) {
+        this.boughtNr = boughtNr;
+    }
+
+    public Long getReservedNr() {
+        return reservedNr;
+    }
+
+    public void setReservedNr(Long reservedNr) {
+        this.reservedNr = reservedNr;
     }
 
     public void setCapacity(Long capacity) {

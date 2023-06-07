@@ -49,9 +49,33 @@ public class HallPlanSeat {
     private Long seatrowId;
 
     @NotNull
+    @Column(name = "bought_nr")
+    private Long boughtNr;
+
+    @NotNull
+    @Column(name = "reserved_nr")
+    private Long reservedNr;
+
+    @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "section_id")
     private HallPlanSection section;
+
+    public Long getBoughtNr() {
+        return boughtNr;
+    }
+
+    public void setBoughtNr(Long boughtNr) {
+        this.boughtNr = boughtNr;
+    }
+
+    public Long getReservedNr() {
+        return reservedNr;
+    }
+
+    public void setReservedNr(Long reservedNr) {
+        this.reservedNr = reservedNr;
+    }
 
     public Long getOrderNr() {
         return orderNr;

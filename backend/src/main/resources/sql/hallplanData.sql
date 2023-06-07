@@ -31,13 +31,14 @@ VALUES
     (-7, 'Family Section', 'orange', 50, -1),
     (-8, 'Disabled Section', 'pink', 30, -1);
 
-INSERT INTO seat (id, status, type, capacity, order_nr, seat_nr, seatrow_id, section_id)
+INSERT INTO seat (id, status, type, capacity, order_nr, seat_nr, seatrow_id, section_id, bought_nr, reserved_nr)
 VALUES
-    (-1, 'FREE', 'SEAT', 1, 1, 1, -1, -1),
-    (-2, 'FREE', 'SEAT', 1, 2, 2, -1, -1),
-    (-3, 'FREE', 'SEAT', 1, 3, 3, -1, -2),
-    (-4, 'OCCUPIED', 'SEAT', 1, 4, 4, -1, -2),
-    (-5, 'FREE', 'VACANT_SEAT', 1, 1, 1, -2, -3),
-    (-6, 'FREE', 'STANDING_SEAT', 1, 1, 1, -3, -4),
-    (-7, 'RESERVED', 'SEAT', 2, 2, 2, -1, -1),
-    (-8, 'FREE', 'SEAT', 1, 3, 3, -2, -3);
+    (-1, 'FREE', 'SEAT', 1, 1, 1, -1, -1, 0, 0),
+    (-2, 'FREE', 'SEAT', 1, 2, 2, -1, -1, 0, 0),
+    (-3, 'FREE', 'SEAT', 1, 3, 3, -1, -2, 0, 0),
+    (-4, 'OCCUPIED', 'SEAT', 1, 4, 4, -1, -2, 0, 0),
+    (-5, 'FREE', 'VACANT_SEAT', 1, 1, 1, -2, -3, 0, 0),
+    (-6, 'FREE', 'STANDING_SEAT', 1, 1, 1, -3, -4, 0, 0),
+    (-7, 'RESERVED', 'SEAT', 2, 2, 2, -1, -1, 0, 0),
+    (-8, 'FREE', 'SEAT', 1, 3, 3, -2, -3, 0, 0);
+

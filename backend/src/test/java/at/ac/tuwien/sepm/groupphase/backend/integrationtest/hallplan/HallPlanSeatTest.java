@@ -75,6 +75,8 @@ public class HallPlanSeatTest {
         seatDto.setSeatNr(7L);
         seatDto.setCapacity(1L);
         seatDto.setOrderNr(1L);
+        seatDto.setBoughtNr(0L);
+        seatDto.setReservedNr(0L);
 
         Optional<HallPlanSection> section = hallPlanSectionRepository.findById(-1L);
         if (section.isPresent()) {
@@ -121,6 +123,8 @@ public class HallPlanSeatTest {
         seatDto.setSeatrowId(1L);
         seatDto.setStatus(HallPlanSeatStatus.FREE);
         seatDto.setType(HallPlanSeatType.SEAT);
+        seatDto.setBoughtNr(0L);
+        seatDto.setReservedNr(0L);
 
         // Perform PUT request
         mockMvc.perform(MockMvcRequestBuilders.put(BASE_URL + HALL_PLAN_ID + "/seatrows/" + SEAT_ROW_ID + "/seats/" + SEAT_ID)

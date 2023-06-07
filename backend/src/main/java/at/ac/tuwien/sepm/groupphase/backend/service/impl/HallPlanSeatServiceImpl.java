@@ -76,7 +76,7 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
 
         List<HallPlanSeat> existingSeat = seatRepository.findAllBySeatRowIdAndSeatNr(seatDto.getSeatrowId(), seatDto.getSeatNr());
 
-        if (!existingSeat.isEmpty() && existingSeat.get(0) != null && (!Objects.equals(seatDto.getSeatNr(), existingSeat.get(0).getSeatNr()))) {
+        if (!existingSeat.isEmpty() && existingSeat.get(0) != null && (existingSeat.get(0).getId().longValue() != seatDto.getId().longValue()) && !Objects.equals(seatDto.getSeatNr(), existingSeat.get(0).getSeatNr())) {
             throw new ValidationException("SeatRow with seatrowId " + seatDto.getSeatrowId() + " and seatNr " + seatDto.getSeatNr() + " already exists");
         }
 
@@ -137,6 +137,9 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
             return false;
         }
         seat.setStatus(HallPlanSeatStatus.OCCUPIED);
+        seat.setBoughtNr(seat.getBoughtNr() + 1L);
+        seat.setReservedNr(seat.getReservedNr() -1L);
+        if(seat.getBoughtNr() < 0) throw new ValidationException("Bought Entries cannot be below 0 - data inconsistency error");
         seatRepository.save(seat);
         return true;
     }
@@ -158,6 +161,7 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
             return false;
         }
         seat.setStatus(HallPlanSeatStatus.RESERVED);
+        seat.setReservedNr(seat.getReservedNr() + 1L);
         seatRepository.save(seat);
         return true;
     }
@@ -178,6 +182,7 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
             return false;
         }
         seat.setStatus(HallPlanSeatStatus.FREE);
+        seat.setReservedNr(seat.getReservedNr() - 1L);
         seatRepository.save(seat);
         return true;
     }
@@ -198,6 +203,7 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
             return false;
         }
         seat.setStatus(HallPlanSeatStatus.FREE);
+        seat.setBoughtNr(seat.getBoughtNr() - 1L);
         seatRepository.save(seat);
         return true;
     }
