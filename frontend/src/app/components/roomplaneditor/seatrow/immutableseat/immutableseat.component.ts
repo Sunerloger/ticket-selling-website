@@ -6,7 +6,7 @@ interface Size {
   height: number;
 }
 
-export interface SeatSelectionPayload{
+export interface SeatSelectionPayload {
   seat: PersistedSeat;
   isSelected: boolean;
 }
@@ -26,7 +26,7 @@ export class ImmutableseatComponent {
   /**
    * If this seat is of type "seat" or "standingSeat" then it toggles its selected status
    */
-  handleSeatClick(){
+  handleSeatClick() {
     const newSelectStatus = !this.isSelected;
 
     //update state
@@ -44,12 +44,8 @@ export class ImmutableseatComponent {
    *
    * @returns false if this seat has status free otherwise true
    */
-  isAvailable(){
-    if(Array.isArray(this.seat.status)){
-      return this.seat.status.length > 0;
-    }else{
-      return this.seat.status === SeatStatus.free;
-    }
+  isAvailable() {
+    return this.seat.boughtNr === 0 && this.seat.reservedNr === 0;
   }
 
   calcWidthAndHeightAssCSSProperties(): Size {

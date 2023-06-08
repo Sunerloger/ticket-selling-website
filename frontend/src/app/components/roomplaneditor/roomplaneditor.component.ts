@@ -19,7 +19,8 @@ export class RoomplaneditorComponent implements OnInit {
     id: 0,
     seatRows: [],
     name: '',
-    description: ''
+    description: '',
+    isTemplate: true
   };
 
   sections: PersistedSection[] = [];
@@ -450,7 +451,9 @@ export class RoomplaneditorComponent implements OnInit {
       status: SeatStatus.free,
       section: defaultSection,
       orderNr,
-      capacity
+      capacity,
+      boughtNr: 0,
+      reservedNr: 0
     };
     return emptySeat;
   }

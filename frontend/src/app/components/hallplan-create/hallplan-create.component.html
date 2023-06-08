@@ -13,20 +13,15 @@
                 <form (ngSubmit)="createHallPlan()" #registerForm="ngForm">
                     <div id="input" class="mb-3">
                         <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name"
-                                name="name" [(ngModel)]="hallplan.name"
-                                #name="ngModel" pattern="[A-Za-zäöüÄÖÜ]+.*"
-                                required>
-                            <div
-                                *ngIf="registerForm.submitted && registerForm.controls['name'].invalid"
+                            <label for="name">Name *</label>
+                            <input type="text" class="form-control" id="name" name="name" [(ngModel)]="hallplan.name"
+                                #name="ngModel" pattern="[A-Za-zäöüÄÖÜ]+.*" required>
+                            <div *ngIf="registerForm.submitted && registerForm.controls['name'].invalid"
                                 class="text-danger">
-                                <span class="validation-info"
-                                    *ngIf="name.errors?.required">
+                                <span class="validation-info" *ngIf="name.errors?.required">
                                     Name is required!
                                 </span>
-                                <span class="validation-info"
-                                    *ngIf="name.errors?.pattern">
+                                <span class="validation-info" *ngIf="name.errors?.pattern">
                                     Name is invalid!
                                 </span>
                             </div>
@@ -34,15 +29,12 @@
                     </div>
                     <div class="form-group mb-3">
                         <label for="description" class="control-label">Description</label>
-                        <input type="text" class="form-control" id="description"
-                            name="description"
-                            [(ngModel)]="hallplan.description"
-                            #description="ngModel">
-                        <div
-                            *ngIf="registerForm.submitted && registerForm.controls['description'].invalid"
+                        <input type="text" class="form-control" id="description" name="description"
+                            [(ngModel)]="hallplan.description" #description="ngModel">
+                        <div *ngIf="registerForm.submitted && registerForm.controls['description'].invalid"
                             class="text-danger"></div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Register</button>
+                    <button type="submit" class="btn btn-primary">Create Hallplan</button>
                 </form>
 
             </div>

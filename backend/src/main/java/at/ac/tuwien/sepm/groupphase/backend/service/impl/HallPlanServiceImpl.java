@@ -78,7 +78,7 @@ public class HallPlanServiceImpl implements HallPlanService {
         if (searchDto.getDescription() == null) {
             searchDto.setDescription("");
         }
-        return hallPlanRepository.searchByNameAndDescriptionIgnoreCase(searchDto.getName(), searchDto.getDescription());
+        return hallPlanRepository.searchByNameAndDescriptionIgnoreCase(searchDto.getName(), searchDto.getDescription(), searchDto.getIsTemplate());
     }
 
     @Override
@@ -102,7 +102,7 @@ public class HallPlanServiceImpl implements HallPlanService {
         HallPlan baseHallplan = optBaseHallplan.get();
 
         if (baseHallplan.getIsTemplate()) {
-            if (newHallplan.getIsTemplate()) {
+            if (!newHallplan.getIsTemplate()) {
                 throw new ValidationException("Only hallplans where isTemplate = true, can be used to create snapshots on");
             }
             //create new hallplan
@@ -130,6 +130,8 @@ public class HallPlanServiceImpl implements HallPlanService {
                         clonedSeat.setSeatNr(seat.getSeatNr());
                         clonedSeat.setOrderNr(seat.getOrderNr());
                         clonedSeat.setSeatrowId(persistedSnapshotSeatRow.getId());
+                        clonedSeat.setBoughtNr(seat.getBoughtNr());
+                        clonedSeat.setReservedNr(seat.getReservedNr());
 
 
                         HallPlanSectionDto clonedSection = new HallPlanSectionDto();
@@ -150,6 +152,8 @@ public class HallPlanServiceImpl implements HallPlanService {
                         clonedSeat.setSeatNr(seat.getSeatNr());
                         clonedSeat.setOrderNr(seat.getOrderNr());
                         clonedSeat.setSeatrowId(persistedSnapshotSeatRow.getId());
+                        clonedSeat.setBoughtNr(seat.getBoughtNr());
+                        clonedSeat.setReservedNr(seat.getReservedNr());
 
                         HallPlanSectionDto clonedSection = new HallPlanSectionDto();
                         clonedSection.setHallPlanId(persitedHallplan.getId());
@@ -191,6 +195,8 @@ public class HallPlanServiceImpl implements HallPlanService {
                         snapshotSeat.setOrderNr(seat.getOrderNr());
                         snapshotSeat.setSeatrowId(persistedSnapshotSeatRow.getId());
                         snapshotSeat.setSection(persistedSnapshotSection);
+                        snapshotSeat.setBoughtNr(seat.getBoughtNr());
+                        snapshotSeat.setReservedNr(seat.getReservedNr());
                         hallPlanSeatRepository.save(snapshotSeat);
                     }
                 }

@@ -17,7 +17,8 @@ export class CustomerhallplandisplayComponent implements OnInit {
     id: 0,
     seatRows: [],
     name: '',
-    description: ''
+    description: '',
+    isTemplate: true
   };
   selectedSeats: Map<PersistedSeat['id'], PersistedSeat> = new Map();
 
@@ -51,7 +52,7 @@ export class CustomerhallplandisplayComponent implements OnInit {
     this.fetchHallplanWithId(this.hallplanId);
   }
 
-  fetchHallplanWithId(id: number){
+  fetchHallplanWithId(id: number) {
     this.service.getHallplanById(id).subscribe({
       next: data => {
         this.roomplan = data;
