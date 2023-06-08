@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatRowDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.DetailedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanSectionMapper;
@@ -108,10 +109,10 @@ public class HallPlanServiceImpl implements HallPlanService {
                 //aggregate all seats with the same section in a map
                 //{key, value} where key is the section id and value is a list of seats
                 //that have the same section (=key)
-                Map<Long, List<HallPlanSeat>> aggregatedSeats = new HashMap<>();
+                Map<Long, List<HallPlanSeatDto>> aggregatedSeats = new HashMap<>();
                 for(HallPlanSeat seat : seatRow.getSeats()){
                     if(aggregatedSeats.containsKey(seat.getSection().getId())){
-                        HallPlanSeat clonedSeat = new HallPlanSeat();
+                        HallPlanSeatDto clonedSeat = new HallPlanSeatDto();
                         clonedSeat.setStatus(seat.getStatus());
                         clonedSeat.setType(seat.getType());
                         clonedSeat.setCapacity(seat.getCapacity());
@@ -120,7 +121,7 @@ public class HallPlanServiceImpl implements HallPlanService {
                         clonedSeat.setSeatrowId(persistedSnapshotSeatRow.getId());
 
 
-                        HallPlanSection clonedSection = new HallPlanSection();
+                        HallPlanSectionDto clonedSection = new HallPlanSectionDto();
                         clonedSection.setHallPlanId(persitedHallplan.getId());
                         clonedSection.setPrice(seat.getSection().getPrice());
                         clonedSection.setName(seat.getSection().getName());
@@ -129,10 +130,10 @@ public class HallPlanServiceImpl implements HallPlanService {
 
                         aggregatedSeats.get(seat.getSection().getId()).add(clonedSeat);
                     }else{
-                        List<HallPlanSeat> list = new ArrayList<>();
+                        List<HallPlanSeatDto> list = new ArrayList<>();
                         //we create a new seat object otherwise we will have an entitymanager
                         //no longer referenced error
-                        HallPlanSeat clonedSeat = new HallPlanSeat();
+                        HallPlanSeatDto clonedSeat = new HallPlanSeatDto();
                         clonedSeat.setStatus(seat.getStatus());
                         clonedSeat.setType(seat.getType());
                         clonedSeat.setCapacity(seat.getCapacity());
@@ -140,7 +141,7 @@ public class HallPlanServiceImpl implements HallPlanService {
                         clonedSeat.setOrderNr(seat.getOrderNr());
                         clonedSeat.setSeatrowId(persistedSnapshotSeatRow.getId());
 
-                        HallPlanSection clonedSection = new HallPlanSection();
+                        HallPlanSectionDto clonedSection = new HallPlanSectionDto();
                         clonedSection.setHallPlanId(persitedHallplan.getId());
                         clonedSection.setPrice(seat.getSection().getPrice());
                         clonedSection.setName(seat.getSection().getName());
@@ -154,13 +155,13 @@ public class HallPlanServiceImpl implements HallPlanService {
                 }
 
                 //now assign the previously generated snapshotSeats to seatrow
-                for(List<HallPlanSeat> seatlist : aggregatedSeats.values()){
+                for(List<HallPlanSeatDto> seatlist : aggregatedSeats.values()){
 
                     HallPlanSection persistedSnapshotSection = null;
-                    for(HallPlanSeat seat : seatlist){
+                    for(HallPlanSeatDto seat : seatlist){
                         if(persistedSnapshotSection == null){
                             //persist section which is shared by all seats in current iteration
-                            HallPlanSection basedSection = seat.getSection();
+                            HallPlanSectionDto basedSection = seat.getSection();
 
                             HallPlanSection snapshotSection = new HallPlanSection();
                             snapshotSection.setHallPlanId(persitedHallplan.getId());
@@ -179,7 +180,6 @@ public class HallPlanServiceImpl implements HallPlanService {
                         snapshotSeat.setOrderNr(seat.getOrderNr());
                         snapshotSeat.setSeatrowId(persistedSnapshotSeatRow.getId());
                         snapshotSeat.setSection(persistedSnapshotSection);
-                        persistedSnapshotSeatRow.getSeats().add(snapshotSeat);
                         hallPlanSeatRepository.save(snapshotSeat);
                     }
                 }
