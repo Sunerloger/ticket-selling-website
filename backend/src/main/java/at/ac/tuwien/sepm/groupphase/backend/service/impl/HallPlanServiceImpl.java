@@ -51,7 +51,8 @@ public class HallPlanServiceImpl implements HallPlanService {
     private final HallPlanSeatRepository hallPlanSeatRepository;
     private final SeatRowMapper seatRowMapper;
 
-    public HallPlanServiceImpl(HallPlanRepository hallPlanRepository, HallPlanMapper hallPlanMapper, HallPlanSectionMapper hallPlanSectionMapper, HallPlanSectionRepository hallPlanSectionRepository, SeatRowRepository seatRowRepository,
+    public HallPlanServiceImpl(HallPlanRepository hallPlanRepository, HallPlanMapper hallPlanMapper, HallPlanSectionMapper hallPlanSectionMapper,
+                               HallPlanSectionRepository hallPlanSectionRepository, SeatRowRepository seatRowRepository,
                                SeatRowMapper seatRowMapper, HallPlanSeatRepository seatRepository) {
         this.hallPlanRepository = hallPlanRepository;
         this.hallPlanMapper = hallPlanMapper;
@@ -83,21 +84,21 @@ public class HallPlanServiceImpl implements HallPlanService {
     public DetailedHallPlanDto snapshotHallplan(HallPlanDto newHallplan, Long baseHallplanId) throws ValidationException {
         LOGGER.trace("snapshotHallplan({}, {})", newHallplan, baseHallplanId);
         Optional<HallPlan> optBaseHallplan = hallPlanRepository.findById(baseHallplanId);
-        if(optBaseHallplan.isEmpty()){
+        if (optBaseHallplan.isEmpty()) {
             throw new ValidationException("Based hallplan does not exist");
         }
 
         HallPlan baseHallplan = optBaseHallplan.get();
 
-        if(baseHallplan.getIsTemplate()){
-            if(newHallplan.getIsTemplate()){
+        if (baseHallplan.getIsTemplate()) {
+            if (newHallplan.getIsTemplate()) {
                 throw new ValidationException("Only hallplans where isTemplate = true, can be used to create snapshots on");
             }
             //create new hallplan
             HallPlan persitedHallplan = hallPlanRepository.save(hallPlanMapper.hallPlanDtoToHallPlan(newHallplan));
 
             //create deep snapshot - meaning copy over all tuples to the snapshot
-            for(SeatRow seatRow : baseHallplan.getSeatRows()){
+            for (SeatRow seatRow : baseHallplan.getSeatRows()) {
                 //persist seatrow
                 SeatRow snapshotSeatRow = new SeatRow();
                 snapshotSeatRow.setRowNr(seatRow.getRowNr());
@@ -109,8 +110,8 @@ public class HallPlanServiceImpl implements HallPlanService {
                 //{key, value} where key is the section id and value is a list of seats
                 //that have the same section (=key)
                 Map<Long, List<HallPlanSeatDto>> aggregatedSeats = new HashMap<>();
-                for(HallPlanSeat seat : seatRow.getSeats()){
-                    if(aggregatedSeats.containsKey(seat.getSection().getId())){
+                for (HallPlanSeat seat : seatRow.getSeats()) {
+                    if (aggregatedSeats.containsKey(seat.getSection().getId())) {
                         HallPlanSeatDto clonedSeat = new HallPlanSeatDto();
                         clonedSeat.setStatus(seat.getStatus());
                         clonedSeat.setType(seat.getType());
@@ -128,8 +129,7 @@ public class HallPlanServiceImpl implements HallPlanService {
                         clonedSeat.setSection(clonedSection);
 
                         aggregatedSeats.get(seat.getSection().getId()).add(clonedSeat);
-                    }else{
-                        List<HallPlanSeatDto> list = new ArrayList<>();
+                    } else {
                         //we create a new seat object otherwise we will have an entitymanager
                         //no longer referenced error
                         HallPlanSeatDto clonedSeat = new HallPlanSeatDto();
@@ -147,6 +147,7 @@ public class HallPlanServiceImpl implements HallPlanService {
                         clonedSection.setColor(seat.getSection().getColor());
                         clonedSeat.setSection(clonedSection);
 
+                        List<HallPlanSeatDto> list = new ArrayList<>();
                         list.add(clonedSeat);
 
                         aggregatedSeats.put(seat.getSection().getId(), list);
@@ -154,11 +155,11 @@ public class HallPlanServiceImpl implements HallPlanService {
                 }
 
                 //now assign the previously generated snapshotSeats to seatrow
-                for(List<HallPlanSeatDto> seatlist : aggregatedSeats.values()){
+                for (List<HallPlanSeatDto> seatlist : aggregatedSeats.values()) {
 
                     HallPlanSection persistedSnapshotSection = null;
-                    for(HallPlanSeatDto seat : seatlist){
-                        if(persistedSnapshotSection == null){
+                    for (HallPlanSeatDto seat : seatlist) {
+                        if (persistedSnapshotSection == null) {
                             //persist section which is shared by all seats in current iteration
                             HallPlanSectionDto basedSection = seat.getSection();
 
@@ -185,11 +186,10 @@ public class HallPlanServiceImpl implements HallPlanService {
             }
 
             return getHallPlanById(persitedHallplan.getId());
-        }else{
+        } else {
             throw new ValidationException("Given Hallplan with id: " + baseHallplanId + " is not a template");
         }
     }
-
 
 
     @Override
@@ -275,7 +275,6 @@ public class HallPlanServiceImpl implements HallPlanService {
     @Override
     public List<HallPlanSection> findAllByHallPlanId(Long id) {
         LOGGER.debug("Find all hall plan sections by hall plan id: {}", id);
-        //List<HallPlanSection> testList = hallPlanSectionRepository.findByHallPlanId(id);
         return null;
     }
 

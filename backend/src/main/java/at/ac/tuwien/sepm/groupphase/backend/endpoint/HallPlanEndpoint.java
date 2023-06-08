@@ -82,7 +82,7 @@ public class HallPlanEndpoint {
     @Secured("ROLE_ADMIN")
     @PostMapping("/{id}/snapshot")
     @Operation(summary = "Create snapshot of given hallplan", security = @SecurityRequirement(name = "apiKey"))
-    public DetailedHallPlanDto createSnapshot(@PathVariable(name ="id") Long baseHallplanId, @RequestBody HallPlanDto hallplan) {
+    public DetailedHallPlanDto createSnapshot(@PathVariable(name = "id") Long baseHallplanId, @RequestBody HallPlanDto hallplan) {
         LOGGER.info("POST /api/v1/hallplans/{}/snapshot", baseHallplanId);
         try {
             return hallPlanService.snapshotHallplan(hallplan, baseHallplanId);

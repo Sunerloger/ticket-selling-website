@@ -221,7 +221,7 @@ export class RoomplaneditorComponent implements OnInit {
       this.service.createSection(this.roomplan.id, defaultSection).subscribe(
         {
           next: data => {
-            this.sections.push(data)
+            this.sections.push(data);
             resolve(data);
           },
           error: error => {
