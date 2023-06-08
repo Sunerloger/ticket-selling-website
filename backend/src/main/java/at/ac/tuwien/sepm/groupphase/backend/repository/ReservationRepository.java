@@ -9,6 +9,7 @@ import java.util.List;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     List<Reservation> findReservationsByUserIdOrderByReservationNrDesc(Long id);
+
     @Override
     Reservation save(Reservation reservation);
 

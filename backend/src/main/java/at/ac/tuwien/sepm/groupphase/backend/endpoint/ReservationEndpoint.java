@@ -70,7 +70,7 @@ public class ReservationEndpoint {
         ReservationDto reservation;
         try {
             reservation = service.getReservationOfUser(reservationNr, userId);
-        } catch (NotFoundException e ) {
+        } catch (NotFoundException e) {
             LOGGER.warn("User requested non existing Reservation.");
             return ResponseEntity.noContent().build();
         }

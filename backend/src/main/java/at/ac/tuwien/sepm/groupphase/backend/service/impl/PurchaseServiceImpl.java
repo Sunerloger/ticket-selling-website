@@ -136,7 +136,7 @@ public class PurchaseServiceImpl implements PurchaseService {
             purchase.setBillCityName(purchaseCreationDto.getCity());
         }
         purchase.setTicketList(ticketList);
-        if (!purchase.getTicketList().isEmpty()){
+        if (!purchase.getTicketList().isEmpty()) {
             repository.save(purchase);
         }
     }

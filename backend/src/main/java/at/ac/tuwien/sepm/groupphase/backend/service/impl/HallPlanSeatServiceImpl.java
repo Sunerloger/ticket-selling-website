@@ -175,7 +175,7 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
         seatRepository.save(seat);
         return true;
     }
-    
+
     @Override
     @Transactional
     public boolean cancelReservation(Long seatId) {

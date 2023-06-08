@@ -138,19 +138,19 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Lock(LockModeType.OPTIMISTIC)
-    public void incrementSoldTickets(Long hallplanId){
+    public void incrementSoldTickets(Long hallplanId) {
         EventDetailDto eventDetailDto = this.getEventFromHallplanId(hallplanId);
         Event event = eventRepository.getEventById(eventDetailDto.getId());
-        event.setSoldTickets(event.getSoldTickets()+1);
+        event.setSoldTickets(event.getSoldTickets() + 1);
         eventRepository.saveAndFlush(event);
     }
 
     @Override
     @Lock(LockModeType.OPTIMISTIC)
-    public void decrementSoldTickets(Long hallplanId){
+    public void decrementSoldTickets(Long hallplanId) {
         EventDetailDto eventDetailDto = this.getEventFromHallplanId(hallplanId);
         Event event = eventRepository.getEventById(eventDetailDto.getId());
-        event.setSoldTickets(event.getSoldTickets()-1);
+        event.setSoldTickets(event.getSoldTickets() - 1);
         eventRepository.saveAndFlush(event);
     }
 
