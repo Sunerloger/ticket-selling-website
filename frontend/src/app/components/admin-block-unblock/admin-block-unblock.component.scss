@@ -12,6 +12,10 @@
 
 .card-header {
   padding-bottom: 5px;
+  display: flex;
+  align-items: baseline;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .btn-primary {

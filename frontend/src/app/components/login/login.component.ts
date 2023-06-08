@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
   }
 
   /**
-   * Send authentication data to the authService. If the authentication was successfully, the user will be forwarded to the message page
+   * Send authentication data to the authService. If the authentication was successfully, the user will be forwarded to the news page
    *
    * @param authRequest authentication data from the user login form
    */
@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
       next: () => {
         console.log('Successfully logged in user: ' + authRequest.email);
         this.notification.success(`You successfully logged in.`);
-        this.router.navigate(['/message']);
+        this.router.navigate(['news']);
       },
       error: error => {
         console.log('Could not log in due to:');

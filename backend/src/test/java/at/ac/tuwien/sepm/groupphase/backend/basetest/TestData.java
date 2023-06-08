@@ -21,14 +21,14 @@ public interface TestData {
     String MESSAGE_BASE_URI = BASE_URI + "/messages";
     String NEWS_BASE_URI = BASE_URI + "/news";
 
-    String ADMIN_USER = "admin@email.com";
+    String ADMIN_USER = "adminTest@email.com";
     List<String> ADMIN_ROLES = new ArrayList<>() {
         {
             add("ROLE_ADMIN");
             add("ROLE_USER");
         }
     };
-    String DEFAULT_USER = "admin@email.com";
+    String DEFAULT_USER = "userTest@email.com";
     List<String> USER_ROLES = new ArrayList<>() {
         {
             add("ROLE_USER");

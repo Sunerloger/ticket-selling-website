@@ -54,6 +54,19 @@ export class UserService {
   }
 
   /**
+   * logged-in user fetches itself user.
+   *
+   * @return an Observable of the user which was retrieved
+   * */
+  getSelf(): Observable<User> {
+    if (this.authService.isLoggedIn()) {
+      return this.http.get<User>(
+        this.userGetUri
+      );
+    }
+  }
+
+  /**
    * Edit a user in the database.
    *
    * @param user the values which should be edited

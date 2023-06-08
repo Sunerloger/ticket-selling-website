@@ -26,8 +26,8 @@
       (addSeatEvent)="handleAddSeats($event)"
       (seatRowDeletionEvent)="handleRemoveRow($event)"
     />
-    <app-sectionmanager 
-      [roomplan]="this.roomplan" 
+    <app-sectionmanager
+      [roomplan]="this.roomplan"
       (createSectionEvent)="handleAddSectionToSeats($event.affectedSeatIds, $event.section)"
       />
   </div>

@@ -1,27 +1,28 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
-import jakarta.persistence.Column;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.CascadeType;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "news")
@@ -55,11 +56,14 @@ public class News {
     private String coverImage;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "news")
-    private List<NewsImage> images = new LinkedList<>();
+    private List<NewsImage> images;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id")
     private Event event;
+
+    @ManyToMany(cascade = CascadeType.MERGE, mappedBy = "readNews")
+    Set<ApplicationUser> readByUsers;
 
     public Long getId() {
         return id;
@@ -125,6 +129,18 @@ public class News {
         this.event = event;
     }
 
+    public void addUser(ApplicationUser user) {
+        readByUsers.add(user);
+    }
+
+    public void remove(ApplicationUser user) {
+        readByUsers.remove(user);
+    }
+
+    public Set<ApplicationUser> getUsers() {
+        return readByUsers;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -136,14 +152,12 @@ public class News {
         return Objects.equals(id, news.id)
             && Objects.equals(title, news.title)
             && Objects.equals(shortText, news.shortText)
-            && Objects.equals(fullText, news.fullText)
-            && Objects.equals(coverImage, news.coverImage)
-            && Objects.equals(event, news.event);
+            && Objects.equals(fullText, news.fullText);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, shortText, fullText, coverImage, event);
+        return Objects.hash(id, title, shortText, fullText);
     }
 
     @Override

@@ -120,7 +120,7 @@ public class HallPlanSeatTest {
         seatDto.setSeatNr(7L);
         seatDto.setCapacity(1L);
         seatDto.setSection(null);
-        seatDto.setSeatrowId(1L);
+        seatDto.setSeatrowId(-1L);
         seatDto.setStatus(HallPlanSeatStatus.FREE);
         seatDto.setType(HallPlanSeatType.SEAT);
         seatDto.setBoughtNr(0L);

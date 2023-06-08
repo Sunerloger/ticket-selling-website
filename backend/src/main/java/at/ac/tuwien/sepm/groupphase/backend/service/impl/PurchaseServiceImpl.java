@@ -7,7 +7,6 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Purchase;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PurchaseRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.PurchaseService;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanSeatService;
@@ -119,12 +118,17 @@ public class PurchaseServiceImpl implements PurchaseService {
         Purchase purchase = new Purchase();
         purchase.setDate(LocalDate.now());
         purchase.setUserId(userId);
-        //TODO: Get UserInfo
-        //TODO: Check if custom address
-        //TODO: create Purchase Object
-        purchase.setBillAddress("not implemented (address)");
-        purchase.setBillAreaCode(1337L);
-        purchase.setBillCityName("not implemented (city)");
+
+        if (!purchaseCreationDto.getUseUserAddress()) {
+            ApplicationUser user = customUserDetailService.getUserById(userId);
+            purchase.setBillAddress(user.getAddress());
+            purchase.setBillAreaCode(user.getAreaCode());
+            purchase.setBillCityName(user.getCityName());
+        } else {
+            purchase.setBillAddress("not implemented (address)");
+            purchase.setBillAreaCode(1337L);
+            purchase.setBillCityName("not implemented (city)");
+        }
         purchase.setTicketList(ticketList);
         repository.save(purchase);
     }
@@ -151,12 +155,17 @@ public class PurchaseServiceImpl implements PurchaseService {
         Purchase purchase = new Purchase();
         purchase.setDate(LocalDate.now());
         purchase.setUserId(userId);
-        //TODO: Get UserInfo
-        //TODO: Check if custom address
-        //TODO: create Purchase Object
-        purchase.setBillAddress("not implemented (address)");
-        purchase.setBillAreaCode(1337L);
-        purchase.setBillCityName("not implemented (city)");
+
+        if (!purchaseCreationDto.getUseUserAddress()) {
+            ApplicationUser user = customUserDetailService.getUserById(userId);
+            purchase.setBillAddress(user.getAddress());
+            purchase.setBillAreaCode(user.getAreaCode());
+            purchase.setBillCityName(user.getCityName());
+        } else {
+            purchase.setBillAddress("not implemented (address)");
+            purchase.setBillAreaCode(1337L);
+            purchase.setBillCityName("not implemented (city)");
+        }
         purchase.setTicketList(ticketList);
         repository.save(purchase);
     }
