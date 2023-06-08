@@ -115,7 +115,6 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
         return bulkDto.getSeats();
     }
 
-    //TODO: Update This Method to support new Database Model (standing seats)
     @Override
     public boolean doesSeatExist(Long seatId) {
         Optional<HallPlanSeat> optionalHallPlanSeat = seatRepository.getSeatById(seatId);
@@ -129,7 +128,6 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
         return true;
     }
 
-    //TODO: Update This Method to support new Database Model (standing seats)
     @Override
     @Transactional
     public boolean purchaseReservedSeat(Long seatId) {
@@ -141,19 +139,21 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
         if (HallPlanSeatType.VACANT_SEAT.equals(seat.getType())) {
             return false;
         }
-        seat.setStatus(HallPlanSeatStatus.OCCUPIED);
-        seat.setBoughtNr(seat.getBoughtNr() + 1L);
-        seat.setReservedNr(seat.getReservedNr() - 1L);
-        if (seat.getBoughtNr() < 0) {
+
+        if (seat.getReservedNr() <= 0) {
+            LOGGER.error("User tries to buy reserved seat but there are no reserved seats persisted.");
             throw new ValidationException("Bought Entries cannot be below 0 - data inconsistency error");
         }
+
+        seat.setBoughtNr(seat.getBoughtNr() + 1L);
+        seat.setReservedNr(seat.getReservedNr() - 1L);
+
         seatRepository.save(seat);
         SeatRow seatRow = seatRowRepository.getReferenceById(seat.getSeatrowId());
         eventService.incrementSoldTickets(seatRow.getHallPlanId());
         return true;
     }
 
-    //TODO: Update This Method to support new Database Model (standing seats)
     @Override
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
@@ -166,16 +166,16 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
         if (HallPlanSeatType.VACANT_SEAT.equals(seat.getType())) {
             return false;
         }
-        if (!HallPlanSeatStatus.FREE.equals(seat.getStatus())) {
+
+        if (seat.getCapacity() <= (seat.getReservedNr() + seat.getBoughtNr())) {
             return false;
         }
-        seat.setStatus(HallPlanSeatStatus.RESERVED);
+
         seat.setReservedNr(seat.getReservedNr() + 1L);
         seatRepository.save(seat);
         return true;
     }
-
-    //TODO: Update This Method to support new Database Model (standing seats)
+    
     @Override
     @Transactional
     public boolean cancelReservation(Long seatId) {
@@ -187,16 +187,16 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
         if (HallPlanSeatType.VACANT_SEAT.equals(seat.getType())) {
             return false;
         }
-        if (!HallPlanSeatStatus.RESERVED.equals(seat.getStatus())) {
+
+        if (seat.getReservedNr() <= 0) {
             return false;
         }
-        seat.setStatus(HallPlanSeatStatus.FREE);
+
         seat.setReservedNr(seat.getReservedNr() - 1L);
         seatRepository.save(seat);
         return true;
     }
 
-    //TODO: Update This Method to support new Database Model (standing seats)
     @Override
     @Transactional
     public boolean freePurchasedSeat(Long seatId) {
@@ -208,10 +208,11 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
         if (HallPlanSeatType.VACANT_SEAT.equals(seat.getType())) {
             return false;
         }
-        if (!HallPlanSeatStatus.OCCUPIED.equals(seat.getStatus())) {
+
+        if (seat.getBoughtNr() <= 0) {
             return false;
         }
-        seat.setStatus(HallPlanSeatStatus.FREE);
+
         seat.setBoughtNr(seat.getBoughtNr() - 1L);
         seatRepository.save(seat);
 
