@@ -7,14 +7,17 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanSectionMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SeatRowMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
+import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSection;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSeatRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSectionRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRowRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import jakarta.xml.bind.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +29,9 @@ import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -41,16 +46,18 @@ public class HallPlanServiceImpl implements HallPlanService {
 
     private final HallPlanSectionRepository hallPlanSectionRepository;
     private final SeatRowRepository seatRowRepository;
+    private final HallPlanSeatRepository hallPlanSeatRepository;
     private final SeatRowMapper seatRowMapper;
 
     public HallPlanServiceImpl(HallPlanRepository hallPlanRepository, HallPlanMapper hallPlanMapper, HallPlanSectionMapper hallPlanSectionMapper, HallPlanSectionRepository hallPlanSectionRepository, SeatRowRepository seatRowRepository,
-                               SeatRowMapper seatRowMapper) {
+                               SeatRowMapper seatRowMapper, HallPlanSeatRepository seatRepository) {
         this.hallPlanRepository = hallPlanRepository;
         this.hallPlanMapper = hallPlanMapper;
         this.hallPlanSectionMapper = hallPlanSectionMapper;
         this.hallPlanSectionRepository = hallPlanSectionRepository;
         this.seatRowRepository = seatRowRepository;
         this.seatRowMapper = seatRowMapper;
+        this.hallPlanSeatRepository = seatRepository;
     }
 
     @Override
@@ -69,6 +76,67 @@ public class HallPlanServiceImpl implements HallPlanService {
         }
         return hallPlanRepository.save(hallPlanMapper.hallPlanDtoToHallPlan(hallplan));
     }
+
+    @Override
+    @Transactional
+    public DetailedHallPlanDto snapshotHallplan(HallPlanDto newHallplan, Long baseHallplanId) throws ValidationException {
+        LOGGER.trace("snapshotHallplan({}, {})", newHallplan, baseHallplanId);
+        DetailedHallPlanDto baseHallplan = getHallPlanById(baseHallplanId);
+        if(baseHallplan.getIsTemplate()){
+            if(newHallplan.getIsTemplate()){
+                throw new ValidationException("Only hallplans where isTemplate = true, can be used to create snapshots on");
+            }
+            //create new hallplan
+            HallPlan persitedHallplan = createHallPlan(newHallplan);
+
+            //snapshot meaning copy over all tuples to the snapshot
+            for(SeatRow seatRow : persitedHallplan.getSeatRows()){
+                seatRow.setId(null);
+                seatRow.setHallPlanId(persitedHallplan.getId());
+                SeatRow snapshotSeatRow = seatRowRepository.save(seatRow);
+
+                //aggregate all seats with the same section in a map
+                Map<Long, List<HallPlanSeat>> aggregatedSeats = new HashMap<>();
+                for(HallPlanSeat seat : snapshotSeatRow.getSeats()){
+                   //aggregate all seats with the same section in a map
+
+                    if(aggregatedSeats.containsKey(seat.getSection().getId())){
+                        aggregatedSeats.get(seat.getSection().getId()).add(seat);
+                    }else{
+                        List<HallPlanSeat> list = new ArrayList<>();
+                        list.add(seat);
+                        aggregatedSeats.put(seat.getSection().getId(), list);
+                    }
+                }
+
+                //now assign the seats to the seatrow
+                for(List<HallPlanSeat> seatlist : aggregatedSeats.values()){
+
+                    HallPlanSection snapshotSection = null;
+                    for(HallPlanSeat seat : seatlist){
+                        if(snapshotSection == null){
+                            //persist section which is shared by all seats in current iteration
+                            HallPlanSection newSection = seat.getSection();
+                            newSection.setId(null);
+                            newSection.setHallPlanId(persitedHallplan.getId());
+
+                            snapshotSection = hallPlanSectionRepository.save(newSection);
+                        }
+                        //persist seat
+                        seat.setSection(snapshotSection);
+                        seat.setId(null);
+                        seat.setSeatrowId(snapshotSeatRow.getId());
+                        hallPlanSeatRepository.save(seat);
+                    }
+                }
+            }
+
+            return getHallPlanById(persitedHallplan.getId());
+        }else{
+            throw new ValidationException("Given Hallplan with id: " + baseHallplanId + " is not a template");
+        }
+    }
+
 
 
     @Override

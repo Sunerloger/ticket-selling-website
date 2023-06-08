@@ -19,6 +19,16 @@ public class DetailedHallPlanDto {
 
     private List<SeatRowDto> seatRows;
 
+    private boolean isTemplate;
+
+    public boolean getIsTemplate() {
+        return isTemplate;
+    }
+
+    public void setIsTemplate(boolean isTemplate) {
+        this.isTemplate = isTemplate;
+    }
+
     public List<SeatRowDto> getSeatRows() {
         return seatRows;
     }

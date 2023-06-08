@@ -28,9 +28,20 @@ public class HallPlan {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "is_template")
+    private boolean isTemplate;
+
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "hallplan_id")
     private List<SeatRow> seatRows;
+
+    public boolean getIsTemplate() {
+        return isTemplate;
+    }
+
+    public void setIsTemplate(boolean template) {
+        isTemplate = template;
+    }
 
     public List<SeatRow> getSeatRows() {
         return seatRows;
