@@ -25,6 +25,7 @@ import {NewsResolver} from './components/news/news.resolver';
 import {EventDetailComponent} from './components/event-detail/event-detail.component';
 import {AdminManagerComponent} from './components/admin-manager/admin-manager.component';
 import {PerformanceTicketSelctionComponent} from './components/performance-ticket-selction/performance-ticket-selction.component';
+import { HallplanCreateComponent } from './components/hallplan-create/hallplan-create.component';
 
 
 const routes: Routes = [
@@ -61,7 +62,9 @@ const routes: Routes = [
 
   {path: 'roomplan/:id/edit', component: RoomplaneditorComponent},
   {path: 'hallplans/:id/edit', component: RoomplaneditorComponent},
+   {path: 'hallplans/create', component: HallplanCreateComponent },
   {path: 'hallplans/manage', canActivate: [AuthGuard], component: HallplanManagerComponent},
+
 
   {path: 'news', canActivate: [AuthGuard], children: [
       {path: '', component: NewsOverviewComponent},

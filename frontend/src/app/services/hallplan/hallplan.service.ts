@@ -23,6 +23,19 @@ export class HallplanService {
         );
     }
 
+    searchHallplans(name: string, description: string) {
+        return this.http.get<Hallplan[]>(
+            `${this.baseUrl}?name=${name}&description=${description}`
+        );
+    }
+
+    createHallplan(hallplan: Hallplan) {
+        console.log(hallplan);
+        return this.http.post<Hallplan>(
+            `${this.baseUrl}`,hallplan
+        );
+    }
+
     getHallplanById(id: number){
         return this.http.get<PersistedHallplan>(
             `${this.baseUrl}/${id}`

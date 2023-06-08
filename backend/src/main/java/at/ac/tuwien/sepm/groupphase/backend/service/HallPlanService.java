@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.DetailedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSection;
@@ -18,6 +19,14 @@ public interface HallPlanService {
      * @return Returns a list of hall plan entities
      */
     List<HallPlan> findAll();
+
+    /**
+     * Find all hall plans stored in the system which match the parameters.
+     *
+     * @param searchDto contains the search parameters name and description
+     * @return Returns a list of hall plan entities
+     */
+    List<HallPlan> searchHallPlans(HallPlanSearchDto searchDto);
 
     /**
      * Creates a new hall plan.

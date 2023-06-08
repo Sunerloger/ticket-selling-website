@@ -138,8 +138,10 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
         }
         seat.setStatus(HallPlanSeatStatus.OCCUPIED);
         seat.setBoughtNr(seat.getBoughtNr() + 1L);
-        seat.setReservedNr(seat.getReservedNr() -1L);
-        if(seat.getBoughtNr() < 0) throw new ValidationException("Bought Entries cannot be below 0 - data inconsistency error");
+        seat.setReservedNr(seat.getReservedNr() - 1L);
+        if (seat.getBoughtNr() < 0) {
+            throw new ValidationException("Bought Entries cannot be below 0 - data inconsistency error");
+        }
         seatRepository.save(seat);
         return true;
     }

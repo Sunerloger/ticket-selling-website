@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.DetailedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanSectionMapper;
@@ -56,8 +57,18 @@ public class HallPlanServiceImpl implements HallPlanService {
     @Override
     public List<HallPlan> findAll() {
         LOGGER.debug("Find all hall plans");
-        List<HallPlan> hallPlans = hallPlanRepository.findAllHallPlans();
-        return hallPlans;
+        return hallPlanRepository.findAllHallPlans();
+    }
+
+    @Override
+    public List<HallPlan> searchHallPlans(HallPlanSearchDto searchDto) {
+        if (searchDto.getName() == null) {
+            searchDto.setName("");
+        }
+        if (searchDto.getDescription() == null) {
+            searchDto.setDescription("");
+        }
+        return hallPlanRepository.searchByNameAndDescriptionIgnoreCase(searchDto.getName(), searchDto.getDescription());
     }
 
     @Override
