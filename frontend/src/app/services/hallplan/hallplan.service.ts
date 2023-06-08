@@ -24,8 +24,14 @@ export class HallplanService {
     }
 
     searchHallplans(name: string, description: string) {
-        return this.http.get<Hallplan[]>(
+        return this.http.get<PersistedHallplan[]>(
             `${this.baseUrl}?name=${name}&description=${description}`
+        );
+    }
+
+    deleteHallPlan(id: number) {
+        return this.http.delete<void>(
+             `${this.baseUrl}/${id}`
         );
     }
 

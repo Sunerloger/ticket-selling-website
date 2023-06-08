@@ -8,10 +8,12 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanSectionMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SeatRowMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
+import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSection;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSeatRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSectionRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRowRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanService;
@@ -43,15 +45,17 @@ public class HallPlanServiceImpl implements HallPlanService {
     private final HallPlanSectionRepository hallPlanSectionRepository;
     private final SeatRowRepository seatRowRepository;
     private final SeatRowMapper seatRowMapper;
+    private final HallPlanSeatRepository seatRepository;
 
     public HallPlanServiceImpl(HallPlanRepository hallPlanRepository, HallPlanMapper hallPlanMapper, HallPlanSectionMapper hallPlanSectionMapper, HallPlanSectionRepository hallPlanSectionRepository, SeatRowRepository seatRowRepository,
-                               SeatRowMapper seatRowMapper) {
+                               SeatRowMapper seatRowMapper, HallPlanSeatRepository seatRepository) {
         this.hallPlanRepository = hallPlanRepository;
         this.hallPlanMapper = hallPlanMapper;
         this.hallPlanSectionMapper = hallPlanSectionMapper;
         this.hallPlanSectionRepository = hallPlanSectionRepository;
         this.seatRowRepository = seatRowRepository;
         this.seatRowMapper = seatRowMapper;
+        this.seatRepository = seatRepository;
     }
 
     @Override
@@ -102,6 +106,25 @@ public class HallPlanServiceImpl implements HallPlanService {
         LOGGER.debug("Delete hall plan by id: {}", id);
         if (!hallPlanRepository.existsById(id)) {
             throw new NotFoundException("Hall Plan not found with id: " + id);
+        }
+        Optional<HallPlan> hallplan = hallPlanRepository.findHallPlanById(id);
+        List<SeatRow> rows = hallplan.get().getSeatRows();
+        if (rows != null) {
+            for (SeatRow row : rows) {
+                for (HallPlanSeat seat : row.getSeats()) {
+                    seatRepository.deleteById(seat.getId());
+                }
+            }
+            for (SeatRow row : rows) {
+                seatRowRepository.deleteById(row.getId());
+            }
+        }
+
+        List<HallPlanSection> sections = hallPlanSectionRepository.findAllByHallplanId(id);
+        if (sections != null) {
+            for (HallPlanSection sec : sections) {
+                hallPlanSectionRepository.deleteById(sec.getId());
+            }
         }
         hallPlanRepository.deleteById(id);
     }

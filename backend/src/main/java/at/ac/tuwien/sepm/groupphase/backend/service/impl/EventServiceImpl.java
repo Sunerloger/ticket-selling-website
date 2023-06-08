@@ -95,7 +95,7 @@ public class EventServiceImpl implements EventService {
 
             if (location != null) {
                 Predicate inner = criteriaBuilder.or(criteriaBuilder.or(criteriaBuilder.like(criteriaBuilder.lower(root.join(eventDatesLocation).get("city")), "%" + location.toLowerCase() + "%"),
-                    criteriaBuilder.like(criteriaBuilder.lower(root.join(eventDatesLocation).get("address")), "%" + location.toLowerCase() + "%")),
+                        criteriaBuilder.like(criteriaBuilder.lower(root.join(eventDatesLocation).get("address")), "%" + location.toLowerCase() + "%")),
                     criteriaBuilder.like(criteriaBuilder.lower(root.join(eventDatesLocation).get("areaCode").as(String.class)), "%" + location.toLowerCase() + "%"));
                 predicate = criteriaBuilder.and(predicate, inner);
             }

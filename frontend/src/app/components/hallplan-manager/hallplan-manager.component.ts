@@ -1,5 +1,5 @@
 import { Component, OnInit  } from '@angular/core';
-import { Hallplan } from 'src/app/dtos/hallplan/hallplan';
+import { Hallplan, PersistedHallplan } from 'src/app/dtos/hallplan/hallplan';
 import { HallplanService } from 'src/app/services/hallplan/hallplan.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -13,7 +13,7 @@ import { Observable, Subject, debounceTime } from 'rxjs';
 })
 export class HallplanManagerComponent implements OnInit {
 
-  hallPlans: Hallplan[] = [];
+  hallPlans: PersistedHallplan[] = [];
   searchName = '';
   searchDescription = '';
   private searchSubject: Subject<{ term1: string; term2: string }> = new Subject<{ term1: string; term2: string }>();
@@ -53,5 +53,33 @@ export class HallplanManagerComponent implements OnInit {
     });
 
   }
+
+  delete(id: number) {
+    if(window.confirm('Do you really want to delete?')) {
+      console.log(id);
+      this.hallPlanService.deleteHallPlan(id).subscribe({
+        next: data => {
+          //Deleted
+          const indexToDelete = this.hallPlans.findIndex((hallplan) => hallplan.id === id);
+
+          // Check if the index is found (-1 indicates not found)
+          if (indexToDelete !== -1) {
+            // Remove the entry from the array using the splice() method
+            this.hallPlans.splice(indexToDelete, 1);
+          }
+        },
+        error: error => {
+          const errorMessage = error.status === 0
+            ? 'Server not reachable'
+            : error.message.message;
+          this.notification.error(errorMessage, 'Connection to server to delete hallplan failed');
+        }
+
+      });
+    }
+
+  }
+
+
 
 }
