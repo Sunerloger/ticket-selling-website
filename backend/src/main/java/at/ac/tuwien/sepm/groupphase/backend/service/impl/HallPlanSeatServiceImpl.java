@@ -76,7 +76,9 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
 
         List<HallPlanSeat> existingSeat = seatRepository.findAllBySeatRowIdAndSeatNr(seatDto.getSeatrowId(), seatDto.getSeatNr());
 
-        if (!existingSeat.isEmpty() && existingSeat.get(0) != null && (existingSeat.get(0).getId().longValue() != seatDto.getId().longValue()) && !Objects.equals(seatDto.getSeatNr(), existingSeat.get(0).getSeatNr())) {
+        if (!existingSeat.isEmpty() && existingSeat.get(0) != null
+            && (existingSeat.get(0).getId().longValue() != seatDto.getId().longValue())
+            && !Objects.equals(seatDto.getSeatNr(), existingSeat.get(0).getSeatNr())) {
             throw new ValidationException("SeatRow with seatrowId " + seatDto.getSeatrowId() + " and seatNr " + seatDto.getSeatNr() + " already exists");
         }
 

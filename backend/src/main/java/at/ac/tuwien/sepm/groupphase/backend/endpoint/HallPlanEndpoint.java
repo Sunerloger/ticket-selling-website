@@ -72,9 +72,21 @@ public class HallPlanEndpoint {
     @PostMapping
     @Operation(summary = "Create a new hall plan entry in the system", security = @SecurityRequirement(name = "apiKey"))
     public HallPlanDto createHallPlan(@RequestBody HallPlanDto hallplan) {
-        LOGGER.info("POST /api/v1/hallplans");
+        LOGGER.info("POST /api/v1/hallplans with {}", hallplan);
         try {
             return hallPlanMapper.hallPlanToHallPlanDto(hallPlanService.createHallPlan(hallplan));
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+        }
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/{id}/snapshot")
+    @Operation(summary = "Create snapshot of given hallplan", security = @SecurityRequirement(name = "apiKey"))
+    public DetailedHallPlanDto createSnapshot(@PathVariable(name = "id") Long baseHallplanId, @RequestBody HallPlanDto hallplan) {
+        LOGGER.info("POST /api/v1/hallplans/{}/snapshot", baseHallplanId);
+        try {
+            return hallPlanService.snapshotHallplan(hallplan, baseHallplanId);
         } catch (ValidationException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }

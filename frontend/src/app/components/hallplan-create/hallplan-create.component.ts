@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HallplanService } from 'src/app/services/hallplan/hallplan.service';
-import {ToastrService} from 'ngx-toastr';
-import {AuthService} from '../../services/auth.service';
-import {Router} from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 import { Hallplan } from 'src/app/dtos/hallplan/hallplan';
 
 @Component({
@@ -11,31 +11,32 @@ import { Hallplan } from 'src/app/dtos/hallplan/hallplan';
   templateUrl: './hallplan-create.component.html',
   styleUrls: ['./hallplan-create.component.scss']
 })
-export class HallplanCreateComponent implements OnInit{
+export class HallplanCreateComponent implements OnInit {
 
-hallplan: Hallplan =  {
-  name : null,
-  description: null,
-  seatRows: null
-};
+  hallplan: Hallplan = {
+    name: null,
+    description: '',
+    seatRows: null,
+    isTemplate: true
+  };
 
-registerForm: FormGroup;
-submitted = false;
-//Error flag
-error = false;
-errorMessage = '';
+  registerForm: FormGroup;
+  submitted = false;
+  //Error flag
+  error = false;
+  errorMessage = '';
 
-constructor(
-  private hallPlanService: HallplanService,
-  private formBuilder: FormBuilder,
-  public authService: AuthService,
-  private notification: ToastrService,
-  private router: Router
-) {
+  constructor(
+    private hallPlanService: HallplanService,
+    private formBuilder: FormBuilder,
+    public authService: AuthService,
+    private notification: ToastrService,
+    private router: Router
+  ) {
   }
 
 
-   ngOnInit(): void {
+  ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
       name: ['', Validators.required],
       //description: ['', Validators.required],
@@ -47,12 +48,12 @@ constructor(
     console.log(this.hallplan.name);
 
     this.registerForm.controls['name'].setValue(this.hallplan.name);
-    if(this.hallplan.name.trim() === '') {
-return;
-}
+    if (this.hallplan.name.trim() === '') {
+      return;
+    }
     //this.registerForm.controls['description'].setValue(this.hallplan.description);
     console.log(this.registerForm.valid);
-      if (this.registerForm.valid) {
+    if (this.registerForm.valid) {
 
       const observable = this.hallPlanService.createHallplan(this.hallplan);
       observable.subscribe({

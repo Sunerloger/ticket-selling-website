@@ -6,6 +6,16 @@ public class HallPlanSearchDto {
 
     private String description;
 
+    private boolean isTemplate;
+
+    public boolean getIsTemplate() {
+        return isTemplate;
+    }
+
+    public void setIsTemplate(boolean template) {
+        isTemplate = template;
+    }
+
     public String getName() {
         return name;
     }
