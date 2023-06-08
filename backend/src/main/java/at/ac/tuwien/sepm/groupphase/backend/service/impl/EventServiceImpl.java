@@ -27,6 +27,7 @@ import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -89,11 +90,14 @@ public class EventServiceImpl implements EventService {
             }
 
             if (artist != null) {
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.get("artist"), "%" + artist + "%"));
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(criteriaBuilder.lower(root.get("artist")), "%" + artist.toLowerCase() + "%"));
             }
 
             if (location != null) {
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.join(eventDatesLocation).get("address"), "%" + location + "%"));
+                Predicate inner = criteriaBuilder.or(criteriaBuilder.or(criteriaBuilder.like(criteriaBuilder.lower(root.join(eventDatesLocation).get("city")), "%" + location.toLowerCase() + "%"),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.join(eventDatesLocation).get("address")), "%" + location.toLowerCase() + "%")),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.join(eventDatesLocation).get("areaCode").as(String.class)), "%" + location.toLowerCase() + "%"));
+                predicate = criteriaBuilder.and(predicate, inner);
             }
 
             return predicate;
