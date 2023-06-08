@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatRowDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.DetailedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSectionDto;
@@ -81,52 +82,105 @@ public class HallPlanServiceImpl implements HallPlanService {
     @Transactional
     public DetailedHallPlanDto snapshotHallplan(HallPlanDto newHallplan, Long baseHallplanId) throws ValidationException {
         LOGGER.trace("snapshotHallplan({}, {})", newHallplan, baseHallplanId);
-        DetailedHallPlanDto baseHallplan = getHallPlanById(baseHallplanId);
+        Optional<HallPlan> optBaseHallplan = hallPlanRepository.findById(baseHallplanId);
+        if(optBaseHallplan.isEmpty()){
+            throw new ValidationException("Based hallplan does not exist");
+        }
+
+        HallPlan baseHallplan = optBaseHallplan.get();
+
         if(baseHallplan.getIsTemplate()){
             if(newHallplan.getIsTemplate()){
                 throw new ValidationException("Only hallplans where isTemplate = true, can be used to create snapshots on");
             }
             //create new hallplan
-            HallPlan persitedHallplan = createHallPlan(newHallplan);
+            HallPlan persitedHallplan = hallPlanRepository.save(hallPlanMapper.hallPlanDtoToHallPlan(newHallplan));
 
-            //snapshot meaning copy over all tuples to the snapshot
-            for(SeatRow seatRow : persitedHallplan.getSeatRows()){
-                seatRow.setId(null);
-                seatRow.setHallPlanId(persitedHallplan.getId());
-                SeatRow snapshotSeatRow = seatRowRepository.save(seatRow);
+            //create deep snapshot - meaning copy over all tuples to the snapshot
+            for(SeatRow seatRow : baseHallplan.getSeatRows()){
+                //persist seatrow
+                SeatRow snapshotSeatRow = new SeatRow();
+                snapshotSeatRow.setRowNr(seatRow.getRowNr());
+                snapshotSeatRow.setHallPlanId(persitedHallplan.getId());
+                SeatRow persistedSnapshotSeatRow = seatRowRepository.save(snapshotSeatRow);
+                persistedSnapshotSeatRow.setSeats(new ArrayList<>());
 
                 //aggregate all seats with the same section in a map
+                //{key, value} where key is the section id and value is a list of seats
+                //that have the same section (=key)
                 Map<Long, List<HallPlanSeat>> aggregatedSeats = new HashMap<>();
-                for(HallPlanSeat seat : snapshotSeatRow.getSeats()){
-                   //aggregate all seats with the same section in a map
-
+                for(HallPlanSeat seat : seatRow.getSeats()){
                     if(aggregatedSeats.containsKey(seat.getSection().getId())){
-                        aggregatedSeats.get(seat.getSection().getId()).add(seat);
+                        HallPlanSeat clonedSeat = new HallPlanSeat();
+                        clonedSeat.setStatus(seat.getStatus());
+                        clonedSeat.setType(seat.getType());
+                        clonedSeat.setCapacity(seat.getCapacity());
+                        clonedSeat.setSeatNr(seat.getSeatNr());
+                        clonedSeat.setOrderNr(seat.getOrderNr());
+                        clonedSeat.setSeatrowId(persistedSnapshotSeatRow.getId());
+
+
+                        HallPlanSection clonedSection = new HallPlanSection();
+                        clonedSection.setHallPlanId(persitedHallplan.getId());
+                        clonedSection.setPrice(seat.getSection().getPrice());
+                        clonedSection.setName(seat.getSection().getName());
+                        clonedSection.setColor(seat.getSection().getColor());
+                        clonedSeat.setSection(clonedSection);
+
+                        aggregatedSeats.get(seat.getSection().getId()).add(clonedSeat);
                     }else{
                         List<HallPlanSeat> list = new ArrayList<>();
-                        list.add(seat);
+                        //we create a new seat object otherwise we will have an entitymanager
+                        //no longer referenced error
+                        HallPlanSeat clonedSeat = new HallPlanSeat();
+                        clonedSeat.setStatus(seat.getStatus());
+                        clonedSeat.setType(seat.getType());
+                        clonedSeat.setCapacity(seat.getCapacity());
+                        clonedSeat.setSeatNr(seat.getSeatNr());
+                        clonedSeat.setOrderNr(seat.getOrderNr());
+                        clonedSeat.setSeatrowId(persistedSnapshotSeatRow.getId());
+
+                        HallPlanSection clonedSection = new HallPlanSection();
+                        clonedSection.setHallPlanId(persitedHallplan.getId());
+                        clonedSection.setPrice(seat.getSection().getPrice());
+                        clonedSection.setName(seat.getSection().getName());
+                        clonedSection.setColor(seat.getSection().getColor());
+                        clonedSeat.setSection(clonedSection);
+
+                        list.add(clonedSeat);
+
                         aggregatedSeats.put(seat.getSection().getId(), list);
                     }
                 }
 
-                //now assign the seats to the seatrow
+                //now assign the previously generated snapshotSeats to seatrow
                 for(List<HallPlanSeat> seatlist : aggregatedSeats.values()){
 
-                    HallPlanSection snapshotSection = null;
+                    HallPlanSection persistedSnapshotSection = null;
                     for(HallPlanSeat seat : seatlist){
-                        if(snapshotSection == null){
+                        if(persistedSnapshotSection == null){
                             //persist section which is shared by all seats in current iteration
-                            HallPlanSection newSection = seat.getSection();
-                            newSection.setId(null);
-                            newSection.setHallPlanId(persitedHallplan.getId());
+                            HallPlanSection basedSection = seat.getSection();
 
-                            snapshotSection = hallPlanSectionRepository.save(newSection);
+                            HallPlanSection snapshotSection = new HallPlanSection();
+                            snapshotSection.setHallPlanId(persitedHallplan.getId());
+                            snapshotSection.setPrice(basedSection.getPrice());
+                            snapshotSection.setName(basedSection.getName());
+                            snapshotSection.setColor(basedSection.getColor());
+
+                            persistedSnapshotSection = hallPlanSectionRepository.save(snapshotSection);
                         }
                         //persist seat
-                        seat.setSection(snapshotSection);
-                        seat.setId(null);
-                        seat.setSeatrowId(snapshotSeatRow.getId());
-                        hallPlanSeatRepository.save(seat);
+                        HallPlanSeat snapshotSeat = new HallPlanSeat();
+                        snapshotSeat.setStatus(seat.getStatus());
+                        snapshotSeat.setType(seat.getType());
+                        snapshotSeat.setCapacity(seat.getCapacity());
+                        snapshotSeat.setSeatNr(seat.getSeatNr());
+                        snapshotSeat.setOrderNr(seat.getOrderNr());
+                        snapshotSeat.setSeatrowId(persistedSnapshotSeatRow.getId());
+                        snapshotSeat.setSection(persistedSnapshotSection);
+                        persistedSnapshotSeatRow.getSeats().add(snapshotSeat);
+                        hallPlanSeatRepository.save(snapshotSeat);
                     }
                 }
             }
