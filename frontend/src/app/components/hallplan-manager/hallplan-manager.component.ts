@@ -1,4 +1,4 @@
-import { Component, OnInit  } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Hallplan, PersistedHallplan } from 'src/app/dtos/hallplan/hallplan';
 import { HallplanService } from 'src/app/services/hallplan/hallplan.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -27,7 +27,7 @@ export class HallplanManagerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.retrieveAllHallplans('','');
+    this.retrieveAllHallplans('', '');
     this.searchSubject.pipe(debounceTime(300)).subscribe((terms) => {
       this.retrieveAllHallplans(terms.term1, terms.term2);
     });
@@ -40,7 +40,7 @@ export class HallplanManagerComponent implements OnInit {
 
   retrieveAllHallplans(term1: string, term2: string): void {
 
-      this.hallPlanService.searchHallplans(term1,term2).subscribe({
+    this.hallPlanService.searchHallplans(term1, term2, true).subscribe({
       next: data => {
         this.hallPlans = data;
       },

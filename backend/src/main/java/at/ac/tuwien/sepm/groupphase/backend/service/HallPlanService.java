@@ -37,6 +37,16 @@ public interface HallPlanService {
      */
     HallPlan createHallPlan(HallPlanDto hallplan) throws ValidationException;
 
+
+    /**
+     * Creates a new hall plan.
+     *
+     * @param baseHallplanId the hallPlanDto containing the information for the snapshoted hall plan
+     * @return the created HallPlan entity with all tuples from its relationships from given basehallplan
+     * @throws ValidationException if the hallPlanDto is invalid
+     */
+    DetailedHallPlanDto snapshotHallplan(HallPlanDto newHallplan, Long baseHallplanId) throws ValidationException;
+
     /**
      * Retrieves a detailed hall plan by its ID.
      *
