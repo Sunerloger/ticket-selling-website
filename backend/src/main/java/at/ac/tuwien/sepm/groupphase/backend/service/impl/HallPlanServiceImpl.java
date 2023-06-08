@@ -80,7 +80,6 @@ public class HallPlanServiceImpl implements HallPlanService {
     }
 
     @Override
-    @Transactional
     public DetailedHallPlanDto snapshotHallplan(HallPlanDto newHallplan, Long baseHallplanId) throws ValidationException {
         LOGGER.trace("snapshotHallplan({}, {})", newHallplan, baseHallplanId);
         Optional<HallPlan> optBaseHallplan = hallPlanRepository.findById(baseHallplanId);
