@@ -46,6 +46,9 @@ public class Event {
 
     private String description;
 
+    @Column(columnDefinition = "Long default 0")
+    private Long soldTickets;
+
     @NotBlank
     private String artist;
 
@@ -150,5 +153,13 @@ public class Event {
 
     public void addNewsEntry(News newsEntry) {
         this.newsEntries.add(newsEntry);
+    }
+
+    public Long getSoldTickets() {
+        return soldTickets;
+    }
+
+    public void setSoldTickets(Long soldTickets) {
+        this.soldTickets = soldTickets;
     }
 }

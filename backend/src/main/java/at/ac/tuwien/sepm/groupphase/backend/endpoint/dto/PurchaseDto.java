@@ -14,6 +14,7 @@ public class PurchaseDto {
     private Long billAreaCode;
     private String billCityName;
     private List<TicketDto> ticketList;
+    private Boolean canceled;
 
     public PurchaseDto() {
     }
@@ -25,6 +26,7 @@ public class PurchaseDto {
         this.billAreaCode = purchase.getBillAreaCode();
         this.billCityName = purchase.getBillCityName();
         this.ticketList = ticketList;
+        this.canceled = purchase.isCanceled();
     }
 
 
@@ -74,5 +76,13 @@ public class PurchaseDto {
 
     public void setTicketList(List<TicketDto> ticketList) {
         this.ticketList = ticketList;
+    }
+
+    public Boolean getCanceled() {
+        return canceled;
+    }
+
+    public void setCanceled(Boolean canceled) {
+        this.canceled = canceled;
     }
 }

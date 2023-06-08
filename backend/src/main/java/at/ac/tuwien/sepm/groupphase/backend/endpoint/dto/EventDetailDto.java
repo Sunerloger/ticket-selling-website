@@ -12,6 +12,7 @@ public class EventDetailDto {
     private String description;
     private String image;
     private String artist;
+    private Long soldTickets;
 
     public List<EventDateDto> getEventDatesLocation() {
         return eventDatesLocation;
@@ -75,6 +76,14 @@ public class EventDetailDto {
 
     public void setArtist(String artist) {
         this.artist = artist;
+    }
+
+    public Long getSoldTickets() {
+        return soldTickets;
+    }
+
+    public void setSoldTickets(Long soldTickets) {
+        this.soldTickets = soldTickets;
     }
 }
 

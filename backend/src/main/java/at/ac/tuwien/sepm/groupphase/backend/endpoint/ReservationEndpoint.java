@@ -30,9 +30,9 @@ import java.util.List;
 @RequestMapping(value = "/api/v1/reservation")
 public class ReservationEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private ReservationService service;
-    private PurchaseService purchaseService;
-    private CustomUserDetailService userService;
+    private final ReservationService service;
+    private final PurchaseService purchaseService;
+    private final CustomUserDetailService userService;
 
     @Autowired
     public ReservationEndpoint(ReservationService reservationService, PurchaseService purchaseService, CustomUserDetailService userService) {
@@ -44,47 +44,55 @@ public class ReservationEndpoint {
     @Secured("ROLE_USER")
     @GetMapping
     @Operation(summary = "Gets a list of all Reservations from that user", security = @SecurityRequirement(name = "apiKey"))
-    public List<ReservationDto> getReservations(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<Object> getReservations(@RequestHeader("Authorization") String token) {
         LOGGER.info("GET /api/v1/reservation");
 
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            return null;
+            LOGGER.error("User with ROLE_USER could not be resolved");
+            return ResponseEntity.internalServerError().body("Request couldn't be resolved!");
         }
 
-        return service.getReservationsOfUser(userId);
+        return ResponseEntity.ok(service.getReservationsOfUser(userId));
     }
 
     @Secured("ROLE_USER")
     @GetMapping("/{reservationNr}")
     @Operation(summary = "Gets a list of all Reservations from that user", security = @SecurityRequirement(name = "apiKey"))
-    public ReservationDto getReservation(@PathVariable Long reservationNr, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<Object> getReservation(@PathVariable Long reservationNr, @RequestHeader("Authorization") String token) {
         LOGGER.info("GET /api/v1/reservation/{}", reservationNr);
 
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            return null;
+            LOGGER.error("User with ROLE_USER could not be resolved");
+            return ResponseEntity.internalServerError().body("Request could not be resolved!");
+        }
+        ReservationDto reservation;
+        try {
+            reservation = service.getReservationOfUser(reservationNr, userId);
+        } catch (NotFoundException e ) {
+            LOGGER.warn("User requested non existing Reservation.");
+            return ResponseEntity.noContent().build();
         }
 
-        ReservationDto reservation = service.getReservationOfUser(reservationNr, userId);
         if (reservation == null) {
-            //something response;
-            LOGGER.warn("something went wrong");
-            return null;
+            LOGGER.error("Successfully fetched reservation is Null");
+            return ResponseEntity.internalServerError().body("There was an issue retrieving your Reservation!");
         }
 
-        return reservation;
+        return ResponseEntity.ok(reservation);
     }
 
     @Secured("ROLE_USER")
     @PostMapping
     @Operation(summary = "Create a new Reservation with the given seats", security = @SecurityRequirement(name = "apiKey"))
-    public ResponseEntity<Void> newReservation(@RequestBody List<SeatDto> seatDtoList, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<Object> newReservation(@RequestBody List<SeatDto> seatDtoList, @RequestHeader("Authorization") String token) {
         LOGGER.info("Post /api/v1/reservation");
 
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            return null;
+            LOGGER.error("User with ROLE_USER could not be resolved");
+            return ResponseEntity.internalServerError().body("Request could not be resolved!");
         }
 
         try {
@@ -98,12 +106,13 @@ public class ReservationEndpoint {
     @Secured("ROLE_USER")
     @DeleteMapping("/{reservationNr}")
     @Operation(summary = "Removes a Reservation by reservationnumber", security = @SecurityRequirement(name = "apiKey"))
-    public ResponseEntity<Void> deleteReservation(@PathVariable Long reservationNr, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<Object> deleteReservation(@PathVariable Long reservationNr, @RequestHeader("Authorization") String token) {
         LOGGER.info("Delete /api/v1/reservation/{}", reservationNr);
 
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            return null;
+            LOGGER.error("User with ROLE_USER could not be resolved");
+            return ResponseEntity.internalServerError().body("Request could not be resolved!");
         }
 
         this.service.deleteReservation(reservationNr, userId);
@@ -113,12 +122,13 @@ public class ReservationEndpoint {
     @Secured("ROLE_USER")
     @PostMapping("/{reservationNr}/purchase")
     @Operation(summary = "Purchases a given amount of tickets of a Reservation", security = @SecurityRequirement(name = "apiKey"))
-    public ResponseEntity<Void> buyReservation(@RequestBody PurchaseCreationDto purchaseCreationDto, @PathVariable Long reservationNr, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<Object> buyReservation(@RequestBody PurchaseCreationDto purchaseCreationDto, @PathVariable Long reservationNr, @RequestHeader("Authorization") String token) {
         LOGGER.info("Post /api/v1/cart/purchase");
 
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            return null;
+            LOGGER.error("User with ROLE_USER could not be resolved");
+            return ResponseEntity.internalServerError().body("Request could not be resolved!");
         }
 
         purchaseService.purchaseReservationOfUser(reservationNr, purchaseCreationDto, userId);

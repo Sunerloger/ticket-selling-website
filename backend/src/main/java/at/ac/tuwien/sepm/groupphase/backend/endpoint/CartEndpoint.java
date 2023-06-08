@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,26 +46,28 @@ public class CartEndpoint {
     @Secured("ROLE_USER")
     @GetMapping
     @Operation(summary = "Get a list of all CartItems", security = @SecurityRequirement(name = "apiKey"))
-    public List<CartItemDto> getCart(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<Object> getCart(@RequestHeader("Authorization") String token) {
         LOGGER.info("GET /api/v1/cart");
 
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            return null;
+            LOGGER.error("User with ROLE_USER could not be resolved");
+            return ResponseEntity.internalServerError().body("User could not be resolved!");
         }
 
-        return service.getItems(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(service.getItems(userId));
     }
 
     @Secured("ROLE_USER")
     @PostMapping
     @Operation(summary = "Add a list of Seats to the cart", security = @SecurityRequirement(name = "apiKey"))
-    public ResponseEntity<Void> addToCart(@RequestBody List<SeatDto> seatDtoList, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<Object> addToCart(@RequestBody List<SeatDto> seatDtoList, @RequestHeader("Authorization") String token) {
         LOGGER.info("Post /api/v1/cart");
 
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            return ResponseEntity.badRequest().build();
+            LOGGER.error("User with ROLE_USER could not be resolved");
+            return ResponseEntity.internalServerError().body("User could not be resolved!");
         }
 
         try {
@@ -78,31 +81,29 @@ public class CartEndpoint {
     @Secured("ROLE_USER")
     @DeleteMapping("/{id}")
     @Operation(summary = "Removes a Seat from the cart", security = @SecurityRequirement(name = "apiKey"))
-    public ResponseEntity<Void> removeFromCart(@PathVariable Long id, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<Object> removeFromCart(@PathVariable Long id, @RequestHeader("Authorization") String token) {
         LOGGER.info("Delete /api/v1/cart/{}", id);
 
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            return ResponseEntity.badRequest().build();
+            LOGGER.error("User with ROLE_USER could not be resolved");
+            return ResponseEntity.internalServerError().body("User could not be resolved!");
         }
 
-        try {
-            this.service.deleteItem(id, userId);
-        } catch (NotFoundException e) {
-            return ResponseEntity.noContent().build();
-        }
+        this.service.deleteItem(id, userId);
         return ResponseEntity.noContent().build();
     }
 
     @Secured("ROLE_USER")
     @PostMapping("/purchase")
     @Operation(summary = "Purchases the tickets in the cart", security = @SecurityRequirement(name = "apiKey"))
-    public ResponseEntity<Void> buyCart(@RequestBody PurchaseCreationDto purchaseCreationDto, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<Object> buyCart(@RequestBody PurchaseCreationDto purchaseCreationDto, @RequestHeader("Authorization") String token) {
         LOGGER.info("Post /api/v1/cart/purchase");
 
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            return ResponseEntity.badRequest().build();
+            LOGGER.error("User with ROLE_USER could not be resolved");
+            return ResponseEntity.internalServerError().body("User could not be resolved!");
         }
 
         purchaseService.purchaseCartOfUser(userId, purchaseCreationDto);

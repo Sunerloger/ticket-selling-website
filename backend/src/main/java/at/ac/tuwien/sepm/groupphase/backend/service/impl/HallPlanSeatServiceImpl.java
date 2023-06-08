@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSeatRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRowRepository;
+import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanSeatService;
 import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatStatus;
 import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatType;
@@ -32,12 +33,14 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
     private final HallPlanSeatRepository seatRepository;
     private final HallPlanSeatMapper seatMapper;
     private final SeatRowRepository seatRowRepository;
+    private final EventService eventService;
 
     @Autowired
-    public HallPlanSeatServiceImpl(HallPlanSeatRepository seatRepository, HallPlanSeatMapper seatMapper, SeatRowRepository seatRowRepository) {
+    public HallPlanSeatServiceImpl(HallPlanSeatRepository seatRepository, HallPlanSeatMapper seatMapper, SeatRowRepository seatRowRepository, EventService eventService) {
         this.seatRepository = seatRepository;
         this.seatMapper = seatMapper;
         this.seatRowRepository = seatRowRepository;
+        this.eventService = eventService;
     }
 
     @Override
@@ -145,6 +148,8 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
             throw new ValidationException("Bought Entries cannot be below 0 - data inconsistency error");
         }
         seatRepository.save(seat);
+        SeatRow seatRow = seatRowRepository.getReferenceById(seat.getSeatrowId());
+        eventService.incrementSoldTickets(seatRow.getHallPlanId());
         return true;
     }
 
@@ -209,6 +214,10 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
         seat.setStatus(HallPlanSeatStatus.FREE);
         seat.setBoughtNr(seat.getBoughtNr() - 1L);
         seatRepository.save(seat);
+
+        SeatRow seatRow = seatRowRepository.getReferenceById(seat.getSeatrowId());
+        eventService.decrementSoldTickets(seatRow.getHallPlanId());
+
         return true;
     }
 

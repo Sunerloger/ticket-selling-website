@@ -3,8 +3,10 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import jakarta.persistence.LockModeType;
 import jakarta.xml.bind.ValidationException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.repository.Lock;
 
 import java.time.LocalDate;
 
@@ -55,4 +57,9 @@ public interface EventService {
     EventDetailDto getEventFromHallplanId(Long hallplanId);
 
     PerformanceDto getPerformanceFromHallplanId(Long hallplanId);
+
+    void incrementSoldTickets(Long hallplanId);
+
+    @Lock(LockModeType.OPTIMISTIC)
+    void decrementSoldTickets(Long hallplanId);
 }
