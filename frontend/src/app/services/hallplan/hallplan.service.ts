@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Globals } from '../../global/globals';
 import { Hallplan, PersistedHallplan, PersistedSeat, PersistedSeatRow, Seat, SeatRow } from 'src/app/dtos/hallplan/hallplan';
 import { PersistedSection, Section } from 'src/app/dtos/hallplan/section';
-import {Observable} from 'rxjs';
-import {AbbreviatedHallplan} from '../../dtos/hallplan/abbreviatedHallplan';
+import { Observable } from 'rxjs';
+import { AbbreviatedHallplan } from '../../dtos/hallplan/abbreviatedHallplan';
 
 
 @Injectable({
@@ -19,17 +19,36 @@ export class HallplanService {
 
     getAllHallplans() {
         return this.http.get<Hallplan[]>(
-          `${this.baseUrl}`
+            `${this.baseUrl}`
         );
     }
 
-    getHallplanById(id: number){
+    searchHallplans(name: string, description: string, isTemplate: boolean) {
+        return this.http.get<PersistedHallplan[]>(
+            `${this.baseUrl}?name=${name}&description=${description}&isTemplate=${isTemplate}`
+        );
+    }
+
+    deleteHallPlan(id: number) {
+        return this.http.delete<void>(
+             `${this.baseUrl}/${id}`
+        );
+    }
+
+    createHallplan(hallplan: Hallplan) {
+        console.log(hallplan);
+        return this.http.post<Hallplan>(
+            `${this.baseUrl}`, hallplan
+        );
+    }
+
+    getHallplanById(id: number) {
         return this.http.get<PersistedHallplan>(
             `${this.baseUrl}/${id}`
         );
     }
 
-    createSeatrow(hallplanId: number, seatrow: SeatRow){
+    createSeatrow(hallplanId: number, seatrow: SeatRow) {
         return this.http.post<PersistedSeatRow>(
             `${this.baseUrl}/${hallplanId}/seatrows`,
             seatrow
@@ -42,7 +61,7 @@ export class HallplanService {
 
     */
 
-    createSeatsBulk(hallplanId: number, seatrowId: number, seats: Seat[]){
+    createSeatsBulk(hallplanId: number, seatrowId: number, seats: Seat[]) {
         return this.http.post<PersistedSeatRow>(
             `${this.baseUrl}/${hallplanId}/seatrows/${seatrowId}/seats/bulk`,
             {
@@ -60,7 +79,7 @@ export class HallplanService {
         );
     }
 
-    deleteSeat(hallplanId: number, seatrowId: number, seatId: number){
+    deleteSeat(hallplanId: number, seatrowId: number, seatId: number) {
         return this.http.delete<void>(
             `${this.baseUrl}/${hallplanId}/seatrows/${seatrowId}/seats/${seatId}`
         );
@@ -78,14 +97,14 @@ export class HallplanService {
         );
     }
 
-    createSection(hallplanId: number, section: Section){
+    createSection(hallplanId: number, section: Section) {
         return this.http.post<PersistedSection>(
             `${this.baseUrl}/${hallplanId}/sections`,
             section
         );
     }
 
-    deleteSection( sectionId: number){
+    deleteSection(sectionId: number) {
         return this.http.delete<PersistedSection>(
             `${this.baseUrl}/sections/${sectionId}`
         );
@@ -97,31 +116,31 @@ export class HallplanService {
      * @param hallplanId id of hallplan
      * @param seatrowId id of seatrow
      */
-    deleteSeatrow(hallplanId: number, seatrowId: number){
+    deleteSeatrow(hallplanId: number, seatrowId: number) {
         return this.http.delete<void>(
             `${this.baseUrl}/${hallplanId}/seatrows/${seatrowId}`
         );
     }
 
-  /**
-   * Get Roomplans by pages.
-   *
-   * @param pageIndex index of the searched for page
-   */
-  getRoomplans(pageIndex: number): Observable<AbbreviatedHallplan[]> {
-    let params: HttpParams = new HttpParams();
-    params = params.set('pageIndex', pageIndex);
-    return this.http.get<AbbreviatedHallplan[]>(this.baseUrl+'/search', {params});
-  }
+    /**
+     * Get Roomplans by pages.
+     *
+     * @param pageIndex index of the searched for page
+     */
+    getRoomplans(pageIndex: number): Observable<AbbreviatedHallplan[]> {
+        let params: HttpParams = new HttpParams();
+        params = params.set('pageIndex', pageIndex);
+        return this.http.get<AbbreviatedHallplan[]>(this.baseUrl + '/search', { params });
+    }
 
-  /**
-   * Get a AbbreviatedHallplan by its id.
-   *
-   * @param id the id of the needed hallplan
-   */
-  getByIdAbbreviated(id: number): Observable<AbbreviatedHallplan> {
-    let params: HttpParams = new HttpParams();
-    params = params.set('id', id);
-    return this.http.get<AbbreviatedHallplan>(this.baseUrl+'/byId', {params});
-  }
+    /**
+     * Get a AbbreviatedHallplan by its id.
+     *
+     * @param id the id of the needed hallplan
+     */
+    getByIdAbbreviated(id: number): Observable<AbbreviatedHallplan> {
+        let params: HttpParams = new HttpParams();
+        params = params.set('id', id);
+        return this.http.get<AbbreviatedHallplan>(this.baseUrl + '/byId', { params });
+    }
 }

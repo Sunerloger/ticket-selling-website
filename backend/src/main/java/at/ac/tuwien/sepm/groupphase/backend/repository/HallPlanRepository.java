@@ -36,10 +36,13 @@ public interface HallPlanRepository extends JpaRepository<HallPlan, Long> {
     @Query("SELECT s.section FROM HallPlan hp JOIN hp.seatRows sr JOIN sr.seats s WHERE hp.id = :hallPlanId")
     List<HallPlanSection> findAllSectionsByHallPlanId(@Param("hallPlanId") Long hallPlanId);
 
-    @Query("SELECT s.section, COUNT(s.section) AS count FROM HallPlan hp JOIN hp.seatRows sr JOIN sr.seats s JOIN s.section WHERE hp.id = :hallPlanId AND sr.hallPlanId = :hallPlanId GROUP BY s.section.id")
+    @Query("SELECT s.section, COUNT(s.section) AS count FROM HallPlan hp JOIN hp.seatRows sr JOIN sr.seats s JOIN s.section WHERE hp.id = :hallPlanId AND s.type <> 'VACANT_SEAT' AND sr.hallPlanId = :hallPlanId GROUP BY s.section.id")
     List<Object[]> findAllSectionsByHallPlanIdCounts(@Param("hallPlanId") Long hallPlanId);
 
     @Query("SELECT sh, 0 AS count FROM HallPlanSection sh WHERE sh.hallPlanId = :hallPlanId")
     List<Object[]> findHallPlanCountsById(@Param("hallPlanId") Long hallPlanId);
+
+    @Query("SELECT h FROM HallPlan h WHERE h.name ILIKE %:name% AND h.description ILIKE %:description% AND h.isTemplate = :isTemplate ")
+    List<HallPlan> searchByNameAndDescriptionIgnoreCase(@Param("name") String name, @Param("description") String description, @Param("isTemplate") boolean isTemplate);
 
 }

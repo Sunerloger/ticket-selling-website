@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @EnableWebMvc
 @Transactional
-@ActiveProfiles({"test", "datagen"})
+@ActiveProfiles({"test", "hallplan"})
 public class HallPlanSeatTest {
 
     @Autowired
@@ -74,12 +74,16 @@ public class HallPlanSeatTest {
         seatDto.setOrderNr(7L);
         seatDto.setSeatNr(7L);
         seatDto.setCapacity(1L);
+        seatDto.setOrderNr(1L);
+        seatDto.setBoughtNr(0L);
+        seatDto.setReservedNr(0L);
+
         Optional<HallPlanSection> section = hallPlanSectionRepository.findById(-1L);
         if (section.isPresent()) {
             HallPlanSectionDto sectionDto = hallPlanSectionMapper.toDto(section.get());
             seatDto.setSection(sectionDto);
         }
-        seatDto.setSeatrowId(-1L);
+        seatDto.setSeatrowId(SEAT_ROW_ID);
         seatDto.setStatus(HallPlanSeatStatus.FREE);
         seatDto.setType(HallPlanSeatType.SEAT);
 
@@ -119,6 +123,8 @@ public class HallPlanSeatTest {
         seatDto.setSeatrowId(-1L);
         seatDto.setStatus(HallPlanSeatStatus.FREE);
         seatDto.setType(HallPlanSeatType.SEAT);
+        seatDto.setBoughtNr(0L);
+        seatDto.setReservedNr(0L);
 
         // Perform PUT request
         mockMvc.perform(MockMvcRequestBuilders.put(BASE_URL + HALL_PLAN_ID + "/seatrows/" + SEAT_ROW_ID + "/seats/" + SEAT_ID)

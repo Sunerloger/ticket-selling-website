@@ -8,6 +8,7 @@ import { PersistedSection, Section } from './section';
 export interface Hallplan {
     name: string;
     description: string;
+    isTemplate: boolean;
     seatRows: SeatRow[];
 }
 
@@ -41,6 +42,8 @@ export interface Seat {
     section: Section;
     capacity: number;
     orderNr: number;
+    boughtNr: number;
+    reservedNr: number;
 }
 
 export interface PersistedSeat extends Seat {
