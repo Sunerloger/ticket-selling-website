@@ -42,4 +42,7 @@ public interface HallPlanRepository extends JpaRepository<HallPlan, Long> {
     @Query("SELECT sh, 0 AS count FROM HallPlanSection sh WHERE sh.hallPlanId = :hallPlanId")
     List<Object[]> findHallPlanCountsById(@Param("hallPlanId") Long hallPlanId);
 
+    @Query("SELECT h FROM HallPlan h WHERE h.name ILIKE %:name% AND h.description ILIKE %:description%")
+    List<HallPlan> searchByNameAndDescriptionIgnoreCase(@Param("name") String name, @Param("description") String description);
+
 }

@@ -12,7 +12,7 @@ public interface PurchaseService {
      * Will only return the purchase if the purchase belongs to the given user.
      *
      * @param purchaseNr the id of the purchase to fetch
-     * @param userId the id of the user that tries to fetch the purchae
+     * @param userId     the id of the user that tries to fetch the purchae
      * @return the requested Purchase
      */
     PurchaseDto getPurchaseByPurchaseNr(Long purchaseNr, Long userId);
@@ -22,7 +22,7 @@ public interface PurchaseService {
      * Will only delete the purchase if the purchase belongs to the given user.
      *
      * @param purchaseNr the id of the purchase to fetch
-     * @param userId the id of the user that tries to delete the purchase
+     * @param userId     the id of the user that tries to delete the purchase
      */
     void deletePurchase(Long purchaseNr, Long userId);
 
@@ -38,7 +38,7 @@ public interface PurchaseService {
      * Creates a new Purchase with the items in the Cart of the User.
      * Sets the Seats from RESERVED to OCCUPIED.
      *
-     * @param userId the id of the user
+     * @param userId              the id of the user
      * @param purchaseCreationDto additional information of the user
      */
     void purchaseCartOfUser(Long userId, PurchaseCreationDto purchaseCreationDto);
@@ -51,8 +51,8 @@ public interface PurchaseService {
      * If a part of the Reservation is given this part is set to OCCUPIED while the rest is being set to FREE.
      *
      * @param purchaseCreationDto additional information of the user
-     * @param reservationNr the id of the reservation
-     * @param userId the id of the user
+     * @param reservationNr       the id of the reservation
+     * @param userId              the id of the user
      */
     void purchaseReservationOfUser(Long purchaseCreationDto, PurchaseCreationDto reservationNr, Long userId);
 

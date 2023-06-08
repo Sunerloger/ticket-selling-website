@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.AbbreviatedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.DetailedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatBulkDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatRowBulkDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSectionDto;
@@ -62,9 +63,9 @@ public class HallPlanEndpoint {
     @Secured("ROLE_USER")
     @GetMapping
     @Operation(summary = "Get a list of all hall plans", security = @SecurityRequirement(name = "apiKey"))
-    public List<HallPlanDto> findAll() {
+    public List<HallPlanDto> findAll(HallPlanSearchDto searchDto) {
         LOGGER.info("GET /api/v1/hallplans");
-        return hallPlanMapper.hallPlanToHallPlanDto(hallPlanService.findAll());
+        return hallPlanMapper.hallPlanToHallPlanDto(hallPlanService.searchHallPlans(searchDto));
     }
 
     @Secured("ROLE_ADMIN")
