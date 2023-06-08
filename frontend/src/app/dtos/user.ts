@@ -21,5 +21,10 @@ export class BlockUser {
   constructor(public email: string,
               public isLocked: boolean) {
   }
+}
 
+export interface ResetPasswordUser{
+  email: string;
+  newPassword: string;
+  token: string;
 }

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {BlockUser, User} from '../dtos/user';
+import {BlockUser, ResetPasswordUser, User} from '../dtos/user';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {AuthService} from './auth.service';
@@ -129,5 +129,17 @@ export class UserService {
     return this.http.put(this.adminBaseUri, unblockUser);
   }
 
+  resetPasswordMail(email: string): Observable<any> {
+    const resetUrl = `${this.adminBaseUri}/password-reset`;
+
+    console.log(email);
+    return this.http.post(resetUrl, email);
+  }
+
+  resetPassword(user: ResetPasswordUser): Observable<any> {
+    const resetPasswordUrl = `${this.userGetUri}/reset-password`;
+    console.log(user);
+    return this.http.post(resetPasswordUrl, user);
+  }
 }
 

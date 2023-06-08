@@ -55,6 +55,8 @@ import { TicketPdfPrintComponent } from './components/ticket-pdf-print/ticket-pd
 import { EventDetailComponent } from './components/event-detail/event-detail.component';
 import { AdminManagerComponent } from './components/admin-manager/admin-manager.component';
 import { PerformanceTicketSelctionComponent } from './components/performance-ticket-selction/performance-ticket-selction.component';
+import { AdminPasswordResetComponent } from './components/admin-password-reset/admin-password-reset.component';
+import { PasswordResetComponent } from './components/password-reset/password-reset.component';
 
 @NgModule({
   declarations: [
@@ -98,6 +100,8 @@ import { PerformanceTicketSelctionComponent } from './components/performance-tic
     EventDetailComponent,
     AdminManagerComponent,
     PerformanceTicketSelctionComponent,
+    AdminPasswordResetComponent,
+    PasswordResetComponent,
   ],
   imports: [
     BrowserModule,

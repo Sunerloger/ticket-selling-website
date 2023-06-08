@@ -12,6 +12,7 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const authUri = this.globals.backendUri + '/authentication';
     const registerUri = this.globals.backendUri + '/register';
+    const resetUri = this.globals.backendUri + '/edit/reset-password';
     // Do not intercept authentication requests
     if (req.url === authUri) {
       return next.handle(req);
@@ -19,6 +20,11 @@ export class AuthInterceptor implements HttpInterceptor {
 
     //Do no intercept register requests
     if (req.url === registerUri) {
+      return next.handle(req);
+    }
+
+    //Do no intercept reset password requests
+    if (req.url === resetUri) {
       return next.handle(req);
     }
 
