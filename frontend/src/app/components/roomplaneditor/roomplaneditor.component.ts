@@ -35,16 +35,16 @@ export class RoomplaneditorComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const hallplanId = params.get('id');
-      if(Number(hallplanId)){
+      if (Number(hallplanId)) {
         this.fetchHallplanWithId(Number(hallplanId));
         this.fetchAllSections(Number(hallplanId));
-      }else{
+      } else {
         this.router.navigate(['/hallplans']);
       }
     });
   }
 
-  fetchAllSections(hallplanId: number){
+  fetchAllSections(hallplanId: number) {
     this.service.getAllSections(hallplanId).subscribe({
       next: data => {
         this.sections = data;
@@ -59,7 +59,7 @@ export class RoomplaneditorComponent implements OnInit {
     });
   }
 
-  fetchHallplanWithId(id: number){
+  fetchHallplanWithId(id: number) {
     this.service.getHallplanById(id).subscribe({
       next: data => {
         this.roomplan = data;
@@ -116,7 +116,7 @@ export class RoomplaneditorComponent implements OnInit {
   }
 
   handleRemoveRow(payload: SeatRowDeletionEventPayload) {
-    const {rowNr, rowId} = payload;
+    const { rowNr, rowId } = payload;
 
     //update state
     const roomplanCloned = structuredClone(this.roomplan);
@@ -146,7 +146,7 @@ export class RoomplaneditorComponent implements OnInit {
     );
   }
 
-  createSection(section: Section): Promise<PersistedSection>{
+  createSection(section: Section): Promise<PersistedSection> {
     return new Promise((resolve, reject) => {
       this.service.createSection(this.roomplan.id, section).subscribe({
         next: data => {
@@ -163,13 +163,13 @@ export class RoomplaneditorComponent implements OnInit {
     });
   }
 
-  async handleAddSectionToSeats(affectedSeats: PersistedSeat[], section: Section){
+  async handleAddSectionToSeats(affectedSeats: PersistedSeat[], section: Section) {
     console.log('handleAddSectionToSeats', affectedSeats, section);
     //create section
     const createdSection = await this.createSection(section);
 
     //assign newly created section to all affected seats
-    for(const seat of affectedSeats){
+    for (const seat of affectedSeats) {
       seat.section = createdSection;
     }
 
@@ -190,7 +190,7 @@ export class RoomplaneditorComponent implements OnInit {
     });
   }
 
-  async updateSeatsBulk(updatedSeats: PersistedSeat[], errorMessage: string){
+  async updateSeatsBulk(updatedSeats: PersistedSeat[], errorMessage: string) {
     return new Promise((resolve, reject) => {
       this.service.updateSeatsBulk(
         this.roomplan.id,
@@ -210,7 +210,7 @@ export class RoomplaneditorComponent implements OnInit {
     });
   }
 
-  async createDefaultSection(): Promise<PersistedSection>{
+  async createDefaultSection(): Promise<PersistedSection> {
     const defaultSection: Section = {
       name: RESERVED_DEFAULT_SECTION_NAME,
       color: 'white',
@@ -221,6 +221,7 @@ export class RoomplaneditorComponent implements OnInit {
       this.service.createSection(this.roomplan.id, defaultSection).subscribe(
         {
           next: data => {
+            this.sections.push(data)
             resolve(data);
           },
           error: error => {
@@ -242,22 +243,22 @@ export class RoomplaneditorComponent implements OnInit {
    * section for every seat of a hallplan
    *
    */
- async retrieveDefaultSection(): Promise<PersistedSection|null>{
-  const defaultSectionName = 'Unassigned';
-   const defaultPersistedSection = this.sections.find(section => section.name === defaultSectionName);
+  async retrieveDefaultSection(): Promise<PersistedSection | null> {
+    const defaultSectionName = 'Unassigned';
+    const defaultPersistedSection = this.sections.find(section => section.name === defaultSectionName);
 
-   return new Promise(async (resolve, reject) => {
-     if (defaultPersistedSection) {
-       return resolve(defaultPersistedSection);
-     } else {
-      const defaultSection = await this.createDefaultSection();
-      if(defaultSection){
-        resolve(defaultSection);
-      }else{
-        reject('Error creating default section');
+    return new Promise(async (resolve, reject) => {
+      if (defaultPersistedSection) {
+        return resolve(defaultPersistedSection);
+      } else {
+        const defaultSection = await this.createDefaultSection();
+        if (defaultSection) {
+          resolve(defaultSection);
+        } else {
+          reject('Error creating default section');
+        }
       }
-     }
-   });
+    });
   }
 
   /**
@@ -275,25 +276,25 @@ export class RoomplaneditorComponent implements OnInit {
     const newSeats: Seat[] = [];
 
     // --- create seats that needs to be created
-    switch(direction){
+    switch (direction) {
       case CreationMenuDirection.left:
         // --- update seatNr of other seats when direction was left
         const updateSeats: PersistedSeat[] = [];
 
         let seatNrOfOldSeat = amountSeat + 1;
-        for(const seat of this.roomplan.seatRows[rowNr - 1].seats){
+        for (const seat of this.roomplan.seatRows[rowNr - 1].seats) {
           updateSeats.push({ ...seat, seatNr: seatNrOfOldSeat });
           seatNrOfOldSeat++;
         }
         console.log(updateSeats);
         // persist
-        if(updateSeats.length > 0){
+        if (updateSeats.length > 0) {
           await this.updateSeatsBulk(updateSeats, 'Failed to add seats. Please try again.');
         }
 
 
         // --- generate the new seat(s=) from the payload that needs to be persisted
-        switch(type){
+        switch (type) {
           case SeatType.seat:
           case SeatType.vacantSeat:
             let newSeatNr = 1;
@@ -378,11 +379,11 @@ export class RoomplaneditorComponent implements OnInit {
       }
       //update the seatnumbers after deletedSeat was found during previous iterations
       //... to optimize performance
-      if(deletedSeatIndex !== -1){
+      if (deletedSeatIndex !== -1) {
         //we already found the deletedseat after that all seats should have their seat nr adjusted
-        if(clonedSeats[i].type !== SeatType.vacantSeat){
+        if (clonedSeats[i].type !== SeatType.vacantSeat) {
           //a vacant seat always has the seatNr -1 so no need to update
-          if(clonedSeats[deletedSeatIndex].type !== SeatType.vacantSeat){
+          if (clonedSeats[deletedSeatIndex].type !== SeatType.vacantSeat) {
             //... verify that the deleted seat was not a vacant seat.
             //If a vacant seat was deleted, the successor seats should not have their seat number updated
             clonedSeats[i].seatNr--;
@@ -429,7 +430,7 @@ export class RoomplaneditorComponent implements OnInit {
     const defaultSection = await this.retrieveDefaultSection();
     let overridenSeatNr = seatNr;
 
-    switch(type){
+    switch (type) {
       case SeatType.seat:
         capacity = 1;
         break;
@@ -460,8 +461,8 @@ export class RoomplaneditorComponent implements OnInit {
         return 0;
       case CreationMenuDirection.right:
         let totalSeats = 0;
-        for(const seat of this.roomplan.seatRows[rowNr - 1].seats){
-          if(seat.type !== SeatType.vacantSeat){
+        for (const seat of this.roomplan.seatRows[rowNr - 1].seats) {
+          if (seat.type !== SeatType.vacantSeat) {
             totalSeats++;
           }
         }
@@ -469,7 +470,7 @@ export class RoomplaneditorComponent implements OnInit {
     }
   }
 
-  getLatestOrderNrFromDirectionAndRowNr(direction: CreationMenuDirection, rowNr: number){
+  getLatestOrderNrFromDirectionAndRowNr(direction: CreationMenuDirection, rowNr: number) {
     switch (direction) {
       case CreationMenuDirection.left:
         return 0;
