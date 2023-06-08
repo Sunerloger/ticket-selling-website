@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ResetPasswordUser;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import jakarta.xml.bind.ValidationException;
@@ -104,4 +105,6 @@ public interface UserService extends UserDetailsService {
     Long getUserIdFromToken(String token);
 
     ApplicationUser getUserById(Long id);
+
+    void resetPassword(ResetPasswordUser user);
 }

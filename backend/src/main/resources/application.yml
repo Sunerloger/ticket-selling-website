@@ -67,6 +67,16 @@ management:
 
 ---
 spring:
+  mail:
+    host: localhost
+    port: 8000
+    username: admin@email.com
+    password: password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
   config:
     activate:
       on-cloud-platform: kubernetes
