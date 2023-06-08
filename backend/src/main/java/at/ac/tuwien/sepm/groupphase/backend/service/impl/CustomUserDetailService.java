@@ -186,7 +186,7 @@ public class CustomUserDetailService implements UserService {
 
         String encodedPassword = passwordEncoder.encode(user.newPassword());
         applicationUserRepository.updatePassword(user.email(), encodedPassword);
-   
+
     }
 
 
