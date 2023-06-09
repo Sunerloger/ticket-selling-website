@@ -45,15 +45,26 @@ export class ImmutableseatComponent {
    * @returns false if this seat has status free otherwise true
    */
   isAvailable() {
-    return this.seat.boughtNr === 0 && this.seat.reservedNr === 0;
+    switch (this.seat.type) {
+      case SeatType.seat:
+      case SeatType.vacantSeat:
+        return this.seat.boughtNr === 0 && this.seat.reservedNr === 0;
+      case SeatType.standingSeat:
+        return this.seat.capacity !== (this.seat.boughtNr + this.seat.reservedNr);
+    }
+  }
+
+  getAvailableCapacity() {
+    return this.seat.capacity - (this.seat.boughtNr + this.seat.reservedNr);
   }
 
   calcWidthAndHeightAssCSSProperties(): Size {
-    const width = this.seat.capacity * 0.05;
-    const height = this.seat.capacity * 0.03;
+    const width = this.seat.capacity * 0.07;
+    const height = this.seat.capacity * 0.05;
     return {
       width,
       height
     };
   }
 }
+
