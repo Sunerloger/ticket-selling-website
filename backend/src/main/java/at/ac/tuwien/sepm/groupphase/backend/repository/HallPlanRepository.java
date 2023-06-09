@@ -1,11 +1,16 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSection;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,4 +50,6 @@ public interface HallPlanRepository extends JpaRepository<HallPlan, Long> {
     @Query("SELECT h FROM HallPlan h WHERE h.name ILIKE %:name% AND h.description ILIKE %:description% AND h.isTemplate = :isTemplate ")
     List<HallPlan> searchByNameAndDescriptionIgnoreCase(@Param("name") String name, @Param("description") String description, @Param("isTemplate") boolean isTemplate);
 
+    @NonNull
+    Page<HallPlan> findAll(@NonNull Specification<Event> specification, @NonNull Pageable pageable);
 }
