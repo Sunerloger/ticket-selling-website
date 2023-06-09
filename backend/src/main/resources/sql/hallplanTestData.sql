@@ -1,13 +1,12 @@
-INSERT INTO hallplan (id, name, description)
-VALUES
-    (-1, 'Hall A', 'Large concert hall'),
-    (-2, 'Hall B', 'Intimate theater'),
-    (-3, 'Hall C', 'Open-air amphitheater'),
-    (-4, 'Hall D', 'Conference center'),
-    (-5, 'Hall E', 'Sports arena'),
-    (-6, 'Hall F', 'Small music venue'),
-    (-7, 'Hall G', 'Cinema complex'),
-    (-8, 'Hall H', 'Museum exhibition space');
+INSERT INTO hallplan (id, name, description, is_template)
+VALUES (-1, 'Hall A', 'Large concert hall', true),
+       (-2, 'Hall B', 'Intimate theater', true),
+       (-3, 'Hall C', 'Open-air amphitheater', true),
+       (-4, 'Hall D', 'Conference center', true),
+       (-5, 'Hall E', 'Sports arena', true),
+       (-6, 'Hall F', 'Small music venue', false),
+       (-7, 'Hall G', 'Cinema complex', false),
+       (-8, 'Hall H', 'Museum exhibition space', true);
 
 INSERT INTO seatrow (id, row_nr, hallplan_id)
 VALUES
