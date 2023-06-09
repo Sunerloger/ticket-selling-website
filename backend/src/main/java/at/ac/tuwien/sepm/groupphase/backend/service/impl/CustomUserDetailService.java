@@ -180,13 +180,17 @@ public class CustomUserDetailService implements UserService {
     public void resetPassword(ResetPasswordUser user) {
         PasswordResetToken actualToken = tokenRepository.getTokenByEmail(user.email());
 
+        //Check if the token which was received through email is the same as the one saved in the database
         if (!actualToken.getToken().equals(user.token())) {
             throw new InsufficientAuthenticationException("Token are not equal");
         }
 
+        //Update user with new encoded password
         String encodedPassword = passwordEncoder.encode(user.newPassword());
         applicationUserRepository.updatePassword(user.email(), encodedPassword);
 
+        //When password is successfully changed delete the token entry
+        tokenRepository.deleteByEmail(user.email());
     }
 
 

@@ -71,8 +71,6 @@ spring:
   mail:
     host: localhost
     port: 25
-    username: admin@email.com
-    password: password
     properties:
       mail:
         smtp:

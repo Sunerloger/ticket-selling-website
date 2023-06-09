@@ -26,15 +26,22 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 
     public void initiatePasswordReset(String email) {
 
+        PasswordResetToken existingToken = tokenRepository.getTokenByEmail(email);
         String token = generateToken();
 
-        PasswordResetToken passwordResetToken = new PasswordResetToken();
-        passwordResetToken.setEmail(email);
-        passwordResetToken.setToken(token);
-        //This token expires 15minutes after creation
-        passwordResetToken.setExpirationTime(LocalDateTime.now().plusMinutes(15));
+        if (existingToken != null) {
+            existingToken.setToken(token);
+            existingToken.setExpirationTime(LocalDateTime.now().plusMinutes(15));
+            tokenRepository.save(existingToken);
+        } else {
+            PasswordResetToken passwordResetToken = new PasswordResetToken();
+            passwordResetToken.setEmail(email);
+            passwordResetToken.setToken(token);
+            //This token expires 15minutes after creation
+            passwordResetToken.setExpirationTime(LocalDateTime.now().plusMinutes(15));
+            tokenRepository.save(passwordResetToken);
+        }
 
-        tokenRepository.save(passwordResetToken);
 
         String passwordResetLink = "http://localhost:4200/#/reset-password?token=" + token;
         emailService.sendPasswordResetMail(email, passwordResetLink, token);

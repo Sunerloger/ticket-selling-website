@@ -30,4 +30,5 @@ public interface TokenRepository extends JpaRepository<PasswordResetToken, Long>
      */
     @Transactional
     void deleteByEmail(String email);
+
 }
