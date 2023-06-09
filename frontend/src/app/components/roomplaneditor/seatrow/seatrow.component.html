@@ -27,7 +27,7 @@
                 [showSeatNr]="this.showSeatNr" />
             <!-- Immutable Seat -->
             <app-immutableseat (seatSelectionChangeEvent)="this.seatSelectionChangeEvent.emit($event)"
-                *ngIf="renderAsImmutable === true" [seat]="seat" />
+                *ngIf="renderAsImmutable === true" [seat]="seat" [rowNr]="this.seatRow.rowNr" />
         </div>
     </div>
     <!-- Plus Btn -->
