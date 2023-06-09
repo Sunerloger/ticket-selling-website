@@ -50,12 +50,12 @@ export class ImmutableseatComponent {
       case SeatType.vacantSeat:
         return this.seat.boughtNr === 0 && this.seat.reservedNr === 0;
       case SeatType.standingSeat:
-        return this.seat.capacity !== (this.seat.boughtNr + this.seat.reservedNr)
+        return this.seat.capacity !== (this.seat.boughtNr + this.seat.reservedNr);
     }
   }
 
   getAvailableCapacity() {
-    return this.seat.capacity - (this.seat.boughtNr + this.seat.reservedNr)
+    return this.seat.capacity - (this.seat.boughtNr + this.seat.reservedNr);
   }
 
   calcWidthAndHeightAssCSSProperties(): Size {
