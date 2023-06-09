@@ -73,7 +73,7 @@ export class SectionmanagerComponent implements OnInit, OnChanges {
           this.notification.error(errorMessage, 'Could not update section ' + error);
         }
       }
-    )
+    );
   }
 
   initByHallplanId() {

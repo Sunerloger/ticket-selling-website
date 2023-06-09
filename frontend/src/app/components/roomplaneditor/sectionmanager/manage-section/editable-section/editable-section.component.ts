@@ -13,7 +13,7 @@ export class EditableSectionComponent {
   @Output() deleteSectionEvent = new EventEmitter<PersistedSection['id']>();
   @Output() updateSectionEvent = new EventEmitter<PersistedSection>();
 
-  isInEditMode: boolean = false;
+  isInEditMode = false;
 
   name = '';
   price = 0;
