@@ -29,13 +29,16 @@ export class AdminPasswordResetComponent {
 
     const email = this.passwordResetForm.controls.email.value;
 
-    //TODO: Change to observable
-    this.userService.sendResetMailAdmin(email).subscribe(() => {
-        //success
-      },
-      (error) => {
-        //error
-      });
+    const observable = this.userService.sendResetMailAdmin(email);
+    observable.subscribe({
+        next: () => {
+          this.notification.success('Reset Email successfully sent!');
+        },
+        error: err => {
+          this.notification.error('Failed to send reset email');
+        }
+      }
+    );
   }
 
 
