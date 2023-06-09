@@ -1,12 +1,16 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PasswordResetToken;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ApplicationUserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TokenRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.PasswordResetService;
+import org.hibernate.annotations.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.awt.geom.NoninvertibleTransformException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -20,12 +24,15 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     @Autowired
     private EmailServiceImpl emailService;
 
-    //TODO: Store the token in the database
     @Autowired
     private TokenRepository tokenRepository;
 
     public void initiatePasswordReset(String email) {
 
+        ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(email);
+        if(applicationUser == null){
+            throw new NotFoundException("No user with email");
+        }
         PasswordResetToken existingToken = tokenRepository.getTokenByEmail(email);
         String token = generateToken();
 
