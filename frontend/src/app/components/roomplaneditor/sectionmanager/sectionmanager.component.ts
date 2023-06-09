@@ -59,6 +59,23 @@ export class SectionmanagerComponent implements OnInit, OnChanges {
       );
   }
 
+
+  persistUpdatedSection(section: PersistedSection) {
+    this.service.updateSection(this.roomplan.id, section.id, section).subscribe(
+      {
+        next: () => {
+          this.fetchAllSections(Number(this.roomplan.id));
+        },
+        error: (error) => {
+          const errorMessage = error.status === 0
+            ? 'Server not reachable'
+            : error.message.message;
+          this.notification.error(errorMessage, 'Could not update section ' + error);
+        }
+      }
+    );
+  }
+
   initByHallplanId() {
     this.route.paramMap.subscribe(params => {
       const hallplanId = params.get('id');
@@ -70,7 +87,7 @@ export class SectionmanagerComponent implements OnInit, OnChanges {
     });
   }
 
-  handleDeleteSection(sectionId: number){
+  handleDeleteSection(sectionId: number) {
     const deletionIndex = this.sections.findIndex(section => section.id === sectionId);
 
     //persist deletion

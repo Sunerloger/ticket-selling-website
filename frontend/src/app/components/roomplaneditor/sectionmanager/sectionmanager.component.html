@@ -13,15 +13,10 @@
 </div>
 
 <div class="content">
-    <app-create-section 
-        *ngIf="sectionpage === submenuPageEnum.addSection" 
-        [roomplan]="this.roomplan"
-        (createSectionEvent)="this.createSectionEvent.emit($event)"
-    />
+    <app-create-section *ngIf="sectionpage === submenuPageEnum.addSection" [roomplan]="this.roomplan"
+        (createSectionEvent)="this.createSectionEvent.emit($event)" />
 
-    <app-manage-section 
-        [sections]="this.sections"
-        (deleteSectionEvent)="this.handleDeleteSection($event)"
-        *ngIf="sectionpage === submenuPageEnum.manageSection" 
-    />
+    <app-manage-section [sections]="this.sections" (deleteSectionEvent)="this.handleDeleteSection($event)"
+        *ngIf="sectionpage === submenuPageEnum.manageSection"
+        (updateSectionEvent)="this.persistUpdatedSection($event)" />
 </div>

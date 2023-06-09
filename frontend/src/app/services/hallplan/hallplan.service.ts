@@ -31,7 +31,7 @@ export class HallplanService {
 
     deleteHallPlan(id: number) {
         return this.http.delete<void>(
-             `${this.baseUrl}/${id}`
+            `${this.baseUrl}/${id}`
         );
     }
 
@@ -79,6 +79,13 @@ export class HallplanService {
         );
     }
 
+    updateSeat(hallplanId: number, seats: PersistedSeat) {
+        return this.http.put<PersistedSeatRow>(
+            `${this.baseUrl}/${hallplanId}/seats`,
+            seats
+        );
+    }
+
     deleteSeat(hallplanId: number, seatrowId: number, seatId: number) {
         return this.http.delete<void>(
             `${this.baseUrl}/${hallplanId}/seatrows/${seatrowId}/seats/${seatId}`
@@ -103,6 +110,14 @@ export class HallplanService {
             section
         );
     }
+
+    updateSection(hallplanId: number, sectionId: number, section: Section) {
+        return this.http.put<PersistedSection>(
+            `${this.baseUrl}/${hallplanId}/sections/${sectionId}`,
+            section
+        );
+    }
+
 
     deleteSection(sectionId: number) {
         return this.http.delete<PersistedSection>(

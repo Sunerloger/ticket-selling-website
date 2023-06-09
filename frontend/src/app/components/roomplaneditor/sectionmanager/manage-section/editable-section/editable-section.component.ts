@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { DetailedPersistedSection, PersistedSection, RESERVED_DEFAULT_SECTION_NAME } from 'src/app/dtos/hallplan/section';
+import { HallplanService } from 'src/app/services/hallplan/hallplan.service';
 
 @Component({
   selector: 'app-editable-section',
@@ -9,6 +11,9 @@ import { DetailedPersistedSection, PersistedSection, RESERVED_DEFAULT_SECTION_NA
 export class EditableSectionComponent {
   @Input() section: DetailedPersistedSection;
   @Output() deleteSectionEvent = new EventEmitter<PersistedSection['id']>();
+  @Output() updateSectionEvent = new EventEmitter<PersistedSection>();
+
+  isInEditMode = false;
 
   name = '';
   price = 0;
@@ -23,8 +28,8 @@ export class EditableSectionComponent {
   handleNameInputChange(updatedName: string) {
     if (updatedName.length === 0) {
       this.nameErrMessage = 'Name is mandatory';
-    }else{
-      this.nameErrMessage ='';
+    } else {
+      this.nameErrMessage = '';
     }
     this.name = updatedName;
   }
@@ -50,6 +55,19 @@ export class EditableSectionComponent {
       this.priceErrMessage = 'Price is mandatory';
     } else {
       this.priceErrMessage = 'Invalid price, may only contain up to two decimal points or none';
+    }
+  }
+
+  persistNewPrice() {
+    let updatedPrice = this.price;
+    if (updatedPrice === 0) {
+      updatedPrice = this.section.price;
+    }
+    if (this.priceErrMessage.length === 0) {
+      this.updateSectionEvent.emit({
+        ...this.section,
+        price: updatedPrice
+      });
     }
   }
 
