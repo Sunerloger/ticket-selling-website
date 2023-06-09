@@ -14,8 +14,6 @@ public class EmailConfig {
 
         javaMailSender.setHost("localhost");
         javaMailSender.setPort(25);
-        javaMailSender.setUsername("Username");
-        javaMailSender.setPassword("password");
         return javaMailSender;
     }
 }

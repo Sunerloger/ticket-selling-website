@@ -66,10 +66,11 @@ management:
         enabled: true
 
 ---
+
 spring:
   mail:
     host: localhost
-    port: 8000
+    port: 25
     username: admin@email.com
     password: password
     properties:

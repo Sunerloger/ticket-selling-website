@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ResetPasswordUser;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDeleteDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
+import at.ac.tuwien.sepm.groupphase.backend.service.PasswordResetService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.security.PermitAll;
@@ -35,11 +36,13 @@ public class ApplicationUserEditEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService;
     private final UserMapper userMapper;
+    private final PasswordResetService passwordResetService;
 
     @Autowired
-    public ApplicationUserEditEndpoint(UserService userService, UserMapper userMapper) {
+    public ApplicationUserEditEndpoint(UserService userService, UserMapper userMapper, PasswordResetService passwordResetService) {
         this.userService = userService;
         this.userMapper = userMapper;
+        this.passwordResetService = passwordResetService;
     }
 
     @DeleteMapping
@@ -73,5 +76,13 @@ public class ApplicationUserEditEndpoint {
     public void resetPassword(@RequestBody ResetPasswordUser user) {
         LOGGER.info("Reseting password for user {}", user);
         userService.resetPassword(user);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PermitAll
+    @PostMapping("send-reset-mail")
+    public void sendResetMail(@RequestBody String email) {
+        LOGGER.info("Sending Reset Mail for user {}", email);
+        passwordResetService.initiatePasswordReset(email);
     }
 }

@@ -5,11 +5,11 @@ import {AuthService} from '../../services/auth.service';
 import {ToastrService} from 'ngx-toastr';
 
 @Component({
-  selector: 'app-admin-password-reset',
-  templateUrl: './admin-password-reset.component.html',
-  styleUrls: ['./admin-password-reset.component.scss']
+  selector: 'app-user-password-reset',
+  templateUrl: './user-password-reset.component.html',
+  styleUrls: ['./user-password-reset.component.scss']
 })
-export class AdminPasswordResetComponent {
+export class UserPasswordResetComponent {
 
   passwordResetForm: FormGroup;
 
@@ -30,13 +30,12 @@ export class AdminPasswordResetComponent {
     const email = this.passwordResetForm.controls.email.value;
 
     //TODO: Change to observable
-    this.userService.sendResetMailAdmin(email).subscribe(() => {
+    this.userService.sendResetMailUser(email).subscribe(() => {
         //success
       },
       (error) => {
         //error
       });
   }
-
 
 }

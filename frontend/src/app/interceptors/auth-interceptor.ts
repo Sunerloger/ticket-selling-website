@@ -13,6 +13,7 @@ export class AuthInterceptor implements HttpInterceptor {
     const authUri = this.globals.backendUri + '/authentication';
     const registerUri = this.globals.backendUri + '/register';
     const resetUri = this.globals.backendUri + '/edit/reset-password';
+    const resetUriUser = this.globals.backendUri + '/edit/send-reset-mail';
     // Do not intercept authentication requests
     if (req.url === authUri) {
       return next.handle(req);
@@ -25,6 +26,10 @@ export class AuthInterceptor implements HttpInterceptor {
 
     //Do no intercept reset password requests
     if (req.url === resetUri) {
+      return next.handle(req);
+    }
+
+    if (req.url === resetUriUser) {
       return next.handle(req);
     }
 

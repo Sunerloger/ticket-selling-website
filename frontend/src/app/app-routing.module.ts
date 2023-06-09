@@ -28,6 +28,7 @@ import {
 } from './components/performance-ticket-selction/performance-ticket-selction.component';
 import {AdminPasswordResetComponent} from './components/admin-password-reset/admin-password-reset.component';
 import {PasswordResetComponent} from './components/password-reset/password-reset.component';
+import {UserPasswordResetComponent} from "./components/user-password-reset/user-password-reset.component";
 
 
 const routes: Routes = [
@@ -53,6 +54,7 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'edit', canActivate: [AuthGuard], component: EditComponent},
   {path: 'reset-password', component: PasswordResetComponent},
+  {path: 'send-reset-mail', component: UserPasswordResetComponent},
   {path: 'reservations', canActivate: [AuthGuard], component: ReservationsComponent},
   {path: 'reservations/:id/checkout', canActivate: [AuthGuard], component: ReservationCheckoutComponent},
 
