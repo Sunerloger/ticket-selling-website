@@ -12,7 +12,7 @@
 
       <span class="event-info">Section: <b> {{ seat.sectionName}}</b></span>
       <span class="event-info">Row: <b> {{ seat.seatRowNr }}</b></span>
-      <span class="event-info">Seat:  <b> {{ seat.seatNr }}</b></span>
+      <span class="event-info">Seat:  <b> {{ seat.type === 'STANDING_SEAT' ? '/ (standing room)' : seat.seatNr }}</b></span>
     </div>
 
   </div>

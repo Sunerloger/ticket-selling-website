@@ -77,7 +77,7 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public void deleteItem(Long itemId, Long userId) {
-        Cart cart = cartRepository.findCartBySeatIdAndUserId(itemId, userId);
+        Cart cart = cartRepository.findTopBySeatIdAndUserId(itemId, userId);
         if (cart == null) {
             return;
         }
