@@ -90,7 +90,7 @@ public class CartEndpoint {
             return ResponseEntity.internalServerError().body("User could not be resolved!");
         }
 
-        this.service.deleteItem(id, userId);
+        this.service.deleteItem(id, userId, true);
         return ResponseEntity.noContent().build();
     }
 

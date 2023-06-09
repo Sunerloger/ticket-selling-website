@@ -37,8 +37,6 @@ public class CartServiceImpl implements CartService {
     @Override
     public void addItemList(List<SeatDto> seatDtoList, Long userId) throws NotFoundException {
         if (seatDtoList.isEmpty()) {
-            //TODO: add corresponding response
-            //TODO: Use correct Exception
             throw new NotFoundException();
         }
 
@@ -76,7 +74,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public void deleteItem(Long itemId, Long userId) {
+    public void deleteItem(Long itemId, Long userId, boolean freeSeat) {
         Cart cart = cartRepository.findTopBySeatIdAndUserId(itemId, userId);
         if (cart == null) {
             return;
@@ -84,9 +82,23 @@ public class CartServiceImpl implements CartService {
         if (!cart.getUserId().equals(userId)) {
             return;
         }
-
-        seatService.cancelReservation(itemId);
+        if (freeSeat) {
+            seatService.cancelReservation(itemId);
+        }
         cartRepository.deleteCartById(cart.getId());
+    }
+
+
+    @Override
+    public boolean itemBelongsToUserCart(Long itemId, Long userId) {
+        Cart cart = cartRepository.findTopBySeatIdAndUserId(itemId, userId);
+        if (cart == null) {
+            return false;
+        }
+        if (!cart.getUserId().equals(userId)) {
+            return false;
+        }
+        return true;
     }
 
 

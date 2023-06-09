@@ -130,6 +130,7 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
 
     @Override
     @Transactional
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public boolean purchaseReservedSeat(Long seatId) {
         Optional<HallPlanSeat> optionalHallPlanSeat = seatRepository.getSeatById(seatId);
         if (optionalHallPlanSeat.isEmpty()) {
@@ -140,13 +141,16 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
             return false;
         }
 
-        if (seat.getReservedNr() <= 0) {
+        if (seat.getReservedNr().equals(0L)) {
             LOGGER.error("User tries to buy reserved seat but there are no reserved seats persisted.");
-            throw new ValidationException("Bought Entries cannot be below 0 - data inconsistency error");
+            //throw new ValidationException("Bought Entries cannot be below 0 - data inconsistency error");
+            return false;
         }
 
+        LOGGER.error(seat.getReservedNr().toString());
         seat.setBoughtNr(seat.getBoughtNr() + 1L);
         seat.setReservedNr(seat.getReservedNr() - 1L);
+        LOGGER.error(seat.getReservedNr().toString());
 
         seatRepository.save(seat);
         SeatRow seatRow = seatRowRepository.getReferenceById(seat.getSeatrowId());
@@ -178,6 +182,7 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
 
     @Override
     @Transactional
+    @Lock(LockModeType.OPTIMISTIC)
     public boolean cancelReservation(Long seatId) {
         Optional<HallPlanSeat> optionalHallPlanSeat = seatRepository.getSeatById(seatId);
         if (optionalHallPlanSeat.isEmpty()) {
@@ -199,6 +204,7 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
 
     @Override
     @Transactional
+    @Lock(LockModeType.OPTIMISTIC)
     public boolean freePurchasedSeat(Long seatId) {
         Optional<HallPlanSeat> optionalHallPlanSeat = seatRepository.getSeatById(seatId);
         if (optionalHallPlanSeat.isEmpty()) {

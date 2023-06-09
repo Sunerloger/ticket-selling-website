@@ -115,9 +115,13 @@ public class PurchaseServiceImpl implements PurchaseService {
             return;
         }
         for (SeatDto seatDto : purchaseCreationDto.getSeats()) {
+            if (!cartService.itemBelongsToUserCart(seatDto.getId(), userId)) {
+                continue;
+            }
+
             if (seatService.purchaseReservedSeat(seatDto.getId())) {
                 ticketList.add(new Ticket(seatDto.getId()));
-                cartService.deleteItem(seatDto.getId(), userId);
+                cartService.deleteItem(seatDto.getId(), userId, false);
             }
         }
 
