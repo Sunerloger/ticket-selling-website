@@ -32,10 +32,10 @@ export class AdminPasswordResetComponent {
     const observable = this.userService.sendResetMailAdmin(email);
     observable.subscribe({
         next: () => {
-          this.notification.success('Reset Email successfully sent!');
+          this.notification.success('An email with instructions to reset the password has been sent to the provided email address.');
         },
         error: err => {
-          this.notification.error('Failed to send reset email');
+          this.notification.error('Failed to sent email!');
         }
       }
     );

@@ -30,8 +30,8 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     public void initiatePasswordReset(String email) {
 
         ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(email);
-        if(applicationUser == null){
-            throw new NotFoundException("No user with email");
+        if (applicationUser == null) {
+            return;
         }
         PasswordResetToken existingToken = tokenRepository.getTokenByEmail(email);
         String token = generateToken();
