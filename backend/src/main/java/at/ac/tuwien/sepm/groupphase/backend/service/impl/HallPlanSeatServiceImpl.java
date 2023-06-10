@@ -143,14 +143,11 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
 
         if (seat.getReservedNr().equals(0L)) {
             LOGGER.error("User tries to buy reserved seat but there are no reserved seats persisted.");
-            //throw new ValidationException("Bought Entries cannot be below 0 - data inconsistency error");
             return false;
         }
 
-        LOGGER.error(seat.getReservedNr().toString());
         seat.setBoughtNr(seat.getBoughtNr() + 1L);
         seat.setReservedNr(seat.getReservedNr() - 1L);
-        LOGGER.error(seat.getReservedNr().toString());
 
         seatRepository.save(seat);
         SeatRow seatRow = seatRowRepository.getReferenceById(seat.getSeatrowId());
