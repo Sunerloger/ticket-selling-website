@@ -63,7 +63,8 @@ public class NewsEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
     @Operation(summary = "Get list of news without details", security = @SecurityRequirement(name = "apiKey"))
-    public List<AbbreviatedNewsDto> findAll(@RequestParam(defaultValue = "0") int pageIndex, @RequestParam boolean loadAlreadyRead,
+    public List<AbbreviatedNewsDto> findAll(@RequestParam(defaultValue = "0") int pageIndex,
+                                            @RequestParam(defaultValue = "false") boolean loadAlreadyRead,
                                             @RequestHeader(value = "Authorization", required = false) String token) {
         LOGGER.info("GET {}?pageIndex={}&loadAlreadyRead={}", BASE_PATH, pageIndex, loadAlreadyRead);
 
