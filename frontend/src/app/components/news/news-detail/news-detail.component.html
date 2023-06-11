@@ -40,7 +40,7 @@
         </button>
       </div>
       <div class="col-auto pt-2" *ngIf="isAdmin()">
-        <button type="button" class="btn btn-danger delete-button" (click)="onDelete()">
+        <button type="button" class="btn btn-danger delete-button" data-toggle="modal" data-target="#deleteModal">
           Delete
         </button>
       </div>
@@ -55,6 +55,26 @@
     <div class="col-auto text-dark mt-4">
       <small>Created on {{dateOfCreationAsLocaleDate()}}
         at {{timeOfCreationAsLocaleTime()}}</small>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Really delete this news?</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+        </button>
+      </div>
+      <div class="modal-body">
+        If you delete this news, it is permanently gone and can not be restored.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="onDelete()">Delete News</button>
+      </div>
     </div>
   </div>
 </div>
