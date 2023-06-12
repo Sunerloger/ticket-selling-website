@@ -31,6 +31,8 @@ import java.lang.invoke.MethodHandles;
 @RequestMapping(value = ApplicationUserEditEndpoint.BASE_PATH)
 public class ApplicationUserEditEndpoint {
 
+
+    //TODO: change URI
     static final String BASE_PATH = "/api/v1/edit";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
