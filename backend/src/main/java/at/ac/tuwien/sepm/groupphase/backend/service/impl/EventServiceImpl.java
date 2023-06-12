@@ -27,7 +27,6 @@ import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -134,4 +133,17 @@ public class EventServiceImpl implements EventService {
         return new PerformanceDto(event, eventDate);
     }
 
+    @Override
+    public Page<Event> findPageByTitleSubstring(String searchString, int number) {
+
+        Pageable pageable = PageRequest.of(0, number, Sort.by("title").ascending());
+        Specification<Event> specification = (root, query, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.isTrue(root.get("id"));
+            if (searchString != null) {
+                predicate = criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), "%" + searchString.toLowerCase() + "%");
+            }
+            return predicate;
+        };
+        return eventRepository.findAll(specification, pageable);
+    }
 }

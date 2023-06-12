@@ -55,4 +55,13 @@ public interface EventService {
     EventDetailDto getEventFromHallplanId(Long hallplanId);
 
     PerformanceDto getPerformanceFromHallplanId(Long hallplanId);
+
+    /**
+     * Finds a pages of events by a substring of the title.
+     *
+     * @param searchString the partial string that should be matched in the title of the event
+     * @param number the maximum number of returned events
+     * @return page of max {@code number} events sorted alphabetically ascending
+     */
+    Page<Event> findPageByTitleSubstring(String searchString, int number);
 }

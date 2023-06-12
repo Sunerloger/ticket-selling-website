@@ -87,14 +87,14 @@ export class EventService {
   /**
    * Get {@code number} Events by title.
    *
-   * @param search the partial string that should be matched
+   * @param searchString the partial string that should be matched
    * @param number the maximum number of returned events
    *
    * @return Observable of event list
    */
-  searchEventByName(search: string, number: number): Observable<Event[]> {
+  searchEventByName(searchString: string, number: number): Observable<Event[]> {
     let params: HttpParams = new HttpParams();
-    params = params.set('search', search);
+    params = params.set('searchString', searchString);
     params = params.set('number', number);
     return this.http.get<Event[]>(
       baseUri + '/search',
