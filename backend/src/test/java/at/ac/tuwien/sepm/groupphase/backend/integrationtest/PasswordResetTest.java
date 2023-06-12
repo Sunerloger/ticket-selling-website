@@ -4,8 +4,10 @@ import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserCreateDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ApplicationUserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,17 +36,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class AdminCreateEndpointTest {
+public class PasswordResetTest {
 
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private UserMapper userMapper;
 
     @Autowired
     private JwtTokenizer jwtTokenizer;
@@ -51,7 +48,7 @@ public class AdminCreateEndpointTest {
     @Autowired
     private SecurityProperties securityProperties;
 
-    static final String BASE_PATH = "/api/v1/admin";
+    static final String BASE_PATH_ADMIN = "/api/v1/admin";
 
 
     private final ApplicationUser applicationUser =
@@ -61,14 +58,12 @@ public class AdminCreateEndpointTest {
 
     @Transactional
     @Test
-    public void givenOneApplicationuser_whenSave_UserIsCreated() throws Exception {
+    public void testSendResetMail() throws Exception {
+        String email = "marty@email.com";
 
-        UserCreateDto userCreateDto = userMapper.entityToUserCreateDto(applicationUser);
-        String body = objectMapper.writeValueAsString(userCreateDto);
-
-        MvcResult mvcResult = this.mockMvc.perform(post(BASE_PATH)
+        MvcResult mvcResult = this.mockMvc.perform(post(BASE_PATH_ADMIN + "/send-reset-mail")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(body)
+                .content(email)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
             .andReturn();
@@ -76,7 +71,8 @@ public class AdminCreateEndpointTest {
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertAll(
-            () -> assertEquals(HttpStatus.CREATED.value(), response.getStatus())
+            () -> assertEquals(HttpStatus.OK.value(), response.getStatus())
         );
+
     }
 }

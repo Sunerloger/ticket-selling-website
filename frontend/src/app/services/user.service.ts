@@ -129,8 +129,8 @@ export class UserService {
     return this.http.put(this.adminBaseUri, unblockUser);
   }
 
-  sendResetMailAdmin(email: string): Observable<any> {
-    const resetUrl = `${this.adminBaseUri}/password-reset`;
+  resetPasswordMail(email: string): Observable<any> {
+    const resetUrl = `${this.adminBaseUri}/send-reset-mail`;
 
     console.log(email);
     return this.http.post(resetUrl, email);
