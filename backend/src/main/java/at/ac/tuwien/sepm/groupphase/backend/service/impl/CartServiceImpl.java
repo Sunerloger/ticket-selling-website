@@ -36,6 +36,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void addItemList(List<SeatDto> seatDtoList, Long userId) throws NotFoundException {
+
         if (seatDtoList.isEmpty()) {
             throw new NotFoundException();
         }
@@ -44,6 +45,9 @@ public class CartServiceImpl implements CartService {
             if (!seatService.doesSeatExist(seatDto.getId())) {
                 throw new NotFoundException();
             }
+        }
+
+        for (SeatDto seatDto : seatDtoList) {
             if (seatService.tryReserveSeat(seatDto.getId())) {
                 Cart cart = new Cart(userId, seatDto.getId());
                 cartRepository.save(cart);
@@ -55,17 +59,15 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public List<CartItemDto> getItems(Long userId) {
+
         List<CartItemDto> itemList = new ArrayList<>();
 
         List<Cart> cartItemList = cartRepository.findByUserId(userId);
         for (Cart cart : cartItemList) {
             HallPlanSeatDto hallPlanSeatDto = seatService.getSeatById(cart.getSeatId());
             SeatRowDto rowDto = seatRowService.getSeatRowById(hallPlanSeatDto.getSeatrowId());
-
             EventDetailDto eventDto = eventService.getEventFromHallplanId(rowDto.getHallPlanId());
-
             SeatDto seatDto = new SeatDto(hallPlanSeatDto, rowDto);
-
             itemList.add(new CartItemDto(seatDto, eventDto, cart.getId()));
         }
 

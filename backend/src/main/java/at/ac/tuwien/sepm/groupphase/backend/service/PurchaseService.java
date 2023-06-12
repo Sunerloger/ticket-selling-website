@@ -54,6 +54,6 @@ public interface PurchaseService {
      * @param reservationNr       the id of the reservation
      * @param userId              the id of the user
      */
-    void purchaseReservationOfUser(Long purchaseCreationDto, PurchaseCreationDto reservationNr, Long userId);
+    boolean purchaseReservationOfUser(Long purchaseCreationDto, PurchaseCreationDto reservationNr, Long userId);
 
 }

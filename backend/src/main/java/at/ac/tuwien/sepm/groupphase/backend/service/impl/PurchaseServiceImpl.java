@@ -14,7 +14,6 @@ import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
 import at.ac.tuwien.sepm.groupphase.backend.service.CartService;
 import at.ac.tuwien.sepm.groupphase.backend.service.ReservationService;
 import jakarta.transaction.Transactional;
-import jakarta.xml.bind.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,7 +105,6 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public void purchaseCartOfUser(Long userId, PurchaseCreationDto purchaseCreationDto) {
-        //TODO: verify request
         //TODO: check if items belong to user cart
 
         List<Ticket> ticketList = new ArrayList<>();
@@ -146,16 +144,14 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    public void purchaseReservationOfUser(Long reservationNr, PurchaseCreationDto purchaseCreationDto, Long userId) {
-        //TODO: verify request
+    public boolean purchaseReservationOfUser(Long reservationNr, PurchaseCreationDto purchaseCreationDto, Long userId) {
         //TODO: check if items belong to reservation
-
         List<Ticket> ticketList = new ArrayList<>();
 
         if (purchaseCreationDto.getSeats() == null) {
-            return;
-            //TODO: some kind of error
+            return false;
         }
+
         for (SeatDto seatDto : purchaseCreationDto.getSeats()) {
             if (seatService.purchaseReservedSeat(seatDto.getId())) {
                 ticketList.add(new Ticket(seatDto.getId()));
@@ -180,6 +176,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         }
         purchase.setTicketList(ticketList);
         repository.save(purchase);
+        return true;
     }
 
 }
