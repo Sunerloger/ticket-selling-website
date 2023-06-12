@@ -3,11 +3,15 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.repository.*;
+import jakarta.persistence.EntityManager;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -31,11 +35,15 @@ public class NewsRepositoryTest implements TestData {
     private NewsImageRepository newsImageRepository;
     @Autowired
     private EventRepository eventRepository;
-
+    @Autowired
+    private ApplicationUserRepository userRepository;
+    @Autowired
+    private EntityManager entityManager;
     private static final Event event = new Event();
 
     @BeforeEach
     public void clearDatabase() {
+        userRepository.deleteAll();
         newsRepository.deleteAll();
         newsImageRepository.deleteAll();
         eventRepository.deleteAll();
@@ -114,6 +122,56 @@ public class NewsRepositoryTest implements TestData {
     }
 
     @Test
+    public void givenNothing_whenSave3NewsOneRead_thenFindListWithTwoElementsAndFindTwoNews() {
+
+        News news1 = News.NewsBuilder.aNews()
+            .withTitle(TEST_NEWS_TITLE)
+            .withShortText(TEST_NEWS_SUMMARY)
+            .withFullText("")
+            .build();
+
+        News news2 = News.NewsBuilder.aNews()
+            .withTitle(TEST_NEWS_TITLE)
+            .withShortText(TEST_NEWS_SUMMARY)
+            .withFullText("")
+            .build();
+
+        News news3 = News.NewsBuilder.aNews()
+            .withTitle(TEST_NEWS_TITLE)
+            .withShortText(TEST_NEWS_SUMMARY)
+            .withFullText("")
+            .build();
+
+        newsRepository.save(news1);
+        newsRepository.save(news2);
+
+        // user is created in method because saving a user outside the method before adding the news would prevent jpa
+        // from accessing the new version
+        ApplicationUser user = new ApplicationUser();
+        user.setEmail(DEFAULT_USER);
+        user.setAdmin(false);
+
+        userRepository.save(user);
+
+        news3.addUser(user);
+        user.addNews(news3);
+
+        newsRepository.save(news3);
+
+        // write changes from cache to database
+        entityManager.flush();
+        // clear first level cache so that subsequent find calls hit the database
+        entityManager.clear();
+
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("createdAt").descending());
+
+        assertAll(
+            () -> assertEquals(1, newsRepository.findNewsByReadByUsersId(user.getId(), pageable).stream().toList().size()),
+            () -> assertEquals(2, newsRepository.findAllNotRead(user.getId(), pageable).stream().toList().size())
+        );
+    }
+
+    @Test
     public void givenNothing_whenSaveNewsWithBlankTitle_thenThrowException() {
         News news = News.NewsBuilder.aNews()
             .withTitle("       ")
@@ -151,5 +209,6 @@ public class NewsRepositoryTest implements TestData {
         assertThrows(ConstraintViolationException.class, () -> newsRepository.save(news));
     }
 
-    // getById and delete are JPA methods and therefore not tested in this layer
+    // getById, delete and findNewsByReadByUsersId are JPA methods and therefore not tested in this layer
+    // putRelation is realized only by jpa methods and therefore not tested in this layer
 }

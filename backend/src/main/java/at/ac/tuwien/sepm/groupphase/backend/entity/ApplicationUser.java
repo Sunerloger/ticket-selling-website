@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -72,7 +73,7 @@ public class ApplicationUser {
         joinColumns = @JoinColumn(name = "applicationuser_id"),
         inverseJoinColumns = @JoinColumn(name = "news_id")
     )
-    Set<News> readNews;
+    Set<News> readNews = new HashSet<>();
 
     public ApplicationUser() {
     }
