@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ApplicationUserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -44,6 +46,8 @@ public class AdminCreateEndpointTest {
     private ApplicationUserRepository applicationUserRepository;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
@@ -62,6 +66,33 @@ public class AdminCreateEndpointTest {
         new ApplicationUser("marty@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure", false,
             false);
 
+
+    @BeforeEach
+    public void beforeEach() {
+        String encodedPassword = passwordEncoder.encode(applicationUser.getPassword());
+        applicationUser.setPassword(encodedPassword);
+        applicationUserRepository.save(applicationUser);
+    }
+
+    @Transactional
+    @Test
+    public void testSendResetMail() throws Exception {
+        String email = "marty@email.com";
+
+        MvcResult mvcResult = this.mockMvc.perform(post(BASE_PATH + "/send-reset-mail")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(email)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertAll(
+            () -> assertEquals(HttpStatus.OK.value(), response.getStatus())
+        );
+
+    }
 
     @Transactional
     @Test

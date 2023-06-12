@@ -62,7 +62,7 @@ public class AdminCreateEndpoint {
 
     @ResponseStatus(HttpStatus.OK)
     @Secured({"ROLE_ADMIN"})
-    @PostMapping("password-reset")
+    @PostMapping("send-reset-mail")
     public void resetPassword(@RequestBody String email) {
         LOGGER.info("RESETING PASSWORD: {}", email);
         passwordResetService.initiatePasswordReset(email);

@@ -130,7 +130,7 @@ export class UserService {
   }
 
   resetPasswordMail(email: string): Observable<any> {
-    const resetUrl = `${this.adminBaseUri}/password-reset`;
+    const resetUrl = `${this.adminBaseUri}/send-reset-mail`;
 
     console.log(email);
     return this.http.post(resetUrl, email);
