@@ -36,7 +36,9 @@
             <app-ticket-pdf-print [ticket]="ticket"></app-ticket-pdf-print>
           </div>
         </div>
-
+      </div>
+      <div *ngIf="item.canceled">
+        <app-ticket-reversal-invoice-pdf-print [purchase]="item"></app-ticket-reversal-invoice-pdf-print>
       </div>
     </div>
     <div *ngIf="!item.canceled">
