@@ -25,6 +25,7 @@ import {EventDetailComponent} from './components/event-detail/event-detail.compo
 import {AdminManagerComponent} from './components/admin-manager/admin-manager.component';
 import {PerformanceTicketSelctionComponent} from './components/performance-ticket-selction/performance-ticket-selction.component';
 import { HallplanCreateComponent } from './components/hallplan-create/hallplan-create.component';
+import { TicketValidatorComponent } from './components/ticket-validator/ticket-validator.component';
 
 
 const routes: Routes = [
@@ -54,6 +55,7 @@ const routes: Routes = [
   {path: 'purchases', canActivate: [AuthGuard], component: PurchasesComponent},
   {path: 'purchases/:id', canActivate: [AuthGuard], component: PurchaseDetailComponent},
   {path: 'performance-tickets/:id', canActivate: [AuthGuard], component: PerformanceTicketSelctionComponent},
+  {path: 'ticket-validator/validate', canActivate: [AuthGuard], component: TicketValidatorComponent},
 
   {path: 'roomplan/:id/edit', canActivate: [AdminRouteGuard], component: RoomplaneditorComponent},
   {path: 'hallplans/:id/edit', canActivate: [AdminRouteGuard], component: RoomplaneditorComponent},
