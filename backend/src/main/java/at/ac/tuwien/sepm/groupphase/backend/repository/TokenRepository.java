@@ -24,9 +24,9 @@ public interface TokenRepository extends JpaRepository<PasswordResetToken, Long>
     PasswordResetToken getTokenByEmail(String email);
 
     /**
-     * Delete a Token entry by email
+     * Delete a Token entry by email.
      *
-     * @param email
+     * @param email the email of which the entry will be deleted
      */
     @Transactional
     void deleteByEmail(String email);

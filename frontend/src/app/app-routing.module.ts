@@ -28,7 +28,7 @@ import {
 } from './components/performance-ticket-selction/performance-ticket-selction.component';
 import {AdminPasswordResetComponent} from './components/admin-password-reset/admin-password-reset.component';
 import {PasswordResetComponent} from './components/password-reset/password-reset.component';
-import {UserPasswordResetComponent} from "./components/user-password-reset/user-password-reset.component";
+import {UserPasswordResetComponent} from './components/user-password-reset/user-password-reset.component';
 
 
 const routes: Routes = [
