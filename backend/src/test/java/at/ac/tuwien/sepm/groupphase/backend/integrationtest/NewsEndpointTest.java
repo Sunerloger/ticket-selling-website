@@ -34,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @ExtendWith(SpringExtension.class)
@@ -75,10 +76,10 @@ public class NewsEndpointTest implements TestData {
 
     @BeforeEach
     public void beforeEach() {
+        userRepository.deleteAll();
         newsRepository.deleteAll();
         newsImageRepository.deleteAll();
         eventRepository.deleteAll();
-        userRepository.deleteAll();
 
         event.setCategory("Rock");
         event.setArtist("Queen");
@@ -205,6 +206,141 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
+    public void given3NewsOneRead_whenFindAllReadAndFindAllNotRead_thenListWithSize1AndListWithSize2()
+        throws Exception {
+
+        News news1 = News.NewsBuilder.aNews()
+            .withTitle(TEST_NEWS_TITLE)
+            .withShortText(TEST_NEWS_SUMMARY)
+            .withFullText("")
+            .build();
+
+        News news2 = News.NewsBuilder.aNews()
+            .withTitle(TEST_NEWS_TITLE)
+            .withShortText(TEST_NEWS_SUMMARY)
+            .withFullText("")
+            .build();
+
+        News news3 = News.NewsBuilder.aNews()
+            .withTitle(TEST_NEWS_TITLE)
+            .withShortText(TEST_NEWS_SUMMARY)
+            .withFullText("")
+            .build();
+
+        newsRepository.save(news1);
+        newsRepository.save(news2);
+        newsRepository.save(news3);
+
+        assertEquals(newsRepository.findAll().size(),3);
+
+        MvcResult mvcResultPut = this.mockMvc.perform(put(NEWS_BASE_URI + "/" + news3.getId())
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse responsePut = mvcResultPut.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), responsePut.getStatus());
+
+        // default pageIndex is 0
+        MvcResult mvcResultLoad = this.mockMvc.perform(get(NEWS_BASE_URI)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+                .param("loadAlreadyRead","false"))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse responseLoad = mvcResultLoad.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), responseLoad.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, responseLoad.getContentType());
+
+        List<AbbreviatedNewsDto> abbreviatedNewsDtos = Arrays.asList(objectMapper.readValue(responseLoad.getContentAsString(),
+            AbbreviatedNewsDto[].class));
+
+        assertEquals(2, abbreviatedNewsDtos.size());
+
+        mvcResultLoad = this.mockMvc.perform(get(NEWS_BASE_URI).param("pageIndex", "0")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+                .param("loadAlreadyRead","true"))
+            .andDo(print())
+            .andReturn();
+        responseLoad = mvcResultLoad.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), responseLoad.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, responseLoad.getContentType());
+
+        abbreviatedNewsDtos = Arrays.asList(objectMapper.readValue(responseLoad.getContentAsString(),
+            AbbreviatedNewsDto[].class));
+
+        assertEquals(1, abbreviatedNewsDtos.size());
+    }
+
+    @Test
+    public void given1News_whenPutNewsReadRelationAndAgainNewsReadRelation_then201And200()
+        throws Exception {
+
+        News news = News.NewsBuilder.aNews()
+            .withTitle(TEST_NEWS_TITLE)
+            .withShortText(TEST_NEWS_SUMMARY)
+            .withFullText("")
+            .build();
+
+        newsRepository.save(news);
+
+        assertEquals(newsRepository.findAll().size(),1);
+
+        MvcResult mvcResultPut1 = this.mockMvc.perform(put(NEWS_BASE_URI + "/" + news.getId())
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse responsePut1 = mvcResultPut1.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), responsePut1.getStatus());
+
+        MvcResult mvcResultPut2 = this.mockMvc.perform(put(NEWS_BASE_URI + "/" + news.getId())
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse responsePut2 = mvcResultPut2.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), responsePut2.getStatus());
+    }
+
+    @Test
+    public void given1News_whenPutNewsReadRelationUserNotFound_then404()
+        throws Exception {
+
+        News news = News.NewsBuilder.aNews()
+            .withTitle(TEST_NEWS_TITLE)
+            .withShortText(TEST_NEWS_SUMMARY)
+            .withFullText("")
+            .build();
+
+        newsRepository.save(news);
+
+        assertEquals(newsRepository.findAll().size(),1);
+
+        MvcResult mvcResultPut = this.mockMvc.perform(put(NEWS_BASE_URI + "/" + news.getId())
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("invalid@email.com", ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse responsePut = mvcResultPut.getResponse();
+
+        assertEquals(HttpStatus.NOT_FOUND.value(), responsePut.getStatus());
+    }
+
+    @Test
+    public void givenNothing_whenPutNewsReadRelation_then404()
+        throws Exception {
+
+        MvcResult mvcResultPut = this.mockMvc.perform(put(NEWS_BASE_URI + "/" + -1000)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse responsePut = mvcResultPut.getResponse();
+
+        assertEquals(HttpStatus.NOT_FOUND.value(), responsePut.getStatus());
+    }
+
+    @Test
     public void givenOneNews_whenFindById_thenNewsWithAllPropertiesExceptShortText() throws Exception {
         newsRepository.save(news);
 
@@ -264,6 +400,110 @@ public class NewsEndpointTest implements TestData {
 
         // map json string to list:
         List<AbbreviatedNewsDto> abbreviatedNewsDtos = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
+            AbbreviatedNewsDto[].class));
+
+        assertEquals(0, abbreviatedNewsDtos.size());
+    }
+
+    @Test
+    public void givenOneNewsWithNewsRead_whenDeleteById_thenGetAllLengthIs0And200() throws Exception {
+        newsRepository.save(news);
+
+        MvcResult mvcResultAdmin = this.mockMvc.perform(put(NEWS_BASE_URI + "/{id}", news.getId())
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse responseAdmin = mvcResultAdmin.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), responseAdmin.getStatus());
+
+        MvcResult mvcResultUser = this.mockMvc.perform(put(NEWS_BASE_URI + "/{id}", news.getId())
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse responseUser = mvcResultUser.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), responseUser.getStatus());
+
+        MvcResult mvcResult = this.mockMvc.perform(delete(NEWS_BASE_URI + "/{id}", news.getId())
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        final MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertAll(
+            () -> assertEquals(HttpStatus.OK.value(), response.getStatus()),
+            () -> assertEquals(userRepository.findAll().size(), 2)
+        );
+
+        // default pageIndex is 0
+        mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+                .param("loadAlreadyRead","false"))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response2 = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response2.getStatus());
+        // response in json format:
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response2.getContentType());
+
+        // map json string to list:
+        List<AbbreviatedNewsDto> abbreviatedNewsDtos = Arrays.asList(objectMapper.readValue(response2.getContentAsString(),
+            AbbreviatedNewsDto[].class));
+
+        assertEquals(0, abbreviatedNewsDtos.size());
+
+        // default pageIndex is 0
+        mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+                .param("loadAlreadyRead","true"))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response3 = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response3.getStatus());
+        // response in json format:
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response3.getContentType());
+
+        // map json string to list:
+        abbreviatedNewsDtos = Arrays.asList(objectMapper.readValue(response3.getContentAsString(),
+            AbbreviatedNewsDto[].class));
+
+        assertEquals(0, abbreviatedNewsDtos.size());
+
+        // default pageIndex is 0
+        mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES))
+                .param("loadAlreadyRead","false"))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response4 = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response4.getStatus());
+        // response in json format:
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response4.getContentType());
+
+        // map json string to list:
+        abbreviatedNewsDtos = Arrays.asList(objectMapper.readValue(response4.getContentAsString(),
+            AbbreviatedNewsDto[].class));
+
+        assertEquals(0, abbreviatedNewsDtos.size());
+
+        // default pageIndex is 0
+        mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES))
+                .param("loadAlreadyRead","true"))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response5 = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response5.getStatus());
+        // response in json format:
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response5.getContentType());
+
+        // map json string to list:
+        abbreviatedNewsDtos = Arrays.asList(objectMapper.readValue(response5.getContentAsString(),
             AbbreviatedNewsDto[].class));
 
         assertEquals(0, abbreviatedNewsDtos.size());
@@ -505,5 +745,4 @@ public class NewsEndpointTest implements TestData {
         return date.getYear() == today.getYear() && date.getDayOfYear() == today.getDayOfYear() &&
             date.getHour() == today.getHour();
     }
-
 }

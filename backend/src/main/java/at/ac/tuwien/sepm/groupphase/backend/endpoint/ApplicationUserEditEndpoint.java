@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDeleteDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -27,7 +26,7 @@ import java.lang.invoke.MethodHandles;
 @RequestMapping(value = ApplicationUserEditEndpoint.BASE_PATH)
 public class ApplicationUserEditEndpoint {
 
-    static final String BASE_PATH = "/api/v1/edit";
+    public static final String BASE_PATH = "/api/v1/edit";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService;
@@ -42,9 +41,9 @@ public class ApplicationUserEditEndpoint {
     @DeleteMapping
     @PermitAll
     @ResponseStatus(HttpStatus.OK)
-    public void delete(UserDeleteDto userDeleteDto) {
+    public void delete(@RequestParam(value = "id") Long id, @RequestParam(value = "email") String email, @RequestParam(value = "password") String password) {
         LOGGER.info("DELETE " + BASE_PATH);
-        userService.delete(userDeleteDto.id(), userDeleteDto.email(), userDeleteDto.password());
+        userService.delete(id, email, password);
     }
 
     @ResponseStatus(HttpStatus.OK)
