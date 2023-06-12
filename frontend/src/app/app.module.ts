@@ -56,6 +56,8 @@ import { EventDetailComponent } from './components/event-detail/event-detail.com
 import { AdminManagerComponent } from './components/admin-manager/admin-manager.component';
 import { PerformanceTicketSelctionComponent } from './components/performance-ticket-selction/performance-ticket-selction.component';
 import { HallplanCreateComponent } from './components/hallplan-create/hallplan-create.component';
+import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
+
 
 @NgModule({
   declarations: [
@@ -100,6 +102,7 @@ import { HallplanCreateComponent } from './components/hallplan-create/hallplan-c
     AdminManagerComponent,
     PerformanceTicketSelctionComponent,
     HallplanCreateComponent,
+    AutocompleteComponent,
   ],
   imports: [
     BrowserModule,

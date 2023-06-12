@@ -137,25 +137,27 @@ export class HallplanService {
         );
     }
 
-    /**
-     * Get Roomplans by pages.
-     *
-     * @param pageIndex index of the searched for page
-     */
-    getRoomplans(pageIndex: number): Observable<AbbreviatedHallplan[]> {
-        let params: HttpParams = new HttpParams();
-        params = params.set('pageIndex', pageIndex);
-        return this.http.get<AbbreviatedHallplan[]>(this.baseUrl + '/search', { params });
-    }
+  /**
+   * Get Roomplans by pages.
+   *
+   * @param pageIndex index of the searched for page
+   * @param search the string that should be matched
+   */
+  getRoomplans(pageIndex: number, search: string): Observable<AbbreviatedHallplan[]> {
+    let params: HttpParams = new HttpParams();
+    params = params.set('pageIndex', pageIndex);
+    params = params.set('search', search);
+    return this.http.get<AbbreviatedHallplan[]>(this.baseUrl+'/search', {params});
+  }
 
-    /**
-     * Get a AbbreviatedHallplan by its id.
-     *
-     * @param id the id of the needed hallplan
-     */
-    getByIdAbbreviated(id: number): Observable<AbbreviatedHallplan> {
-        let params: HttpParams = new HttpParams();
-        params = params.set('id', id);
-        return this.http.get<AbbreviatedHallplan>(this.baseUrl + '/byId', { params });
-    }
+  /**
+   * Get a AbbreviatedHallplan by its id.
+   *
+   * @param id the id of the needed hallplan
+   */
+  getByIdAbbreviated(id: number): Observable<AbbreviatedHallplan> {
+    let params: HttpParams = new HttpParams();
+    params = params.set('id', id);
+    return this.http.get<AbbreviatedHallplan>(this.baseUrl+'/byId', {params});
+  }
 }
