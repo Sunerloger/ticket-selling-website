@@ -12,7 +12,7 @@ import { TicketValidatorService } from 'src/app/services/ticketvalidator.service
 })
 export class TicketValidatorComponent implements OnInit {
   parameterValue: string;
-  validationResult: string;
+  validationResult: string = '';
   constructor(private route: ActivatedRoute, private ticketService: TicketValidatorService, private notification: ToastrService) { }
 
   ngOnInit() {
@@ -25,12 +25,13 @@ export class TicketValidatorComponent implements OnInit {
        this.validationResult = data.message;
       }, error: error => {
         this.notification.error(`Something went wrong... please try again!`);
+        this.validationResult = "invalid";
       }
     });
     });
   }
 
   validityCheck(): boolean {
-    return (this.validationResult === 'Ticket is valid!') ? true : false;
+    return (this.validationResult === 'Ticket is valid!') ? true : this.validationResult === '' ? true : false;
   }
 }
