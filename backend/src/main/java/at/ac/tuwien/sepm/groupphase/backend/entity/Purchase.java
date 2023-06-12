@@ -1,13 +1,14 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,6 +25,8 @@ public class Purchase {
     private String billAddress;
     private Long billAreaCode;
     private String billCityName;
+    @Column(columnDefinition = "boolean default false")
+    private boolean canceled;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "purchaseNr")
@@ -79,5 +82,13 @@ public class Purchase {
 
     public void setBillCityName(String billCityName) {
         this.billCityName = billCityName;
+    }
+
+    public boolean isCanceled() {
+        return canceled;
+    }
+
+    public void setCanceled(boolean canceled) {
+        this.canceled = canceled;
     }
 }

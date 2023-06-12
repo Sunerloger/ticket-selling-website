@@ -11,22 +11,24 @@
       <br>
 
       <div class="form-group custom-billing">
-        <input type="checkbox" class="checkbox" id="billing-info" name="admin"  [(ngModel)]="creationItem.useUserAddress">
+        <input type="checkbox" class="checkbox" id="billing-info" name="admin"
+               [(ngModel)]="creationItem.useUserAddress">
         <label for="billing-info">Use different billing Adress</label>
       </div>
 
       <div class="form-group">
-        <label for="cityName">City</label>
+        <label for="cityName">City <span *ngIf="this.creationItem.useUserAddress" class="text-danger">*</span></label>
         <input type="text" class="form-control" id="cityName" name="cityName" required>
       </div>
 
       <div class="form-group">
-        <label for="areaCode">Area Code</label>
+        <label for="areaCode">Area Code <span *ngIf="this.creationItem.useUserAddress"
+                                              class="text-danger">*</span></label>
         <input type="text" class="form-control" id="areaCode" name="cityName" required>
       </div>
 
       <div class="form-group">
-        <label for="address">Address</label>
+        <label for="address">Address <span *ngIf="this.creationItem.useUserAddress" class="text-danger">*</span></label>
         <input type="text" class="form-control" id="address" name="cityName" required>
       </div>
       <div class="infobox">
@@ -34,17 +36,17 @@
         <h4>Payment Information</h4>
 
         <div class="form-group">
-          <label for="cardNum">Card number</label>
+          <label for="cardNum">Card number <span class="text-danger">*</span></label>
           <input type="number" class="form-control" id="cardNum" name="cityName" required>
         </div>
 
         <div class="form-group">
-          <label for="expirationDate">Exopiration date: (MM/YY)</label>
+          <label for="expirationDate">Exopiration date: (MM/YY) <span class="text-danger">*</span></label>
           <input type="date" class="form-control" id="expirationDate" name="cityName" required>
         </div>
 
         <div class="form-group">
-          <label for="securityCode">Security Code</label>
+          <label for="securityCode">Security Code <span class="text-danger">*</span></label>
           <input type="number" class="form-control" id="securityCode" name="cityName" required>
         </div>
       </div>
@@ -56,16 +58,16 @@
       <h4>Order Overview</h4>
       <div class="overview-row">
         <span>Articles</span>
-        <span>{{ ( this.withoutTaxes | number:'1.2-2').replace('.', ',') }} €</span>
+        <span>{{ (this.withoutTaxes | number:'1.2-2').replace('.', ',') }} €</span>
       </div>
       <div class="overview-row">
         <span>Taxes</span>
-        <span>{{ ( this.taxes | number:'1.2-2').replace('.', ',') }} €</span>
+        <span>{{ (this.taxes | number:'1.2-2').replace('.', ',') }} €</span>
       </div>
       <hr>
       <div class="overview-row">
         <h5>Total</h5>
-        <h5>{{ ( this.total | number:'1.2-2').replace('.', ',') }} €</h5>
+        <h5>{{ (this.total | number:'1.2-2').replace('.', ',') }} €</h5>
       </div>
     </div>
   </div>
@@ -81,16 +83,18 @@
     <div *ngIf="item !== undefined">
       <div *ngFor="let reservation of item.reservedSeats; let i = index">
         <div class="item-list">
-          <input type="checkbox" class="checkbox" name="admin" (change)="sumOfCheckedItems()" [(ngModel)]="checkboxList[i]">
+          <input type="checkbox" class="checkbox" name="admin" (change)="sumOfCheckedItems()"
+                 [(ngModel)]="checkboxList[i]">
           <app-ticket-list-item [event]="item.event" [seat]="reservation" style="flex: auto"></app-ticket-list-item>
         </div>
       </div>
     </div>
 
   </div>
-
-  <div class="Total-Price infobox">
-    <h4>Total: {{ (sumOfCheckedItems()| number:'1.2-2').replace('.', ',') }} €</h4>
+  <div class="total-container">
+    <div class="Total-Price">
+      <h4>Total: {{ (sumOfCheckedItems()| number:'1.2-2').replace('.', ',') }} €</h4>
+    </div>
+    <button id="checkout" type="button" class="btn btn-primary" [disabled]="noItemsChecked()" (click)="purchase()">&nbsp;Buy Now&nbsp;</button>
   </div>
-  <button id="checkout" type="button" class="btn btn-primary" (click)="purchase()">&nbsp;Buy Now&nbsp;</button>
 </div>

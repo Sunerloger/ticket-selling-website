@@ -22,7 +22,6 @@ export class CartCheckoutComponent implements OnInit {
   withoutTaxes = 0;
   taxes = 0;
   user: User;
-
   constructor(private service: CartService,
               private userService: UserService,
               private notification: ToastrService,
@@ -33,11 +32,9 @@ export class CartCheckoutComponent implements OnInit {
     this.userService.getSelf().subscribe(data => {
       this.user = data;
     });
-
     this.getItems();
     this.creationItem.useUserAddress = false;
     this.creationItem.address = '';
-    this.creationItem.areaCode = 0;
     this.creationItem.city = '';
   }
 

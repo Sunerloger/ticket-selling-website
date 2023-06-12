@@ -18,5 +18,6 @@ export interface Purchase {
   billCityName: string;
   billAreaCode: number;
   ticketList: TicketSeat[];
+  canceled: boolean;
 
 }

@@ -33,15 +33,17 @@ export class ShoppingCartComponent implements OnInit{
   }
 
   deleteByIndex(index: number){
-    //Todo: something with response
     this.service.deleteCartItemById(this.items[index].seat.id).subscribe(
       (response) => {
         console.log('Status:', response.status);
         this.notification.success(`Ticket successfully removed from cart.`);
       },
       (error) => {
-        console.error('Error:', error);
-        this.notification.error(`Something went wrong... please try again!`);
+        const errorMessage = error.status === 0
+          ? 'Server not reachable'
+          : error.message.message;
+        this.notification.error(errorMessage, 'Error:');
+        console.error(error);
       }, () => {
         this.items.splice(index,1);
       }
