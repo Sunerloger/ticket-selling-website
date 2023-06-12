@@ -65,15 +65,7 @@ public class AdminCreateEndpointTest {
     private final ApplicationUser applicationUser =
         new ApplicationUser("marty@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure", false,
             false);
-
-
-    @BeforeEach
-    public void beforeEach() {
-        String encodedPassword = passwordEncoder.encode(applicationUser.getPassword());
-        applicationUser.setPassword(encodedPassword);
-        applicationUserRepository.save(applicationUser);
-    }
-
+    
     @Transactional
     @Test
     public void testSendResetMail() throws Exception {
