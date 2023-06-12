@@ -29,7 +29,7 @@ export class AdminPasswordResetComponent {
 
     const email = this.passwordResetForm.controls.email.value;
 
-    const observable = this.userService.sendResetMailAdmin(email);
+    const observable = this.userService.sendResetMail(email);
     observable.subscribe({
         next: () => {
           this.notification.success('An email with instructions to reset the password has been sent to the provided email address.');
