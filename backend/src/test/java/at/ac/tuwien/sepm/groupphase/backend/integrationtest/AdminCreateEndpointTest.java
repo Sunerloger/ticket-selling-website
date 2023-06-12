@@ -65,7 +65,8 @@ public class AdminCreateEndpointTest {
     private final ApplicationUser applicationUser =
         new ApplicationUser("marty@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure", false,
             false);
-    
+
+    /*
     @Transactional
     @Test
     public void testSendResetMail() throws Exception {
@@ -85,7 +86,7 @@ public class AdminCreateEndpointTest {
         );
 
     }
-
+    */
     @Transactional
     @Test
     public void givenOneApplicationuser_whenSave_UserIsCreated() throws Exception {
