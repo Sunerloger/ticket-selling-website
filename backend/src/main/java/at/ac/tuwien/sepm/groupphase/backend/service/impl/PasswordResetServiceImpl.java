@@ -29,6 +29,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 
     public void initiatePasswordReset(String email) {
 
+        //When a user with the email does not exist
         ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(email);
         if (applicationUser == null) {
             return;
