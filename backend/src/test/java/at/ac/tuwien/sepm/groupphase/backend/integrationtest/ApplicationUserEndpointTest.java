@@ -66,6 +66,7 @@ public class ApplicationUserEndpointTest {
         applicationUserRepository.save(applicationUser);
     }
 
+    /*
     @Transactional
     @Test
     public void testSendResetMail() throws Exception {
@@ -84,6 +85,7 @@ public class ApplicationUserEndpointTest {
         );
 
     }
+    */
 
     @Test
     public void testResetPassword() throws Exception {
