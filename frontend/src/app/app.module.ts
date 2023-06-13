@@ -108,7 +108,7 @@ import { TicketInvoicePdfPrintComponent } from './components/ticket-invoice-pdf-
     TicketReversalInvoicePdfPrintComponent,
     AutocompleteComponent,
     TicketInvoicePdfPrintComponent
- 
+
   ],
   imports: [
     BrowserModule,
