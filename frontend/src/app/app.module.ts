@@ -58,6 +58,8 @@ import { PerformanceTicketSelctionComponent } from './components/performance-tic
 import { HallplanCreateComponent } from './components/hallplan-create/hallplan-create.component';
 import {TicketReversalInvoicePdfPrintComponent}
   from './components/ticket-reversal-invoice-pdf-print/ticket-reversal-invoice-pdf-print.component';
+import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
+
 
 @NgModule({
   declarations: [
@@ -103,6 +105,7 @@ import {TicketReversalInvoicePdfPrintComponent}
     PerformanceTicketSelctionComponent,
     HallplanCreateComponent,
     TicketReversalInvoicePdfPrintComponent,
+    AutocompleteComponent,
   ],
   imports: [
     BrowserModule,
