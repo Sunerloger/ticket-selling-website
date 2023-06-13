@@ -72,7 +72,7 @@ export class TicketInvoicePdfPrintComponent implements OnInit, AfterViewInit {
         `
       )
       .join('')}
-    <h3>Total Price: ${this.sumOfItems(this.purchase)}€<span style="font-size: 14px;">(including Austrian VAT)</span></h3>
+    <h3>Total Price: ${this.sumOfItems(this.purchase)}€<span style="font-size: 14px;">(including 20% Austrian VAT)</span></h3>
 
     <h3>Payment Details</h3>
     <p>

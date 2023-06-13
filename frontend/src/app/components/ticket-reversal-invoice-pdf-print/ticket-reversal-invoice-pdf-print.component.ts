@@ -37,7 +37,6 @@ export class TicketReversalInvoicePdfPrintComponent implements AfterViewInit, On
   }
 
   public generateReversalInvoicePdf() {
-    // Create the PDF content dynamically
     const pdfContent: any = `
       <div #pdfContent>
         <i style="font-size: 48px; color: #23a6d5">Reversal Invoice</i>
