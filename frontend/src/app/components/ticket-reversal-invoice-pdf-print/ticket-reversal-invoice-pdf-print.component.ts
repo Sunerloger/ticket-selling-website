@@ -3,6 +3,7 @@ import * as htmlToPdfMake from 'html-to-pdfmake';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import {Purchase} from 'src/app/dtos/purchases';
+import {User} from 'src/app/dtos/user';
 
 @Component({
   selector: 'app-ticket-reversal-invoice-pdf-print',
@@ -14,6 +15,8 @@ export class TicketReversalInvoicePdfPrintComponent implements AfterViewInit, On
 
   @Input()
   purchase: Purchase;
+  @Input()
+  user: User;
 
   fonts = {
     // eslint-disable-next-line
@@ -37,46 +40,61 @@ export class TicketReversalInvoicePdfPrintComponent implements AfterViewInit, On
   }
 
   public generateReversalInvoicePdf() {
-    // Create the PDF content dynamically
     const pdfContent: any = `
-      <div #pdfContent>
-        <i style="font-size: 48px; color: #23a6d5">Reversal Invoice</i>
-        <b>------------------------------------------------------</b>
-        <h2>Purchase Number: ${this.purchase.purchaseNr}</h2>
-        <p>
-          <strong>Purchase Date:</strong> ${this.purchase.purchaseDate}
-          <br>
-          <strong>Billing Address:</strong> ${this.purchase.billAddress}
-          <br>
-          <strong>Billing City:</strong> ${this.purchase.billCityName}
-          <br>
-          <strong>Billing Area Code:</strong> ${this.purchase.billAreaCode}
-        </p>
-        <h3 style="margin-bottom: 0px">Ticket List</h3>
-        ${this.purchase.ticketList
+    <div #pdfContent>
+      <b style="font-size: 36px; color: #23a6d5">Ticketline - Reversal Invoice</b>
+      <b>------------------------------------------------------</b>
+      <h3>Invoice Information</h3>
+      <p>
+        <strong>Invoice Number:</strong> ${this.purchase.purchaseNr}
+        <br>
+        <strong>Invoice Date:</strong> ${this.purchase.purchaseDate}
+        <br>
+        <strong>Recipient:</strong> ${this.user.firstName} ${this.user.lastName}
+        <br>
+        <strong>Address:</strong> ${this.purchase.billAddress}
+        <br>
+        <strong>Area Code:</strong> ${this.purchase.billAreaCode}
+        <br>
+        <strong>City:</strong> ${this.purchase.billCityName}
+      </p>
+
+      <h3 style="margin-bottom: 0px">Purchased Tickets</h3>
+      ${this.purchase.ticketList
       .map(
         ticket => `
-          <p style="margin-bottom: 5px">
-            <strong>TicketNr:</strong> ${ticket.ticketNr} |
-            <strong>Seat:</strong> ${ticket.seat.seatNr}
-          </p>
-        `
+            <p style="margin-bottom: 5px">
+              <strong>TicketNr:</strong> ${ticket.ticketNr} |
+              <strong>Seat:</strong> ${ticket.seat.seatNr}
+            </p>
+          `
       )
       .join('')}
-        <h2>Total Refunded Price: ${this.sumOfItems(this.purchase)}€</h2>
-      </div>
-    `;
+      <h3>Total Price: ${this.sumOfItems(this.purchase)}€ <span style="font-size: 14px;">(excluding 20% Austrian VAT)</span></h3>
 
-    // Create documentDefinition for content
+      <h3>Reversal Info</h3>
+      <p>
+     The refund will be conducted to the payment information you provided during the purchase.
+      </p>
+
+      <h3>Legal Statements</h3>
+      <p>
+        This is a reversal invoice for the purchase. Any authorized payment made for the original invoice will be refunded.
+        <br>
+        Any unauthorized reproduction or distribution of this invoice is strictly prohibited.
+      </p>
+    </div>
+  `;
+
     const documentDefinition = htmlToPdfMake(pdfContent);
     const doc = {
       content: [documentDefinition]
     };
 
-    // Set font dependencies
     const vfs = pdfFonts.pdfMake.vfs;
     pdfMake.createPdf(doc, null, this.fonts, vfs).download('reversal_invoice.pdf');
   }
+
 
   purchasePresent(): boolean {
     return this.purchase ? true : false;
