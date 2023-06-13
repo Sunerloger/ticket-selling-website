@@ -60,6 +60,7 @@ import {TicketReversalInvoicePdfPrintComponent}
   from './components/ticket-reversal-invoice-pdf-print/ticket-reversal-invoice-pdf-print.component';
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 
+import { TicketInvoicePdfPrintComponent } from './components/ticket-invoice-pdf-print/ticket-invoice-pdf-print.component';
 
 @NgModule({
   declarations: [
@@ -106,6 +107,8 @@ import { AutocompleteComponent } from './components/autocomplete/autocomplete.co
     HallplanCreateComponent,
     TicketReversalInvoicePdfPrintComponent,
     AutocompleteComponent,
+    TicketInvoicePdfPrintComponent
+ 
   ],
   imports: [
     BrowserModule,

@@ -34,6 +34,8 @@
           </div>
           <div *ngIf="!item.canceled">
             <app-ticket-pdf-print [ticket]="ticket"></app-ticket-pdf-print>
+            <app-ticket-invoice-pdf-print [purchase]="item" [user]="user"></app-ticket-invoice-pdf-print>
+
           </div>
         </div>
       </div>
