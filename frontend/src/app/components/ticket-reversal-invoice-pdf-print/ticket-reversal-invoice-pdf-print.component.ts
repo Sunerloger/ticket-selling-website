@@ -90,4 +90,8 @@ export class TicketReversalInvoicePdfPrintComponent implements AfterViewInit, On
     return sum.toFixed(2).replace('.', ',');
 
   }
+
+  getPaymentMethod(): string {
+    return 'Credit Card';
+  }
 }
