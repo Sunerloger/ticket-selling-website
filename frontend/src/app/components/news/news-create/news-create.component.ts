@@ -22,9 +22,10 @@ export class NewsCreateComponent implements OnInit {
     fullText: '',
     coverImage: null,
     images: [],
+    eventId: null
   };
   selectedFiles: File[];
-  selectedEvent: Event;
+  selectedEvent?: Event;
 
   constructor(private fb: FormBuilder,
               private service: NewsService,
@@ -67,7 +68,11 @@ export class NewsCreateComponent implements OnInit {
    */
   public onSubmit(form: NgForm): void {
 
-    this.news.eventId = this.selectedEvent.id;
+    if (this.selectedEvent) {
+      this.news.eventId = this.selectedEvent.id;
+    } else {
+      this.news.eventId = null;
+    }
 
     console.log('is form valid?', form.valid, this.news);
 
