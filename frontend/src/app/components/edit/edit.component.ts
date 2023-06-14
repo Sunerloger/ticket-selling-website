@@ -66,7 +66,6 @@ export class EditComponent implements OnInit {
     this.userService.getUser(this.authService.getToken()).subscribe(user => {
       this.user = user;
       this.user.password = '';
-      console.log('User ', user);
     });
     this.editForm = this.formBuilder.group({
       admin: [''],
@@ -91,7 +90,6 @@ export class EditComponent implements OnInit {
     this.editForm.controls['areaCode'].setValue(this.user.areaCode);
     this.editForm.controls['cityName'].setValue(this.user.cityName);
     this.editForm.controls['password'].setValue(this.user.password.trim());
-    console.log(this.editForm);
 
     if (this.editForm.valid && this.user.password === this.passwordVerify.trim()) {
       let observable: Observable<any>;
@@ -142,5 +140,13 @@ export class EditComponent implements OnInit {
     } else {
       // User cancelled, do nothing
     }
+  }
+
+  changeMode(): void {
+    this.mode = 1;
+    // Reset Password forms when changing to delete mode
+    this.user.password = '';
+    this.passwordVerify = '';
+
   }
 }
