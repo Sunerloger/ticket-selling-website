@@ -32,7 +32,7 @@
         {{news.title}}
       </div>
     </div>
-    <div *ngIf="isAdmin() || news.eventId" class="row d-flex flex-row justify-content-start w-auto">
+    <div *ngIf="isAdmin() || news.eventId" class="row d-flex flex-row justify-content-start w-auto mb-4">
       <div class="col-auto pt-2" *ngIf="news.eventId">
         <button type="button" class="btn btn-secondary event-button"
                 [routerLink]="['/event', news.eventId]">
@@ -45,7 +45,7 @@
         </button>
       </div>
     </div>
-    <div class="mt-4" *ngIf="news.fullText">
+    <div *ngIf="news.fullText">
       <div class="row text-start">
         <div class="full-text-styling">
           <p [innerText]="news.fullText"></p>
