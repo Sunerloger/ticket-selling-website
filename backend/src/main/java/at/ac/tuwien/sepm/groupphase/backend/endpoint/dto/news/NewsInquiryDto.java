@@ -19,7 +19,7 @@ public class NewsInquiryDto {
     private String title;
 
     @NotNull(message = "Short Text must not be null")
-    @NotBlank(message = "Title must not be blank")
+    @NotBlank(message = "Short Text must not be blank")
     @Size(max = 100)
     private String shortText;
 
