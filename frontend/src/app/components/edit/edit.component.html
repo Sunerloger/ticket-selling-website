@@ -7,7 +7,7 @@
         <div class="card-header">
           <h3 class="card-headline">{{heading}}</h3>
         </div>
-        <form (ngSubmit)="editUser()" #editForm="ngForm">
+        <form (ngSubmit)="confirmSubmit()" #editForm="ngForm">
           <div id="input">
             <div *ngIf="mode === 0">
               <div class="form-group"
@@ -149,14 +149,22 @@
             </div>
 
             <div class="action-buttons">
-              <div *ngIf="mode === 0">
-                <button type="submit" class="btn btn-primary">Edit</button>
-                <button class="btn btn-danger" (click)="mode=1">Delete</button>
-              </div>
-              <div *ngIf="mode === 1">
-                <button class="btn btn-danger">Delete</button>
+              <div class="row">
+                <div class="col-md-6" *ngIf="mode === 0">
+                  <div class="d-grid gap-2 mb-2">
+                    <button type="submit" class="btn btn-primary">Edit</button>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="d-grid gap-2">
+                    <button class="btn btn-danger" *ngIf="mode === 0" (click)="mode=1">Delete</button>
+                    <button class="btn btn-danger" *ngIf="mode === 1">Delete</button>
+                  </div>
+                </div>
               </div>
             </div>
+
+
           </div>
         </form>
       </div>

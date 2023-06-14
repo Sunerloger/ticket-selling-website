@@ -134,4 +134,13 @@ export class EditComponent implements OnInit {
       this.editForm.markAllAsTouched();
     }
   }
+
+  confirmSubmit() {
+    if (confirm('Are you sure you want to submit?')) {
+      // User confirmed, submit the form
+      this.editUser();
+    } else {
+      // User cancelled, do nothing
+    }
+  }
 }

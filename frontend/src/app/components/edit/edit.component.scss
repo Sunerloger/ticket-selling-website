@@ -8,11 +8,15 @@
 
 }
 
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
 .btn-primary {
   background-color: #00BA8B;
   border-color: transparent;
   margin-top: 10px;
-  margin-right: 10px;
 }
 
 .btn-danger {
