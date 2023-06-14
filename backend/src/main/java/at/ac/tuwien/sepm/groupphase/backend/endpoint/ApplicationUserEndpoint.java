@@ -24,17 +24,17 @@ import org.springframework.web.bind.annotation.RestController;
 import java.lang.invoke.MethodHandles;
 
 @RestController
-@RequestMapping(value = ApplicationUserEditEndpoint.BASE_PATH)
-public class ApplicationUserEditEndpoint {
+@RequestMapping(value = ApplicationUserEndpoint.BASE_PATH)
+public class ApplicationUserEndpoint {
 
-    static final String BASE_PATH = "/api/v1/edit";
+    static final String BASE_PATH = "/api/v1/user";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService;
     private final UserMapper userMapper;
 
     @Autowired
-    public ApplicationUserEditEndpoint(UserService userService, UserMapper userMapper) {
+    public ApplicationUserEndpoint(UserService userService, UserMapper userMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
     }
@@ -51,7 +51,7 @@ public class ApplicationUserEditEndpoint {
     @PutMapping
     @PermitAll
     @Operation(summary = "Edit a user")
-    public void update(@Valid @RequestBody UserDetailDto userDetailDto, @RequestParam(value = "token") String token) {
+    public void update(@Valid @RequestBody UserDetailDto userDetailDto, @RequestHeader("Authorization") String token) {
         LOGGER.info("EDIT USER " + BASE_PATH + "with TOKEN " + token, userDetailDto);
         userMapper.entityToUserDetailDto(userService.edit(userMapper.userDetailDtoToEntity(userDetailDto), token));
     }

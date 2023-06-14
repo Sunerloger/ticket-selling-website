@@ -27,8 +27,8 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = AdminCreateEndpoint.BASE_PATH)
-public class AdminCreateEndpoint {
+@RequestMapping(value = AdminEndpoint.BASE_PATH)
+public class AdminEndpoint {
 
     static final String BASE_PATH = "/api/v1/admin";
 
@@ -38,7 +38,7 @@ public class AdminCreateEndpoint {
     private final UserMapper userMapper;
 
     @Autowired
-    public AdminCreateEndpoint(UserService userService, UserMapper userMapper) {
+    public AdminEndpoint(UserService userService, UserMapper userMapper) {
         this.userMapper = userMapper;
         this.userService = userService;
     }
