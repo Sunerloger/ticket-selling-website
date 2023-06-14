@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import jakarta.xml.bind.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,7 @@ public class AdminEndpoint {
     @PostMapping
     @Secured({"ROLE_ADMIN"})
     @Operation(summary = "Create a new user", security = @SecurityRequirement(name = "apiKey"))
-    public UserCreateDto post(@RequestBody UserCreateDto userCreateDto) {
+    public UserCreateDto post(@Valid @RequestBody UserCreateDto userCreateDto) {
         LOGGER.info("POST: {}", userCreateDto);
         try {
             return userMapper.entityToUserCreateDto(userService.register(userMapper.userCreateDtoToEntity(userCreateDto)));
