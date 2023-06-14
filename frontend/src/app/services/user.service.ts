@@ -118,7 +118,7 @@ export class UserService {
     params = params.append('email', user.email);
     params = params.append('isLocked', user.isLocked);
     params = params.append('pageIndex', pageIndex);
-    return this.http.get<BlockUser[]>(this.adminBaseUri + '?token=' + this.authService.getToken(), {params});
+    return this.http.get<BlockUser[]>(this.adminBaseUri, {params});
   }
 
   /**
