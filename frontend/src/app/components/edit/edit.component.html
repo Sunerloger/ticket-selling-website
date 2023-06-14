@@ -140,18 +140,22 @@
 
             <div class="form-group">
               <label for="passwordVerify">Verify Password: <span class="text-danger">*</span></label>
-              <input type="password" class="form-control" id="passwordVerify" name="passwordVerify" [(ngModel)]="passwordVerify" required
+              <input type="password" class="form-control" id="passwordVerify" name="passwordVerify"
+                     [(ngModel)]="passwordVerify" required
                      minlength="8">
+              <div class="text-danger" *ngIf="editForm.submitted && passwordVerify !== user.password">
+                Passwords do not match!
+              </div>
             </div>
 
             <div class="action-buttons">
-            <div *ngIf="mode === 0">
-              <button type="submit" class="btn btn-primary">Edit</button>
-              <button class="btn btn-danger" (click)="mode=1">Delete</button>
-            </div>
-            <div *ngIf="mode === 1">
-              <button class="btn btn-danger">Delete</button>
-            </div>
+              <div *ngIf="mode === 0">
+                <button type="submit" class="btn btn-primary">Edit</button>
+                <button class="btn btn-danger" (click)="mode=1">Delete</button>
+              </div>
+              <div *ngIf="mode === 1">
+                <button class="btn btn-danger">Delete</button>
+              </div>
             </div>
           </div>
         </form>
