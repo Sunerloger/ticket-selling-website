@@ -82,7 +82,5 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(status)
             .headers(headers)
             .body(objectMapper.convertValue(body, Object.class));
-        //return new ResponseEntity<>(body.toString(), headers, status);
-
     }
 }
