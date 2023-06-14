@@ -12,7 +12,7 @@
             <div *ngIf="mode === 0">
               <div class="form-group"
                    [class.has-error]="firstName.invalid && firstName.touched">
-                <label for="firstName" class="control-label">First Name:<span class="text-danger">*</span></label>
+                <label for="firstName" class="control-label">First Name: <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="firstName" name="firstName" pattern="[A-Za-z]*"
                        [(ngModel)]="user.firstName"
                        #firstName="ngModel" required>
@@ -31,7 +31,7 @@
 
               <div class="form-group"
                    [class.has-error]="lastName.invalid && lastName.touched">
-                <label for="lastName">Last Name:<span class="text-danger">*</span></label>
+                <label for="lastName">Last Name: <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="lastName" name="lastName" pattern="[A-Za-z]*"
                        [(ngModel)]="user.lastName"
                        #lastName="ngModel" required>
@@ -48,7 +48,7 @@
               </div>
               <div class="form-group"
                    [class.has-error]="birthDate.invalid && birthDate.touched">
-                <label for="birthDate">Birthdate:<span class="text-danger">*</span></label>
+                <label for="birthDate">Birthdate: <span class="text-danger">*</span></label>
                 <input type="date" class="form-control" id="birthDate" name="birthDate" [(ngModel)]="user.birthdate"
                        #birthDate="ngModel" required>
                 <div *ngIf="editForm.submitted &&editForm.controls['birthDate'].invalid" class="text-danger">
@@ -59,7 +59,7 @@
 
               <div class="form-group"
                    [class.has-error]="address.invalid && address.touched">
-                <label for="address">Address:<span class="text-danger">*</span></label>
+                <label for="address">Address: <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="address" name="address"
                        pattern="([A-Za-z0-9ßäöüÄÖÜ]+[-\s/]?)*"
                        [(ngModel)]="user.address"
@@ -82,7 +82,7 @@
 
               <div class="form-group"
                    [class.has-error]="areaCode.invalid && areaCode.touched">
-                <label for="areaCode">AreaCode:<span class="text-danger">*</span></label>
+                <label for="areaCode">AreaCode: <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="areaCode" name="areaCode" pattern="[0-9]+"
                        [(ngModel)]="user.areaCode"
                        #areaCode="ngModel" required>
@@ -100,7 +100,7 @@
 
               <div class="form-group"
                    [class.has-error]="cityName.invalid && cityName.touched">
-                <label for="cityName">CityName:<span class="text-danger">*</span></label>
+                <label for="cityName">CityName: <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="cityName" name="cityName" pattern="[A-Za-z]+"
                        [(ngModel)]="user.cityName"
                        #cityName="ngModel" required>
@@ -119,7 +119,7 @@
 
             <div class="form-group"
                  [class.has-error]="password.invalid && password.touched">
-              <label for="password">Password:<span class="text-danger">*</span></label>
+              <label for="password">Password: <span class="text-danger">*</span></label>
               <input type="password" class="form-control" id="password" name="password" [(ngModel)]="user.password"
                      #password="ngModel" required minlength="8">
               <div *ngIf="editForm.submitted && editForm.controls['password']?.invalid" class="text-danger">
@@ -139,7 +139,7 @@
             </div>
 
             <div class="form-group">
-              <label for="passwordVerify">Verify Password:<span class="text-danger">*</span></label>
+              <label for="passwordVerify">Verify Password: <span class="text-danger">*</span></label>
               <input type="password" class="form-control" id="passwordVerify" name="passwordVerify" [(ngModel)]="passwordVerify" required
                      minlength="8">
             </div>
