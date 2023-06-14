@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.exceptionhandler;
 
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    private final ObjectMapper objectMapper;
+
+
+    public GlobalExceptionHandler(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+
     /**
      * Use the @ExceptionHandler annotation to write handler for custom exceptions.
      */
@@ -55,17 +64,25 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   HttpStatusCode status, WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
         //Get all errors
-        List<String> errors = ex.getBindingResult()
+        List<Map<String, String>> errors = ex.getBindingResult()
             .getFieldErrors()
             .stream()
-            .map(err -> err.getField() + " " + err.getDefaultMessage())
+            .map(err -> {
+                Map<String, String> error = new LinkedHashMap<>();
+                error.put("field", err.getField());
+                error.put("message", err.getDefaultMessage());
+                return error;
+            })
             .collect(Collectors.toList());
-        body.put("Validation errors", errors);
+        body.put("errors", errors);
 
         // enforce UNPROCESSABLE_ENTITY on all MethodArgumentNotValidExceptions
         status = HttpStatus.UNPROCESSABLE_ENTITY;
 
-        return new ResponseEntity<>(body.toString(), headers, status);
+        return ResponseEntity.status(status)
+            .headers(headers)
+            .body(objectMapper.convertValue(body, Object.class));
+        //return new ResponseEntity<>(body.toString(), headers, status);
 
     }
 }

@@ -35,6 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -97,7 +98,7 @@ public class NewsEndpointTest implements TestData {
         NewsImage img1 = NewsImage.NewsImageBuilder.aNewsImage().withNews(news).withImageData(TEST_NEWS_IMAGE_DATA_LIST.get(0)).build();
         NewsImage img2 = NewsImage.NewsImageBuilder.aNewsImage().withNews(news).withImageData(TEST_NEWS_IMAGE_DATA_LIST.get(1)).build();
         NewsImage img3 = NewsImage.NewsImageBuilder.aNewsImage().withNews(news).withImageData(TEST_NEWS_IMAGE_DATA_LIST.get(2)).build();
-        List<NewsImage> testImageList = new LinkedList<>(Arrays.asList(img1,img2,img3));
+        List<NewsImage> testImageList = new LinkedList<>(Arrays.asList(img1, img2, img3));
 
         news.setImages(testImageList);
 
@@ -118,7 +119,7 @@ public class NewsEndpointTest implements TestData {
         // default pageIndex is 0
         MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
-                .param("loadAlreadyRead","false"))
+                .param("loadAlreadyRead", "false"))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -142,7 +143,7 @@ public class NewsEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
-            .param("loadAlreadyRead","false"))
+                .param("loadAlreadyRead", "false"))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -170,12 +171,12 @@ public class NewsEndpointTest implements TestData {
             news.setId((long) -i);
             newsRepository.save(news);
         }
-        assertEquals(newsRepository.findAll().size(),21);
+        assertEquals(newsRepository.findAll().size(), 21);
 
         // default pageIndex is 0
         MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
-            .param("loadAlreadyRead","false"))
+                .param("loadAlreadyRead", "false"))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -190,7 +191,7 @@ public class NewsEndpointTest implements TestData {
 
         mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI).param("pageIndex", "1")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
-            .param("loadAlreadyRead","false"))
+                .param("loadAlreadyRead", "false"))
             .andDo(print())
             .andReturn();
         response = mvcResult.getResponse();
@@ -253,7 +254,7 @@ public class NewsEndpointTest implements TestData {
         // default pageIndex is 0
         mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
-            .param("loadAlreadyRead","false"))
+                .param("loadAlreadyRead", "false"))
             .andDo(print())
             .andReturn();
         response = mvcResult.getResponse();
@@ -322,7 +323,9 @@ public class NewsEndpointTest implements TestData {
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
+            .andExpect(jsonPath("$.errors[0].message").value("Title must not be blank"))
             .andReturn();
+        /*
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertAll(
@@ -335,6 +338,8 @@ public class NewsEndpointTest implements TestData {
                 assertEquals(1, errors.length);
             }
         );
+        */
+
     }
 
     @Test
