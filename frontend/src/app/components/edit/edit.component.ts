@@ -90,10 +90,10 @@ export class EditComponent implements OnInit {
     this.editForm.controls['address'].setValue(this.user.address);
     this.editForm.controls['areaCode'].setValue(this.user.areaCode);
     this.editForm.controls['cityName'].setValue(this.user.cityName);
-    this.editForm.controls['password'].setValue(this.user.password);
+    this.editForm.controls['password'].setValue(this.user.password.trim());
     console.log(this.editForm);
 
-    if (this.editForm.valid && this.user.password.match(this.passwordVerify)) {
+    if (this.editForm.valid && this.user.password === this.passwordVerify.trim()) {
       let observable: Observable<any>;
       switch (this.mode) {
         case EditDeleteMode.edit:
