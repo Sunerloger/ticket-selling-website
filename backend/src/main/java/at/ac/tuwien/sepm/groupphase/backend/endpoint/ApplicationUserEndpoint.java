@@ -42,9 +42,9 @@ public class ApplicationUserEndpoint {
     @DeleteMapping
     @PermitAll
     @ResponseStatus(HttpStatus.OK)
-    public void delete(UserDeleteDto userDeleteDto) {
+    public void delete(@RequestBody UserDeleteDto userDeleteDto) {
         LOGGER.info("DELETE " + BASE_PATH);
-        userService.delete(userDeleteDto.id(), userDeleteDto.email(), userDeleteDto.password());
+        userService.delete(userMapper.userDeleteDtoToEntity(userDeleteDto));
     }
 
     @ResponseStatus(HttpStatus.OK)
