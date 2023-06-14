@@ -48,7 +48,7 @@
     <div class="mt-4" *ngIf="news.fullText">
       <div class="row text-start">
         <div class="full-text-styling">
-          {{news.fullText}}
+          <p [innerText]="news.fullText"></p>
         </div>
       </div>
     </div>
