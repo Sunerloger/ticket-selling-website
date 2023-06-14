@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -61,14 +62,15 @@ public class AdminEndpoint {
     @PutMapping
     @Secured("ROLE_ADMIN")
     @Operation(summary = "Block/Unblock a user", security = @SecurityRequirement(name = "apiKey"))
-    public void put(@RequestBody UserUnBlockDto userUnBlockDto) {
+    public void put(@Valid @RequestBody UserUnBlockDto userUnBlockDto) {
         LOGGER.info("Block user " + BASE_PATH + "user: {}", userUnBlockDto.email());
         userService.block(userMapper.userUnBlockDtoToEntity(userUnBlockDto));
     }
 
     @GetMapping
     @Secured("ROLE_ADMIN")
-    public List<UserUnBlockDto> getBlockedUsers(UserUnBlockDto userUnBlockDto, @RequestParam(defaultValue = "0") int pageIndex, @RequestParam(value = "token") String token) {
+    public List<UserUnBlockDto> getBlockedUsers(@Valid @RequestBody UserUnBlockDto userUnBlockDto, @RequestParam(defaultValue = "0") int pageIndex,
+                                                @RequestHeader("Authorization") String token) {
         LOGGER.info("Get blocked users " + BASE_PATH);
         return userMapper.entityToStreamUserUnBlockDto(userService.getBlockedUsers(userMapper.userUnBlockDtoToEntity(userUnBlockDto), token, pageIndex));
     }

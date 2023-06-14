@@ -2,11 +2,16 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserCreateDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserUnBlockDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ApplicationUserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.xml.bind.ValidationException;
+import org.apache.catalina.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,6 +28,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_ROLES;
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_USER;
@@ -29,8 +37,11 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -54,6 +65,9 @@ public class AdminEndpointTest {
     private UserMapper userMapper;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private JwtTokenizer jwtTokenizer;
 
     @Autowired
@@ -66,6 +80,30 @@ public class AdminEndpointTest {
         new ApplicationUser("marty@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure", false,
             false);
 
+
+    //Initial Setup for Tests
+    @BeforeEach
+    @Transactional
+    @Rollback
+    public void beforeEach() throws ValidationException {
+
+        // Delete existing users
+        applicationUserRepository.deleteAll();
+
+        UserCreateDto unblockedUser = new UserCreateDto(-1000L, "John@email.com", "John", "Doe", LocalDate.parse("1988-12-12"),
+            "Teststreet 44/7", 1010L, "Vienna", "password", false, false);
+
+        UserCreateDto blockedUser = new UserCreateDto(-1000L, "James@email.com", "James", "Doe", LocalDate.parse("1988-12-12"),
+            "Teststreet 44/7", 1010L, "Vienna", "password", false, true);
+
+
+        UserCreateDto admin = new UserCreateDto(-1000L, "administrator@email.com", "Admin", "admin", LocalDate.parse("1988-12-12"),
+            "Teststreet 44/7", 1010L, "Vienna", "password", true, false);
+
+        userService.register(userMapper.userCreateDtoToEntity(admin));
+        userService.register(userMapper.userCreateDtoToEntity(unblockedUser));
+        userService.register(userMapper.userCreateDtoToEntity(blockedUser));
+    }
 
     @Transactional
     @Test
@@ -167,7 +205,7 @@ public class AdminEndpointTest {
         );
         String requestBody = objectMapper.writeValueAsString(userCreateDto);
 
-        mockMvc.perform(post("/api/v1/register")
+        mockMvc.perform(post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
@@ -184,7 +222,7 @@ public class AdminEndpointTest {
         );
         String requestBody = objectMapper.writeValueAsString(userCreateDto);
 
-        mockMvc.perform(post("/api/v1/register")
+        mockMvc.perform(post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
@@ -193,4 +231,36 @@ public class AdminEndpointTest {
                 containsInAnyOrder("First name must contain only letters", "Last name must contain only letters")));
     }
 
+    @Test
+    public void whenBlockingValidUser_Then_UserIsLockedIsTrue() throws Exception {
+        UserUnBlockDto userUnBlockDto = new UserUnBlockDto("John@email.com", true);
+
+        String requestBody = objectMapper.writeValueAsString(userUnBlockDto);
+        mockMvc.perform(put(BASE_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andExpect(status().isOk());
+
+        ApplicationUser blockedUser = applicationUserRepository.findUserByEmail("John@email.com");
+        assertNotNull(blockedUser);
+        assertEquals(Boolean.TRUE, blockedUser.getLocked());
+
+    }
+
+    @Test
+    public void whenUnblockingValidUser_Then_UserIsLockedIsFalse() throws Exception {
+        UserUnBlockDto userUnBlockDto = new UserUnBlockDto("James@email.com", false);
+
+        String requestBody = objectMapper.writeValueAsString(userUnBlockDto);
+        mockMvc.perform(put(BASE_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andExpect(status().isOk());
+
+        ApplicationUser unblockedUser = applicationUserRepository.findUserByEmail("James@email.com");
+        assertNotNull(unblockedUser);
+        assertEquals(Boolean.FALSE, unblockedUser.getLocked());
+    }
 }
