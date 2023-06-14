@@ -140,12 +140,14 @@
                      minlength="8">
             </div>
 
+            <div class="action-buttons">
             <div *ngIf="mode === 0">
               <button type="submit" class="btn btn-primary">Edit</button>
               <button class="btn btn-danger" (click)="mode=1">Delete</button>
             </div>
             <div *ngIf="mode === 1">
               <button class="btn btn-danger">Delete</button>
+            </div>
             </div>
           </div>
         </form>

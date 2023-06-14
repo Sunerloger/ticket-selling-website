@@ -52,9 +52,9 @@ export class EditComponent implements OnInit {
   public get heading(): string {
     switch (this.mode) {
       case EditDeleteMode.edit:
-        return 'Editing';
+        return 'Edit Account Details';
       case EditDeleteMode.delete:
-        return 'Deleting';
+        return 'Delete Account';
       default:
         return '?';
     }
