@@ -62,7 +62,6 @@ export class EditComponent implements OnInit {
 
 
   ngOnInit(): void {
-    console.log(this.user);
     this.userService.getUser(this.authService.getToken()).subscribe(user => {
       this.user = user;
       this.user.password = '';
