@@ -106,11 +106,11 @@ public class HallPlanServiceImpl implements HallPlanService {
 
         HallPlan baseHallplan = optBaseHallplan.get();
 
-        if(newHallplan.getDescription().isBlank()){
+        if(newHallplan.getDescription() == null){
             newHallplan.setDescription(baseHallplan.getDescription());
         }
-        if(newHallplan.getName().isBlank()){
-            newHallplan.setName("Snapshot - " + baseHallplan.getName());
+        if(newHallplan.getName() == null){
+            newHallplan.setName(baseHallplan.getName());
         }
 
         if (baseHallplan.getIsTemplate()) {
