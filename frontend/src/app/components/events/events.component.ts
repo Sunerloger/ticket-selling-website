@@ -7,8 +7,7 @@ import {EventDate} from 'src/app/dtos/eventDate';
 import {AbbreviatedHallplan} from '../../dtos/hallplan/abbreviatedHallplan';
 import {HallplanService} from '../../services/hallplan/hallplan.service';
 import {Observable, of} from 'rxjs';
-import {PersistedSection} from "../../dtos/hallplan/section";
-import {PersistedHallplan} from "../../dtos/hallplan/hallplan";
+import {PersistedHallplan} from '../../dtos/hallplan/hallplan';
 
 @Component({
   selector: 'app-events',
