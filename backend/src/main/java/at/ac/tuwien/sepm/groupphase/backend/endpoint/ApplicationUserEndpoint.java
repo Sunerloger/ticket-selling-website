@@ -39,7 +39,7 @@ public class ApplicationUserEndpoint {
     private final PasswordResetService passwordResetService;
 
     @Autowired
-    public ApplicationUserEditEndpoint(UserService userService, UserMapper userMapper, PasswordResetService passwordResetService) {
+    public ApplicationUserEndpoint(UserService userService, UserMapper userMapper, PasswordResetService passwordResetService) {
         this.userService = userService;
         this.userMapper = userMapper;
         this.passwordResetService = passwordResetService;

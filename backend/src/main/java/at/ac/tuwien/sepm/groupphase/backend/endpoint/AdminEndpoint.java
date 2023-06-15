@@ -43,7 +43,7 @@ public class AdminEndpoint {
     private final PasswordResetService passwordResetService;
 
     @Autowired
-    public AdminCreateEndpoint(UserService userService, UserMapper userMapper, PasswordResetService passwordResetService) {
+    public AdminEndpoint(UserService userService, UserMapper userMapper, PasswordResetService passwordResetService) {
         this.userMapper = userMapper;
         this.userService = userService;
         this.passwordResetService = passwordResetService;
