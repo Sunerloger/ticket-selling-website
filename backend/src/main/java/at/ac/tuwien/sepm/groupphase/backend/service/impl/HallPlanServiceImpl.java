@@ -106,10 +106,14 @@ public class HallPlanServiceImpl implements HallPlanService {
 
         HallPlan baseHallplan = optBaseHallplan.get();
 
+        if(newHallplan.getDescription().isBlank()){
+            newHallplan.setDescription(baseHallplan.getDescription());
+        }
+        if(newHallplan.getName().isBlank()){
+            newHallplan.setName("Snapshot - " + baseHallplan.getName());
+        }
+
         if (baseHallplan.getIsTemplate()) {
-            if (!newHallplan.getIsTemplate()) {
-                throw new ValidationException("Only hallplans where isTemplate = true, can be used to create snapshots on");
-            }
             //create new hallplan
             HallPlan persitedHallplan = hallPlanRepository.save(hallPlanMapper.hallPlanDtoToHallPlan(newHallplan));
 
