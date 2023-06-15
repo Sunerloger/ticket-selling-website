@@ -20,7 +20,7 @@ public class HallPlanSectionDto {
 
     @NotNull(message = "Price is mandatory")
     @PositiveOrZero(message = "Price must be a positive number or zero")
-    private Long price;
+    private Double price;
 
     @NotNull(message = "HallPlanId is mandatory")
     private Long hallPlanId;
@@ -59,11 +59,11 @@ public class HallPlanSectionDto {
         this.color = color;
     }
 
-    public Long getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -80,7 +80,7 @@ public class HallPlanSectionDto {
         private Long id;
         private String name;
         private String color;
-        private Long price;
+        private Double price;
         private Long hallplanId;
 
         private HallPlanSectionDtoBuilder() {
@@ -106,7 +106,7 @@ public class HallPlanSectionDto {
             return this;
         }
 
-        public HallPlanSectionDtoBuilder withPrice(Long price) {
+        public HallPlanSectionDtoBuilder withPrice(Double price) {
             this.price = price;
             return this;
         }

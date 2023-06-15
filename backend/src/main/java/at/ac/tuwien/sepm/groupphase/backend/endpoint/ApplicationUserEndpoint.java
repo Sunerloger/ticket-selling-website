@@ -28,12 +28,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.lang.invoke.MethodHandles;
 
 @RestController
-@RequestMapping(value = ApplicationUserEditEndpoint.BASE_PATH)
-public class ApplicationUserEditEndpoint {
+@RequestMapping(value = ApplicationUserEndpoint.BASE_PATH)
+public class ApplicationUserEndpoint {
 
-
-    //TODO: change URI
-    static final String BASE_PATH = "/api/v1/edit";
+    static final String BASE_PATH = "/api/v1/user";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService;
@@ -50,16 +48,16 @@ public class ApplicationUserEditEndpoint {
     @DeleteMapping
     @PermitAll
     @ResponseStatus(HttpStatus.OK)
-    public void delete(UserDeleteDto userDeleteDto) {
+    public void delete(@RequestBody UserDeleteDto userDeleteDto) {
         LOGGER.info("DELETE " + BASE_PATH);
-        userService.delete(userDeleteDto.id(), userDeleteDto.email(), userDeleteDto.password());
+        userService.delete(userMapper.userDeleteDtoToEntity(userDeleteDto));
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping
     @PermitAll
     @Operation(summary = "Edit a user")
-    public void update(@Valid @RequestBody UserDetailDto userDetailDto, @RequestParam(value = "token") String token) {
+    public void update(@Valid @RequestBody UserDetailDto userDetailDto, @RequestHeader("Authorization") String token) {
         LOGGER.info("EDIT USER " + BASE_PATH + "with TOKEN " + token, userDetailDto);
         userMapper.entityToUserDetailDto(userService.edit(userMapper.userDetailDtoToEntity(userDetailDto), token));
     }

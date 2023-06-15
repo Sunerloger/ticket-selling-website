@@ -16,9 +16,9 @@
       </button>
     </div>
   </div>
-  <div *ngIf="items.length !== 0">
+  <div *ngIf="items.length !== 0" class="total-container">
     <span class="total"> Total ({{items.length}} Ticket{{ this.items.length === 1 ? '' : 's' }}
-      ): &nbsp; <h3>{{sumOfItems()}} €</h3></span>
+      ): &nbsp; <h3>{{ (sumOfItems() | number:'1.2-2').replace('.', ',') }} €</h3></span>
     <button id="checkout" type="button" class="btn btn-primary" (click)="checkout()">&nbsp;Checkout&nbsp;</button>
   </div>
   <div *ngIf="items.length === 0">

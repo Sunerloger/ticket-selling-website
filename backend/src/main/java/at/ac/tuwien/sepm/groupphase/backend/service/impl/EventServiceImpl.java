@@ -12,6 +12,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.EventDateRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.xml.bind.ValidationException;
 import org.slf4j.Logger;
@@ -21,12 +22,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -89,11 +92,14 @@ public class EventServiceImpl implements EventService {
             }
 
             if (artist != null) {
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.get("artist"), "%" + artist + "%"));
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(criteriaBuilder.lower(root.get("artist")), "%" + artist.toLowerCase() + "%"));
             }
 
             if (location != null) {
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.join(eventDatesLocation).get("address"), "%" + location + "%"));
+                Predicate inner = criteriaBuilder.or(criteriaBuilder.or(criteriaBuilder.like(criteriaBuilder.lower(root.join(eventDatesLocation).get("city")), "%" + location.toLowerCase() + "%"),
+                        criteriaBuilder.like(criteriaBuilder.lower(root.join(eventDatesLocation).get("address")), "%" + location.toLowerCase() + "%")),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.join(eventDatesLocation).get("areaCode").as(String.class)), "%" + location.toLowerCase() + "%"));
+                predicate = criteriaBuilder.and(predicate, inner);
             }
 
             return predicate;
@@ -128,6 +134,24 @@ public class EventServiceImpl implements EventService {
         EventDate eventDate = eventDateRepository.getEventDateByRoom(hallplanId);
         Event event = eventRepository.getEventById(eventDate.getEvent());
         return new PerformanceDto(event, eventDate);
+    }
+
+    @Override
+    @Lock(LockModeType.OPTIMISTIC)
+    public void incrementSoldTickets(Long hallplanId) {
+        EventDetailDto eventDetailDto = this.getEventFromHallplanId(hallplanId);
+        Event event = eventRepository.getEventById(eventDetailDto.getId());
+        event.setSoldTickets(event.getSoldTickets() + 1);
+        eventRepository.saveAndFlush(event);
+    }
+
+    @Override
+    @Lock(LockModeType.OPTIMISTIC)
+    public void decrementSoldTickets(Long hallplanId) {
+        EventDetailDto eventDetailDto = this.getEventFromHallplanId(hallplanId);
+        Event event = eventRepository.getEventById(eventDetailDto.getId());
+        event.setSoldTickets(event.getSoldTickets() - 1);
+        eventRepository.saveAndFlush(event);
     }
 
 }

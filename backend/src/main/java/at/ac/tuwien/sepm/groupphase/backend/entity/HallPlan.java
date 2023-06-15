@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -28,9 +29,20 @@ public class HallPlan {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @Column(name = "is_template")
+    private boolean isTemplate;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "hallplan_id")
     private List<SeatRow> seatRows;
+
+    public boolean getIsTemplate() {
+        return isTemplate;
+    }
+
+    public void setIsTemplate(boolean template) {
+        isTemplate = template;
+    }
 
     public List<SeatRow> getSeatRows() {
         return seatRows;

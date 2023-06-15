@@ -14,6 +14,16 @@ public class HallPlanDto {
     @Size(max = 255, message = "description must be less than or equal to {max} characters")
     private String description;
 
+    private boolean isTemplate;
+
+    public boolean getIsTemplate() {
+        return isTemplate;
+    }
+
+    public void setIsTemplate(boolean template) {
+        isTemplate = template;
+    }
+
     public String getName() {
         return name;
     }

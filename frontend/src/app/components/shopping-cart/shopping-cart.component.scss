@@ -81,3 +81,9 @@
   display: flex;
   align-items: baseline
 }
+
+.total-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}

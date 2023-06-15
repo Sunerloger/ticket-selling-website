@@ -15,7 +15,7 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     /**
      * Find all news entries specified by {@code pageable}.
      *
-     * @param userId specifies the user who read the news entries
+     * @param userId   specifies the user who read the news entries
      * @param pageable specifies parameters and index of page
      * @return ordered page of news entries
      */
@@ -25,7 +25,7 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     /**
      * Find all news entries specified by {@code pageable}.
      *
-     * @param userId specifies the user who has not seen the news entries
+     * @param userId   specifies the user who has not seen the news entries
      * @param pageable specifies parameters and index of page
      * @return ordered page of news entries
      */

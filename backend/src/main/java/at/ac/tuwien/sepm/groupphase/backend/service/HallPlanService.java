@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.DetailedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSection;
@@ -20,6 +21,14 @@ public interface HallPlanService {
     List<HallPlan> findAll();
 
     /**
+     * Find all hall plans stored in the system which match the parameters.
+     *
+     * @param searchDto contains the search parameters name and description
+     * @return Returns a list of hall plan entities
+     */
+    List<HallPlan> searchHallPlans(HallPlanSearchDto searchDto);
+
+    /**
      * Creates a new hall plan.
      *
      * @param hallplan the hallPlanDto containing the information for the new hall plan
@@ -27,6 +36,16 @@ public interface HallPlanService {
      * @throws ValidationException if the hallPlanDto is invalid
      */
     HallPlan createHallPlan(HallPlanDto hallplan) throws ValidationException;
+
+
+    /**
+     * Creates a new hall plan.
+     *
+     * @param baseHallplanId the hallPlanDto containing the information for the snapshoted hall plan
+     * @return the created HallPlan entity with all tuples from its relationships from given basehallplan
+     * @throws ValidationException if the hallPlanDto is invalid
+     */
+    DetailedHallPlanDto snapshotHallplan(HallPlanDto newHallplan, Long baseHallplanId) throws ValidationException;
 
     /**
      * Retrieves a detailed hall plan by its ID.
@@ -119,8 +138,9 @@ public interface HallPlanService {
      * Retrieves a page containing 5 Hallplans.
      *
      * @param pageIndex index of the page
+     * @param search term to be searched for
      * @return a list of hallplans
      */
-    Page<HallPlan> findPageOfHallplans(int pageIndex);
+    Page<HallPlan> findPageOfHallplans(int pageIndex, String search);
 
 }

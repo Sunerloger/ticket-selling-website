@@ -58,6 +58,9 @@ import { PerformanceTicketSelctionComponent } from './components/performance-tic
 import { AdminPasswordResetComponent } from './components/admin-password-reset/admin-password-reset.component';
 import { PasswordResetComponent } from './components/password-reset/password-reset.component';
 import { UserPasswordResetComponent } from './components/user-password-reset/user-password-reset.component';
+import { HallplanCreateComponent } from './components/hallplan-create/hallplan-create.component';
+import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
+
 
 @NgModule({
   declarations: [
@@ -104,6 +107,8 @@ import { UserPasswordResetComponent } from './components/user-password-reset/use
     AdminPasswordResetComponent,
     PasswordResetComponent,
     UserPasswordResetComponent,
+    HallplanCreateComponent,
+    AutocompleteComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,12 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PurchaseDto;
 import at.ac.tuwien.sepm.groupphase.backend.service.PurchaseService;
 import at.ac.tuwien.sepm.groupphase.backend.service.impl.CustomUserDetailService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import java.lang.invoke.MethodHandles;
-import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class PurchaseEndpoint {
         MethodHandles.lookup().lookupClass()
     );
     private final PurchaseService service;
-    private CustomUserDetailService userService;
+    private final CustomUserDetailService userService;
 
     @Autowired
     public PurchaseEndpoint(
@@ -44,17 +44,17 @@ public class PurchaseEndpoint {
         summary = "Gets a list of all Purchases from that user",
         security = @SecurityRequirement(name = "apiKey")
     )
-    public List<PurchaseDto> getPurchases(
+    public ResponseEntity<Object> getPurchases(
         @RequestHeader("Authorization") String token
     ) {
         LOGGER.info("GET /api/v1/purchase");
-
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            return null;
+            LOGGER.error("User with ROLE_USER could not be resolved");
+            return ResponseEntity.internalServerError().body("Request could not be resolved!");
         }
 
-        return service.getPurchasesOfUser(userId);
+        return ResponseEntity.ok(service.getPurchasesOfUser(userId));
     }
 
     @Secured("ROLE_USER")
@@ -63,7 +63,7 @@ public class PurchaseEndpoint {
         summary = "Get a single Purchase by its purchaseNr",
         security = @SecurityRequirement(name = "apiKey")
     )
-    public PurchaseDto getPurchaseByNr(
+    public ResponseEntity<Object> getPurchaseByNr(
         @PathVariable Long purchaseNr,
         @RequestHeader("Authorization") String token
     ) {
@@ -71,10 +71,11 @@ public class PurchaseEndpoint {
 
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            return null;
+            LOGGER.error("User with ROLE_USER could not be resolved");
+            return ResponseEntity.internalServerError().body("Request could not be resolved!");
         }
 
-        return service.getPurchaseByPurchaseNr(purchaseNr, userId);
+        return ResponseEntity.ok(service.getPurchaseByPurchaseNr(purchaseNr, userId));
     }
 
     @Secured("ROLE_USER")
@@ -83,7 +84,7 @@ public class PurchaseEndpoint {
         summary = "Removes a Purchase by purchaseNr",
         security = @SecurityRequirement(name = "apiKey")
     )
-    public ResponseEntity<Void> cancelPurchase(
+    public ResponseEntity<Object> cancelPurchase(
         @PathVariable Long purchaseNr,
         @RequestHeader("Authorization") String token
     ) {
@@ -91,7 +92,8 @@ public class PurchaseEndpoint {
 
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            return null;
+            LOGGER.error("User with ROLE_USER could not be resolved");
+            return ResponseEntity.internalServerError().body("Request could not be resolved!");
         }
 
         service.deletePurchase(purchaseNr, userId);

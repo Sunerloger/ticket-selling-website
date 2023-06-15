@@ -60,11 +60,18 @@ export class LoginComponent implements OnInit {
         console.log('Could not log in due to:');
         console.log(error);
         this.error = true;
+        if (error.status === 403) {
+          this.notification.error(`Account is locked. Contact an administrator!`);
+        }
+        if (error.status === 401) {
+          this.notification.error(`Email or password is incorrect!`);
+        }
+        /*
         if (typeof error.error === 'object') {
-          this.notification.error(`Email address or password is wrong or account!`);
+          this.notification.error(`Email address or password is wrong or account is locked!`);
         } else {
           this.notification.error(`Email address or password is wrong or account!`);
-        }
+        }*/
       }
     });
   }

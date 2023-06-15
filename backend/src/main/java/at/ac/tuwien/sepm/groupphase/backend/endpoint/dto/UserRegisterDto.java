@@ -2,6 +2,8 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDate;
@@ -12,10 +14,13 @@ public record UserRegisterDto(
     @Column(unique = true, nullable = false)
     String email,
     @Column(nullable = false)
+    @Pattern(regexp = "[ÄÖÜA-Zäöüa-z]*", message = "First name must contain only letters")
     String firstName,
     @Column(nullable = false)
+    @Pattern(regexp = "[ÄÖÜA-Zäöüa-z]*", message = "Last name must contain only letters")
     String lastName,
     @Column(nullable = false)
+    @Past(message = "Birthdate must be in the past")
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate birthdate,
     @Column(nullable = false)

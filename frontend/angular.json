@@ -17,6 +17,12 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies":[
+          "html-to-pdfmake",
+          "pdfmake",
+          "vfs_fonts",
+          "qrcode"
+          ],
             "outputPath": "dist/sepm-group-phase",
             "index": "src/index.html",
             "main": "src/main.ts",

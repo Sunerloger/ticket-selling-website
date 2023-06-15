@@ -6,6 +6,7 @@ import {ToastrService} from 'ngx-toastr';
 import {EventDate} from 'src/app/dtos/eventDate';
 import {AbbreviatedHallplan} from '../../dtos/hallplan/abbreviatedHallplan';
 import {HallplanService} from '../../services/hallplan/hallplan.service';
+import {Observable, of} from 'rxjs';
 
 @Component({
   selector: 'app-events',
@@ -18,7 +19,6 @@ export class EventsComponent implements OnInit {
     city: '',
     areaCode: '',
     address: '',
-    room: 1,
     startingTime: '',
   };
   event: Event = {
@@ -34,7 +34,6 @@ export class EventsComponent implements OnInit {
   eventForm: FormGroup;
   currentPage = 0;
   pageSize = 5;
-  roomplanIsLoading = false;
   selectedRoomplan = '';
   roomplans = [];
   distance = 1;
@@ -46,6 +45,10 @@ export class EventsComponent implements OnInit {
               private notification: ToastrService) {
     this.today = new Date(new Date().toISOString().split('T')[0]);
   }
+  observableRoomplans = (input: string) => (input === '')
+    ? of ([])
+    : this.hallplanService.getRoomplans(this.currentPage, input);
+
 
   ngOnInit(): void {
     this.eventForm = this.fb.group({
@@ -57,7 +60,6 @@ export class EventsComponent implements OnInit {
       description: [''],
       image: ['']
     });
-    this.fetchOptionsRoomplan();
   }
 
   onFileSelected(event: any) {
@@ -89,6 +91,9 @@ export class EventsComponent implements OnInit {
     this.eventForm.controls['category'].setValue(this.event.category);
     this.eventForm.controls['description'].setValue(this.event.description);
     this.eventForm.controls['artist'].setValue(this.event.artist);
+    this.event.eventDatesLocation.forEach((eventDate) =>{
+      this.prepareHallplan(eventDate);
+    });
     console.log(this.eventForm);
     if (this.eventForm.valid) {
       console.log(this.event);
@@ -106,26 +111,16 @@ export class EventsComponent implements OnInit {
       // If the form is invalid, mark all fields as touched to display error messages
       this.eventForm.markAllAsTouched();
     }
+  }
+  prepareHallplan(eventDate: any){
+    if(eventDate.room.id){
+      eventDate.room = eventDate.room.id;
+    }
+  }
 
-  }
-  fetchOptionsRoomplan() {
-    this.roomplanIsLoading = true;
-    // Make an HTTP request to fetch the options using pagination
-    // Adjust the API endpoint and parameters based on your backend implementation
-    // Example: this.http.get(`/api/options?page=${this.currentPage}&pageSize=${this.pageSize}`)
-    //   .subscribe((response: any) => {
-    //     this.options = this.options.concat(response.options);
-    //     this.isLoading = false;
-    //   });
-    const observable = this.hallplanService.getRoomplans(this.currentPage);
-    observable.subscribe((data: AbbreviatedHallplan[]) => {
-      console.log(data);
-      this.roomplans = data;
-      console.log(this.roomplans);
-    });
-  }
-  openDropdownRoomplan() {
-    console.log('Roomplans: '+this.roomplans);
-    this.fetchOptionsRoomplan();
+  formatHallPlanName(hallplan: AbbreviatedHallplan | null | undefined): string {
+    return (hallplan == null)
+      ? ''
+      : `${hallplan.name}`;
   }
 }

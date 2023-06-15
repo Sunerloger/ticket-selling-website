@@ -18,7 +18,8 @@
                 </svg>
             </button>
 
-            <button class="btn edit_btn">
+            <button class="btn edit_btn" (click)="this.isInEditMode = !this.isInEditMode"
+                [ngClass]="{'active_btn' : this.isInEditMode === true}">
                 <svg xmlns="http://www.w3.org/2000/svg" height="27" viewBox="0 96 960 960" width="27">
                     <path
                         d="M180 876h44l443-443-44-44-443 443v44Zm614-486L666 262l42-42q17-17 42-17t42 17l44 44q17 17 17 42t-17 42l-42 42Zm-42 42L248 936H120V808l504-504 128 128Zm-107-21-22-22 44 44-22-22Z" />
@@ -59,13 +60,17 @@
         </span>
         <!-- Price Input-->
         <div class="input-group">
-            <input [defaultValue]="section.price" placeholder="Price" class="form-control" id="price" (input)="handlePriceChange($event.currentTarget.value)">
+            <input [defaultValue]="section.price" placeholder="Price" class="form-control" id="price"
+                (input)="handlePriceChange($event.currentTarget.value)">
             <div class="input-group-prepend">
                 <span class="input-group-text">€</span>
             </div>
             <label *ngIf="this.priceErrMessage.length > 0" for="price"
                 class="form-label text-danger">{{this.priceErrMessage}}</label>
+
         </div>
+        <button *ngIf="this.isInEditMode === true && this.priceErrMessage.length === 0"
+            class="btn btn-secondary save_btn" (click)="persistNewPrice()">Save</button>
 
     </div>
 
@@ -77,8 +82,8 @@
         </span>
         <!-- Name Input-->
         <div class="form-group">
-            <input [defaultValue]="section.name"  placeholder="Name" class="form-control" type="text" id="name"
-                (input)="handleNameInputChange($event.currentTarget.value)">
+            <input [disabled]="true" [defaultValue]="section.name" placeholder="Name" class="form-control" type="text"
+                id="name" (input)="handleNameInputChange($event.currentTarget.value)">
             <label for="name" *ngIf="this.nameErrMessage.length > 0" class="form-label text-danger">Name is
                 mandatory</label>
         </div>

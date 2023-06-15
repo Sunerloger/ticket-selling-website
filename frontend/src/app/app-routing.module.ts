@@ -23,12 +23,11 @@ import {HallplanManagerComponent} from './components/hallplan-manager/hallplan-m
 import {NewsResolver} from './components/news/news.resolver';
 import {EventDetailComponent} from './components/event-detail/event-detail.component';
 import {AdminManagerComponent} from './components/admin-manager/admin-manager.component';
-import {
-  PerformanceTicketSelctionComponent
-} from './components/performance-ticket-selction/performance-ticket-selction.component';
 import {AdminPasswordResetComponent} from './components/admin-password-reset/admin-password-reset.component';
 import {PasswordResetComponent} from './components/password-reset/password-reset.component';
 import {UserPasswordResetComponent} from './components/user-password-reset/user-password-reset.component';
+import {PerformanceTicketSelctionComponent} from './components/performance-ticket-selction/performance-ticket-selction.component';
+import { HallplanCreateComponent } from './components/hallplan-create/hallplan-create.component';
 
 
 const routes: Routes = [
@@ -36,6 +35,7 @@ const routes: Routes = [
 
   {path: 'events', canActivate: [AuthGuard], component: EventOverviewComponent},
   {path: 'event/:id', canActivate: [AuthGuard], component: EventDetailComponent},
+  {path: 'events/create', canActivate: [AdminRouteGuard], component: EventsComponent},
   {path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent},
   {path: 'events/create', canActivate: [AdminRouteGuard], component: EventsComponent},
 
@@ -64,10 +64,11 @@ const routes: Routes = [
 
   {path: 'roomplan/:id/edit', canActivate: [AdminRouteGuard], component: RoomplaneditorComponent},
   {path: 'hallplans/:id/edit', canActivate: [AdminRouteGuard], component: RoomplaneditorComponent},
+   {path: 'hallplans/create', component: HallplanCreateComponent },
   {path: 'hallplans/manage', canActivate: [AdminRouteGuard], component: HallplanManagerComponent},
 
-  {
-    path: 'news', canActivate: [AuthGuard], children: [
+
+  {path: 'news', canActivate: [AuthGuard], children: [
       {path: '', component: NewsOverviewComponent},
       {
         path: ':id/info', component: NewsDetailComponent, resolve: {
