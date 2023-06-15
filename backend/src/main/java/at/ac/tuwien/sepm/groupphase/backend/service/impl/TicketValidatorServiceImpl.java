@@ -42,6 +42,9 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
 
     private final TicketRepository ticketRepository;
 
+    private static final String TICKET_INVALID = "Ticket is invalid!";
+
+    private static final String TICKET_VALID = "Ticket is invalid!";
     public TicketValidatorServiceImpl(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
 
@@ -84,33 +87,42 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
     }
 
     public TicketPayloadDto validatePayload(TicketPayloadDto payloadDto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        //Create TicketPayloadDto
+        TicketPayloadDto newPayload = new TicketPayloadDto();
         //Retrieve KeyFileSpecs
         KeyFileSpecs specs = readKeyFileSpecs();
         //Decrypt Message with retrieved KeySpecs
-        String decryptedMsg = aesDecrypt(payloadDto.getMessage(), specs.getSecretKey(), specs.getIvParameterSpec());
-        //Create TicketPayloadDto
-        TicketPayloadDto newPayload = new TicketPayloadDto();
+        String decryptedMsg = "";
+        try {
+            decryptedMsg = aesDecrypt(payloadDto.getMessage(), specs.getSecretKey(), specs.getIvParameterSpec());
+        } catch (IllegalArgumentException ex) {
+            newPayload.setMessage(TICKET_INVALID);
+            return newPayload;
+        }
 
         String[] msgComponents = decryptedMsg.split(" ");
-        if(msgComponents.length != 4) newPayload.setMessage("Ticket is invalid!");
+        if(msgComponents.length != 4) {
+            newPayload.setMessage(TICKET_INVALID);
+            return newPayload;
+        }
         Long ticketId = Long.valueOf(msgComponents[0]);
         Long seatId = Long.valueOf(msgComponents[1]);
         //Retrieve ticket
         Optional<Ticket> ticket = ticketRepository.findById(ticketId);
         if(!ticket.isPresent())
         {
-            newPayload.setMessage("Ticket is invalid!");
+            newPayload.setMessage(TICKET_INVALID);
         } else {
             if (Objects.equals(ticket.get().getSeatId(), seatId)) {
-                newPayload.setMessage("Ticket is valid!");
+                newPayload.setMessage(TICKET_VALID);
             } else {
-                newPayload.setMessage("Ticket is invalid!");
+                newPayload.setMessage(TICKET_INVALID);
             }
         }
         try {
-            if (!Long.valueOf(msgComponents[3]).equals(Long.valueOf("5839593258"))) newPayload.setMessage("Ticket is invalid!");
+            if (!Long.valueOf(msgComponents[3]).equals(Long.valueOf("5839593258"))) newPayload.setMessage(TICKET_INVALID);
         } catch (NumberFormatException ex) {
-            newPayload.setMessage("Ticket is invalid!");
+            newPayload.setMessage(TICKET_INVALID);
         }
         return newPayload;
     }
