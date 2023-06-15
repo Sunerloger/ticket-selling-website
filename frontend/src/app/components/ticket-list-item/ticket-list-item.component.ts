@@ -12,7 +12,7 @@ export class TicketListItemComponent {
   @Input() isReservation?: boolean;
   @Input() seat: SeatDetail;
   @Input() event: Event;
-
+  @Input() isCanceled?: boolean = false;
   formatTime(time: string): Date {
     const parts = time.split(':');
     const hours = Number(parts[0]);

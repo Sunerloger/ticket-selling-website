@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSeatRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRowRepository;
+import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanSeatService;
 import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatStatus;
 import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatType;
@@ -32,12 +33,14 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
     private final HallPlanSeatRepository seatRepository;
     private final HallPlanSeatMapper seatMapper;
     private final SeatRowRepository seatRowRepository;
+    private final EventService eventService;
 
     @Autowired
-    public HallPlanSeatServiceImpl(HallPlanSeatRepository seatRepository, HallPlanSeatMapper seatMapper, SeatRowRepository seatRowRepository) {
+    public HallPlanSeatServiceImpl(HallPlanSeatRepository seatRepository, HallPlanSeatMapper seatMapper, SeatRowRepository seatRowRepository, EventService eventService) {
         this.seatRepository = seatRepository;
         this.seatMapper = seatMapper;
         this.seatRowRepository = seatRowRepository;
+        this.eventService = eventService;
     }
 
     @Override
@@ -76,7 +79,9 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
 
         List<HallPlanSeat> existingSeat = seatRepository.findAllBySeatRowIdAndSeatNr(seatDto.getSeatrowId(), seatDto.getSeatNr());
 
-        if (!existingSeat.isEmpty() && existingSeat.get(0) != null && (!Objects.equals(seatDto.getSeatNr(), existingSeat.get(0).getSeatNr()))) {
+        if (!existingSeat.isEmpty() && existingSeat.get(0) != null
+            && (existingSeat.get(0).getId().longValue() != seatDto.getId().longValue())
+            && !Objects.equals(seatDto.getSeatNr(), existingSeat.get(0).getSeatNr())) {
             throw new ValidationException("SeatRow with seatrowId " + seatDto.getSeatrowId() + " and seatNr " + seatDto.getSeatNr() + " already exists");
         }
 
@@ -110,7 +115,6 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
         return bulkDto.getSeats();
     }
 
-    //TODO: Update This Method to support new Database Model (standing seats)
     @Override
     public boolean doesSeatExist(Long seatId) {
         Optional<HallPlanSeat> optionalHallPlanSeat = seatRepository.getSeatById(seatId);
@@ -124,9 +128,9 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
         return true;
     }
 
-    //TODO: Update This Method to support new Database Model (standing seats)
     @Override
     @Transactional
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public boolean purchaseReservedSeat(Long seatId) {
         Optional<HallPlanSeat> optionalHallPlanSeat = seatRepository.getSeatById(seatId);
         if (optionalHallPlanSeat.isEmpty()) {
@@ -136,12 +140,21 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
         if (HallPlanSeatType.VACANT_SEAT.equals(seat.getType())) {
             return false;
         }
-        seat.setStatus(HallPlanSeatStatus.OCCUPIED);
+
+        if (seat.getReservedNr().equals(0L)) {
+            LOGGER.error("User tries to buy reserved seat but there are no reserved seats persisted.");
+            return false;
+        }
+
+        seat.setBoughtNr(seat.getBoughtNr() + 1L);
+        seat.setReservedNr(seat.getReservedNr() - 1L);
+
         seatRepository.save(seat);
+        SeatRow seatRow = seatRowRepository.getReferenceById(seat.getSeatrowId());
+        eventService.incrementSoldTickets(seatRow.getHallPlanId());
         return true;
     }
 
-    //TODO: Update This Method to support new Database Model (standing seats)
     @Override
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
@@ -154,17 +167,19 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
         if (HallPlanSeatType.VACANT_SEAT.equals(seat.getType())) {
             return false;
         }
-        if (!HallPlanSeatStatus.FREE.equals(seat.getStatus())) {
+
+        if (seat.getCapacity() <= (seat.getReservedNr() + seat.getBoughtNr())) {
             return false;
         }
-        seat.setStatus(HallPlanSeatStatus.RESERVED);
+
+        seat.setReservedNr(seat.getReservedNr() + 1L);
         seatRepository.save(seat);
         return true;
     }
 
-    //TODO: Update This Method to support new Database Model (standing seats)
     @Override
     @Transactional
+    @Lock(LockModeType.OPTIMISTIC)
     public boolean cancelReservation(Long seatId) {
         Optional<HallPlanSeat> optionalHallPlanSeat = seatRepository.getSeatById(seatId);
         if (optionalHallPlanSeat.isEmpty()) {
@@ -174,17 +189,19 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
         if (HallPlanSeatType.VACANT_SEAT.equals(seat.getType())) {
             return false;
         }
-        if (!HallPlanSeatStatus.RESERVED.equals(seat.getStatus())) {
+
+        if (seat.getReservedNr() <= 0) {
             return false;
         }
-        seat.setStatus(HallPlanSeatStatus.FREE);
+
+        seat.setReservedNr(seat.getReservedNr() - 1L);
         seatRepository.save(seat);
         return true;
     }
 
-    //TODO: Update This Method to support new Database Model (standing seats)
     @Override
     @Transactional
+    @Lock(LockModeType.OPTIMISTIC)
     public boolean freePurchasedSeat(Long seatId) {
         Optional<HallPlanSeat> optionalHallPlanSeat = seatRepository.getSeatById(seatId);
         if (optionalHallPlanSeat.isEmpty()) {
@@ -194,11 +211,17 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
         if (HallPlanSeatType.VACANT_SEAT.equals(seat.getType())) {
             return false;
         }
-        if (!HallPlanSeatStatus.OCCUPIED.equals(seat.getStatus())) {
+
+        if (seat.getBoughtNr() <= 0) {
             return false;
         }
-        seat.setStatus(HallPlanSeatStatus.FREE);
+
+        seat.setBoughtNr(seat.getBoughtNr() - 1L);
         seatRepository.save(seat);
+
+        SeatRow seatRow = seatRowRepository.getReferenceById(seat.getSeatrowId());
+        eventService.decrementSoldTickets(seatRow.getHallPlanId());
+
         return true;
     }
 

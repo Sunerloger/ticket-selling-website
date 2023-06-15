@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserCreateDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDeleteDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserUnBlockDto;
@@ -27,6 +28,9 @@ public interface UserMapper {
     @Mapping(target = "id", source = "id")
     UserDetailDto entityToUserDetailDto(ApplicationUser user);
 
+    @Named("user")
+    @Mapping(target = "email", source = "email")
+    UserDeleteDto entityToUserDeleteDto(ApplicationUser user);
 
     @Mapping(target = "email", source = "email")
     @Mapping(target = "isLocked", source = "locked")
@@ -48,6 +52,9 @@ public interface UserMapper {
     @Mapping(target = "email", source = "email")
     @Mapping(target = "locked", source = "isLocked")
     ApplicationUser userUnBlockDtoToEntity(UserUnBlockDto userUnBlockDto);
+
+    @Mapping(target = "email", source = "email")
+    ApplicationUser userDeleteDtoToEntity(UserDeleteDto userDeleteDto);
 
 
 }

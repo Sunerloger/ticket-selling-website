@@ -6,8 +6,9 @@ interface Size {
   height: number;
 }
 
-export interface SeatSelectionPayload{
+export interface SeatSelectionPayload {
   seat: PersistedSeat;
+  rowNr: number;
   isSelected: boolean;
 }
 
@@ -17,6 +18,7 @@ export interface SeatSelectionPayload{
   styleUrls: ['./immutableseat.component.scss']
 })
 export class ImmutableseatComponent {
+  @Input() rowNr: number;
   @Input() seat: PersistedSeat;
   @Output() seatSelectionChangeEvent = new EventEmitter<SeatSelectionPayload>();
 
@@ -26,7 +28,7 @@ export class ImmutableseatComponent {
   /**
    * If this seat is of type "seat" or "standingSeat" then it toggles its selected status
    */
-  handleSeatClick(){
+  handleSeatClick() {
     const newSelectStatus = !this.isSelected;
 
     //update state
@@ -35,6 +37,7 @@ export class ImmutableseatComponent {
     //emit event
     this.seatSelectionChangeEvent.emit({
       seat: this.seat,
+      rowNr: this.rowNr,
       isSelected: newSelectStatus
     });
   }
@@ -44,20 +47,27 @@ export class ImmutableseatComponent {
    *
    * @returns false if this seat has status free otherwise true
    */
-  isAvailable(){
-    if(Array.isArray(this.seat.status)){
-      return this.seat.status.length > 0;
-    }else{
-      return this.seat.status === SeatStatus.free;
+  isAvailable() {
+    switch (this.seat.type) {
+      case SeatType.seat:
+      case SeatType.vacantSeat:
+        return this.seat.boughtNr === 0 && this.seat.reservedNr === 0;
+      case SeatType.standingSeat:
+        return this.seat.capacity !== (this.seat.boughtNr + this.seat.reservedNr);
     }
   }
 
+  getAvailableCapacity() {
+    return this.seat.capacity - (this.seat.boughtNr + this.seat.reservedNr);
+  }
+
   calcWidthAndHeightAssCSSProperties(): Size {
-    const width = this.seat.capacity * 0.05;
-    const height = this.seat.capacity * 0.03;
+    const width = this.seat.capacity * 0.07;
+    const height = this.seat.capacity * 0.05;
     return {
       width,
       height
     };
   }
 }
+

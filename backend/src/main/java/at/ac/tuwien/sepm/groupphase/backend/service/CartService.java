@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CartItemDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -29,6 +30,10 @@ public interface CartService {
      *
      * @param itemId the id of the to delete seat
      * @param userId the id of the user
+     * @param freeSeat specifies if the seat should be set back to free (when deleting from the cart should be set to true)
      */
-    void deleteItem(Long itemId, Long userId);
+    @Transactional
+    void deleteItem(Long itemId, Long userId, boolean freeSeat);
+
+    boolean itemBelongsToUserCart(Long itemId, Long userId);
 }

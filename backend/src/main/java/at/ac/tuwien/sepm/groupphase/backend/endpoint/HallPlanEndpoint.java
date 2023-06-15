@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.AbbreviatedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.DetailedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatBulkDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatRowBulkDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSectionDto;
@@ -62,18 +63,30 @@ public class HallPlanEndpoint {
     @Secured("ROLE_USER")
     @GetMapping
     @Operation(summary = "Get a list of all hall plans", security = @SecurityRequirement(name = "apiKey"))
-    public List<HallPlanDto> findAll() {
+    public List<HallPlanDto> findAll(HallPlanSearchDto searchDto) {
         LOGGER.info("GET /api/v1/hallplans");
-        return hallPlanMapper.hallPlanToHallPlanDto(hallPlanService.findAll());
+        return hallPlanMapper.hallPlanToHallPlanDto(hallPlanService.searchHallPlans(searchDto));
     }
 
     @Secured("ROLE_ADMIN")
     @PostMapping
     @Operation(summary = "Create a new hall plan entry in the system", security = @SecurityRequirement(name = "apiKey"))
     public HallPlanDto createHallPlan(@RequestBody HallPlanDto hallplan) {
-        LOGGER.info("POST /api/v1/hallplans");
+        LOGGER.info("POST /api/v1/hallplans with {}", hallplan);
         try {
             return hallPlanMapper.hallPlanToHallPlanDto(hallPlanService.createHallPlan(hallplan));
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+        }
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/{id}/snapshot")
+    @Operation(summary = "Create snapshot of given hallplan", security = @SecurityRequirement(name = "apiKey"))
+    public DetailedHallPlanDto createSnapshot(@PathVariable(name = "id") Long baseHallplanId, @RequestBody HallPlanDto hallplan) {
+        LOGGER.info("POST /api/v1/hallplans/{}/snapshot", baseHallplanId);
+        try {
+            return hallPlanService.snapshotHallplan(hallplan, baseHallplanId);
         } catch (ValidationException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
@@ -115,10 +128,10 @@ public class HallPlanEndpoint {
     @Secured("ROLE_USER")
     @GetMapping("/search")
     @Operation(summary = "Get list of events without details", security = @SecurityRequirement(name = "apiKey"))
-    public List<AbbreviatedHallPlanDto> searchHallPlanPages(@RequestParam(defaultValue = "0") int pageIndex) {
+    public List<AbbreviatedHallPlanDto> searchHallPlanPages(@RequestParam(defaultValue = "0") int pageIndex, @RequestParam(required = false) String search) {
         LOGGER.info("GET {}/hallplansForSearch");
         LOGGER.info("called without param");
-        return hallPlanService.findPageOfHallplans(pageIndex)
+        return hallPlanService.findPageOfHallplans(pageIndex, search)
             .map(hallPlanMapper::hallPlanToAbbreviatedHallPlanDto)
             .toList();
     }

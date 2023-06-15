@@ -2,19 +2,20 @@
   <div *ngIf="item">
 
     <div class="card-header">
-      <h1>Purchase from: {{ item.purchaseDate | date:'dd.MM.yy'
-        }}</h1>
+      <h1>
+        Purchase from: {{ item.purchaseDate | date:'dd.MM.yy'}}
+        {{ item.canceled ? '(Canceled)' : '' }}
+      </h1>
     </div>
 
     <div class="billing-info">
       <h4>Bill number: {{item.purchaseNr}} </h4>
+    </div>
+
+    <div class="infobox">
       <h4>Total: {{ (sumOfItems(item)| number:'1.2-2').replace('.', ',') }} €
       </h4>
     </div>
-    <button type="button" class="btn btn-primary"
-            (click)="deletePurchase(item.purchaseNr)">Refund Purchase
-    </button>
-
     <div class="infobox">
       <h4>Billing Information </h4>
       <span> {{user.firstName}}, {{user.lastName}}</span><br>
@@ -29,15 +30,19 @@
         <div style="display: flex; align-items: stretch;">
           <div class="item-list" style="width:100%">
             <app-ticket-list-item [event]="ticket.event" [seat]="ticket.seat"
-                                  [ticketnr]="ticket.ticketNr"></app-ticket-list-item>
+                                  [ticketnr]="ticket.ticketNr" [isCanceled]="item.canceled"></app-ticket-list-item>
           </div>
-
-          <app-ticket-pdf-print [ticket]="ticket"></app-ticket-pdf-print>
-
+          <div *ngIf="!item.canceled">
+            <app-ticket-pdf-print [ticket]="ticket"></app-ticket-pdf-print>
+          </div>
         </div>
 
       </div>
-
+    </div>
+    <div *ngIf="!item.canceled">
+      <button type="button" class="btn btn-primary"
+              (click)="deletePurchase(item.purchaseNr)">Refund Purchase
+      </button>
     </div>
   </div>
 

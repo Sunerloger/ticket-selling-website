@@ -37,7 +37,11 @@ export class PurchaseDetailComponent implements OnInit {
       next: data => {
         this.item = data;
       }, error: error => {
-        this.router.navigate(['/purchases']);
+        const errorMessage = error.status === 0
+          ? 'Server not reachable'
+          : error.message.message;
+        this.notification.error(errorMessage, 'Error:');
+        console.error(error);
       }
     });
   }
@@ -50,8 +54,11 @@ export class PurchaseDetailComponent implements OnInit {
         this.notification.success(`Ticket successfully removed from cart.`);
       },
       (error) => {
-        console.error('Error:', error);
-        this.notification.error(`Something went wrong... please try again!`);
+        const errorMessage = error.status === 0
+          ? 'Server not reachable'
+          : error.message.message;
+        this.notification.error(errorMessage, 'Requested Performance does not exist');
+        console.error(error);
       }, () => {
         this.router.navigate(['/purchases']);
       }

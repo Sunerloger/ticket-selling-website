@@ -161,13 +161,12 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void delete(Long id, String email, String password) {
-        UserDetails userDetails = loadUserByUsername(email);
-        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+    public void delete(ApplicationUser applicationUser) {
+        UserDetails userDetails = loadUserByUsername(applicationUser.getEmail());
+        if (!passwordEncoder.matches(applicationUser.getPassword(), userDetails.getPassword())) {
             throw new BadCredentialsException("Password is incorrect");
         }
-        applicationUserRepository.deleteById(id);
-
+        applicationUserRepository.deleteById(applicationUser.getId());
     }
 
     @Override

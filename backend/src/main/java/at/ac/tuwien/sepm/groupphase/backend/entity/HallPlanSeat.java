@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatStatus;
 import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatType;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -49,9 +50,33 @@ public class HallPlanSeat {
     private Long seatrowId;
 
     @NotNull
+    @Column(name = "bought_nr")
+    private Long boughtNr;
+
+    @NotNull
+    @Column(name = "reserved_nr")
+    private Long reservedNr;
+
+    @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "section_id")
     private HallPlanSection section;
+
+    public Long getBoughtNr() {
+        return boughtNr;
+    }
+
+    public void setBoughtNr(Long boughtNr) {
+        this.boughtNr = boughtNr;
+    }
+
+    public Long getReservedNr() {
+        return reservedNr;
+    }
+
+    public void setReservedNr(Long reservedNr) {
+        this.reservedNr = reservedNr;
+    }
 
     public Long getOrderNr() {
         return orderNr;
