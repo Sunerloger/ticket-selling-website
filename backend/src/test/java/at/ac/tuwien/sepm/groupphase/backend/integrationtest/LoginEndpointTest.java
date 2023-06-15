@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -94,6 +95,34 @@ public class LoginEndpointTest {
         String token = result.getResponse().getContentAsString();
 
         assertTrue(isValidToken(token));
+    }
+
+    @Test
+    public void testUnsuccessfulLogin() throws Exception {
+        //Create valid UserLoginDto
+        UserLoginDto userLoginDto = new UserLoginDto();
+        userLoginDto.setEmail("John@email.com");
+        userLoginDto.setPassword("passwordIsWrong");
+
+        String body = objectMapper.writeValueAsString(userLoginDto);
+
+        int attempts = 5;
+
+        for (int attempt = 1; attempt <= attempts; attempt++) {
+
+            MvcResult result = mockMvc.perform(post("/api/v1/authentication")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(body))
+                .andReturn();
+
+            if (attempt == attempts) {
+                ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(userLoginDto.getEmail());
+                assertTrue(applicationUser.getLocked());
+            } else {
+                ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(userLoginDto.getEmail());
+                assertFalse(applicationUser.getLocked());
+            }
+        }
     }
 
     private boolean isValidToken(String token) {
