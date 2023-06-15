@@ -28,10 +28,12 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -189,24 +191,13 @@ public class MessageEndpointTest implements TestData {
         MessageInquiryDto messageInquiryDto = messageMapper.messageToMessageInquiryDto(message);
         String body = objectMapper.writeValueAsString(messageInquiryDto);
 
-        MvcResult mvcResult = this.mockMvc.perform(post(MESSAGE_BASE_URI)
+        this.mockMvc.perform(post(MESSAGE_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
+            .andExpect(jsonPath("$.errors[*].message", containsInAnyOrder("Title must not be null", "Summary must not be null", "Text must not be null")))
             .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        assertAll(
-            () -> assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus()),
-            () -> {
-                //Reads the errors from the body
-                String content = response.getContentAsString();
-                content = content.substring(content.indexOf('[') + 1, content.indexOf(']'));
-                String[] errors = content.split(",");
-                assertEquals(3, errors.length);
-            }
-        );
     }
 
     private boolean isNow(LocalDateTime date) {

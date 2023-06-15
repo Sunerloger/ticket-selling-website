@@ -46,10 +46,14 @@
                 </small>
               </div>
             </div>
+            <div class="action-buttons">
+              <button type="button" (click)="loginUser()" class="btn btn-primary">Login</button>
 
-            <button type="button" (click)="loginUser()" class="btn btn-primary float-right">Login</button>
-
+              <a href="#/send-reset-mail" (click)="openPasswordResetModal()">Forgot password?</a>
+            </div>
           </form>
+
+
         </div>
 
       </div>
