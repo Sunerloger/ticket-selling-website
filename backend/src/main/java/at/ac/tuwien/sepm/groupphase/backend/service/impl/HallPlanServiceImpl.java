@@ -32,6 +32,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -106,10 +107,10 @@ public class HallPlanServiceImpl implements HallPlanService {
 
         HallPlan baseHallplan = optBaseHallplan.get();
 
-        if(newHallplan.getDescription() == null){
+        if (newHallplan.getDescription() == null) {
             newHallplan.setDescription(baseHallplan.getDescription());
         }
-        if(newHallplan.getName() == null){
+        if (newHallplan.getName() == null) {
             newHallplan.setName(baseHallplan.getName());
         }
 
