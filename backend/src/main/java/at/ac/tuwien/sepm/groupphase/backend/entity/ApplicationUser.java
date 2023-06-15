@@ -44,9 +44,7 @@ public class ApplicationUser {
     @Pattern(regexp = "[ÄÖÜA-Zäöüa-z]*")
     private String cityName;
 
-
     private String password;
-
 
     private Boolean admin = false;
 
@@ -103,22 +101,6 @@ public class ApplicationUser {
         setLocked(isLocked);
     }
 
-
-    /*
-        public ApplicationUser(String email, String firstName, String lastName, LocalDate birthdate, String address, Long areaCode, String cityName,
-                               String password, Boolean admin, Boolean isLocked) {
-            this.email = email;
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.birthdate = birthdate;
-            this.address = address;
-            this.areaCode = areaCode;
-            this.cityName = cityName;
-            this.password = password;
-            this.admin = admin;
-            this.isLocked = isLocked;
-        }
-    */
     public ApplicationUser(String email, Boolean isLocked) {
         this.email = email;
         this.isLocked = isLocked;
