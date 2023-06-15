@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {UserService} from '../../services/user.service';
 import {ToastrService} from 'ngx-toastr';
 import {ResetPasswordUser} from '../../dtos/user';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-password-reset',
@@ -18,6 +19,7 @@ export class PasswordResetComponent {
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
+    private router: Router,
     private notification: ToastrService
   ) {
     this.passwordResetForm = this.formBuilder.group({
@@ -41,14 +43,12 @@ export class PasswordResetComponent {
       newPassword: this.passwordResetForm.controls.newPassword.value,
       token: this.getTokenFromUrl()
     };
-    console.log('Email:' + user.email);
-    console.log('Token:' + user.token);
 
     const observable = this.userService.resetPassword(user);
     observable.subscribe({
         next: () => {
           this.notification.success('Password successfully reset!');
-
+          this.router.navigate(['login']);
         },
         error: err => {
           this.notification.error('Failed to reset password.');

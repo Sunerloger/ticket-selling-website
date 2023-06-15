@@ -133,20 +133,16 @@ export class UserService {
 
   sendResetMail(email: string): Observable<any> {
     const resetUrl = `${this.adminBaseUri}/send-reset-mail`;
-
-    console.log(email);
     return this.http.post(resetUrl, email);
   }
 
   sendResetMailUser(email: string): Observable<any> {
     const resetUrl = `${this.userBaseUri}/send-reset-mail`;
-    console.log(email);
     return this.http.post(resetUrl, email);
   }
 
   resetPassword(user: ResetPasswordUser): Observable<any> {
     const resetPasswordUrl = `${this.userBaseUri}/reset-password`;
-    console.log(user);
     return this.http.post(resetPasswordUrl, user);
   }
 }
