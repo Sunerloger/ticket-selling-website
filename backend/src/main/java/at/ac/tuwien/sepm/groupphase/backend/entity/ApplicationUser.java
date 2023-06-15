@@ -43,6 +43,7 @@ public class ApplicationUser {
     @Pattern(regexp = "[ÄÖÜA-Zäöüa-z]*")
     private String cityName;
 
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")
     private String password;
 
     private Boolean admin = false;
