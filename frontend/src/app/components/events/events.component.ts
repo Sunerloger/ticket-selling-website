@@ -7,6 +7,8 @@ import {EventDate} from 'src/app/dtos/eventDate';
 import {AbbreviatedHallplan} from '../../dtos/hallplan/abbreviatedHallplan';
 import {HallplanService} from '../../services/hallplan/hallplan.service';
 import {Observable, of} from 'rxjs';
+import {PersistedSection} from "../../dtos/hallplan/section";
+import {PersistedHallplan} from "../../dtos/hallplan/hallplan";
 
 @Component({
   selector: 'app-events',
@@ -82,7 +84,7 @@ export class EventsComponent implements OnInit {
     this.event.eventDatesLocation.splice(index, 1);
   }
 
-  onSubmit(): void {
+  async onSubmit() {
     console.log(this.event);
     this.eventForm.controls['title'].setValue(this.event.title);
     this.eventForm.controls['dateLocation'].setValue(this.event.eventDatesLocation);
@@ -91,9 +93,9 @@ export class EventsComponent implements OnInit {
     this.eventForm.controls['category'].setValue(this.event.category);
     this.eventForm.controls['description'].setValue(this.event.description);
     this.eventForm.controls['artist'].setValue(this.event.artist);
-    this.event.eventDatesLocation.forEach((eventDate) =>{
-      this.prepareHallplan(eventDate);
-    });
+    for (const eventDate1 of this.event.eventDatesLocation) {
+      await this.prepareHallplan(eventDate1);
+    }
     console.log(this.eventForm);
     if (this.eventForm.valid) {
       console.log(this.event);
@@ -112,9 +114,21 @@ export class EventsComponent implements OnInit {
       this.eventForm.markAllAsTouched();
     }
   }
-  prepareHallplan(eventDate: any){
+  prepareHallplan(eventDate: any): Promise<PersistedHallplan>{
     if(eventDate.room.id){
-      eventDate.room = eventDate.room.id;
+      return new Promise((resolve, reject) => {
+        this.hallplanService.createHallplanSnapshot(eventDate.room.id).subscribe({
+          next: data => {
+            eventDate.room = data.id;
+            resolve(data);
+          },
+          error: error => {
+            console.error('Error fetching hallplan', error);
+            this.notification.error(`Could not fetch this hallplan. Errorcode: ${error.status}, Errortext: ${error.error.errors}`);
+            reject(error);
+          }
+        });
+      });
     }
   }
 
