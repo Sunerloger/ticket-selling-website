@@ -1,9 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ResetPasswordUser;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.PasswordResetToken;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ApplicationUserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.TokenRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtAuthorizationFilter;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -18,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -38,14 +42,16 @@ public class CustomUserDetailService implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
     private final JwtTokenizer jwtTokenizer;
+    private final TokenRepository tokenRepository;
 
     @Autowired
     public CustomUserDetailService(ApplicationUserRepository applicationUserRepository, PasswordEncoder passwordEncoder,
-                                   JwtTokenizer jwtTokenizer, JwtAuthorizationFilter jwtAuthorizationFilter) {
+                                   JwtTokenizer jwtTokenizer, JwtAuthorizationFilter jwtAuthorizationFilter, TokenRepository tokenRepository) {
         this.applicationUserRepository = applicationUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtAuthorizationFilter = jwtAuthorizationFilter;
         this.jwtTokenizer = jwtTokenizer;
+        this.tokenRepository = tokenRepository;
     }
 
     @Override
@@ -195,6 +201,23 @@ public class CustomUserDetailService implements UserService {
     @Override
     public ApplicationUser getUserById(Long id) {
         return applicationUserRepository.getApplicationUserById(id);
+    }
+
+    @Override
+    public void resetPassword(ResetPasswordUser user) {
+        PasswordResetToken actualToken = tokenRepository.getTokenByEmail(user.email());
+
+        //Check if the token which was received through email is the same as the one saved in the database
+        if (!actualToken.getToken().equals(user.token())) {
+            throw new InsufficientAuthenticationException("Token are not equal");
+        }
+
+        //Update user with new encoded password
+        String encodedPassword = passwordEncoder.encode(user.newPassword());
+        applicationUserRepository.updatePassword(user.email(), encodedPassword);
+
+        //When password is successfully changed delete the token entry
+        tokenRepository.deleteByEmail(user.email());
     }
 
 

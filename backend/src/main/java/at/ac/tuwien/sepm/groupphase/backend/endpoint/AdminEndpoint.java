@@ -4,11 +4,13 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserCreateDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserUnBlockDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
+import at.ac.tuwien.sepm.groupphase.backend.service.PasswordResetService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.xml.bind.ValidationException;
+import org.apache.coyote.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,11 +40,13 @@ public class AdminEndpoint {
     private final UserService userService;
 
     private final UserMapper userMapper;
+    private final PasswordResetService passwordResetService;
 
     @Autowired
-    public AdminEndpoint(UserService userService, UserMapper userMapper) {
+    public AdminEndpoint(UserService userService, UserMapper userMapper, PasswordResetService passwordResetService) {
         this.userMapper = userMapper;
         this.userService = userService;
+        this.passwordResetService = passwordResetService;
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -56,6 +60,14 @@ public class AdminEndpoint {
         } catch (ValidationException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @Secured({"ROLE_ADMIN"})
+    @PostMapping("send-reset-mail")
+    public void resetPassword(@RequestBody String email) {
+        LOGGER.info("RESETING PASSWORD: {}", email);
+        passwordResetService.initiatePasswordReset(email);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -74,4 +86,6 @@ public class AdminEndpoint {
         LOGGER.info("Get blocked users " + BASE_PATH);
         return userMapper.entityToStreamUserUnBlockDto(userService.getBlockedUsers(userMapper.userUnBlockDtoToEntity(userUnBlockDto), token, pageIndex));
     }
+
+
 }

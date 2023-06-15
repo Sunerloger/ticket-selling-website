@@ -86,4 +86,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
+  openPasswordResetModal() {
+    this.router.navigate(['send-reset-mail']);
+  }
 }
