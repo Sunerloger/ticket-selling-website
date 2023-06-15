@@ -49,6 +49,8 @@ public class ApplicationUser {
 
     private Boolean isLocked = false;
 
+    private int failedLoginAttempts;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -202,5 +204,13 @@ public class ApplicationUser {
 
     public void remove(News news) {
         this.readNews.remove(news);
+    }
+
+    public int getFailedLoginAttempts() {
+        return failedLoginAttempts;
+    }
+
+    public void setFailedLoginAttempts(int failedLoginAttempts) {
+        this.failedLoginAttempts = failedLoginAttempts;
     }
 }

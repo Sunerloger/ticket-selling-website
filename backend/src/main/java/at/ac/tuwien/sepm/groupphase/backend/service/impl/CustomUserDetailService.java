@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -59,8 +60,13 @@ public class CustomUserDetailService implements UserService {
             } else {
                 grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_USER");
             }
+            if (applicationUser.getLocked()) {
+                return new User(applicationUser.getEmail(), applicationUser.getPassword(), true, true, true, false, grantedAuthorities);
+            } else {
+                return new User(applicationUser.getEmail(), applicationUser.getPassword(), grantedAuthorities);
+            }
 
-            return new User(applicationUser.getEmail(), applicationUser.getPassword(), grantedAuthorities);
+
         } catch (NotFoundException e) {
             throw new UsernameNotFoundException(e.getMessage(), e);
         }
@@ -85,26 +91,48 @@ public class CustomUserDetailService implements UserService {
         }
     }
 
+
     @Override
     public String login(UserLoginDto userLoginDto) {
         try {
             UserDetails userDetails = loadUserByUsername(userLoginDto.getEmail());
-            if (userDetails != null
-                && userDetails.isAccountNonExpired()
-                && userDetails.isAccountNonLocked()
-                && userDetails.isCredentialsNonExpired()
-                && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
-            ) {
-                List<String> roles = userDetails.getAuthorities()
-                    .stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .toList();
-                return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
+            ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(userLoginDto.getEmail());
+
+            if (userDetails == null) {
+                throw new BadCredentialsException("Email or password is incorrect!");
             }
+
+            if (!passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())) {
+                if (applicationUser.getAdmin() == Boolean.TRUE) {
+                    throw new BadCredentialsException("Email or password is incorrect");
+                }
+                applicationUser.setFailedLoginAttempts(applicationUser.getFailedLoginAttempts() + 1);
+                if (applicationUser.getFailedLoginAttempts() >= 5) {
+                    applicationUser.setLocked(true);
+                    applicationUserRepository.save(applicationUser);
+                    throw new LockedException("Too many failed login attempts! Your account is locked. Contact an administrator!");
+                } else {
+                    applicationUserRepository.save(applicationUser);
+                    throw new BadCredentialsException("Email or password is incorrect!");
+                }
+            }
+
+            if (!userDetails.isAccountNonLocked()) {
+                throw new LockedException("Account is locked. Contact an administrator!");
+            }
+            if (!userDetails.isCredentialsNonExpired()) {
+                throw new BadCredentialsException("Email or password is incorrect!");
+            }
+            applicationUser.setFailedLoginAttempts(0);
+            applicationUserRepository.save(applicationUser);
+            List<String> roles = userDetails.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+            return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
         } catch (UsernameNotFoundException e) {
             throw new BadCredentialsException("Email or password is incorrect or account is locked");
         }
-        throw new BadCredentialsException("Email or password is incorrect or account is locked");
     }
 
     @Override
@@ -133,13 +161,12 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void delete(Long id, String email, String password) {
-        UserDetails userDetails = loadUserByUsername(email);
-        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+    public void delete(ApplicationUser applicationUser) {
+        UserDetails userDetails = loadUserByUsername(applicationUser.getEmail());
+        if (!passwordEncoder.matches(applicationUser.getPassword(), userDetails.getPassword())) {
             throw new BadCredentialsException("Password is incorrect");
         }
-        applicationUserRepository.deleteById(id);
-
+        applicationUserRepository.deleteById(applicationUser.getId());
     }
 
     @Override
