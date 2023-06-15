@@ -1,13 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 
-import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserCreateDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ApplicationUserRepository;
-import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.xml.bind.ValidationException;
@@ -26,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -53,11 +52,6 @@ public class LoginEndpointTest {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private JwtTokenizer jwtTokenizer;
-
-    @Autowired
-    private SecurityProperties securityProperties;
 
     @BeforeEach
     public void beforeEach() throws ValidationException {
@@ -65,14 +59,14 @@ public class LoginEndpointTest {
         // Delete existing users
         applicationUserRepository.deleteAll();
 
-        UserCreateDto successfullLoginUser = new UserCreateDto(-1000L, "John@email.com", "John", "Doe", LocalDate.parse("1988-12-12"),
+        UserCreateDto loginUser = new UserCreateDto(-1000L, "John@email.com", "John", "Doe", LocalDate.parse("1988-12-12"),
             "Teststreet 44/7", 1010L, "Vienna", "password", false, false);
 
-        UserCreateDto unsuccessfullLoginUser = new UserCreateDto(-1000L, "James@email.com", "James", "Doe", LocalDate.parse("1988-12-12"),
-            "Teststreet 44/7", 1010L, "Vienna", "password", false, true);
+        UserCreateDto loginAdmin = new UserCreateDto(-1000L, "James@email.com", "James", "Doe", LocalDate.parse("1988-12-12"),
+            "Teststreet 44/7", 1010L, "Vienna", "password", true, false);
 
-        userService.register(userMapper.userCreateDtoToEntity(successfullLoginUser));
-        userService.register(userMapper.userCreateDtoToEntity(unsuccessfullLoginUser));
+        userService.register(userMapper.userCreateDtoToEntity(loginUser));
+        userService.register(userMapper.userCreateDtoToEntity(loginAdmin));
 
     }
 
@@ -110,7 +104,7 @@ public class LoginEndpointTest {
 
         for (int attempt = 1; attempt <= attempts; attempt++) {
 
-            MvcResult result = mockMvc.perform(post("/api/v1/authentication")
+            mockMvc.perform(post("/api/v1/authentication")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(body))
                 .andReturn();
@@ -118,6 +112,58 @@ public class LoginEndpointTest {
             if (attempt == attempts) {
                 ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(userLoginDto.getEmail());
                 assertTrue(applicationUser.getLocked());
+            } else {
+                ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(userLoginDto.getEmail());
+                assertFalse(applicationUser.getLocked());
+            }
+        }
+    }
+
+    @Test
+    @Transactional
+    public void testSuccessfulLoginAdmin() throws Exception {
+        //Create valid UserLoginDto
+        UserLoginDto userLoginDto = new UserLoginDto();
+        userLoginDto.setEmail("James@email.com");
+        userLoginDto.setPassword("password");
+
+        String body = objectMapper.writeValueAsString(userLoginDto);
+
+        MvcResult result = mockMvc.perform(post("/api/v1/authentication")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        String token = result.getResponse().getContentAsString();
+        ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(userLoginDto.getEmail());
+        assertAll(
+            () -> assertTrue(isValidToken(token)),
+            () -> assertFalse(applicationUser.getLocked()),
+            () -> assertTrue(applicationUser.getAdmin())
+        );
+    }
+
+    @Test
+    public void testUnsuccessfulLoginAdmin() throws Exception {
+        //Create valid UserLoginDto
+        UserLoginDto userLoginDto = new UserLoginDto();
+        userLoginDto.setEmail("James@email.com");
+        userLoginDto.setPassword("passwordIsWrong");
+
+        String body = objectMapper.writeValueAsString(userLoginDto);
+
+        int attempts = 5;
+        for (int attempt = 1; attempt <= attempts; attempt++) {
+
+            mockMvc.perform(post("/api/v1/authentication")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(body))
+                .andReturn();
+
+            if (attempt == attempts) {
+                ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(userLoginDto.getEmail());
+                assertFalse(applicationUser.getLocked());
             } else {
                 ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(userLoginDto.getEmail());
                 assertFalse(applicationUser.getLocked());
