@@ -30,6 +30,7 @@ export class RegisterComponent implements OnInit {
   //Error flag
   error = false;
   errorMessage = '';
+  passwordVerify: string;
 
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
@@ -62,10 +63,10 @@ export class RegisterComponent implements OnInit {
     this.registerForm.controls['address'].setValue(this.user.address);
     this.registerForm.controls['areaCode'].setValue(this.user.areaCode);
     this.registerForm.controls['cityName'].setValue(this.user.cityName);
-    this.registerForm.controls['password'].setValue(this.user.password);
+    this.registerForm.controls['password'].setValue(this.user.password.trim());
 
     console.log(this.registerForm);
-    if (this.registerForm.valid) {
+    if (this.registerForm.valid && this.user.password === this.passwordVerify) {
       console.log(this.user);
       const observable = this.userService.registerUser(this.user);
       observable.subscribe({
@@ -81,6 +82,7 @@ export class RegisterComponent implements OnInit {
         }
       });
     } else {
+      this.notification.error('Passwords do not match!');
       this.registerForm.markAllAsTouched();
     }
 
