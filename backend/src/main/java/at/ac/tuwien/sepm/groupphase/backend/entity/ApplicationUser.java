@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.ValidationException;
 import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDate;
@@ -43,8 +44,9 @@ public class ApplicationUser {
     @Pattern(regexp = "[ÄÖÜA-Zäöüa-z]*")
     private String cityName;
 
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")
+
     private String password;
+
 
     private Boolean admin = false;
 
@@ -87,21 +89,36 @@ public class ApplicationUser {
         this.admin = admin;
     }
 
-
     public ApplicationUser(String email, String firstName, String lastName, LocalDate birthdate, String address, Long areaCode, String cityName,
-                           String password, Boolean admin, Boolean isLocked) {
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthdate = birthdate;
-        this.address = address;
-        this.areaCode = areaCode;
-        this.cityName = cityName;
-        this.password = password;
-        this.admin = admin;
-        this.isLocked = isLocked;
+                           String password, Boolean admin, Boolean isLocked) throws ValidationException {
+        setEmail(email);
+        setFirstName(firstName);
+        setLastName(lastName);
+        setBirthdate(birthdate);
+        setAddress(address);
+        setAreaCode(areaCode);
+        setCityName(cityName);
+        setPassword(password);
+        setAdmin(admin);
+        setLocked(isLocked);
     }
 
+
+    /*
+        public ApplicationUser(String email, String firstName, String lastName, LocalDate birthdate, String address, Long areaCode, String cityName,
+                               String password, Boolean admin, Boolean isLocked) {
+            this.email = email;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.birthdate = birthdate;
+            this.address = address;
+            this.areaCode = areaCode;
+            this.cityName = cityName;
+            this.password = password;
+            this.admin = admin;
+            this.isLocked = isLocked;
+        }
+    */
     public ApplicationUser(String email, Boolean isLocked) {
         this.email = email;
         this.isLocked = isLocked;
