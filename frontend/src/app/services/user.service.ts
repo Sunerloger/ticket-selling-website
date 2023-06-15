@@ -88,7 +88,6 @@ export class UserService {
    * @param password the password of the user
    * */
   delete(id: number, email: string, password: string) {
-    console.log(id + email + password);
     let params = new HttpParams();
     params = params.append('id', id);
     params = params.append('email', email);
