@@ -65,7 +65,7 @@ public class UserRegisterEndpointTest {
 
 
     private final ApplicationUser applicationUser =
-        new ApplicationUser("martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure", false,
+        new ApplicationUser("martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "Password123%", false,
             false);
 
 
@@ -94,7 +94,7 @@ public class UserRegisterEndpointTest {
     @Test
     public void givenValidUserRegisterDto_whenRegisterUser_UserIsCreated() throws Exception {
         UserRegisterDto userRegisterDto =
-            new UserRegisterDto(-1000L, "john@example.com", "John", "Doe", LocalDate.parse("1988-12-12"), "Teststreet", 1010L, "Vienna", "password", false,
+            new UserRegisterDto(-1000L, "john@example.com", "John", "Doe", LocalDate.parse("1988-12-12"), "Teststreet", 1010L, "Vienna", "Password123%", false,
                 false);
         String requestBody = objectMapper.writeValueAsString(userRegisterDto);
         mockMvc.perform(post(BASE_PATH)
@@ -115,7 +115,7 @@ public class UserRegisterEndpointTest {
     public void givenUserRegisterDtoWithInvalidFirstName_whenRegisterUser_ValidationFails() throws Exception {
         UserRegisterDto userRegisterDto = new UserRegisterDto(
             -1000L, "john@example.com", "John123", "Doe", LocalDate.parse("1990-01-01"),
-            "Teststreet", 1010L, "Vienna", "password", false, false
+            "Teststreet", 1010L, "Vienna", "Password123%", false, false
         );
         String requestBody = objectMapper.writeValueAsString(userRegisterDto);
 
@@ -131,7 +131,7 @@ public class UserRegisterEndpointTest {
     public void givenUserRegisterDtoWithInvalidLastName_whenRegisterUser_ValidationFails() throws Exception {
         UserRegisterDto userRegisterDto = new UserRegisterDto(
             -1000L, "john@example.com", "John", "Doe123", LocalDate.parse("1990-01-01"),
-            "Teststreet", 1010L, "Vienna", "password", false, false
+            "Teststreet", 1010L, "Vienna", "Password123%", false, false
         );
         String requestBody = objectMapper.writeValueAsString(userRegisterDto);
 
@@ -148,7 +148,7 @@ public class UserRegisterEndpointTest {
         LocalDate futureDate = LocalDate.now().plusYears(1);
         UserRegisterDto userRegisterDto = new UserRegisterDto(
             -1000L, "john@example.com", "John", "Example", futureDate,
-            "Teststreet", 1010L, "Vienna", "password", false, false
+            "Teststreet", 1010L, "Vienna", "Password123%", false, false
         );
         String requestBody = objectMapper.writeValueAsString(userRegisterDto);
 
@@ -164,7 +164,7 @@ public class UserRegisterEndpointTest {
     public void givenUserRegisterDtoWithMultipleInvalidFields_whenRegisterUser_ValidationFails() throws Exception {
         UserRegisterDto userRegisterDto = new UserRegisterDto(
             -1000L, "john@example.com", "John123", "Example123", LocalDate.parse("1988-12-12"),
-            "Teststreet", 1010L, "Vienna", "password", false, false
+            "Teststreet", 1010L, "Vienna", "Password123%", false, false
         );
         String requestBody = objectMapper.writeValueAsString(userRegisterDto);
 

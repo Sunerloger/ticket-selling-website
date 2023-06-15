@@ -60,10 +60,10 @@ public class LoginEndpointTest {
         applicationUserRepository.deleteAll();
 
         UserCreateDto loginUser = new UserCreateDto(-1000L, "John@email.com", "John", "Doe", LocalDate.parse("1988-12-12"),
-            "Teststreet 44/7", 1010L, "Vienna", "password", false, false);
+            "Teststreet 44/7", 1010L, "Vienna", "Password123%", false, false);
 
         UserCreateDto loginAdmin = new UserCreateDto(-1000L, "James@email.com", "James", "Doe", LocalDate.parse("1988-12-12"),
-            "Teststreet 44/7", 1010L, "Vienna", "password", true, false);
+            "Teststreet 44/7", 1010L, "Vienna", "Password123%", true, false);
 
         userService.register(userMapper.userCreateDtoToEntity(loginUser));
         userService.register(userMapper.userCreateDtoToEntity(loginAdmin));
@@ -76,7 +76,7 @@ public class LoginEndpointTest {
         //Create valid UserLoginDto
         UserLoginDto userLoginDto = new UserLoginDto();
         userLoginDto.setEmail("John@email.com");
-        userLoginDto.setPassword("password");
+        userLoginDto.setPassword("Password123%");
 
         String body = objectMapper.writeValueAsString(userLoginDto);
 
@@ -96,7 +96,7 @@ public class LoginEndpointTest {
         //Create valid UserLoginDto
         UserLoginDto userLoginDto = new UserLoginDto();
         userLoginDto.setEmail("John@email.com");
-        userLoginDto.setPassword("passwordIsWrong");
+        userLoginDto.setPassword("PasswordIsWrong");
 
         String body = objectMapper.writeValueAsString(userLoginDto);
 
@@ -125,7 +125,7 @@ public class LoginEndpointTest {
         //Create valid UserLoginDto
         UserLoginDto userLoginDto = new UserLoginDto();
         userLoginDto.setEmail("James@email.com");
-        userLoginDto.setPassword("password");
+        userLoginDto.setPassword("Password123%");
 
         String body = objectMapper.writeValueAsString(userLoginDto);
 
@@ -149,7 +149,7 @@ public class LoginEndpointTest {
         //Create valid UserLoginDto
         UserLoginDto userLoginDto = new UserLoginDto();
         userLoginDto.setEmail("James@email.com");
-        userLoginDto.setPassword("passwordIsWrong");
+        userLoginDto.setPassword("PasswordIsWrong");
 
         String body = objectMapper.writeValueAsString(userLoginDto);
 
