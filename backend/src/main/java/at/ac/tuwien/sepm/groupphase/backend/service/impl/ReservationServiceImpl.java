@@ -37,7 +37,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public List<ReservationDto> getReservationsOfUser(Long userId) {
-        List<Reservation> reservationList = repository.findReservationsByUserIdOrderByDate(userId);
+        List<Reservation> reservationList = repository.findReservationsByUserIdOrderByReservationNrDesc(userId);
         List<ReservationDto> reservationDtoList = new ArrayList<>();
 
         for (Reservation reservation : reservationList) {
@@ -52,14 +52,14 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public ReservationDto getReservationOfUser(Long reservationNr, Long userId) {
+    public ReservationDto getReservationOfUser(Long reservationNr, Long userId) throws NotFoundException {
         Reservation reservation = repository.findReservationByReservationNr(reservationNr);
         if (!reservation.getUserId().equals(userId)) {
-            return null;
+            throw new NotFoundException();
         }
 
         if (reservation.getReservationSeatsList().isEmpty()) {
-            return null;
+            throw new NotFoundException();
         }
 
         List<SeatDto> seatDtoList = new ArrayList<>();
@@ -75,7 +75,7 @@ public class ReservationServiceImpl implements ReservationService {
         reservationDto.setReservedSeats(seatDtoList);
 
         if (rowDto == null) {
-            return reservationDto;
+            throw new RuntimeException();
         }
 
         EventDetailDto event = eventService.getEventFromHallplanId(rowDto.getHallPlanId());
@@ -94,11 +94,11 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = repository.findReservationByReservationNr(reservationNr);
 
         if (reservation == null) {
-            return; //Todo: No Content
+            throw new NotFoundException();
         }
 
         if (!reservation.getUserId().equals(userId)) {
-            return; //TODO: No Content (to not have side channels)
+            throw new NotFoundException();
         }
 
         for (ReservationSeat reservationSeat : reservation.getReservationSeatsList()) {

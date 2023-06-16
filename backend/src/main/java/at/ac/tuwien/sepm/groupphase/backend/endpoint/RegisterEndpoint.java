@@ -48,4 +48,5 @@ public class RegisterEndpoint {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
+
 }

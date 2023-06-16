@@ -114,9 +114,11 @@ export class AdminBlockUnblockComponent implements OnInit {
           switch (this.mode) {
             case BlockUnblockMode.block:
               this.notification.success(`${this.user.email} has been successfully blocked`);
+              this.resetBlockForm();
               break;
             case BlockUnblockMode.unblock:
               this.notification.success(`${this.user.email} has been successfully unblocked`);
+              this.resetBlockForm();
               break;
             default:
               console.error('Unknown Mode');
@@ -180,6 +182,22 @@ export class AdminBlockUnblockComponent implements OnInit {
         this.users.push(...value);
       });
 
+    }
+  }
+
+  confirmBlock(email: string) {
+    if (this.mode === 0) {
+      if (confirm('Are you sure you want to block the user?')) {
+        this.blockUser(email);
+      } else {
+        //User cancelled
+      }
+    } else {
+      if (confirm('Are you sure you want to unblock the user?')) {
+        this.blockUser(email);
+      } else {
+        //User cancelled
+      }
     }
   }
 }

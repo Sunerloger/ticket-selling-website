@@ -14,15 +14,19 @@ import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
 import at.ac.tuwien.sepm.groupphase.backend.service.CartService;
 import at.ac.tuwien.sepm.groupphase.backend.service.ReservationService;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class PurchaseServiceImpl implements PurchaseService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private PurchaseRepository repository;
     private HallPlanSeatService seatService;
     private TicketService ticketService;
@@ -59,31 +63,33 @@ public class PurchaseServiceImpl implements PurchaseService {
         Purchase purchase = repository.findPurchasesByPurchaseNr(purchaseNr);
 
         if (purchase == null) {
-            return; //Todo: No Content
+            return;
         }
 
         if (!purchase.getUserId().equals(userId)) {
-            return; //TODO: No Content (to not have side channels)
+            return;
         }
 
         for (Ticket ticket : purchase.getTicketList()) {
             seatService.freePurchasedSeat(ticket.getSeatId());
         }
-        repository.deletePurchaseByPurchaseNr(purchaseNr);
+        purchase.setCanceled(true);
+        repository.save(purchase);
     }
 
 
     @Override
     public List<PurchaseDto> getPurchasesOfUser(Long id) {
 
-        List<Purchase> purchaseList = repository.findPurchasesByUserIdOrderByPurchaseDate(id);
+        List<Purchase> purchaseList = repository.findPurchasesByUserIdOrderByPurchaseNrDesc(id);
         List<PurchaseDto> purchaseDtoList = new ArrayList<>();
 
         //TODO: check if purchase belong to user cart
 
         for (Purchase purchase : purchaseList) {
             if (purchase.getTicketList().isEmpty()) {
-                break; //TODO: actually this shouldnt happen (every purchase should have tickets)
+                LOGGER.error("purchase doesnt have tickets");
+                continue;
             }
 
             List<Ticket> ticketList = purchase.getTicketList();
@@ -106,12 +112,15 @@ public class PurchaseServiceImpl implements PurchaseService {
 
         if (purchaseCreationDto.getSeats() == null) {
             return;
-            //TODO: some kind of error
         }
         for (SeatDto seatDto : purchaseCreationDto.getSeats()) {
+            if (!cartService.itemBelongsToUserCart(seatDto.getId(), userId)) {
+                continue;
+            }
+
             if (seatService.purchaseReservedSeat(seatDto.getId())) {
                 ticketList.add(new Ticket(seatDto.getId()));
-                cartService.deleteItem(seatDto.getId(), userId);
+                cartService.deleteItem(seatDto.getId(), userId, false);
             }
         }
 
@@ -125,12 +134,14 @@ public class PurchaseServiceImpl implements PurchaseService {
             purchase.setBillAreaCode(user.getAreaCode());
             purchase.setBillCityName(user.getCityName());
         } else {
-            purchase.setBillAddress("not implemented (address)");
-            purchase.setBillAreaCode(1337L);
-            purchase.setBillCityName("not implemented (city)");
+            purchase.setBillAddress(purchaseCreationDto.getAddress());
+            purchase.setBillAreaCode(purchaseCreationDto.getAreaCode());
+            purchase.setBillCityName(purchaseCreationDto.getCity());
         }
         purchase.setTicketList(ticketList);
-        repository.save(purchase);
+        if (!purchase.getTicketList().isEmpty()) {
+            repository.save(purchase);
+        }
     }
 
     @Override
@@ -162,9 +173,9 @@ public class PurchaseServiceImpl implements PurchaseService {
             purchase.setBillAreaCode(user.getAreaCode());
             purchase.setBillCityName(user.getCityName());
         } else {
-            purchase.setBillAddress("not implemented (address)");
-            purchase.setBillAreaCode(1337L);
-            purchase.setBillCityName("not implemented (city)");
+            purchase.setBillAddress(purchaseCreationDto.getAddress());
+            purchase.setBillAreaCode(purchaseCreationDto.getAreaCode());
+            purchase.setBillCityName(purchaseCreationDto.getCity());
         }
         purchase.setTicketList(ticketList);
         repository.save(purchase);

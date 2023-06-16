@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.ApplicationUserEditEndpoint;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.ApplicationUserEndpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.RegisterEndpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDeleteDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
@@ -11,6 +11,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ApplicationUserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.TokenRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -50,10 +52,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class ApplicationUserEditEndpointTest {
+public class ApplicationUserEndpointTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private TokenRepository tokenRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private ApplicationUserRepository userRepository;
@@ -73,8 +81,13 @@ public class ApplicationUserEditEndpointTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    static final String BASE_PATH = ApplicationUserEditEndpoint.BASE_PATH;
-    static final String POST_PATH = RegisterEndpoint.BASE_PATH;
+    static final String BASE_PATH = ApplicationUserEndpoint.BASE_PATH;
+
+    static final String REGISTER_PATH = RegisterEndpoint.BASE_PATH;
+
+    private final ApplicationUser applicationUser =
+        new ApplicationUser("marty@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure", false,
+            false);
 
     @BeforeEach
     public void beforeEach() {
@@ -84,16 +97,17 @@ public class ApplicationUserEditEndpointTest {
     @Test
     public void givenApplicationUsersWithNewsRead_whenDelete_thenGetAllLengthIs0And200() throws Exception {
 
-        ApplicationUser user = new ApplicationUser(DEFAULT_USER, "Martin",
+        UserRegisterDto user = new UserRegisterDto(null, DEFAULT_USER, "Martin",
             "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L,
             "Vienna", "123", false, false);
 
-        UserRegisterDto userRegisterDto = userMapper.entityToDto(user);
-        String body = objectMapper.writeValueAsString(userRegisterDto);
+        // TODO: admin and isLocked should not be nullable?
 
-        MvcResult mvcResultPost = this.mockMvc.perform(post(POST_PATH)
+        String registerBody = objectMapper.writeValueAsString(user);
+
+        MvcResult mvcResultPost = this.mockMvc.perform(post(REGISTER_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(body))
+                .content(registerBody))
             .andDo(print())
             .andReturn();
 
@@ -144,11 +158,12 @@ public class ApplicationUserEditEndpointTest {
         UserDeleteDto userDeleteDto = new UserDeleteDto(userRepository.findUserByEmail(DEFAULT_USER).getId(),
             DEFAULT_USER, "123");
 
+        String deleteBody = objectMapper.writeValueAsString(userDeleteDto);
+
         MvcResult mvcResult = this.mockMvc.perform(delete(BASE_PATH)
-                .param("id", userDeleteDto.id().toString())
-                .param("email", userDeleteDto.email())
-                .param("password", userDeleteDto.password())
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(deleteBody))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();

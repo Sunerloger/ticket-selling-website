@@ -27,15 +27,17 @@ export class RoomplanCartComponent {
   }
 
   addToCart(seatList: PersistedSeat[]) {
-    //Todo: something with response
     this.cartService.addToCart(seatList).subscribe(
       (response) => {
         console.log('Status:', response.status);
         this.notification.success(`Ticket successfully removed from cart.`);
       },
       (error) => {
-        console.error('Error:', error);
-        this.notification.error(`Something went wrong... please try again!`);
+        const errorMessage = error.status === 0
+          ? 'Server not reachable'
+          : error.message.message;
+        this.notification.error(errorMessage, 'Error:');
+        console.error(error);
       }, () => {
         this.router.navigate(['/cart']);
       }
@@ -43,24 +45,21 @@ export class RoomplanCartComponent {
   }
 
   reserveSeats(seatList: PersistedSeat[]) {
-    //Todo: something with response
     this.reservationService.createReservation(seatList).subscribe(
       (response) => {
         console.log('Status:', response.status);
-        this.notification.success(`Ticket successfully removed from cart.`);
+        this.notification.success(`Purchase successful.`);
       },
       (error) => {
-        console.error('Error:', error);
-        this.notification.error(`Something went wrong... please try again!`);
+        const errorMessage = error.status === 0
+          ? 'Server not reachable'
+          : error.message.message;
+        this.notification.error(errorMessage, 'Error:');
+        console.error(error);
       }, () => {
         this.router.navigate(['/reservations']);
       }
     );
   }
-
-  buttonMessage(): string {
-    return 'lol';
-  }
-
 
 }

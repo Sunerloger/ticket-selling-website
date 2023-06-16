@@ -8,6 +8,7 @@ interface Size {
 
 export interface SeatSelectionPayload {
   seat: PersistedSeat;
+  rowNr: number;
   isSelected: boolean;
 }
 
@@ -17,6 +18,7 @@ export interface SeatSelectionPayload {
   styleUrls: ['./immutableseat.component.scss']
 })
 export class ImmutableseatComponent {
+  @Input() rowNr: number;
   @Input() seat: PersistedSeat;
   @Output() seatSelectionChangeEvent = new EventEmitter<SeatSelectionPayload>();
 
@@ -35,6 +37,7 @@ export class ImmutableseatComponent {
     //emit event
     this.seatSelectionChangeEvent.emit({
       seat: this.seat,
+      rowNr: this.rowNr,
       isSelected: newSelectStatus
     });
   }

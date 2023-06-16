@@ -8,7 +8,7 @@
       <div class="cart-info">
         <span class="cart-item-info"> Section: <b>{{ item.section.name }} </b> </span>
         <span class="cart-item-info"> Row: <b> {{ item.section.id }} </b> </span>
-        <span class="cart-item-info"> Seat: <b> {{ item.seatNr }} </b> </span>
+        <span class="cart-item-info"> Seat: <b> {{ item.type === 'STANDING_SEAT' ? '/ (standing room)' : item.seatNr }} </b> </span>
       </div>
 
       <div class="item-price-info">

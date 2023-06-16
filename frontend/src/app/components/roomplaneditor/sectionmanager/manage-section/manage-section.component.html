@@ -6,10 +6,8 @@
 
     <!-- Sections -->
     <div *ngFor="let section of this.sections" class="section_display">
-        <app-editable-section
-        (deleteSectionEvent)="this.deleteSectionEvent.emit($event)"
-        [section]="section"
-        />
-    <!-- Underline -->
-    <div class="large_seperator"></div>
-</div>
+        <app-editable-section (deleteSectionEvent)="this.deleteSectionEvent.emit($event)" [section]="section"
+            (updateSectionEvent)="this.updateSectionEvent.emit($event)" />
+        <!-- Underline -->
+        <div class="large_seperator"></div>
+    </div>
