@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +13,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -36,8 +38,12 @@ public class ApplicationUser {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthdate;
 
+
+    @Pattern(regexp = "[ÄÖÜäöüßA-Za-z0-9\\s/-]*")
     private String address;
 
+
+    @Positive
     private Long areaCode;
 
     @Pattern(regexp = "[ÄÖÜA-Zäöüa-z]*")
