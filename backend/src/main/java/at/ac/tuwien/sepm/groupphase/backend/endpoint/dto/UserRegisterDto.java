@@ -34,13 +34,7 @@ public record UserRegisterDto(
 
     @Column(nullable = false)
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")
-    String password,
-
-    Boolean admin,
-
-    Boolean isLocked
-
-
+    String password
 ) {
 }
 
