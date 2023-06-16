@@ -20,6 +20,7 @@ public interface TestData {
     String BASE_URI = "/api/v1";
     String MESSAGE_BASE_URI = BASE_URI + "/messages";
     String NEWS_BASE_URI = BASE_URI + "/news";
+    String EVENTS_BASE_URI = BASE_URI + "/events";
 
     String ADMIN_USER = "adminTest@email.com";
     List<String> ADMIN_ROLES = new ArrayList<>() {

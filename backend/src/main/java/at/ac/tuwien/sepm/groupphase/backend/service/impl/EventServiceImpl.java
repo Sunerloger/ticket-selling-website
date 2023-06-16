@@ -138,7 +138,7 @@ public class EventServiceImpl implements EventService {
 
         Pageable pageable = PageRequest.of(0, number, Sort.by("title").ascending());
         Specification<Event> specification = (root, query, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.isTrue(root.get("id"));
+            Predicate predicate = criteriaBuilder.isNotNull(root.get("id"));
             if (searchString != null) {
                 predicate = criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), "%" + searchString.toLowerCase() + "%");
             }
