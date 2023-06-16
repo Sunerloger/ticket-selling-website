@@ -1,0 +1,20 @@
+<div *ngIf="sections" class="editor_container">
+
+  <div class=row *ngFor="let section of sections">
+
+    <div class="col-1">
+      <i [ngStyle]="{'color': section.color}" class="fa fa-circle"></i>
+      {{section.color}}
+    </div>
+
+    <div class="col-2">
+      {{section.name}}
+    </div>
+
+    <div class="col-3">
+      {{formatPrice(section.price)}}€
+    </div>
+
+  </div>
+
+</div>
