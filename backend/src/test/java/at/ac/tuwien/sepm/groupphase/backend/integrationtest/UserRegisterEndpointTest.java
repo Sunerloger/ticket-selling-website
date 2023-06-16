@@ -44,6 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class UserRegisterEndpointTest {
 
+    
     @Autowired
     private MockMvc mockMvc;
 
