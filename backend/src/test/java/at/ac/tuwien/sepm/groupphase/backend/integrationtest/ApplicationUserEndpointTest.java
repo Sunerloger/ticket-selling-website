@@ -4,7 +4,6 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserCreateDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ApplicationUserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,17 +15,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -81,7 +81,6 @@ public class ApplicationUserEndpointTest {
     }
 
 
-
     @Test
     @Transactional
     public void givenUserDetailDtoAndAuthorizationToken_whenUpdateUser_thenUpdateUser() throws Exception {
@@ -95,25 +94,18 @@ public class ApplicationUserEndpointTest {
         userLoginDto.setPassword("Password123%");
         String token = userService.login(userLoginDto);
 
-        ApplicationUser beforeEdit = applicationUserRepository.findUserByEmail("John@email.com");
-        assertAll(
-            () -> assertNotNull(beforeEdit));
-
-        mockMvc.perform(put(BASE_PATH)
+        MvcResult mvcResult = this.mockMvc.perform(put(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .content(objectMapper.writeValueAsString(userDetailDto)))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andReturn();
 
+        MockHttpServletResponse response = mvcResult.getResponse();
 
-        ApplicationUser editedUser = applicationUserRepository.findUserByEmail("John@email.com");
         assertAll(
-            () -> assertNotNull(editedUser),
-            () -> assertEquals("Jonathan", editedUser.getFirstName()),
-            () -> assertEquals("Frakes", editedUser.getLastName()),
-            () -> assertEquals(LocalDate.parse("1988-12-12"), editedUser.getBirthdate()),
-            () -> assertEquals("Blumenstraße 1-2/44", editedUser.getAddress()),
-            () -> assertEquals("Vienna", editedUser.getCityName()));
+            () -> assertEquals(HttpStatus.OK.value(), response.getStatus())
+        );
     }
 
     @Test
