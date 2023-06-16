@@ -60,7 +60,7 @@ public class PasswordResetTest {
     static final String BASE_PATH_USER = "/api/v1/edit";
 
     private final ApplicationUser applicationUser =
-        new ApplicationUser("marty@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure", false,
+        new ApplicationUser("marty@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "Password123%", false,
             false);
 
     @BeforeEach
@@ -93,7 +93,7 @@ public class PasswordResetTest {
     @Test
     public void testResetPassword() throws Exception {
         String email = "marty@email.com";
-        ResetPasswordUser resetPasswordUser = new ResetPasswordUser("marty@email.com", "passwordHasChanged", "Token");
+        ResetPasswordUser resetPasswordUser = new ResetPasswordUser("marty@email.com", "passwordHasChanged123%", "Token");
         PasswordResetToken passwordResetToken = new PasswordResetToken();
         passwordResetToken.setToken(resetPasswordUser.token());
         passwordResetToken.setEmail(resetPasswordUser.email());
@@ -111,7 +111,7 @@ public class PasswordResetTest {
         ApplicationUser afterReset = applicationUserRepository.findUserByEmail(email);
         assertAll(
             () -> assertEquals(HttpStatus.OK.value(), resetResultResponse.getStatus()),
-            () -> assertTrue(passwordEncoder.matches("passwordHasChanged", afterReset.getPassword()))
+            () -> assertTrue(passwordEncoder.matches("passwordHasChanged123%", afterReset.getPassword()))
         );
 
     }

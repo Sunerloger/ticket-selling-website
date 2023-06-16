@@ -360,6 +360,7 @@ public class HallPlanServiceImpl implements HallPlanService {
             if (search != null) {
                 predicate = criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + search.toLowerCase() + "%");
             }
+            predicate = criteriaBuilder.isTrue(root.get("isTemplate"));
             return predicate;
         };
         return hallPlanRepository.findAll(specification, pageable);

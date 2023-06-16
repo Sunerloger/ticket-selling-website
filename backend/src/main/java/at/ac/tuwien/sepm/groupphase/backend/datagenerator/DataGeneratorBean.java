@@ -59,10 +59,12 @@ public class DataGeneratorBean {
     @PostConstruct
     public void generateInitialAdmin() throws SQLException, ValidationException {
         LOGGER.info("Generating initial admin...");
+
+
         ApplicationUser initialAdmin =
-            new ApplicationUser("adminTest@email.com", "Admin", "Admin", LocalDate.parse("1999-12-12"), "Adminstreet", 1010L, "Vienna", "password", true, false);
+            new ApplicationUser("adminTest@email.com", "Admin", "Admin", LocalDate.parse("1999-12-12"), "Adminstreet", 1010L, "Vienna", "Password123%", true, false);
         ApplicationUser initialUser =
-            new ApplicationUser("userTest@email.com", "User", "User", LocalDate.parse("1999-12-12"), "Userstreet", 1010L, "Vienna", "password", false, false);
+            new ApplicationUser("userTest@email.com", "User", "User", LocalDate.parse("1999-12-12"), "Userstreet", 1010L, "Vienna", "Password123%", false, false);
         try (var connection = dataSource.getConnection()) {
             ScriptUtils.executeSqlScript(connection, new ClassPathResource("sql/deleteAllUsers.sql"));
             userDetailService.register(initialAdmin);
@@ -78,11 +80,11 @@ public class DataGeneratorBean {
             Resource scriptResource = new ClassPathResource("sql/insertUsers.sql");
             String sqlScript = FileCopyUtils.copyToString(new InputStreamReader(scriptResource.getInputStream(), StandardCharsets.UTF_8));
 
-            String plainTextPassword = "password";
+            String plainTextPassword = "Password123%";
 
             String hashedPassword = passwordEncoder.encode(plainTextPassword);
 
-            sqlScript = StringUtils.replace(sqlScript, "{password}", hashedPassword);
+            sqlScript = StringUtils.replace(sqlScript, "{Password123%}", hashedPassword);
 
             ScriptUtils.executeSqlScript(connection, new ByteArrayResource(sqlScript.getBytes(StandardCharsets.UTF_8)));
         } catch (IOException e) {
