@@ -8,6 +8,7 @@ import {AbbreviatedHallplan} from '../../dtos/hallplan/abbreviatedHallplan';
 import {HallplanService} from '../../services/hallplan/hallplan.service';
 import {Observable, of} from 'rxjs';
 import {PersistedHallplan} from '../../dtos/hallplan/hallplan';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-events',
@@ -43,7 +44,8 @@ export class EventsComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private service: EventService,
               private hallplanService: HallplanService,
-              private notification: ToastrService) {
+              private notification: ToastrService,
+              private router: Router) {
     this.today = new Date(new Date().toISOString().split('T')[0]);
   }
   observableRoomplans = (input: string) => (input === '')
@@ -102,6 +104,7 @@ export class EventsComponent implements OnInit {
       observable.subscribe({
         next: data => {
           this.notification.success(`Event ${this.event.title} successfully created.`);
+          this.router.navigateByUrl('/events');
         },
         error: error => {
           console.error('Error creating event', error);

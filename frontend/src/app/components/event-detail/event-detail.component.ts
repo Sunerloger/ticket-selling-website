@@ -5,8 +5,6 @@ import {ActivatedRoute} from '@angular/router';
 import {EventService} from '../../services/event.service';
 import {HallplanService} from '../../services/hallplan/hallplan.service';
 import {ToastrService} from 'ngx-toastr';
-import {concatMap, from, Observable} from 'rxjs';
-import {AbbreviatedHallplan} from '../../dtos/hallplan/abbreviatedHallplan';
 
 @Component({
   selector: 'app-event-detail',
