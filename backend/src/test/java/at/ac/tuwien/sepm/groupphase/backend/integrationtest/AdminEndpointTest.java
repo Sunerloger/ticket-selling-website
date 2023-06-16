@@ -77,7 +77,7 @@ public class AdminEndpointTest {
 
 
     private final ApplicationUser applicationUser =
-        new ApplicationUser("marty@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure", false,
+        new ApplicationUser("marty@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "Password123%", false,
             false);
 
 
@@ -91,14 +91,14 @@ public class AdminEndpointTest {
         applicationUserRepository.deleteAll();
 
         UserCreateDto unblockedUser = new UserCreateDto(-1000L, "John@email.com", "John", "Doe", LocalDate.parse("1988-12-12"),
-            "Teststreet 44/7", 1010L, "Vienna", "password", false, false);
+            "Teststreet 44/7", 1010L, "Vienna", "Password123%", false, false);
 
         UserCreateDto blockedUser = new UserCreateDto(-1000L, "James@email.com", "James", "Doe", LocalDate.parse("1988-12-12"),
-            "Teststreet 44/7", 1010L, "Vienna", "password", false, true);
+            "Teststreet 44/7", 1010L, "Vienna", "Password123%", false, true);
 
 
         UserCreateDto admin = new UserCreateDto(-1000L, "administrator@email.com", "Admin", "admin", LocalDate.parse("1988-12-12"),
-            "Teststreet 44/7", 1010L, "Vienna", "password", true, false);
+            "Teststreet 44/7", 1010L, "Vienna", "Password123%", true, false);
 
         userService.register(userMapper.userCreateDtoToEntity(admin));
         userService.register(userMapper.userCreateDtoToEntity(unblockedUser));
@@ -131,7 +131,7 @@ public class AdminEndpointTest {
     @Test
     public void givenValidUserCreateDto_whenRegisterUser_UserIsCreated() throws Exception {
         UserCreateDto userCreateDto =
-            new UserCreateDto(-1000L, "john@example.com", "John", "Doe", LocalDate.parse("1988-12-12"), "Teststreet", 1010L, "Vienna", "password", false,
+            new UserCreateDto(-1000L, "john@example.com", "John", "Doe", LocalDate.parse("1988-12-12"), "Teststreet", 1010L, "Vienna", "Password123%", false,
                 false);
         String requestBody = objectMapper.writeValueAsString(userCreateDto);
         mockMvc.perform(post(BASE_PATH)
@@ -152,7 +152,7 @@ public class AdminEndpointTest {
     @Test
     public void givenValidUserCreateDtoButMissingAdminRole_whenRegisterUser_isForbidden() throws Exception {
         UserCreateDto userCreateDto =
-            new UserCreateDto(-1000L, "john@example.com", "John", "Doe", LocalDate.parse("1988-12-12"), "Teststreet", 1010L, "Vienna", "password", false,
+            new UserCreateDto(-1000L, "john@example.com", "John", "Doe", LocalDate.parse("1988-12-12"), "Teststreet", 1010L, "Vienna", "Password123%", false,
                 false);
         String requestBody = objectMapper.writeValueAsString(userCreateDto);
         mockMvc.perform(post(BASE_PATH)
@@ -166,7 +166,7 @@ public class AdminEndpointTest {
     public void givenUserRegisterDtoWithInvalidFirstName_whenRegisterUser_ValidationFails() throws Exception {
         UserCreateDto userCreateDto = new UserCreateDto(
             -1000L, "john@example.com", "John123", "Doe", LocalDate.parse("1990-01-01"),
-            "Teststreet", 1010L, "Vienna", "password", false, false
+            "Teststreet", 1010L, "Vienna", "Password123%", false, false
         );
         String requestBody = objectMapper.writeValueAsString(userCreateDto);
 
@@ -183,7 +183,7 @@ public class AdminEndpointTest {
     public void givenUserRegisterDtoWithInvalidLastName_whenRegisterUser_ValidationFails() throws Exception {
         UserCreateDto userCreateDto = new UserCreateDto(
             -1000L, "john@example.com", "John", "Doe123", LocalDate.parse("1990-01-01"),
-            "Teststreet", 1010L, "Vienna", "password", false, false
+            "Teststreet", 1010L, "Vienna", "Password123%", false, false
         );
         String requestBody = objectMapper.writeValueAsString(userCreateDto);
 
@@ -201,7 +201,7 @@ public class AdminEndpointTest {
         LocalDate futureDate = LocalDate.now().plusYears(1);
         UserCreateDto userCreateDto = new UserCreateDto(
             -1000L, "john@example.com", "John", "Example", futureDate,
-            "Teststreet", 1010L, "Vienna", "password", false, false
+            "Teststreet", 1010L, "Vienna", "Password123%", false, false
         );
         String requestBody = objectMapper.writeValueAsString(userCreateDto);
 
@@ -218,7 +218,7 @@ public class AdminEndpointTest {
     public void givenUserRegisterDtoWithMultipleInvalidFields_whenRegisterUser_ValidationFails() throws Exception {
         UserCreateDto userCreateDto = new UserCreateDto(
             -1000L, "john@example.com", "John123", "Example123", LocalDate.parse("1988-12-12"),
-            "Teststreet", 1010L, "Vienna", "password", false, false
+            "Teststreet", 1010L, "Vienna", "Password123%", false, false
         );
         String requestBody = objectMapper.writeValueAsString(userCreateDto);
 

@@ -133,8 +133,14 @@
                  [class.has-error]="password.invalid && password.touched">
               <label for="password">Password: <span class="text-danger">*</span></label>
               <input type="password" class="form-control" id="password" name="password" [(ngModel)]="user.password"
-                     #password="ngModel" required minlength="8" placeholder="Enter a password">
+                     #password="ngModel" required minlength="8" [pattern]="passwordPattern"
+                     placeholder="Enter a password">
               <div *ngIf="registerForm.submitted && registerForm.controls['password']?.invalid" class="text-danger">
+                <div class="text-danger"
+                     *ngIf="password.errors?.pattern">
+                  Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special
+                  character.
+                </div>
                 <div class="text-danger"
                      *ngIf="password.errors?.minlength">
                   Password must be at least 8 characters!

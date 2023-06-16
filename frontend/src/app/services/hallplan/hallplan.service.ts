@@ -160,4 +160,21 @@ export class HallplanService {
     params = params.set('id', id);
     return this.http.get<AbbreviatedHallplan>(this.baseUrl+'/byId', {params});
   }
+
+  /**
+   * Create a snapshot of the hallplan with given id.
+   *
+   * @param id the id of the needed hallplan
+   */
+  createHallplanSnapshot(id: number) {
+    const url = `${this.baseUrl}/${id}/snapshot`;
+    const body = JSON.stringify({ isTemplate: false });
+
+    return this.http.post<PersistedHallplan>(url, body, {
+      headers: {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        'Content-Type': 'application/json',
+      },
+    });
+  }
 }
