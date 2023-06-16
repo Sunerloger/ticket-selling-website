@@ -2,7 +2,7 @@ import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {HallplanService} from '../../services/hallplan/hallplan.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
-import {PersistedSection} from '../../dtos/hallplan/section';
+import {DetailedPersistedSection} from '../../dtos/hallplan/section';
 
 @Component({
   selector: 'app-section-color-legend',
@@ -12,9 +12,7 @@ import {PersistedSection} from '../../dtos/hallplan/section';
 export class SectionColorLegendComponent implements OnInit, OnChanges {
   @Input() hallplanId: number;
 
-  sections: PersistedSection[] = [];
-  // todo: remove sections without seats
-  // todo: convert to detailed persisted section
+  sections: DetailedPersistedSection[] = [];
 
   constructor(
     private service: HallplanService,
@@ -33,10 +31,10 @@ export class SectionColorLegendComponent implements OnInit, OnChanges {
   }
 
   fetchAllSections(hallplanId: number) {
-    this.service.getAllSections(hallplanId).subscribe({
+    this.service.getAllSectionsWithCounts(hallplanId).subscribe({
       next: data => {
         // filter out unused sections:
-        this.sections = data;
+        this.sections = data.filter(sec => sec.count !== 0);
       },
       error: error => {
         const errorMessage = error.status === 0
