@@ -99,9 +99,7 @@ public class ApplicationUserEndpointTest {
 
         UserRegisterDto user = new UserRegisterDto(null, DEFAULT_USER, "Martin",
             "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L,
-            "Vienna", "123", false, false);
-
-        // TODO: admin and isLocked should not be nullable?
+            "Vienna", "passworD123%", false, false);
 
         String registerBody = objectMapper.writeValueAsString(user);
 
@@ -156,7 +154,7 @@ public class ApplicationUserEndpointTest {
         assertEquals(HttpStatus.CREATED.value(), responsePut2.getStatus());
 
         UserDeleteDto userDeleteDto = new UserDeleteDto(userRepository.findUserByEmail(DEFAULT_USER).getId(),
-            DEFAULT_USER, "123");
+            DEFAULT_USER, "passworD123%");
 
         String deleteBody = objectMapper.writeValueAsString(userDeleteDto);
 
