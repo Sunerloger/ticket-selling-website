@@ -143,10 +143,18 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public ApplicationUser register(ApplicationUser applicationUser) throws ValidationException {
+        if (!isValidPassword(applicationUser.getPassword())) {
+            throw new ValidationException("Invalid Password!");
+        }
         String encodedPassword = passwordEncoder.encode(applicationUser.getPassword());
         applicationUser.setPassword(encodedPassword);
         checkForExistingUserByEmail(applicationUser.getEmail());
         return applicationUserRepository.save(applicationUser);
+    }
+
+    private boolean isValidPassword(String password) {
+        String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+        return password.matches(passwordPattern);
     }
 
     @Override
