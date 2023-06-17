@@ -1,10 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserCreateDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDeleteDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ApplicationUserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,9 +28,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -235,7 +236,23 @@ public class ApplicationUserEndpointTest {
             .andExpect(jsonPath("$.errors[0].message").value("Birthdate must be in the past"));
     }
 
-    private final ApplicationUser applicationUser =
-        new ApplicationUser("marty@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "Password123%", false,
-            false);
+    @Test
+    @Transactional
+    public void giveUserDeleteDtoWithExistingUser_WhenDelete_ThenDeleteUser() throws Exception {
+        UserDeleteDto userDeleteDto = new UserDeleteDto(1L, "John@email.com", "Password123%");
+        //Receive the token for the user before performing delete
+        UserLoginDto userLoginDto = new UserLoginDto();
+        userLoginDto.setEmail("John@email.com");
+        userLoginDto.setPassword("Password123%");
+        String token = userService.login(userLoginDto);
+        mockMvc.perform(delete(BASE_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .content(objectMapper.writeValueAsString(userDeleteDto)))
+            .andExpect(status().isOk());
+        assertAll(
+            () -> assertNull(applicationUserRepository.findUserByEmail("John@email.com"))
+        );
+    }
+    
 }
