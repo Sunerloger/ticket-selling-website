@@ -5,10 +5,12 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDeleteDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ApplicationUserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.xml.bind.ValidationException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,7 +34,6 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -64,6 +66,12 @@ public class ApplicationUserEndpointTest {
 
     static final String BASE_PATH = "/api/v1/user";
 
+    private final UserCreateDto testUser1 = new UserCreateDto(-1000L, "John@email.com", "John", "Doe", LocalDate.parse("1988-12-12"),
+        "Teststreet 44/7", 1010L, "Vienna", "Password123%", false, false);
+
+    private final UserCreateDto testUser2 = new UserCreateDto(-1000L, "James@email.com", "James", "Doe", LocalDate.parse("1988-12-12"),
+        "Teststreet 44/7", 1010L, "Vienna", "Password123%", false, true);
+
     //Initial Setup for Tests
     @BeforeEach
     @Transactional
@@ -71,15 +79,8 @@ public class ApplicationUserEndpointTest {
 
         // Delete existing users
         applicationUserRepository.deleteAll();
-
-        UserCreateDto unblockedUser = new UserCreateDto(-1000L, "John@email.com", "John", "Doe", LocalDate.parse("1988-12-12"),
-            "Teststreet 44/7", 1010L, "Vienna", "Password123%", false, false);
-
-        UserCreateDto blockedUser = new UserCreateDto(-1000L, "James@email.com", "James", "Doe", LocalDate.parse("1988-12-12"),
-            "Teststreet 44/7", 1010L, "Vienna", "Password123%", false, true);
-
-        userService.register(userMapper.userCreateDtoToEntity(unblockedUser));
-        userService.register(userMapper.userCreateDtoToEntity(blockedUser));
+        userService.register(userMapper.userCreateDtoToEntity(testUser1));
+        userService.register(userMapper.userCreateDtoToEntity(testUser2));
     }
 
 
@@ -239,20 +240,22 @@ public class ApplicationUserEndpointTest {
     @Test
     @Transactional
     public void giveUserDeleteDtoWithExistingUser_WhenDelete_ThenDeleteUser() throws Exception {
-        UserDeleteDto userDeleteDto = new UserDeleteDto(1L, "John@email.com", "Password123%");
+
+        UserDeleteDto userDeleteDto = new UserDeleteDto(testUser1.id(), testUser1.email(), testUser1.password());
         //Receive the token for the user before performing delete
         UserLoginDto userLoginDto = new UserLoginDto();
-        userLoginDto.setEmail("John@email.com");
-        userLoginDto.setPassword("Password123%");
+        userLoginDto.setEmail(testUser1.email());
+        userLoginDto.setPassword(testUser1.password());
         String token = userService.login(userLoginDto);
+
         mockMvc.perform(delete(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .content(objectMapper.writeValueAsString(userDeleteDto)))
             .andExpect(status().isOk());
-        assertAll(
-            () -> assertNull(applicationUserRepository.findUserByEmail("John@email.com"))
-        );
+
+        // Assert that the user no longer exists in the repository
+        assertFalse(applicationUserRepository.existsById(testUser1.id()));
     }
-    
+
 }
