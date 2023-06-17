@@ -2,7 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CartItemDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ReservationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.repository.*;
@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest
 @ActiveProfiles({"test", "datagen"})
 @AutoConfigureMockMvc
-public class CartEndpointTest implements TestData {
+public class ReservationEndpointTest implements TestData {
     @Autowired
     private WebApplicationContext webAppContext;
 
@@ -45,6 +46,9 @@ public class CartEndpointTest implements TestData {
 
     @Autowired
     private CartRepository cartRepository;
+
+    @Autowired
+    private ReservationRepository reservationRepository;
 
     @Autowired
     private HallPlanRepository hallPlanRepository;
@@ -74,7 +78,7 @@ public class CartEndpointTest implements TestData {
     @BeforeEach
     public void setup() {
         userRepository.deleteAll();
-        cartRepository.deleteAll();
+        reservationRepository.deleteAll();
 
         Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
         Optional<HallPlanSeat> optSeat2 = seatRepository.getSeatById(-2L);
@@ -95,8 +99,8 @@ public class CartEndpointTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenGetCart_thenEmptyList() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(get(CART_BASE_URI)
+    public void givenNothing_whenGetReservations_thenEmptyList() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(get(RESERVATION_BASE_URI)
             .header(securityProperties.getAuthHeader(), jwtTokenizer
                 .getAuthToken(DEFAULT_USER, USER_ROLES))).andReturn();
 
@@ -105,17 +109,33 @@ public class CartEndpointTest implements TestData {
 
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
 
-        List<CartItemDto> cartItemDtoList = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
-            CartItemDto[].class));
+        List<ReservationDto> cartItemDtoList = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
+            ReservationDto[].class));
 
         assertEquals(0, cartItemDtoList.size());
     }
 
     @Test
-    public void given1CartItem_whenGetCart_then1ItemList() throws Exception {
-        Cart cart = new Cart(userRepository.findUserByEmail(DEFAULT_USER).getId(), -1L);
-        cartRepository.save(cart);
-        MvcResult mvcResult = this.mockMvc.perform(get(CART_BASE_URI)
+    public void getNonExistingReservation() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(get(RESERVATION_BASE_URI + "/{id}", -1L)
+            .header(securityProperties.getAuthHeader(), jwtTokenizer
+                .getAuthToken(DEFAULT_USER, USER_ROLES))).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+    }
+
+    @Test
+    public void given1ReservationItem_whenGetReservations_then1ItemList() throws Exception {
+        Reservation reservation = new Reservation();
+        reservation.setDate(LocalDate.now());
+        reservation.setUserId(userId);
+        List<ReservationSeat> reservationSeatList = new ArrayList<>();
+        reservationSeatList.add(new ReservationSeat(-1L));
+        reservation.setReservationSeatsList(reservationSeatList);
+        reservationRepository.save(reservation);
+
+        MvcResult mvcResult = this.mockMvc.perform(get(RESERVATION_BASE_URI)
             .header(securityProperties.getAuthHeader(), jwtTokenizer
                 .getAuthToken(DEFAULT_USER, USER_ROLES))).andReturn();
 
@@ -124,21 +144,49 @@ public class CartEndpointTest implements TestData {
 
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
 
-        List<CartItemDto> cartItemDtoList = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
-            CartItemDto[].class));
+        List<ReservationDto> cartItemDtoList = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
+            ReservationDto[].class));
 
         assertEquals(1, cartItemDtoList.size());
     }
 
     @Test
-    public void tryAddNonExistingItemToCart() throws Exception {
+    public void given1ReservationItem_whenGetReservation_then1Item() throws Exception {
+        Reservation reservation = new Reservation();
+        reservation.setDate(LocalDate.now());
+        reservation.setUserId(userId);
+        List<ReservationSeat> reservationSeatList = new ArrayList<>();
+        reservationSeatList.add(new ReservationSeat(-1L));
+        reservation.setReservationSeatsList(reservationSeatList);
+        reservationRepository.save(reservation);
+
+        List<Reservation> reservationList = reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId);
+        Long reservationNr = reservationList.get(0).getReservationNr();
+
+        MvcResult mvcResult = this.mockMvc.perform(get(RESERVATION_BASE_URI + "/{id}", reservationNr)
+            .header(securityProperties.getAuthHeader(), jwtTokenizer
+                .getAuthToken(DEFAULT_USER, USER_ROLES))).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        ReservationDto reservationDto = objectMapper.readValue(response.getContentAsString(),
+            ReservationDto.class);
+
+        assertEquals(reservationNr, reservationDto.getReservationNr() );
+    }
+
+    @Test
+    public void tryReserveNonExistingItem() throws Exception {
         List<SeatDto> seatDtoList = new ArrayList<>();
         SeatDto seatDto = new SeatDto();
         seatDto.setId(1L);
         seatDtoList.add(seatDto);
 
         String body = objectMapper.writeValueAsString(seatDtoList);
-        MvcResult mvcResult = this.mockMvc.perform(post(CART_BASE_URI)
+        MvcResult mvcResult = this.mockMvc.perform(post(RESERVATION_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
@@ -150,14 +198,14 @@ public class CartEndpointTest implements TestData {
     }
 
     @Test
-    public void addExistingSeatToCart() throws Exception {
+    public void reserveSeat() throws Exception {
         List<SeatDto> seatDtoList = new ArrayList<>();
         SeatDto seatDto = new SeatDto();
         seatDto.setId(-1L);
         seatDtoList.add(seatDto);
 
         String body = objectMapper.writeValueAsString(seatDtoList);
-        MvcResult mvcResult = this.mockMvc.perform(post(CART_BASE_URI)
+        MvcResult mvcResult = this.mockMvc.perform(post(RESERVATION_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
@@ -167,11 +215,11 @@ public class CartEndpointTest implements TestData {
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.OK.value(), response.getStatus());
 
-        assertEquals(1, cartRepository.findByUserId(userId).size());
+        assertEquals(1, reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId).size());
     }
 
     @Test
-    public void addTwoExistingSeatsToCart() throws Exception {
+    public void reserveTwoSeats() throws Exception {
         List<SeatDto> seatDtoList = new ArrayList<>();
         SeatDto seatDto = new SeatDto();
         seatDto.setId(-1L);
@@ -181,7 +229,7 @@ public class CartEndpointTest implements TestData {
         seatDtoList.add(seatDto2);
 
         String body = objectMapper.writeValueAsString(seatDtoList);
-        MvcResult mvcResult = this.mockMvc.perform(post(CART_BASE_URI)
+        MvcResult mvcResult = this.mockMvc.perform(post(RESERVATION_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
@@ -191,11 +239,12 @@ public class CartEndpointTest implements TestData {
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.OK.value(), response.getStatus());
 
-        assertEquals(2, cartRepository.findByUserId(userId).size());
+        assertEquals(1, reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId).size());
+        assertEquals(2, reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId).get(0).getReservationSeatsList().size());
     }
 
     @Test
-    public void addOneExistingAndOneNoneExistingSeatToCart() throws Exception {
+    public void tryReserveSeatAndNonExistingSeat() throws Exception {
         List<SeatDto> seatDtoList = new ArrayList<>();
         SeatDto seatDto = new SeatDto();
         seatDto.setId(-1L);
@@ -205,7 +254,7 @@ public class CartEndpointTest implements TestData {
         seatDtoList.add(seatDto2);
 
         String body = objectMapper.writeValueAsString(seatDtoList);
-        MvcResult mvcResult = this.mockMvc.perform(post(CART_BASE_URI)
+        MvcResult mvcResult = this.mockMvc.perform(post(RESERVATION_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
@@ -214,25 +263,34 @@ public class CartEndpointTest implements TestData {
 
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
-        assertEquals(cartRepository.findByUserId(userId).size(), 0);
+        assertEquals(0, reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId).size());
     }
 
     @Test
-    public void deleteCartItem() throws Exception {
-        cartRepository.save(new Cart(userId, -1L));
+    public void deleteReservation() throws Exception {
+        Reservation reservation = new Reservation();
+        reservation.setDate(LocalDate.now());
+        reservation.setUserId(userId);
+        List<ReservationSeat> reservationSeatList = new ArrayList<>();
+        reservationSeatList.add(new ReservationSeat(-1L));
+        reservation.setReservationSeatsList(reservationSeatList);
+        reservationRepository.save(reservation);
 
-        MvcResult mvcResult = this.mockMvc.perform(delete(CART_BASE_URI + "/{id}", -1L)
+        List<Reservation> reservationList = reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId);
+        Long reservationNr = reservationList.get(0).getReservationNr();
+
+        MvcResult mvcResult = this.mockMvc.perform(delete(RESERVATION_BASE_URI + "/{id}", reservationNr)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
             .andDo(print())
             .andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
-        assertEquals(0, cartRepository.findByUserId(userId).size());
+        assertEquals(0, reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId).size());
     }
 
     @Test
-    public void addReservedSeatToCart() throws Exception {
+    public void tryReserveReservedSeat() throws Exception {
         Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
         HallPlanSeat seat = optSeat.get();
         seat.setReservedNr(1L);
@@ -245,7 +303,7 @@ public class CartEndpointTest implements TestData {
         seatDtoList.add(seatDto);
 
         String body = objectMapper.writeValueAsString(seatDtoList);
-        MvcResult mvcResult = this.mockMvc.perform(post(CART_BASE_URI)
+        MvcResult mvcResult = this.mockMvc.perform(post(RESERVATION_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
@@ -255,7 +313,6 @@ public class CartEndpointTest implements TestData {
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.OK.value(), response.getStatus());
 
-        assertEquals(0, cartRepository.findByUserId(userId).size());
+        assertEquals(0, reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId).size());
     }
-
 }

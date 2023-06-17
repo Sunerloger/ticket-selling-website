@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Purchase;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PurchaseRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.PurchaseService;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanSeatService;
@@ -23,6 +24,7 @@ import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class PurchaseServiceImpl implements PurchaseService {
@@ -48,6 +50,10 @@ public class PurchaseServiceImpl implements PurchaseService {
     public PurchaseDto getPurchaseByPurchaseNr(Long purchaseNr, Long userId) {
         Purchase purchase = repository.findPurchasesByPurchaseNr(purchaseNr);
         //TODO: check if purchase belong to user cart
+
+        if (purchase == null) {
+            throw new NotFoundException();
+        }
 
         List<Ticket> ticketList = purchase.getTicketList();
         List<TicketDto> ticketDtoList = new ArrayList<>();

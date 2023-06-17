@@ -54,6 +54,10 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public ReservationDto getReservationOfUser(Long reservationNr, Long userId) throws NotFoundException {
         Reservation reservation = repository.findReservationByReservationNr(reservationNr);
+        if (reservation == null){
+            throw new NotFoundException();
+        }
+
         if (!reservation.getUserId().equals(userId)) {
             throw new NotFoundException();
         }

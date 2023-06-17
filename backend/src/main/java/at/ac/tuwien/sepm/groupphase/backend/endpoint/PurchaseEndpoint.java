@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.PurchaseService;
 import at.ac.tuwien.sepm.groupphase.backend.service.impl.CustomUserDetailService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -74,8 +75,12 @@ public class PurchaseEndpoint {
             LOGGER.error("User with ROLE_USER could not be resolved");
             return ResponseEntity.internalServerError().body("Request could not be resolved!");
         }
+try{
+    return ResponseEntity.ok(service.getPurchaseByPurchaseNr(purchaseNr, userId));
+} catch (NotFoundException e){
+    return ResponseEntity.noContent().build();
+}
 
-        return ResponseEntity.ok(service.getPurchaseByPurchaseNr(purchaseNr, userId));
     }
 
     @Secured("ROLE_USER")
