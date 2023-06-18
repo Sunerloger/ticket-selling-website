@@ -28,7 +28,7 @@
                   <tr *ngFor="let user of users" class="center-td blocked-users">
                     <td>{{user.email}}</td>
                     <td>
-                      <button type="submit" class="btn btn-danger" (click)="blockUser(user.email)">Unblock</button>
+                      <button type="submit" class="btn btn-danger" (click)="confirmBlock(user.email)">Unblock</button>
                     </td>
                   </tr>
                 </div>
@@ -36,7 +36,7 @@
                   <tr *ngFor="let user of users" class="center-td blocked-users">
                     <td>{{user.email}}</td>
                     <td>
-                      <button type="submit" class="btn btn-danger" (click)="blockUser(user.email)">Block</button>
+                      <button type="submit" class="btn btn-danger" (click)="confirmBlock(user.email)">Block</button>
                     </td>
                   </tr>
                 </div>

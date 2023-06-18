@@ -1,9 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ResetPasswordUser;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.PasswordResetToken;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ApplicationUserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.TokenRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtAuthorizationFilter;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -18,6 +21,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -37,14 +42,16 @@ public class CustomUserDetailService implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
     private final JwtTokenizer jwtTokenizer;
+    private final TokenRepository tokenRepository;
 
     @Autowired
     public CustomUserDetailService(ApplicationUserRepository applicationUserRepository, PasswordEncoder passwordEncoder,
-                                   JwtTokenizer jwtTokenizer, JwtAuthorizationFilter jwtAuthorizationFilter) {
+                                   JwtTokenizer jwtTokenizer, JwtAuthorizationFilter jwtAuthorizationFilter, TokenRepository tokenRepository) {
         this.applicationUserRepository = applicationUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtAuthorizationFilter = jwtAuthorizationFilter;
         this.jwtTokenizer = jwtTokenizer;
+        this.tokenRepository = tokenRepository;
     }
 
     @Override
@@ -59,8 +66,13 @@ public class CustomUserDetailService implements UserService {
             } else {
                 grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_USER");
             }
+            if (applicationUser.getLocked()) {
+                return new User(applicationUser.getEmail(), applicationUser.getPassword(), true, true, true, false, grantedAuthorities);
+            } else {
+                return new User(applicationUser.getEmail(), applicationUser.getPassword(), grantedAuthorities);
+            }
 
-            return new User(applicationUser.getEmail(), applicationUser.getPassword(), grantedAuthorities);
+
         } catch (NotFoundException e) {
             throw new UsernameNotFoundException(e.getMessage(), e);
         }
@@ -85,34 +97,64 @@ public class CustomUserDetailService implements UserService {
         }
     }
 
+
     @Override
     public String login(UserLoginDto userLoginDto) {
         try {
             UserDetails userDetails = loadUserByUsername(userLoginDto.getEmail());
-            if (userDetails != null
-                && userDetails.isAccountNonExpired()
-                && userDetails.isAccountNonLocked()
-                && userDetails.isCredentialsNonExpired()
-                && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
-            ) {
-                List<String> roles = userDetails.getAuthorities()
-                    .stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .toList();
-                return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
+            ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(userLoginDto.getEmail());
+
+            if (userDetails == null) {
+                throw new BadCredentialsException("Email or password is incorrect!");
             }
+
+            if (!passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())) {
+                if (applicationUser.getAdmin() == Boolean.TRUE) {
+                    throw new BadCredentialsException("Email or password is incorrect");
+                }
+                applicationUser.setFailedLoginAttempts(applicationUser.getFailedLoginAttempts() + 1);
+                if (applicationUser.getFailedLoginAttempts() >= 5) {
+                    applicationUser.setLocked(true);
+                    applicationUserRepository.save(applicationUser);
+                    throw new LockedException("Too many failed login attempts! Your account is locked. Contact an administrator!");
+                } else {
+                    applicationUserRepository.save(applicationUser);
+                    throw new BadCredentialsException("Email or password is incorrect!");
+                }
+            }
+
+            if (!userDetails.isAccountNonLocked()) {
+                throw new LockedException("Account is locked. Contact an administrator!");
+            }
+            if (!userDetails.isCredentialsNonExpired()) {
+                throw new BadCredentialsException("Email or password is incorrect!");
+            }
+            applicationUser.setFailedLoginAttempts(0);
+            applicationUserRepository.save(applicationUser);
+            List<String> roles = userDetails.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+            return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
         } catch (UsernameNotFoundException e) {
             throw new BadCredentialsException("Email or password is incorrect or account is locked");
         }
-        throw new BadCredentialsException("Email or password is incorrect or account is locked");
     }
 
     @Override
     public ApplicationUser register(ApplicationUser applicationUser) throws ValidationException {
+        if (!isValidPassword(applicationUser.getPassword())) {
+            throw new ValidationException("Invalid Password!");
+        }
         String encodedPassword = passwordEncoder.encode(applicationUser.getPassword());
         applicationUser.setPassword(encodedPassword);
         checkForExistingUserByEmail(applicationUser.getEmail());
         return applicationUserRepository.save(applicationUser);
+    }
+
+    private boolean isValidPassword(String password) {
+        String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+        return password.matches(passwordPattern);
     }
 
     @Override
@@ -133,13 +175,12 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void delete(Long id, String email, String password) {
-        UserDetails userDetails = loadUserByUsername(email);
-        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+    public void delete(ApplicationUser applicationUser) {
+        UserDetails userDetails = loadUserByUsername(applicationUser.getEmail());
+        if (!passwordEncoder.matches(applicationUser.getPassword(), userDetails.getPassword())) {
             throw new BadCredentialsException("Password is incorrect");
         }
-        applicationUserRepository.deleteById(id);
-
+        applicationUserRepository.deleteById(applicationUser.getId());
     }
 
     @Override
@@ -168,6 +209,23 @@ public class CustomUserDetailService implements UserService {
     @Override
     public ApplicationUser getUserById(Long id) {
         return applicationUserRepository.getApplicationUserById(id);
+    }
+
+    @Override
+    public void resetPassword(ResetPasswordUser user) {
+        PasswordResetToken actualToken = tokenRepository.getTokenByEmail(user.email());
+
+        //Check if the token which was received through email is the same as the one saved in the database
+        if (!actualToken.getToken().equals(user.token())) {
+            throw new InsufficientAuthenticationException("Token are not equal");
+        }
+
+        //Update user with new encoded password
+        String encodedPassword = passwordEncoder.encode(user.newPassword());
+        applicationUserRepository.updatePassword(user.email(), encodedPassword);
+
+        //When password is successfully changed delete the token entry
+        tokenRepository.deleteByEmail(user.email());
     }
 
 

@@ -32,6 +32,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -106,10 +107,14 @@ public class HallPlanServiceImpl implements HallPlanService {
 
         HallPlan baseHallplan = optBaseHallplan.get();
 
+        if (newHallplan.getDescription() == null) {
+            newHallplan.setDescription(baseHallplan.getDescription());
+        }
+        if (newHallplan.getName() == null) {
+            newHallplan.setName(baseHallplan.getName());
+        }
+
         if (baseHallplan.getIsTemplate()) {
-            if (!newHallplan.getIsTemplate()) {
-                throw new ValidationException("Only hallplans where isTemplate = true, can be used to create snapshots on");
-            }
             //create new hallplan
             HallPlan persitedHallplan = hallPlanRepository.save(hallPlanMapper.hallPlanDtoToHallPlan(newHallplan));
 
@@ -358,6 +363,7 @@ public class HallPlanServiceImpl implements HallPlanService {
             if (search != null) {
                 predicate = criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + search.toLowerCase() + "%");
             }
+            predicate = criteriaBuilder.isTrue(root.get("isTemplate"));
             return predicate;
         };
         return hallPlanRepository.findAll(specification, pageable);

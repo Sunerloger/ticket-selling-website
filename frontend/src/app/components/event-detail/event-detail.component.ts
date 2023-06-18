@@ -5,8 +5,6 @@ import {ActivatedRoute} from '@angular/router';
 import {EventService} from '../../services/event.service';
 import {HallplanService} from '../../services/hallplan/hallplan.service';
 import {ToastrService} from 'ngx-toastr';
-import {concatMap, from, Observable} from 'rxjs';
-import {AbbreviatedHallplan} from '../../dtos/hallplan/abbreviatedHallplan';
 
 @Component({
   selector: 'app-event-detail',
@@ -20,7 +18,6 @@ export class EventDetailComponent implements OnInit{
     city: '',
     areaCode: '',
     address: '',
-    room: 1,
     startingTime: '',
   };
   event: Event = {
@@ -41,60 +38,45 @@ export class EventDetailComponent implements OnInit{
   ) { }
 
   ngOnInit() {
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe(async params => {
       this.event.id = parseInt(params.get('id'), 10);
-      this.executeRequests();
-    });
-  }
-  getData(): Observable<Event> {
-    return this.eventService.getById(this.event.id);
-  }
-
-// Second service method
-  getOtherData(eventDate: EventDate): Observable<AbbreviatedHallplan> {
-    // Make the HTTP request with data and return the Observable
-    return this.hallplanService.getByIdAbbreviated(eventDate.room);
-  }
-
-// In your component or service where you want to call these methods
-  executeRequests(): void {
-    this.getData().pipe(
-      concatMap((data: Event) => {
-        this.event = data; // Assign the data to the global variable
-        return from(data.eventDatesLocation).pipe(
-          concatMap((item: any) => this.getOtherData(item))
-        );
-      })
-    ).subscribe((result: any) => {
-      const rec = { key: result.id, value: result.name };
-      this.hallPlanNames.push(rec);
-    });
-  }
-
-  fetchEventDetails() {
-    const observable = this.eventService.getById(this.event.id);
-    observable.subscribe({
-      next: data => {
-        this.event = data;;
-      },
-      error: error => {
-        console.error('Error fetching event', error);
-        this.notification.error(`Could not fetch this event. Errorcode: ${error.status}, Errortext: ${error.error.errors}`);
+      await this.fetchEventDetails();
+      for (const eventDate1 of this.event.eventDatesLocation) {
+        eventDate1.roomName =  await this.fetchHallplanName(eventDate1.room);
       }
     });
   }
 
-  fetchHallplanName(id: number){
-    const observable = this.hallplanService.getByIdAbbreviated(id);
-    observable.subscribe({
-      next: data => {
-        const rec = { key: id, value: data.name };
-        this.hallPlanNames.push(rec);
-      },
-      error: error => {
-        console.error('Error fetching hallplans', error);
-        this.notification.error(`Could not fetch hallplans. Errorcode: ${error.status}, Errortext: ${error.error.errors}`);
-      }
+  fetchEventDetails(): Promise<Event> {
+    return new Promise((resolve, reject) => {
+      this.eventService.getById(this.event.id).subscribe({
+        next: data => {
+          this.event= data;
+          resolve(data);
+        },
+        error: error => {
+          console.error('Error fetching event', error);
+          this.notification.error(`Could not fetch this event. Errorcode: ${error.status}, Errortext: ${error.error.errors}`);
+          reject(error);
+        }
+      });
+    });
+  }
+
+  fetchHallplanName(id: number): Promise<string>{
+    return new Promise((resolve, reject) => {
+      this.hallplanService.getByIdAbbreviated(id).subscribe({
+        next: data => {
+          const rec = { key: id, value: data.name };
+          this.hallPlanNames.push(rec);
+          resolve(data.name);
+        },
+        error: error => {
+          console.error('Error fetching hallplans', error);
+          this.notification.error(`Could not fetch hallplans. Errorcode: ${error.status}, Errortext: ${error.error.errors}`);
+          reject(error);
+        }
+      });
     });
   }
 
@@ -106,14 +88,5 @@ export class EventDetailComponent implements OnInit{
   transformTime(timeString: string): string {
     const [hours, minutes] = timeString.split(':');
     return `${parseInt(hours, 10)}:${parseInt(minutes, 10)} (CET)`;
-  }
-
-  getValueForKey(key: number): string | undefined {
-    for (const record of this.hallPlanNames) {
-      if (key in record) {
-        return record[key];
-      }
-    }
-    return undefined;
   }
 }
