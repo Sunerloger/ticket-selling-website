@@ -5,8 +5,18 @@ import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PurchaseCreationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ReservationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.*;
-import at.ac.tuwien.sepm.groupphase.backend.repository.*;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Reservation;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ReservationSeat;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ApplicationUserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.CartRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSeatRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSectionRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PurchaseRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ReservationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRowRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@ActiveProfiles({"test", "datagen"})
+@ActiveProfiles({"checkout-test-data"})
 @AutoConfigureMockMvc
 public class ReservationEndpointTest implements TestData {
     @Autowired

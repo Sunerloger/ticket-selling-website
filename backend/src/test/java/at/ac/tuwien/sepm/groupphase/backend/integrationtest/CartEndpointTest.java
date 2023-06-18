@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@ActiveProfiles({"test", "datagen"})
+@ActiveProfiles({"checkout-test-data"})
 @AutoConfigureMockMvc
 public class CartEndpointTest implements TestData {
     @Autowired
