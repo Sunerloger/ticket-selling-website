@@ -41,7 +41,7 @@ public interface PurchaseService {
      * @param userId              the id of the user
      * @param purchaseCreationDto additional information of the user
      */
-    void purchaseCartOfUser(Long userId, PurchaseCreationDto purchaseCreationDto);
+    boolean purchaseCartOfUser(Long userId, PurchaseCreationDto purchaseCreationDto);
 
     /**
      * Creates a new Purchase with the given items of the User.

@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PurchaseCreationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ReservationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
@@ -48,6 +49,9 @@ public class ReservationEndpointTest implements TestData {
     private CartRepository cartRepository;
 
     @Autowired
+    private PurchaseRepository purchaseRepository;
+
+    @Autowired
     private ReservationRepository reservationRepository;
 
     @Autowired
@@ -75,9 +79,11 @@ public class ReservationEndpointTest implements TestData {
     private ObjectMapper objectMapper;
 
     private Long userId;
+
     @BeforeEach
     public void setup() {
         userRepository.deleteAll();
+        purchaseRepository.deleteAll();
         reservationRepository.deleteAll();
 
         Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
@@ -85,9 +91,9 @@ public class ReservationEndpointTest implements TestData {
         HallPlanSeat seat = optSeat.get();
         HallPlanSeat seat2 = optSeat2.get();
         seat.setReservedNr(0L);
-        seat.setOrderNr(0L);
+        seat.setBoughtNr(0L);
         seat2.setReservedNr(0L);
-        seat2.setOrderNr(0L);
+        seat2.setBoughtNr(0L);
         seatRepository.save(seat);
         seatRepository.save(seat2);
 
@@ -175,7 +181,7 @@ public class ReservationEndpointTest implements TestData {
         ReservationDto reservationDto = objectMapper.readValue(response.getContentAsString(),
             ReservationDto.class);
 
-        assertEquals(reservationNr, reservationDto.getReservationNr() );
+        assertEquals(reservationNr, reservationDto.getReservationNr());
     }
 
     @Test
@@ -315,4 +321,285 @@ public class ReservationEndpointTest implements TestData {
 
         assertEquals(0, reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId).size());
     }
+
+    @Test
+    public void deleteReservationOfDifferentUser() throws Exception {
+        Reservation reservation = new Reservation();
+        reservation.setDate(LocalDate.now());
+        reservation.setUserId(userId + 1);
+        List<ReservationSeat> reservationSeatList = new ArrayList<>();
+        reservationSeatList.add(new ReservationSeat(-1L));
+        reservation.setReservationSeatsList(reservationSeatList);
+        reservationRepository.save(reservation);
+
+        List<Reservation> reservationList = reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId + 1);
+        Long reservationNr = reservationList.get(0).getReservationNr();
+
+        MvcResult mvcResult = this.mockMvc.perform(delete(RESERVATION_BASE_URI + "/{id}", reservationNr)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+        assertEquals(1, reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId + 1).size());
+    }
+
+
+    @Test
+    public void deleteNonExistingReservation() throws Exception {
+        Long reservationNr = 1L;
+
+        MvcResult mvcResult = this.mockMvc.perform(delete(RESERVATION_BASE_URI + "/{id}", reservationNr)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+    }
+
+    @Test
+    public void fetchReservationOfDifferentUser() throws Exception {
+        Reservation reservation = new Reservation();
+        reservation.setDate(LocalDate.now());
+        reservation.setUserId(userId + 1);
+        List<ReservationSeat> reservationSeatList = new ArrayList<>();
+        reservationSeatList.add(new ReservationSeat(-1L));
+        reservation.setReservationSeatsList(reservationSeatList);
+        reservationRepository.save(reservation);
+
+        List<Reservation> reservationList = reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId + 1);
+        Long reservationNr = reservationList.get(0).getReservationNr();
+
+        MvcResult mvcResult = this.mockMvc.perform(get(RESERVATION_BASE_URI + "/{id}", reservationNr)
+            .header(securityProperties.getAuthHeader(), jwtTokenizer
+                .getAuthToken(DEFAULT_USER, USER_ROLES))).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+    }
+
+    @Test
+    public void purchaseReservation() throws Exception {
+        Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
+        HallPlanSeat seat = optSeat.get();
+        seat.setReservedNr(1L);
+        seat.setOrderNr(0L);
+        seatRepository.save(seat);
+
+        Reservation reservation = new Reservation();
+        reservation.setDate(LocalDate.now());
+        reservation.setUserId(userId);
+        List<ReservationSeat> reservationSeatList = new ArrayList<>();
+        reservationSeatList.add(new ReservationSeat(-1L));
+        reservation.setReservationSeatsList(reservationSeatList);
+        reservationRepository.save(reservation);
+
+        List<Reservation> reservationList = reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId);
+        Long reservationNr = reservationList.get(0).getReservationNr();
+
+        List<SeatDto> seatDtoList = new ArrayList<>();
+        SeatDto seatDto = new SeatDto();
+        seatDto.setId(-1L);
+        seatDtoList.add(seatDto);
+
+        PurchaseCreationDto purchaseCreationDto = new PurchaseCreationDto(true, null, null, null, seatDtoList);
+
+        String body = objectMapper.writeValueAsString(purchaseCreationDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(post(RESERVATION_BASE_URI + "/{reservationNr}/purchase", reservationNr)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(0, reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId).size());
+        assertEquals(1, purchaseRepository.findPurchasesByUserIdOrderByPurchaseNrDesc(userId).size());
+    }
+
+    @Test
+    public void purchaseReservationPartially() throws Exception {
+        Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
+        HallPlanSeat seat = optSeat.get();
+        seat.setReservedNr(1L);
+        seat.setOrderNr(0L);
+        seatRepository.save(seat);
+
+        optSeat = seatRepository.getSeatById(-2L);
+        seat = optSeat.get();
+        seat.setReservedNr(1L);
+        seat.setOrderNr(0L);
+        seatRepository.save(seat);
+
+        Reservation reservation = new Reservation();
+        reservation.setDate(LocalDate.now());
+        reservation.setUserId(userId);
+        List<ReservationSeat> reservationSeatList = new ArrayList<>();
+        reservationSeatList.add(new ReservationSeat(-1L));
+        reservation.setReservationSeatsList(reservationSeatList);
+        reservationRepository.save(reservation);
+
+        List<Reservation> reservationList = reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId);
+        Long reservationNr = reservationList.get(0).getReservationNr();
+
+        List<SeatDto> seatDtoList = new ArrayList<>();
+        SeatDto seatDto = new SeatDto();
+        seatDto.setId(-1L);
+        seatDtoList.add(seatDto);
+
+        PurchaseCreationDto purchaseCreationDto = new PurchaseCreationDto(true, null, null, null, seatDtoList);
+
+        String body = objectMapper.writeValueAsString(purchaseCreationDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(post(RESERVATION_BASE_URI + "/{reservationNr}/purchase", reservationNr)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(0, reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId).size());
+        assertEquals(1, purchaseRepository.findPurchasesByUserIdOrderByPurchaseNrDesc(userId).size());
+        assertEquals(1, purchaseRepository.findPurchasesByUserIdOrderByPurchaseNrDesc(userId).get(0).getTicketList().size());
+    }
+
+    @Test
+    public void emtpyPartialPurchaseReservation() throws Exception {
+        Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
+        HallPlanSeat seat = optSeat.get();
+        seat.setReservedNr(1L);
+        seat.setOrderNr(0L);
+        seatRepository.save(seat);
+
+        optSeat = seatRepository.getSeatById(-2L);
+        seat = optSeat.get();
+        seat.setReservedNr(1L);
+        seat.setOrderNr(0L);
+        seatRepository.save(seat);
+
+        Reservation reservation = new Reservation();
+        reservation.setDate(LocalDate.now());
+        reservation.setUserId(userId);
+        List<ReservationSeat> reservationSeatList = new ArrayList<>();
+        reservation.setReservationSeatsList(reservationSeatList);
+        reservationRepository.save(reservation);
+
+        List<Reservation> reservationList = reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId);
+        Long reservationNr = reservationList.get(0).getReservationNr();
+
+        List<SeatDto> seatDtoList = new ArrayList<>();
+        SeatDto seatDto = new SeatDto();
+        seatDto.setId(-1L);
+        seatDtoList.add(seatDto);
+
+        PurchaseCreationDto purchaseCreationDto = new PurchaseCreationDto(true, null, null, null, seatDtoList);
+
+        String body = objectMapper.writeValueAsString(purchaseCreationDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(post(RESERVATION_BASE_URI + "/{reservationNr}/purchase", reservationNr)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertEquals(1, reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId).size());
+        assertEquals(0, purchaseRepository.findPurchasesByUserIdOrderByPurchaseNrDesc(userId).size());
+    }
+
+    @Test
+    public void purchaseReservationPartiallyAndGiveNonExistingSeat() throws Exception {
+        Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
+        HallPlanSeat seat = optSeat.get();
+        seat.setReservedNr(1L);
+        seat.setOrderNr(0L);
+        seatRepository.save(seat);
+
+        Reservation reservation = new Reservation();
+        reservation.setDate(LocalDate.now());
+        reservation.setUserId(userId);
+        List<ReservationSeat> reservationSeatList = new ArrayList<>();
+        reservationSeatList.add(new ReservationSeat(-1L));
+        reservation.setReservationSeatsList(reservationSeatList);
+        reservationRepository.save(reservation);
+
+        List<Reservation> reservationList = reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId);
+        Long reservationNr = reservationList.get(0).getReservationNr();
+
+        List<SeatDto> seatDtoList = new ArrayList<>();
+        SeatDto seatDto = new SeatDto();
+        seatDto.setId(1L);
+        seatDtoList.add(seatDto);
+
+        PurchaseCreationDto purchaseCreationDto = new PurchaseCreationDto(true, null, null, null, seatDtoList);
+
+        String body = objectMapper.writeValueAsString(purchaseCreationDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(post(RESERVATION_BASE_URI + "/{reservationNr}/purchase", reservationNr)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertEquals(1, reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId).size());
+        assertEquals(0, purchaseRepository.findPurchasesByUserIdOrderByPurchaseNrDesc(userId).size());
+    }
+
+    @Test
+    public void purchaseReservationPartiallyAndGiveNonReservedSeat() throws Exception {
+        Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
+        HallPlanSeat seat = optSeat.get();
+        seat.setReservedNr(1L);
+        seat.setOrderNr(0L);
+        seatRepository.save(seat);
+
+        Reservation reservation = new Reservation();
+        reservation.setDate(LocalDate.now());
+        reservation.setUserId(userId);
+        List<ReservationSeat> reservationSeatList = new ArrayList<>();
+        reservationSeatList.add(new ReservationSeat(-1L));
+        reservation.setReservationSeatsList(reservationSeatList);
+        reservationRepository.save(reservation);
+
+        List<Reservation> reservationList = reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId);
+        Long reservationNr = reservationList.get(0).getReservationNr();
+
+        List<SeatDto> seatDtoList = new ArrayList<>();
+        SeatDto seatDto = new SeatDto();
+        seatDto.setId(-2L);
+        seatDtoList.add(seatDto);
+
+        PurchaseCreationDto purchaseCreationDto = new PurchaseCreationDto(true, null, null, null, seatDtoList);
+
+        String body = objectMapper.writeValueAsString(purchaseCreationDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(post(RESERVATION_BASE_URI + "/{reservationNr}/purchase", reservationNr)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertEquals(1, reservationRepository.findReservationsByUserIdOrderByReservationNrDesc(userId).size());
+        assertEquals(0, purchaseRepository.findPurchasesByUserIdOrderByPurchaseNrDesc(userId).size());
+    }
+
 }

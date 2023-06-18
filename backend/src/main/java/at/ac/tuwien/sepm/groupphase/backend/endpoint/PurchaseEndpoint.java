@@ -75,11 +75,11 @@ public class PurchaseEndpoint {
             LOGGER.error("User with ROLE_USER could not be resolved");
             return ResponseEntity.internalServerError().body("Request could not be resolved!");
         }
-try{
-    return ResponseEntity.ok(service.getPurchaseByPurchaseNr(purchaseNr, userId));
-} catch (NotFoundException e){
-    return ResponseEntity.noContent().build();
-}
+        try {
+            return ResponseEntity.ok(service.getPurchaseByPurchaseNr(purchaseNr, userId));
+        } catch (NotFoundException e) {
+            return ResponseEntity.noContent().build();
+        }
 
     }
 

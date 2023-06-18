@@ -82,4 +82,21 @@ public class SeatDto {
     public void setSeatRowNr(Long seatRowNr) {
         this.seatRowNr = seatRowNr;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof SeatDto)) {
+            return false;
+        }
+
+        // typecast o to Complex so that we can compare data members
+        SeatDto c = (SeatDto) o;
+
+        return c.getId().equals(this.getId());
+    }
+
 }

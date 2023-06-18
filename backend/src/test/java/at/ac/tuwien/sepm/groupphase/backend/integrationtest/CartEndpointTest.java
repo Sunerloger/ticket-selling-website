@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CartItemDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PurchaseCreationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.repository.*;
@@ -56,6 +57,9 @@ public class CartEndpointTest implements TestData {
     private HallPlanSectionRepository sectionRepository;
 
     @Autowired
+    private PurchaseRepository purchaseRepository;
+
+    @Autowired
     private HallPlanSeatRepository seatRepository;
 
     @Autowired
@@ -71,19 +75,21 @@ public class CartEndpointTest implements TestData {
     private ObjectMapper objectMapper;
 
     private Long userId;
+
     @BeforeEach
     public void setup() {
         userRepository.deleteAll();
         cartRepository.deleteAll();
+        purchaseRepository.deleteAll();
 
         Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
         Optional<HallPlanSeat> optSeat2 = seatRepository.getSeatById(-2L);
         HallPlanSeat seat = optSeat.get();
         HallPlanSeat seat2 = optSeat2.get();
         seat.setReservedNr(0L);
-        seat.setOrderNr(0L);
+        seat.setBoughtNr(0L);
         seat2.setReservedNr(0L);
-        seat2.setOrderNr(0L);
+        seat2.setBoughtNr(0L);
         seatRepository.save(seat);
         seatRepository.save(seat2);
 
@@ -256,6 +262,120 @@ public class CartEndpointTest implements TestData {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
 
         assertEquals(0, cartRepository.findByUserId(userId).size());
+    }
+
+    @Test
+    public void deleteCartItemOfDifferentUser() throws Exception {
+        cartRepository.save(new Cart(userId + 1L, -1L));
+
+        MvcResult mvcResult = this.mockMvc.perform(delete(CART_BASE_URI + "/{id}", -1L)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+        assertEquals(1, cartRepository.findByUserId(userId + 1L).size());
+    }
+
+    @Test
+    public void deleteNonExistingItem() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(delete(CART_BASE_URI + "/{id}", -1L)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+    }
+
+    @Test
+    public void purchaseCart() throws Exception {
+        Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
+        HallPlanSeat seat = optSeat.get();
+        seat.setReservedNr(1L);
+        seat.setOrderNr(0L);
+        seatRepository.save(seat);
+
+        cartRepository.save(new Cart(userId, -1L));
+
+        List<SeatDto> seatDtoList = new ArrayList<>();
+        SeatDto seatDto = new SeatDto();
+        seatDto.setId(-1L);
+        seatDtoList.add(seatDto);
+
+        PurchaseCreationDto purchaseCreationDto = new PurchaseCreationDto(true, null, null, null, seatDtoList);
+
+        String body = objectMapper.writeValueAsString(purchaseCreationDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(post(CART_BASE_URI + "/purchase")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(0, cartRepository.findByUserId(userId).size());
+        assertEquals(1, purchaseRepository.findPurchasesByUserIdOrderByPurchaseNrDesc(userId).size());
+    }
+
+    @Test
+    public void purchaseCartWithNonExistingItem() throws Exception {
+        List<SeatDto> seatDtoList = new ArrayList<>();
+        SeatDto seatDto = new SeatDto();
+        seatDto.setId(1L);
+        seatDtoList.add(seatDto);
+
+        PurchaseCreationDto purchaseCreationDto = new PurchaseCreationDto(true, null, null, null, seatDtoList);
+
+        String body = objectMapper.writeValueAsString(purchaseCreationDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(post(CART_BASE_URI + "/purchase")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertEquals(0, cartRepository.findByUserId(userId).size());
+        assertEquals(0, purchaseRepository.findPurchasesByUserIdOrderByPurchaseNrDesc(userId).size());
+    }
+
+    @Test
+    public void purchaseCartWithNonReservedItem() throws Exception {
+        Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
+        HallPlanSeat seat = optSeat.get();
+        seat.setReservedNr(0L);
+        seat.setOrderNr(0L);
+        seatRepository.save(seat);
+
+        List<SeatDto> seatDtoList = new ArrayList<>();
+        SeatDto seatDto = new SeatDto();
+        seatDto.setId(-1L);
+        seatDtoList.add(seatDto);
+
+        PurchaseCreationDto purchaseCreationDto = new PurchaseCreationDto(true, null, null, null, seatDtoList);
+
+        String body = objectMapper.writeValueAsString(purchaseCreationDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(post(CART_BASE_URI + "/purchase")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertEquals(0, cartRepository.findByUserId(userId).size());
+        assertEquals(0, purchaseRepository.findPurchasesByUserIdOrderByPurchaseNrDesc(userId).size());
     }
 
 }

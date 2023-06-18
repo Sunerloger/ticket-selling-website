@@ -92,9 +92,9 @@ public class PurchaseEndpointTest implements TestData {
         HallPlanSeat seat = optSeat.get();
         HallPlanSeat seat2 = optSeat2.get();
         seat.setReservedNr(0L);
-        seat.setOrderNr(0L);
+        seat.setBoughtNr(0L);
         seat2.setReservedNr(0L);
-        seat2.setOrderNr(0L);
+        seat2.setBoughtNr(0L);
         seatRepository.save(seat);
         seatRepository.save(seat2);
 
@@ -240,7 +240,7 @@ public class PurchaseEndpointTest implements TestData {
 
     @Test
     public void cancelNonExistingPurchase() throws Exception {
-          MvcResult mvcResult = this.mockMvc.perform(delete(PURCHASE_BASE_URI + "/{id}", 1L)
+        MvcResult mvcResult = this.mockMvc.perform(delete(PURCHASE_BASE_URI + "/{id}", 1L)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
             .andDo(print())
             .andReturn();
@@ -249,4 +249,67 @@ public class PurchaseEndpointTest implements TestData {
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
     }
 
+    @Test
+    public void fetchPurchaseFromDifferentUser() throws Exception {
+        List<Ticket> ticketList = new ArrayList<>();
+        ticketList.add(new Ticket(-1L));
+
+        Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
+        HallPlanSeat seat = optSeat.get();
+        seat.setReservedNr(0L);
+        seat.setOrderNr(1L);
+        seatRepository.save(seat);
+
+        Purchase purchase = new Purchase();
+        purchase.setDate(LocalDate.now());
+        purchase.setUserId(userId + 1L);
+        purchase.setBillAddress(PURCHASE_ADDR);
+        purchase.setBillAreaCode(PURCHASE_AREA_CODE);
+        purchase.setBillCityName(PURCHASE_CITY);
+        purchase.setTicketList(ticketList);
+        purchaseRepository.save(purchase);
+
+        List<Purchase> purchaseList = purchaseRepository.findPurchasesByUserIdOrderByPurchaseNrDesc(userId + 1);
+        Long purchaseNr = purchaseList.get(0).getPurchaseNr();
+
+        MvcResult mvcResult = this.mockMvc.perform(get(PURCHASE_BASE_URI + "/{id}", purchaseNr)
+            .header(securityProperties.getAuthHeader(), jwtTokenizer
+                .getAuthToken(DEFAULT_USER, USER_ROLES))).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+    }
+
+    @Test
+    public void cancelPurchaseFromDifferentUser() throws Exception {
+        List<Ticket> ticketList = new ArrayList<>();
+        ticketList.add(new Ticket(-1L));
+
+        Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
+        HallPlanSeat seat = optSeat.get();
+        seat.setReservedNr(0L);
+        seat.setOrderNr(1L);
+        seatRepository.save(seat);
+
+        Purchase purchase = new Purchase();
+        purchase.setDate(LocalDate.now());
+        purchase.setUserId(userId + 1L);
+        purchase.setBillAddress(PURCHASE_ADDR);
+        purchase.setBillAreaCode(PURCHASE_AREA_CODE);
+        purchase.setBillCityName(PURCHASE_CITY);
+        purchase.setTicketList(ticketList);
+        purchaseRepository.save(purchase);
+
+        List<Purchase> purchaseList = purchaseRepository.findPurchasesByUserIdOrderByPurchaseNrDesc(userId + 1L);
+        Long purchaseNr = purchaseList.get(0).getPurchaseNr();
+
+        MvcResult mvcResult = this.mockMvc.perform(delete(PURCHASE_BASE_URI + "/{id}", purchaseNr)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+        assertEquals(false, purchaseRepository.findPurchasesByUserIdOrderByPurchaseNrDesc(userId + 1L).get(0).isCanceled());
+    }
 }

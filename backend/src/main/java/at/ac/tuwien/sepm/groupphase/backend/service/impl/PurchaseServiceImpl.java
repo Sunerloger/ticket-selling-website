@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PurchaseCreationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PurchaseDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ReservationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
@@ -24,7 +25,7 @@ import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Service
 public class PurchaseServiceImpl implements PurchaseService {
@@ -49,9 +50,12 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Override
     public PurchaseDto getPurchaseByPurchaseNr(Long purchaseNr, Long userId) {
         Purchase purchase = repository.findPurchasesByPurchaseNr(purchaseNr);
-        //TODO: check if purchase belong to user cart
 
         if (purchase == null) {
+            throw new NotFoundException();
+        }
+
+        if (!Objects.equals(purchase.getUserId(), userId)) {
             throw new NotFoundException();
         }
 
@@ -90,8 +94,6 @@ public class PurchaseServiceImpl implements PurchaseService {
         List<Purchase> purchaseList = repository.findPurchasesByUserIdOrderByPurchaseNrDesc(id);
         List<PurchaseDto> purchaseDtoList = new ArrayList<>();
 
-        //TODO: check if purchase belong to user cart
-
         for (Purchase purchase : purchaseList) {
             if (purchase.getTicketList().isEmpty()) {
                 LOGGER.error("purchase doesnt have tickets");
@@ -110,14 +112,17 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    public void purchaseCartOfUser(Long userId, PurchaseCreationDto purchaseCreationDto) {
-        //TODO: check if items belong to user cart
-
+    public boolean purchaseCartOfUser(Long userId, PurchaseCreationDto purchaseCreationDto) {
         List<Ticket> ticketList = new ArrayList<>();
 
         if (purchaseCreationDto.getSeats() == null) {
-            return;
+            return false;
         }
+
+        if (purchaseCreationDto.getSeats().isEmpty()) {
+            return false;
+        }
+
         for (SeatDto seatDto : purchaseCreationDto.getSeats()) {
             if (!cartService.itemBelongsToUserCart(seatDto.getId(), userId)) {
                 continue;
@@ -133,7 +138,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchase.setDate(LocalDate.now());
         purchase.setUserId(userId);
 
-        if (!purchaseCreationDto.getUseUserAddress()) {
+        if (purchaseCreationDto.getUseUserAddress()) {
             ApplicationUser user = customUserDetailService.getUserById(userId);
             purchase.setBillAddress(user.getAddress());
             purchase.setBillAreaCode(user.getAreaCode());
@@ -146,21 +151,46 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchase.setTicketList(ticketList);
         if (!purchase.getTicketList().isEmpty()) {
             repository.save(purchase);
+            return true;
         }
+        return false;
     }
 
     @Override
     public boolean purchaseReservationOfUser(Long reservationNr, PurchaseCreationDto purchaseCreationDto, Long userId) {
-        //TODO: check if items belong to reservation
-        List<Ticket> ticketList = new ArrayList<>();
-
+        //check if reservation has items
         if (purchaseCreationDto.getSeats() == null) {
             return false;
         }
 
+        if (purchaseCreationDto.getSeats().isEmpty()) {
+            return false;
+        }
+
+        //fetch reservation and check if the reservation belongs to user and exists
+        ReservationDto reservationDto;
+        try {
+            reservationDto = reservationService.getReservationOfUser(reservationNr, userId);
+        } catch (NotFoundException e) {
+            return false;
+        }
+
+        //check if the items belong to the reservation
+
+        List<SeatDto> reservedSeats = reservationDto.getReservedSeats();
+
+        for (SeatDto seatDto : purchaseCreationDto.getSeats()) {
+            if (!reservedSeats.remove(seatDto)) {
+                LOGGER.warn("item doesnt belong to reservation");
+                return false;
+            }
+        }
+
+        //purchase tickets
+        List<Ticket> purchasedTicketList = new ArrayList<>();
         for (SeatDto seatDto : purchaseCreationDto.getSeats()) {
             if (seatService.purchaseReservedSeat(seatDto.getId())) {
-                ticketList.add(new Ticket(seatDto.getId()));
+                purchasedTicketList.add(new Ticket(seatDto.getId()));
             }
         }
 
@@ -180,7 +210,7 @@ public class PurchaseServiceImpl implements PurchaseService {
             purchase.setBillAreaCode(purchaseCreationDto.getAreaCode());
             purchase.setBillCityName(purchaseCreationDto.getCity());
         }
-        purchase.setTicketList(ticketList);
+        purchase.setTicketList(purchasedTicketList);
         repository.save(purchase);
         return true;
     }
