@@ -111,6 +111,14 @@ public interface HallPlanService {
     List<HallPlanSection> getAllSections();
 
     /**
+     * Retrieves all hall plan sections belonging to a specific hall plan.
+     *
+     * @param id the ID of the hall plan
+     * @return a list of HallPlanSection entities associated with the given hall plan ID
+     */
+    List<HallPlanSection> findAllByHallPlanId(Long id);
+
+    /**
      * Retrieves all sections by hallplanId.
      *
      * @param hallplanId id of the hallplan of the sections to retrieve
@@ -130,7 +138,7 @@ public interface HallPlanService {
      * Retrieves a page containing 5 Hallplans.
      *
      * @param pageIndex index of the page
-     * @param search    term to be searched for
+     * @param search term to be searched for
      * @return a list of hallplans
      */
     Page<HallPlan> findPageOfHallplans(int pageIndex, String search);

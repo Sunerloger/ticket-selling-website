@@ -22,7 +22,7 @@ public class SeatDto {
 
     public SeatDto(HallPlanSeatDto seatDto, SeatRowDto rowDto) {
         this.id = seatDto.getId();
-        this.price = seatDto.getSection().getPrice().doubleValue();
+        this.price = seatDto.getSection().getPrice().doubleValue(); //TODO remove conversion
         this.type = seatDto.getType();
         this.seatNr = seatDto.getSeatNr();
         this.sectionName = seatDto.getSection().getName();

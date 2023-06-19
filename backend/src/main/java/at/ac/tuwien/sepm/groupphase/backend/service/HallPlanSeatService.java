@@ -26,6 +26,15 @@ public interface HallPlanSeatService {
     HallPlanSeatDto getSeatById(Long seatId);
 
     /**
+     * Retrieves all seats in a specific seat row.
+     *
+     * @param hallPlanId the ID of the hallPlan
+     * @param seatRowId  the ID of the seat row
+     * @return a list of seatDtos belonging to the specified seat row
+     */
+    List<HallPlanSeatDto> getAllSeatsBySeatRow(Long hallPlanId, Long seatRowId);
+
+    /**
      * Updates a seat with new information.
      *
      * @param seatDto the seatDto containing the updated information
@@ -49,6 +58,7 @@ public interface HallPlanSeatService {
     @Transactional
     boolean cancelReservation(Long seatId);
 
+    //TODO: Update This Method to support new Database Model (standing seats)
     @Transactional
     boolean freePurchasedSeat(Long seatId);
 

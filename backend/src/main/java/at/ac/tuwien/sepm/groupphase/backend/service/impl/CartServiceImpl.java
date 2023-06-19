@@ -95,7 +95,10 @@ public class CartServiceImpl implements CartService {
         if (cart == null) {
             return false;
         }
-        return cart.getUserId().equals(userId);
+        if (!cart.getUserId().equals(userId)) {
+            return false;
+        }
+        return true;
     }
 
 

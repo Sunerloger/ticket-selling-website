@@ -84,6 +84,16 @@ public class HallPlan {
             return new HallPlanBuilder();
         }
 
+        public HallPlanBuilder withName() {
+            this.name = name;
+            return this;
+        }
+
+        public HallPlanBuilder withDescription() {
+            this.description = description;
+            return this;
+        }
+
         public HallPlan build() {
             HallPlan hallPlan = new HallPlan();
             hallPlan.setName(name);

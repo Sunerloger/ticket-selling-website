@@ -28,8 +28,8 @@ public interface CartService {
     /**
      * removes a seat from the cart of the given user.
      *
-     * @param itemId   the id of the to delete seat
-     * @param userId   the id of the user
+     * @param itemId the id of the to delete seat
+     * @param userId the id of the user
      * @param freeSeat specifies if the seat should be set back to free (when deleting from the cart should be set to true)
      */
     @Transactional
