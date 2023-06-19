@@ -23,12 +23,16 @@ public record UserRegisterDto(
     @Past(message = "Birthdate must be in the past")
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate birthdate,
+
+    @Pattern(regexp = "[ÄÖÜäöüßA-Za-z0-9\\s/-]*")
     @Column(nullable = false)
     String address,
 
     @Column(nullable = false)
     @Positive
     Long areaCode,
+
+    @Pattern(regexp = "[ÄÖÜA-Zäöüa-z]*")
     @Column(nullable = false)
     String cityName,
 
