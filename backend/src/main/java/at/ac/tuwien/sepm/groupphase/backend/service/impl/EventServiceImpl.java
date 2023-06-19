@@ -108,6 +108,12 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public Page<Event> getTopEvent() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("soldTickets").descending());
+        return eventRepository.findAll(pageable);
+    }
+
+    @Override
     public EventDetailDto getEventById(Long id) throws NotFoundException {
         LOG.trace("getEventById({})", id);
         Optional<Event> existingEvent = eventRepository.findById(id);

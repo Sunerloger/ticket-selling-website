@@ -77,4 +77,13 @@ export class EventService {
   getPerformance(hallplanId: number): Observable<Performance> {
     return this.http.get<any>(baseUri + '/performance/' + hallplanId);
   }
+
+  /**
+   * Get top 10 events.
+   *
+   * @return performance.
+   */
+  getTopEvents(): Observable<Event[]> {
+    return this.http.get<any>(baseUri + '/topEvents');
+  }
 }

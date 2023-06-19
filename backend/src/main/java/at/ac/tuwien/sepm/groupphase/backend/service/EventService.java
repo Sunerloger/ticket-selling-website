@@ -56,10 +56,19 @@ public interface EventService {
      */
     EventDetailDto getEventFromHallplanId(Long hallplanId);
 
+    /**
+     * Finds the top 10 sold out events.
+     *
+     * @return page of max 10 events sorted by date
+     */
+    Page<Event> getTopEvent();
+
     PerformanceDto getPerformanceFromHallplanId(Long hallplanId);
 
     void incrementSoldTickets(Long hallplanId);
 
     @Lock(LockModeType.OPTIMISTIC)
     void decrementSoldTickets(Long hallplanId);
+
+
 }

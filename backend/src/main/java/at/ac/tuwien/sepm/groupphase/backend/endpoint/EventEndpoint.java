@@ -98,4 +98,17 @@ public class EventEndpoint {
             throw new NotFoundException(e);
         }
     }
+
+    @Secured("ROLE_USER")
+    @GetMapping("/topEvents")
+    @Operation(summary = "Get the 10 most sold out", security = @SecurityRequirement(name = "apiKey"))
+    public List<EventDetailDto> findTopEvents() {
+        try {
+            return eventService.getTopEvent()
+                .map(eventMapper::eventToEventDetailDto)
+                .toList();
+        } catch (NotFoundException e) {
+            throw new NotFoundException(e);
+        }
+    }
 }

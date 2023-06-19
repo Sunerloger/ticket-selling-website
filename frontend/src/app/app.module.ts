@@ -60,7 +60,8 @@ import { PasswordResetComponent } from './components/password-reset/password-res
 import { UserPasswordResetComponent } from './components/user-password-reset/user-password-reset.component';
 import { HallplanCreateComponent } from './components/hallplan-create/hallplan-create.component';
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
-
+import { EventChartComponent } from './components/event-chart/event-chart.component';
+import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 
 @NgModule({
   declarations: [
@@ -109,6 +110,7 @@ import { AutocompleteComponent } from './components/autocomplete/autocomplete.co
     UserPasswordResetComponent,
     HallplanCreateComponent,
     AutocompleteComponent,
+    EventChartComponent,
   ],
   imports: [
     BrowserModule,
@@ -125,6 +127,7 @@ import { AutocompleteComponent } from './components/autocomplete/autocomplete.co
     MatPaginatorModule,
     InfiniteScrollModule,
     NgbModule,
+    CanvasJSAngularChartsModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
