@@ -27,13 +27,13 @@ public class CheckoutDataGeneratorBean {
 
     @PostConstruct
     public void generateData() throws SQLException {
-        LOGGER.info("Generating hall plan data...");
+        LOGGER.info("Generating checkout-test-data...");
         try (var connection = dataSource.getConnection()) {
             ScriptUtils.executeSqlScript(connection, new ClassPathResource("sql/deleteAll.sql"));
             ScriptUtils.executeSqlScript(connection, new ClassPathResource("sql/insertHallplans.sql"));
             ScriptUtils.executeSqlScript(connection, new ClassPathResource("sql/insertEvents.sql"));
             ScriptUtils.executeSqlScript(connection, new ClassPathResource("sql/insertNewsEntries.sql"));
-            LOGGER.info("Finished generating data without error.");
+            LOGGER.info("Finished generating checkout-test-data without error.");
         }
     }
 }

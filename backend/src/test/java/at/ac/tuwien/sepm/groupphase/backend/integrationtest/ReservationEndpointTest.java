@@ -10,13 +10,9 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Reservation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ReservationSeat;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ApplicationUserRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.CartRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSeatRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSectionRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PurchaseRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ReservationRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRowRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +28,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -49,29 +44,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @ActiveProfiles({"checkout-test-data"})
 @AutoConfigureMockMvc
 public class ReservationEndpointTest implements TestData {
-    @Autowired
-    private WebApplicationContext webAppContext;
 
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private CartRepository cartRepository;
 
     @Autowired
     private PurchaseRepository purchaseRepository;
 
     @Autowired
     private ReservationRepository reservationRepository;
-
-    @Autowired
-    private HallPlanRepository hallPlanRepository;
-
-    @Autowired
-    private SeatRowRepository seatRowRepository;
-
-    @Autowired
-    private HallPlanSectionRepository sectionRepository;
 
     @Autowired
     private HallPlanSeatRepository seatRepository;

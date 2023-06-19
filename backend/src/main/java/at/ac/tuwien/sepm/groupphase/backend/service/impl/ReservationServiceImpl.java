@@ -43,9 +43,9 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public List<ReservationDto> getReservationsOfUser(Long userId) {
+        LOGGER.debug("Fetch the List of reservations of user {}", userId);
         List<Reservation> reservationList = repository.findReservationsByUserIdOrderByReservationNrDesc(userId);
         List<ReservationDto> reservationDtoList = new ArrayList<>();
-
         for (Reservation reservation : reservationList) {
             if (reservation.getReservationSeatsList().isEmpty()) {
                 LOGGER.error("reservation doesnt have tickets");
@@ -60,6 +60,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ReservationDto getReservationOfUser(Long reservationNr, Long userId) throws NotFoundException {
+        LOGGER.debug("Fetch reservation {} of user {}", reservationNr, userId);
         Reservation reservation = repository.findReservationByReservationNr(reservationNr);
         if (reservation == null) {
             LOGGER.warn("reservation with the given nr doesnt exist");
@@ -105,6 +106,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public void deleteReservation(Long reservationNr, Long userId) {
+        LOGGER.debug("Delete reservation {} of user {}", reservationNr, userId);
         Reservation reservation = repository.findReservationByReservationNr(reservationNr);
 
         if (reservation == null) {
@@ -123,6 +125,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public void addReservation(List<SeatDto> itemDtoList, Long userId) {
+        LOGGER.debug("Add a new reservation with a List of Seats");
         if (itemDtoList.isEmpty()) {
             return;
         }
@@ -161,7 +164,7 @@ public class ReservationServiceImpl implements ReservationService {
         for (SeatDto item : itemDtoList) {
             if (seatService.tryReserveSeat(item.getId())) {
                 reservationSeatList.add(new ReservationSeat(item.getId()));
-                //TODO: Inform user that not all seats were Reserved
+                // Inform user that not all seats were Reserved
             }
         }
 

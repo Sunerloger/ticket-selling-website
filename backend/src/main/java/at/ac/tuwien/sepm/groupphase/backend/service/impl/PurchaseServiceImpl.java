@@ -49,6 +49,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public PurchaseDto getPurchaseByPurchaseNr(Long purchaseNr, Long userId) {
+        LOGGER.debug("Fetch Purchase with nr {} of user {}", purchaseNr, userId);
         Purchase purchase = repository.findPurchasesByPurchaseNr(purchaseNr);
 
         if (purchase == null) {
@@ -70,6 +71,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Override
     @Transactional
     public void deletePurchase(Long purchaseNr, Long userId) {
+        LOGGER.debug("Purchase cart of user {}", userId);
         Purchase purchase = repository.findPurchasesByPurchaseNr(purchaseNr);
 
         if (purchase == null) {
@@ -77,6 +79,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         }
 
         if (!purchase.getUserId().equals(userId)) {
+            LOGGER.warn("user {} tries to remove Purchase that doesnt belong to him", userId);
             return;
         }
 
@@ -89,9 +92,9 @@ public class PurchaseServiceImpl implements PurchaseService {
 
 
     @Override
-    public List<PurchaseDto> getPurchasesOfUser(Long id) {
-
-        List<Purchase> purchaseList = repository.findPurchasesByUserIdOrderByPurchaseNrDesc(id);
+    public List<PurchaseDto> getPurchasesOfUser(Long userId) {
+        LOGGER.debug("Fetch all purchases of user {}", userId);
+        List<Purchase> purchaseList = repository.findPurchasesByUserIdOrderByPurchaseNrDesc(userId);
         List<PurchaseDto> purchaseDtoList = new ArrayList<>();
 
         for (Purchase purchase : purchaseList) {
@@ -113,6 +116,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public boolean purchaseCartOfUser(Long userId, PurchaseCreationDto purchaseCreationDto) {
+        LOGGER.debug("Purchase cart of user {}", userId);
         List<Ticket> ticketList = new ArrayList<>();
 
         if (purchaseCreationDto.getSeats() == null) {
@@ -158,12 +162,9 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public boolean purchaseReservationOfUser(Long reservationNr, PurchaseCreationDto purchaseCreationDto, Long userId) {
-        //check if reservation has items
-        if (purchaseCreationDto.getSeats() == null) {
-            return false;
-        }
+        LOGGER.debug("Purchase cart of user {}", userId);
 
-        if (purchaseCreationDto.getSeats().isEmpty()) {
+        if (purchaseCreationDto.getSeats() == null || purchaseCreationDto.getSeats().isEmpty()) {
             return false;
         }
 

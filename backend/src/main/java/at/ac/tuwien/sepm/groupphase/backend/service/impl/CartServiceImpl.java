@@ -13,14 +13,18 @@ import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanSeatService;
 import at.ac.tuwien.sepm.groupphase.backend.service.SeatRowService;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class CartServiceImpl implements CartService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final CartRepository cartRepository;
     private final EventService eventService;
     private final HallPlanSeatService seatService;
@@ -36,7 +40,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void addItemList(List<SeatDto> seatDtoList, Long userId) throws NotFoundException {
-
+        LOGGER.debug("Adding a List of items to the Cart of user {}", userId);
         if (seatDtoList.isEmpty()) {
             throw new NotFoundException();
         }
@@ -59,7 +63,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public List<CartItemDto> getItems(Long userId) {
-
+        LOGGER.debug("Fetching the items of the cart from user {}", userId);
         List<CartItemDto> itemList = new ArrayList<>();
 
         List<Cart> cartItemList = cartRepository.findByUserId(userId);
@@ -77,6 +81,7 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public void deleteItem(Long itemId, Long userId, boolean freeSeat) {
+        LOGGER.debug("Delete item {} out of cart from user {}", itemId, userId);
         Cart cart = cartRepository.findTopBySeatIdAndUserId(itemId, userId);
         if (cart == null) {
             return;
@@ -93,6 +98,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public boolean itemBelongsToUserCart(Long itemId, Long userId) {
+        LOGGER.debug("Check if item {} belongs to the Cart of user {}", itemId, userId);
         Cart cart = cartRepository.findTopBySeatIdAndUserId(itemId, userId);
         if (cart == null) {
             return false;

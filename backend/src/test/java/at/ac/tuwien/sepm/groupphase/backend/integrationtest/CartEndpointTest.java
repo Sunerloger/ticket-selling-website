@@ -5,8 +5,13 @@ import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CartItemDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PurchaseCreationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.*;
-import at.ac.tuwien.sepm.groupphase.backend.repository.*;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Cart;
+import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ApplicationUserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.CartRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSeatRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PurchaseRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,15 +51,6 @@ public class CartEndpointTest implements TestData {
 
     @Autowired
     private CartRepository cartRepository;
-
-    @Autowired
-    private HallPlanRepository hallPlanRepository;
-
-    @Autowired
-    private SeatRowRepository seatRowRepository;
-
-    @Autowired
-    private HallPlanSectionRepository sectionRepository;
 
     @Autowired
     private PurchaseRepository purchaseRepository;
