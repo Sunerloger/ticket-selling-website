@@ -4,16 +4,22 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatDt
 import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatType;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public class SeatDto {
+    @NotNull(message = "id must be specified")
     private Long id;
+    @NotNull(message = "price must be specified")
     private Double price;
     @Enumerated(EnumType.STRING)
     @NotNull(message = "type must be specified")
     private HallPlanSeatType type;
+    @NotNull(message = "type must be specified")
     private Long seatNr;
+    @NotBlank(message = "sectionName must be specified")
     private String sectionName;
+    @NotNull(message = "seatRowNr must be specified")
     private Long seatRowNr;
 
     public SeatDto() {
@@ -22,7 +28,7 @@ public class SeatDto {
 
     public SeatDto(HallPlanSeatDto seatDto, SeatRowDto rowDto) {
         this.id = seatDto.getId();
-        this.price = seatDto.getSection().getPrice().doubleValue(); //TODO remove conversion
+        this.price = seatDto.getSection().getPrice();
         this.type = seatDto.getType();
         this.seatNr = seatDto.getSeatNr();
         this.sectionName = seatDto.getSection().getName();
@@ -76,4 +82,21 @@ public class SeatDto {
     public void setSeatRowNr(Long seatRowNr) {
         this.seatRowNr = seatRowNr;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof SeatDto)) {
+            return false;
+        }
+
+        // typecast o to Complex so that we can compare data members
+        SeatDto c = (SeatDto) o;
+
+        return c.getId().equals(this.getId());
+    }
+
 }

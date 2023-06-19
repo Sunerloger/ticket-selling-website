@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Globals } from '../../global/globals';
 import { Hallplan, PersistedHallplan, PersistedSeat, PersistedSeatRow, Seat, SeatRow } from 'src/app/dtos/hallplan/hallplan';
-import { PersistedSection, Section } from 'src/app/dtos/hallplan/section';
+import {DetailedPersistedSection, PersistedSection, Section} from 'src/app/dtos/hallplan/section';
 import { Observable } from 'rxjs';
 import { AbbreviatedHallplan } from '../../dtos/hallplan/abbreviatedHallplan';
 
@@ -103,6 +103,12 @@ export class HallplanService {
             `${this.baseUrl}/${hallplanId}/sections`,
         );
     }
+
+  getAllSectionsWithCounts(hallplanId: number) {
+    return this.http.get<DetailedPersistedSection[]>(
+      `${this.baseUrl}/${hallplanId}/sections`,
+    );
+  }
 
     createSection(hallplanId: number, section: Section) {
         return this.http.post<PersistedSection>(

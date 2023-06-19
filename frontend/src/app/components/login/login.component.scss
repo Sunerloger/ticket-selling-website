@@ -1,5 +1,5 @@
 .card-header {
-  padding-bottom: 5px;
+  margin-top: 1.5rem;
 }
 
 .card-border {
@@ -27,8 +27,9 @@
 
 .action-buttons {
   display: flex;
-  flex-direction: row;
+  flex-direction: row-reverse;
   justify-content: space-between;
   align-items: baseline;
+
 }
 

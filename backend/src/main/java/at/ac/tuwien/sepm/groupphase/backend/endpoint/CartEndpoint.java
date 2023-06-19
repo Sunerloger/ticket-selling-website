@@ -100,13 +100,17 @@ public class CartEndpoint {
         LOGGER.info("Post /api/v1/cart/purchase");
 
         Long userId = userService.getUserIdFromToken(token);
+
         if (userId == null) {
             LOGGER.error("User with ROLE_USER could not be resolved");
             return ResponseEntity.internalServerError().body("User could not be resolved!");
         }
 
-        purchaseService.purchaseCartOfUser(userId, purchaseCreationDto);
-        return ResponseEntity.ok().build();
+        if (purchaseService.purchaseCartOfUser(userId, purchaseCreationDto)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 }

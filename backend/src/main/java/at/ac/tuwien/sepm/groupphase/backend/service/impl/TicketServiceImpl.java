@@ -10,10 +10,15 @@ import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanSeatService;
 import at.ac.tuwien.sepm.groupphase.backend.service.SeatRowService;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.lang.invoke.MethodHandles;
 
 @Service
 public class TicketServiceImpl implements TicketService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final HallPlanSeatService seatService;
     private final SeatRowService rowService;
     private final EventService eventService;
@@ -26,6 +31,7 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public TicketDto ticketDtoFromTicket(Ticket ticket) {
+        LOGGER.debug("Create ticketDto From ticket of seat {}", ticket.getSeatId());
         HallPlanSeatDto hallPlanSeatDto = seatService.getSeatById(ticket.getSeatId());
         SeatRowDto rowDto = rowService.getSeatRowById(hallPlanSeatDto.getSeatrowId());
 

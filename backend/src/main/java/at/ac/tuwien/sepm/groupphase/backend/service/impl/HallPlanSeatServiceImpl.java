@@ -116,6 +116,7 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
 
     @Override
     public boolean doesSeatExist(Long seatId) {
+        LOGGER.debug("Check if Seat exists and is purchaseabkle");
         Optional<HallPlanSeat> optionalHallPlanSeat = seatRepository.getSeatById(seatId);
         if (optionalHallPlanSeat.isEmpty()) {
             return false;
@@ -131,6 +132,7 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     public boolean purchaseReservedSeat(Long seatId) {
+        LOGGER.debug("If possible, buy seat");
         Optional<HallPlanSeat> optionalHallPlanSeat = seatRepository.getSeatById(seatId);
         if (optionalHallPlanSeat.isEmpty()) {
             return false;
@@ -158,6 +160,7 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     public boolean tryReserveSeat(Long seatId) {
+        LOGGER.debug("If possible, reserve seat");
         Optional<HallPlanSeat> optionalHallPlanSeat = seatRepository.getSeatById(seatId);
         if (optionalHallPlanSeat.isEmpty()) {
             return false;
@@ -180,6 +183,7 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
     @Transactional
     @Lock(LockModeType.OPTIMISTIC)
     public boolean cancelReservation(Long seatId) {
+        LOGGER.debug("cancel reservation of seat");
         Optional<HallPlanSeat> optionalHallPlanSeat = seatRepository.getSeatById(seatId);
         if (optionalHallPlanSeat.isEmpty()) {
             return false;
@@ -202,6 +206,7 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
     @Transactional
     @Lock(LockModeType.OPTIMISTIC)
     public boolean freePurchasedSeat(Long seatId) {
+        LOGGER.debug("Free purchased seat");
         Optional<HallPlanSeat> optionalHallPlanSeat = seatRepository.getSeatById(seatId);
         if (optionalHallPlanSeat.isEmpty()) {
             return false;
@@ -220,7 +225,6 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
 
         SeatRow seatRow = seatRowRepository.getReferenceById(seat.getSeatrowId());
         eventService.decrementSoldTickets(seatRow.getHallPlanId());
-
         return true;
     }
 
