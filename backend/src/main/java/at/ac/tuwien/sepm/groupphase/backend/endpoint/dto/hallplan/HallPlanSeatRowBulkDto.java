@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatRowDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.SeatRow;
 
 import java.util.List;
 

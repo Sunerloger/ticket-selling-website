@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatType;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
@@ -134,6 +135,7 @@ public class HallPlanSeatDto {
         private Long capacity;
         private Long seatNr;
         private Long orderNr;
+        private Long sectionId;
 
         private SeatDtoBuilder() {
         }
@@ -172,6 +174,10 @@ public class HallPlanSeatDto {
             return this;
         }
 
+        public SeatDtoBuilder withSectionId(Long sectionId) {
+            this.sectionId = sectionId;
+            return this;
+        }
 
         public HallPlanSeatDto build() {
             HallPlanSeatDto seatDto = new HallPlanSeatDto();

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatRowDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.DetailedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatDto;
@@ -7,6 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSearch
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanSectionMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SeatRowMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
@@ -19,6 +21,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSectionRepository
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRowRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.xml.bind.ValidationException;
 import org.slf4j.Logger;
@@ -35,6 +38,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -50,15 +54,18 @@ public class HallPlanServiceImpl implements HallPlanService {
     private final HallPlanSectionRepository hallPlanSectionRepository;
     private final SeatRowRepository seatRowRepository;
     private final HallPlanSeatRepository hallPlanSeatRepository;
+    private final SeatRowMapper seatRowMapper;
     private final HallPlanSeatRepository seatRepository;
 
     public HallPlanServiceImpl(HallPlanRepository hallPlanRepository, HallPlanMapper hallPlanMapper, HallPlanSectionMapper hallPlanSectionMapper,
-                               HallPlanSectionRepository hallPlanSectionRepository, SeatRowRepository seatRowRepository, HallPlanSeatRepository seatRepository) {
+                               HallPlanSectionRepository hallPlanSectionRepository, SeatRowRepository seatRowRepository,
+                               SeatRowMapper seatRowMapper, HallPlanSeatRepository seatRepository) {
         this.hallPlanRepository = hallPlanRepository;
         this.hallPlanMapper = hallPlanMapper;
         this.hallPlanSectionMapper = hallPlanSectionMapper;
         this.hallPlanSectionRepository = hallPlanSectionRepository;
         this.seatRowRepository = seatRowRepository;
+        this.seatRowMapper = seatRowMapper;
         this.hallPlanSeatRepository = seatRepository;
         this.seatRepository = seatRepository;
     }
@@ -222,7 +229,9 @@ public class HallPlanServiceImpl implements HallPlanService {
         } else {
             throw new NotFoundException("Hall Plan with id " + id + " was not found in the system");
         }
-        return hallPlanEntityWithoutSeats.map(hallPlanMapper::mapToDetailedHallPlanDto).orElse(null);
+        DetailedHallPlanDto detailed = hallPlanEntityWithoutSeats.map(hallPlanMapper::mapToDetailedHallPlanDto).orElse(null);
+        return detailed;
+        //return hallPlanEntityWithoutSeats.map(hallPlanMapper::mapToDetailedHallPlanDto).orElse(null);
     }
 
     @Override
@@ -309,12 +318,17 @@ public class HallPlanServiceImpl implements HallPlanService {
         return hallPlanSectionRepository.findAll();
     }
 
+    @Override
+    public List<HallPlanSection> findAllByHallPlanId(Long id) {
+        LOGGER.debug("Find all hall plan sections by hall plan id: {}", id);
+        return null;
+    }
 
     @Override
     public List<HallPlanSectionDto> findAllSectionsByHallPlanIdWithCounts(Long hallplanId) {
         List<Object[]> counts = hallPlanRepository.findAllSectionsByHallPlanIdCounts(hallplanId);
         List<Object[]> zeroCounts = hallPlanRepository.findHallPlanCountsById(hallplanId);
-        List<HallPlanSection> sections = new ArrayList<>();
+        List<HallPlanSection> sections = new ArrayList<HallPlanSection>();
         List<Long> existIdList = new ArrayList<>();
         for (Object[] count : counts) {
             HallPlanSection section = (HallPlanSection) count[0];
@@ -337,7 +351,8 @@ public class HallPlanServiceImpl implements HallPlanService {
             }
 
         }
-        return hallPlanSectionMapper.toDto(sections);
+        List<HallPlanSectionDto> list = hallPlanSectionMapper.toDto(sections);
+        return list;
     }
 
     @Override
