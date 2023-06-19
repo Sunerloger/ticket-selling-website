@@ -3,13 +3,19 @@
 }
 
 .card-header {
-  padding-bottom: 5px;
-
-
+  margin-top: 1.5rem;
+  display:flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: baseline;
 }
-
+.modal-footer{
+  display:flex;
+  align-items: baseline;
+}
 .action-buttons {
   display: flex;
+  flex-direction: row-reverse;
   justify-content: space-between;
 }
 
