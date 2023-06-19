@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.HallPlanEndpoint;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,7 +38,7 @@ public class HallPlanSection {
     public HallPlanSection() {
     }
 
-    public HallPlanSection(String name, String color, Double price, Long hallPlanId) {
+    public HallPlanSection(String name, String color, Double price) {
         this.name = name;
         this.color = color;
         this.price = price;

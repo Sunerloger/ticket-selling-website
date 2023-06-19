@@ -19,7 +19,6 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -38,7 +37,7 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final String filePath = "./src/main/resources/KeyFiles.txt";
+    private static final String FILEPATH = "./src/main/resources/KeyFiles.txt";
 
     private final TicketRepository ticketRepository;
 
@@ -55,13 +54,16 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
     public TicketPayloadDto getTicketPayload(TicketDto ticketDto)
         throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, ValidationException {
         if (ticketDto == null || ticketDto.getEvent() == null || ticketDto.getSeat() == null) {
+            LOGGER.info("The parameters Event and Seat of the Ticket must be provided");
             throw new jakarta.validation.ValidationException("The parameters Event and Seat of the Ticket must be provided");
         }
+        LOGGER.info("Generating payload for ticket: {}", ticketDto.getTicketNr());
         return generatePayload(ticketDto);
     }
 
     // ! Only call to set initial key values !
     private void writeKeysToFile(ArrayList<SecretKey> secretKeys) {
+        LOGGER.info("Writing keys to file: {}", FILEPATH);
         // Generate a random initialization vector (IV)
         byte[] iv = new byte[16];
 
@@ -74,17 +76,19 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
         random.nextBytes(keyBytes);
         String encodedKey = encode(keyBytes);
         String encodedIv = encode(iv);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILEPATH))) {
             writer.write(encodedKey);
             writer.newLine();
             writer.write(encodedIv);
-
+            LOGGER.info("Keys written successfully to file: {}", FILEPATH);
         } catch (IOException e) {
+            LOGGER.error("Error writing keys to file: {}", FILEPATH);
             throw new RuntimeException(e);
         }
     }
 
     public TicketPayloadDto validatePayload(TicketPayloadDto payloadDto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        LOGGER.info("Validating payload");
         //Create TicketPayloadDto
         TicketPayloadDto newPayload = new TicketPayloadDto();
         //Retrieve KeyFileSpecs
@@ -94,12 +98,14 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
         try {
             decryptedMsg = aesDecrypt(payloadDto.getMessage(), specs.getSecretKey(), specs.getIvParameterSpec());
         } catch (IllegalArgumentException ex) {
+            LOGGER.info("Payload decryption failed. Invalid ticket.");
             newPayload.setMessage(TICKET_INVALID);
             return newPayload;
         }
 
         String[] msgComponents = decryptedMsg.split(" ");
         if (msgComponents.length != 4) {
+            LOGGER.info("Invalid payload format. Invalid ticket.");
             newPayload.setMessage(TICKET_INVALID);
             return newPayload;
         }
@@ -108,19 +114,24 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
         //Retrieve ticket
         Optional<Ticket> ticket = ticketRepository.findById(ticketId);
         if (!ticket.isPresent()) {
+            LOGGER.info("Ticket not found. Invalid ticket.");
             newPayload.setMessage(TICKET_INVALID);
         } else {
             if (Objects.equals(ticket.get().getSeatId(), seatId)) {
+                LOGGER.info("Ticket validation successful. Ticket is valid.");
                 newPayload.setMessage(TICKET_VALID);
             } else {
+                LOGGER.info("Ticket validation failed. Invalid ticket.");
                 newPayload.setMessage(TICKET_INVALID);
             }
         }
         try {
             if (!Long.valueOf(msgComponents[3]).equals(Long.valueOf("5839593258"))) {
+                LOGGER.info("Invalid payload data. Invalid ticket.");
                 newPayload.setMessage(TICKET_INVALID);
             }
         } catch (NumberFormatException ex) {
+            LOGGER.info("Invalid payload data format. Invalid ticket.");
             newPayload.setMessage(TICKET_INVALID);
         }
         return newPayload;
@@ -130,6 +141,7 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
         throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
 
         if (ticketDto.getTicketNr() == null) {
+            LOGGER.info("Ticket number must be provided.");
             throw new jakarta.validation.ValidationException("Ticket Nr must be provided");
         }
         //Retrieve KeyFileSpecs
@@ -137,12 +149,11 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
 
         //Encrypt message
         String payloadMsg = "";
-
         payloadMsg += ticketDto.getTicketNr() + " " + ticketDto.getSeat().getId() + " " + ticketDto.getSeat().getSeatNr() + " 5839593258";
         String encryptedMessage = aesEncrypt(payloadMsg, specs.getSecretKey(), specs.getIvParameterSpec());
-        //String decryptedMessage = aesDecrypt(encryptedMessage, secretKey, ivParameterSpec);
         TicketPayloadDto ticketPayloadDto = new TicketPayloadDto();
         ticketPayloadDto.setMessage(encryptedMessage);
+        LOGGER.info("Payload generated for ticket: {}", ticketDto.getTicketNr());
         return ticketPayloadDto;
     }
 
@@ -167,7 +178,7 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
         String ivBytes;
 
         // Retrieve Key Bytes from file
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILEPATH))) {
             keyBytes = reader.readLine();
             ivBytes = reader.readLine();
         } catch (IOException e) {

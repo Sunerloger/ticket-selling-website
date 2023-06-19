@@ -129,7 +129,7 @@ public class HallPlanEndpoint {
     @GetMapping("/search")
     @Operation(summary = "Get list of events without details", security = @SecurityRequirement(name = "apiKey"))
     public List<AbbreviatedHallPlanDto> searchHallPlanPages(@RequestParam(defaultValue = "0") int pageIndex, @RequestParam(required = false) String search) {
-        LOGGER.info("GET {}/hallplansForSearch");
+        LOGGER.info("GET {}/hallplansForSearch", pageIndex);
         LOGGER.info("called without param");
         return hallPlanService.findPageOfHallplans(pageIndex, search)
             .map(hallPlanMapper::hallPlanToAbbreviatedHallPlanDto)
@@ -213,8 +213,7 @@ public class HallPlanEndpoint {
     @Operation(summary = "Get all seat rows of a Hallplan, in ascending rowNr order", security = @SecurityRequirement(name = "apiKey"))
     public List<SeatRowDto> getSeatRowByHallplanId(@PathVariable Long hallPlanId) {
         LOGGER.info("GET /api/v1/{}/seatrows", hallPlanId);
-        List<SeatRowDto> seatRows = seatRowService.findAllSeatRowsOfHallPlan(hallPlanId);
-        return seatRows;
+        return seatRowService.findAllSeatRowsOfHallPlan(hallPlanId);
     }
 
     @Secured("ROLE_USER")
@@ -222,8 +221,7 @@ public class HallPlanEndpoint {
     @Operation(summary = "Get all seat rows in the system", security = @SecurityRequirement(name = "apiKey"))
     public List<SeatRowDto> findAllSeatRows() {
         LOGGER.info("GET /api/v1/seatrows");
-        List<SeatRowDto> seatRows = seatRowService.findAllSeatRows();
-        return seatRows;
+        return seatRowService.findAllSeatRows();
     }
 
     //*******************************************************
