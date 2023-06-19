@@ -43,9 +43,10 @@ public interface EventService {
      * @param toDate    the latest data that is searched
      * @param author    the author of given event
      * @param location  the location that is searched for
+     * @param titleCategory  the title or category that is searched for
      * @return page of max 20 events sorted by date
      */
-    Page<Event> findAllPagesByDateAndAuthorAndLocation(int pageIndex, LocalDate fromDate, LocalDate toDate, String author, String location);
+    Page<Event> findAllPagesByDateAndAuthorAndLocation(int pageIndex, LocalDate fromDate, LocalDate toDate, String author, String location, String titleCategory);
 
 
     /**

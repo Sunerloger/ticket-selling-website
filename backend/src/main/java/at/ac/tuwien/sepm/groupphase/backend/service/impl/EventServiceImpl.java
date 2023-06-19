@@ -78,7 +78,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Page<Event> findAllPagesByDateAndAuthorAndLocation(int pageIndex, LocalDate fromDate, LocalDate toDate, String artist, String location) {
+    public Page<Event> findAllPagesByDateAndAuthorAndLocation(int pageIndex, LocalDate fromDate, LocalDate toDate, String artist, String location, String titleCategory) {
         Pageable pageable = PageRequest.of(pageIndex, 20, Sort.by("title").ascending());
         String eventDatesLocation = "eventDatesLocation";
         Specification<Event> specification = (root, query, criteriaBuilder) -> {
@@ -99,6 +99,12 @@ public class EventServiceImpl implements EventService {
                 Predicate inner = criteriaBuilder.or(criteriaBuilder.or(criteriaBuilder.like(criteriaBuilder.lower(root.join(eventDatesLocation).get("city")), "%" + location.toLowerCase() + "%"),
                         criteriaBuilder.like(criteriaBuilder.lower(root.join(eventDatesLocation).get("address")), "%" + location.toLowerCase() + "%")),
                     criteriaBuilder.like(criteriaBuilder.lower(root.join(eventDatesLocation).get("areaCode").as(String.class)), "%" + location.toLowerCase() + "%"));
+                predicate = criteriaBuilder.and(predicate, inner);
+            }
+
+            if (titleCategory != null) {
+                Predicate inner = criteriaBuilder.or(criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), "%" + titleCategory.toLowerCase() + "%"),
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("category")), "%" + titleCategory.toLowerCase() + "%"));
                 predicate = criteriaBuilder.and(predicate, inner);
             }
 

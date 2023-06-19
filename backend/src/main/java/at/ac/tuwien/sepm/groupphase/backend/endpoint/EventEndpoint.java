@@ -69,13 +69,14 @@ public class EventEndpoint {
         @RequestParam(required = false) String artist,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate untilDate,
-        @RequestParam(required = false) String location
+        @RequestParam(required = false) String location,
+        @RequestParam(required = false) String titleCategory
     ) {
         LOG.info("GET {}/events", "/api/v1/events");
 
-        if (artist != null || fromDate != null || untilDate != null || location != null) {
+        if (artist != null || fromDate != null || untilDate != null || location != null || titleCategory != null) {
             LOG.info("called with param");
-            return eventService.findAllPagesByDateAndAuthorAndLocation(pageIndex, fromDate, untilDate, artist, location)
+            return eventService.findAllPagesByDateAndAuthorAndLocation(pageIndex, fromDate, untilDate, artist, location, titleCategory)
                 .map(eventMapper::eventToAbbreviatedEventDto)
                 .toList();
         } else {
