@@ -4,8 +4,8 @@
   <div class="card-border">
     <div class="card-header">
       <h3 class="card-headline">{{heading}}</h3>
-      <button class="btn btn-danger" *ngIf="mode === 0" (click)="changeMode()">Navigate To Delete</button>
-      <button class="btn btn-primary" *ngIf="mode === 1" (click)="changeMode()">Navigate To Edit</button>
+      <button class="btn btn-danger" *ngIf="mode === 0" (click)="changeMode()">Delete</button>
+      <button class="btn btn-primary" *ngIf="mode === 1" (click)="changeMode()">Edit</button>
     </div>
     <form (ngSubmit)="confirmSubmit()" #editForm="ngForm">
       <div id="input">
