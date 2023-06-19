@@ -13,6 +13,14 @@
       <input type="date" class="form-control" id="toDateInput" [(ngModel)]="toDate" (ngModelChange)="getEntities()">
     </div>
     <div class="col-md-3">
+      <label for="startingTime" class="form-label">Starting Time:</label>
+      <input type="time" class="form-control" id="startingTime" [(ngModel)]="startTime" (ngModelChange)="getEntities()">
+    </div>
+    <div class="col-md-3">
+      <label for="duration" class="form-label">Duration:</label>
+      <input type="time" class="form-control" id="duration" [(ngModel)]="duration" (ngModelChange)="getEntities()">
+    </div>
+    <div class="col-md-3">
       <label for="authorInput" class="form-label">Artist:</label>
       <input type="text" class="form-control" id="authorInput" [(ngModel)]="artist" (ngModelChange)="getEntities()">
     </div>

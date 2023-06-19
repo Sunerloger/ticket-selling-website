@@ -26,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -70,13 +71,17 @@ public class EventEndpoint {
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate untilDate,
         @RequestParam(required = false) String location,
-        @RequestParam(required = false) String titleCategory
+        @RequestParam(required = false) String titleCategory,
+        @RequestParam(required = false)LocalTime startTime,
+        @RequestParam(required = false)LocalTime duration
     ) {
         LOG.info("GET {}/events", "/api/v1/events");
 
-        if (artist != null || fromDate != null || untilDate != null || location != null || titleCategory != null) {
+        if (artist != null || fromDate != null || untilDate != null || location != null || titleCategory != null
+            || startTime != null || duration != null) {
             LOG.info("called with param");
-            return eventService.findAllPagesByDateAndAuthorAndLocation(pageIndex, fromDate, untilDate, artist, location, titleCategory)
+            return eventService.findAllPagesByDateAndAuthorAndLocation(pageIndex, fromDate, untilDate, artist, location,
+                    titleCategory, startTime, duration)
                 .map(eventMapper::eventToAbbreviatedEventDto)
                 .toList();
         } else {

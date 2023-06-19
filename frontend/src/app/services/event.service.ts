@@ -42,7 +42,7 @@ export class EventService {
    * @return an Observable for the fetched page of event entries
    */
   getPage(pageIndex: number, fromDate: string, toDate: string, artist: string, location: string,
-          titleCategory: string ): Observable<AbbreviatedEvent[]> {
+          titleCategory: string, startTime: any, duration: any ): Observable<AbbreviatedEvent[]> {
     let params: HttpParams = new HttpParams();
     params = params.set('pageIndex', pageIndex);
     if(fromDate != null){
@@ -59,6 +59,12 @@ export class EventService {
     }
     if(titleCategory !== ''){
       params = params.set('titleCategory', titleCategory);
+    }
+    if(startTime !== null){
+      params = params.set('startTime', startTime);
+    }
+    if(duration !== null){
+      params = params.set('duration', duration);
     }
     return this.http.get<AbbreviatedEvent[]>(baseUri, {params});
   }
