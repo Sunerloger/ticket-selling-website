@@ -60,6 +60,7 @@ import { PasswordResetComponent } from './components/password-reset/password-res
 import { UserPasswordResetComponent } from './components/user-password-reset/user-password-reset.component';
 import { HallplanCreateComponent } from './components/hallplan-create/hallplan-create.component';
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
+import { SectionColorLegendComponent } from './components/section-color-legend/section-color-legend.component';
 
 
 @NgModule({
@@ -109,6 +110,7 @@ import { AutocompleteComponent } from './components/autocomplete/autocomplete.co
     UserPasswordResetComponent,
     HallplanCreateComponent,
     AutocompleteComponent,
+    SectionColorLegendComponent,
   ],
   imports: [
     BrowserModule,
