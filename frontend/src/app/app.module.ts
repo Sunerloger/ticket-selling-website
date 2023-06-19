@@ -59,6 +59,7 @@ import { AdminPasswordResetComponent } from './components/admin-password-reset/a
 import { PasswordResetComponent } from './components/password-reset/password-reset.component';
 import { UserPasswordResetComponent } from './components/user-password-reset/user-password-reset.component';
 import { HallplanCreateComponent } from './components/hallplan-create/hallplan-create.component';
+import { TicketValidatorComponent } from './components/ticket-validator/ticket-validator.component';
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 
 
@@ -108,6 +109,7 @@ import { AutocompleteComponent } from './components/autocomplete/autocomplete.co
     PasswordResetComponent,
     UserPasswordResetComponent,
     HallplanCreateComponent,
+    TicketValidatorComponent,
     AutocompleteComponent,
   ],
   imports: [
