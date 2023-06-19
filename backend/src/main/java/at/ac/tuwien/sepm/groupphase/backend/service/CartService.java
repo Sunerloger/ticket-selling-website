@@ -35,5 +35,12 @@ public interface CartService {
     @Transactional
     void deleteItem(Long itemId, Long userId, boolean freeSeat);
 
+    /**
+     * Checks if a given seat belongs to the cart of the given user.
+     *
+     * @param itemId the id of the seat
+     * @param userId the id of the user
+     * @return true if the item with the given seatId is in the cart of the user
+     */
     boolean itemBelongsToUserCart(Long itemId, Long userId);
 }

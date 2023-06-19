@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,20 +37,11 @@ public class TicketValidatorEndpoint {
     }
 
     @Secured("ROLE_USER")
-    @PostMapping
+    @GetMapping
     @Operation(summary = "Get a QR Code Payload as a string ", security = @SecurityRequirement(name = "apiKey"))
     public TicketPayloadDto getTicketPayload(@RequestBody TicketDto ticketDto)
         throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, ValidationException {
         LOGGER.info("GET /api/v1/ticket-validator");
         return ticketValidatorService.getTicketPayload(ticketDto);
-    }
-
-    @Secured("ROLE_ADMIN")
-    @GetMapping("/validate")
-    @Operation(summary = "Get a QR Code Payload as a string ", security = @SecurityRequirement(name = "apiKey"))
-    public TicketPayloadDto validateTicketPayload(TicketPayloadDto payloadDto)
-        throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, ValidationException {
-        LOGGER.info("GET /api/v1/ticket-validator/validate");
-        return ticketValidatorService.validatePayload(payloadDto);
     }
 }

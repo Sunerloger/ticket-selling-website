@@ -142,7 +142,12 @@ export class EditComponent implements OnInit {
   }
 
   changeMode(): void {
-    this.mode = 1;
+    if (this.mode === 0) {
+      this.mode = 1;
+    } else {
+      this.mode = 0;
+    }
+
     // Reset Password forms when changing to delete mode
     this.user.password = '';
     this.passwordVerify = '';

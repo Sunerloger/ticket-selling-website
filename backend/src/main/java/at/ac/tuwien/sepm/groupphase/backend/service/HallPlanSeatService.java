@@ -40,15 +40,45 @@ public interface HallPlanSeatService {
      */
     void deleteSeat(Long seatId);
 
+    /**
+     * Checks if a seat exists and is not of the type VACANT_SEAT.
+     *
+     * @param seatId the id of the seat to check
+     * @return true if the seat exists and isn't of type VACANT_SEAT
+     */
     boolean doesSeatExist(Long seatId);
 
+    /**
+     * Tries to purchase a seat that has been reserved before.
+     *
+     * @param seatId the seat to purchase
+     * @return true if the seat was purchased
+     */
     boolean purchaseReservedSeat(Long seatId);
 
+    /**
+     * Tries to reserve a seat that has been reserved before.
+     *
+     * @param seatId the seat to reserve
+     * @return true if the seat was reserved
+     */
     boolean tryReserveSeat(Long seatId);
 
+    /**
+     * Cancels the reservation of a seat that was reserved before.
+     *
+     * @param seatId the seat to free
+     * @return true if successful
+     */
     @Transactional
     boolean cancelReservation(Long seatId);
 
+    /**
+     * Cancels the purchase of a seat that was reserved before.
+     *
+     * @param seatId the seat to free
+     * @return true if successful
+     */
     @Transactional
     boolean freePurchasedSeat(Long seatId);
 

@@ -22,14 +22,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class UserRegisterMappingTest {
 
     private final ApplicationUser applicationUser =
-        new ApplicationUser("martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure", false,false);
+        new ApplicationUser("martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "Password123%", false,false);
 
     private final UserRegisterDto userRegisterDtoActual =
-        new UserRegisterDto(1L, "martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure",
-            false,false);
+        new UserRegisterDto(1L, "martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "Password123%");
 
     private final UserCreateDto userCreateDtoActual =
-        new UserCreateDto(1L, "martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure",
+        new UserCreateDto(1L, "martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "Password123%",
             false,false);
     @Autowired
     private UserMapper userMapper;

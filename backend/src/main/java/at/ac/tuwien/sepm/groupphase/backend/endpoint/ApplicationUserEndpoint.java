@@ -56,9 +56,9 @@ public class ApplicationUserEndpoint {
     @PutMapping
     @PermitAll
     @Operation(summary = "Edit a user")
-    public void update(@Valid @RequestBody UserDetailDto userDetailDto, @RequestHeader("Authorization") String token) {
+    public UserDetailDto update(@Valid @RequestBody UserDetailDto userDetailDto, @RequestHeader("Authorization") String token) {
         LOGGER.info("EDIT USER " + BASE_PATH + "with TOKEN " + token, userDetailDto);
-        userMapper.entityToUserDetailDto(userService.edit(userMapper.userDetailDtoToEntity(userDetailDto), token));
+        return userMapper.entityToUserDetailDto(userService.edit(userMapper.userDetailDtoToEntity(userDetailDto), token));
     }
 
     @GetMapping
