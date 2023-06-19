@@ -33,7 +33,7 @@ export class CartCheckoutComponent implements OnInit {
       this.user = data;
     });
     this.getItems();
-    this.creationItem.useUserAddress = false;
+    this.creationItem.useUserAddress = true;
     this.creationItem.address = '';
     this.creationItem.city = '';
   }
