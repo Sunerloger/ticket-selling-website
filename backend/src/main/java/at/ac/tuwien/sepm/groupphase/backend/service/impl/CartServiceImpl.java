@@ -90,7 +90,9 @@ public class CartServiceImpl implements CartService {
             return;
         }
         if (freeSeat) {
-            seatService.cancelReservation(itemId);
+            if (!seatService.cancelReservation(itemId)) {
+                LOGGER.error("unable to free a seat that was reserved");
+            }
         }
         cartRepository.deleteCartById(cart.getId());
     }
@@ -108,6 +110,5 @@ public class CartServiceImpl implements CartService {
         }
         return true;
     }
-
 
 }

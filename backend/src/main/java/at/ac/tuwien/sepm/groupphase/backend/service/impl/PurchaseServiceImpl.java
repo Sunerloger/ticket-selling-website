@@ -84,7 +84,9 @@ public class PurchaseServiceImpl implements PurchaseService {
         }
 
         for (Ticket ticket : purchase.getTicketList()) {
-            seatService.freePurchasedSeat(ticket.getSeatId());
+            if (!seatService.freePurchasedSeat(ticket.getSeatId())) {
+                LOGGER.error("unable to free a seat that was bought");
+            }
         }
         purchase.setCanceled(true);
         repository.save(purchase);

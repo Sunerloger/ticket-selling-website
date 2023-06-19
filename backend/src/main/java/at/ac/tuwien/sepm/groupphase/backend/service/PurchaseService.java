@@ -40,6 +40,7 @@ public interface PurchaseService {
      *
      * @param userId              the id of the user
      * @param purchaseCreationDto additional information of the user
+     * @return returns true if the cart was purchased (at least partially)
      */
     boolean purchaseCartOfUser(Long userId, PurchaseCreationDto purchaseCreationDto);
 
@@ -53,6 +54,7 @@ public interface PurchaseService {
      * @param purchaseCreationDto additional information of the user
      * @param reservationNr       the id of the reservation
      * @param userId              the id of the user
+     * @return returns true if the reservation was purchased (at least partially)
      */
     boolean purchaseReservationOfUser(Long purchaseCreationDto, PurchaseCreationDto reservationNr, Long userId);
 

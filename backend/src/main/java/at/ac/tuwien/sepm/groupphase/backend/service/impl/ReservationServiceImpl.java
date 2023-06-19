@@ -118,7 +118,9 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         for (ReservationSeat reservationSeat : reservation.getReservationSeatsList()) {
-            seatService.cancelReservation(reservationSeat.getSeatId());
+            if (!seatService.cancelReservation(reservationSeat.getSeatId())) {
+                LOGGER.error("unable to free a seat that was reserved");
+            }
         }
         repository.deleteReservationByReservationNr(reservationNr);
     }
