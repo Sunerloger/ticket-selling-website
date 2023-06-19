@@ -44,7 +44,8 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
 
     private static final String TICKET_INVALID = "Ticket is invalid!";
 
-    private static final String TICKET_VALID = "Ticket is invalid!";
+    private static final String TICKET_VALID = "Ticket is valid!";
+
     public TicketValidatorServiceImpl(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
 
@@ -53,13 +54,10 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
     @Override
     public TicketPayloadDto getTicketPayload(TicketDto ticketDto)
         throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, ValidationException {
-        //ArrayList<SecretKey> secretKeys = new ArrayList<>();
-        //writeKeysToFile(secretKeys);
         if (ticketDto == null || ticketDto.getEvent() == null || ticketDto.getSeat() == null) {
             throw new jakarta.validation.ValidationException("The parameters Event and Seat of the Ticket must be provided");
         }
         return generatePayload(ticketDto);
-        //writeKeysToFile("./src/main/resources/KeyFiles.txt", secretKeys);
     }
 
     // ! Only call to set initial key values !
@@ -67,19 +65,19 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
         // Generate a random initialization vector (IV)
         byte[] iv = new byte[16];
 
-        SecureRandom random_iv = new SecureRandom();
-        random_iv.nextBytes(iv);
+        SecureRandom randomIv = new SecureRandom();
+        randomIv.nextBytes(iv);
 
         //Write 32 Byte Key Array to File encode as Base 64 String
         byte[] keyBytes = new byte[32];
         SecureRandom random = new SecureRandom();
         random.nextBytes(keyBytes);
-        String encoded_key = encode(keyBytes);
-        String encoded_iv = encode(iv);
+        String encodedKey = encode(keyBytes);
+        String encodedIv = encode(iv);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            writer.write(encoded_key);
+            writer.write(encodedKey);
             writer.newLine();
-            writer.write(encoded_iv);
+            writer.write(encodedIv);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -101,7 +99,7 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
         }
 
         String[] msgComponents = decryptedMsg.split(" ");
-        if(msgComponents.length != 4) {
+        if (msgComponents.length != 4) {
             newPayload.setMessage(TICKET_INVALID);
             return newPayload;
         }
@@ -109,8 +107,7 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
         Long seatId = Long.valueOf(msgComponents[1]);
         //Retrieve ticket
         Optional<Ticket> ticket = ticketRepository.findById(ticketId);
-        if(!ticket.isPresent())
-        {
+        if (!ticket.isPresent()) {
             newPayload.setMessage(TICKET_INVALID);
         } else {
             if (Objects.equals(ticket.get().getSeatId(), seatId)) {
@@ -120,7 +117,9 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
             }
         }
         try {
-            if (!Long.valueOf(msgComponents[3]).equals(Long.valueOf("5839593258"))) newPayload.setMessage(TICKET_INVALID);
+            if (!Long.valueOf(msgComponents[3]).equals(Long.valueOf("5839593258"))) {
+                newPayload.setMessage(TICKET_INVALID);
+            }
         } catch (NumberFormatException ex) {
             newPayload.setMessage(TICKET_INVALID);
         }

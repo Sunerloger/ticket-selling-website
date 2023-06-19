@@ -18,7 +18,7 @@ export class TicketValidatorComponent implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.parameterValue = params['payload']; 
-      
+      console.log("Validating");
       const observable: Observable<TicketPayload> = this.ticketService.validatePayload(this.parameterValue);
       observable.subscribe({
       next: data => {
