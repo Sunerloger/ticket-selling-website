@@ -31,16 +31,17 @@ export class RegisterComponent implements OnInit {
   error = false;
   errorMessage = '';
   passwordVerify: string;
+  passwordPattern = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/);
 
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
               public authService: AuthService,
               private notification: ToastrService,
               private router: Router) {
-
   }
 
   ngOnInit(): void {
+
     this.registerForm = this.formBuilder.group({
       admin: [''],
       email: ['', Validators.required],
@@ -50,7 +51,7 @@ export class RegisterComponent implements OnInit {
       address: ['', Validators.required],
       areaCode: ['', Validators.required],
       cityName: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(8)]]
+      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(this.passwordPattern)]]
     });
   }
 
@@ -64,10 +65,7 @@ export class RegisterComponent implements OnInit {
     this.registerForm.controls['areaCode'].setValue(this.user.areaCode);
     this.registerForm.controls['cityName'].setValue(this.user.cityName);
     this.registerForm.controls['password'].setValue(this.user.password.trim());
-
-    console.log(this.registerForm);
     if (this.registerForm.valid && this.user.password === this.passwordVerify) {
-      console.log(this.user);
       const observable = this.userService.registerUser(this.user);
       observable.subscribe({
         next: () => {
@@ -85,9 +83,5 @@ export class RegisterComponent implements OnInit {
       this.notification.error('Passwords do not match!');
       this.registerForm.markAllAsTouched();
     }
-
-
   }
-
-
 }

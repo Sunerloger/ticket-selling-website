@@ -2,8 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketPayloadDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
-import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketValidatorService;
 import jakarta.xml.bind.ValidationException;
 import org.slf4j.Logger;
@@ -30,8 +28,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class TicketValidatorServiceImpl implements TicketValidatorService {
@@ -54,6 +50,7 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
     @Override
     public TicketPayloadDto getTicketPayload(TicketDto ticketDto)
         throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, ValidationException {
+        ArrayList<SecretKey> secretKeys = new ArrayList<>();
         if (ticketDto == null || ticketDto.getEvent() == null || ticketDto.getSeat() == null) {
             throw new jakarta.validation.ValidationException("The parameters Event and Seat of the Ticket must be provided");
         }
@@ -123,11 +120,11 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
         } catch (NumberFormatException ex) {
             newPayload.setMessage(TICKET_INVALID);
         }
-        return newPayload;
-    }
+        // Create a SecretKey object using the provided key bytes
+        SecretKey secretKey = new SecretKeySpec(decode(keyBytes), "AES");
 
-    private TicketPayloadDto generatePayload(TicketDto ticketDto)
-        throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        //Encrypt message
+        String payloadMsg = "";
 
         if (ticketDto.getTicketNr() == null) {
             throw new jakarta.validation.ValidationException("Ticket Nr must be provided");
@@ -188,23 +185,5 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
 
     private static byte[] decode(String data) {
         return Base64.getDecoder().decode(data);
-    }
-
-    public static class KeyFileSpecs {
-        private SecretKey secretKey;
-        private IvParameterSpec ivParameterSpec;
-
-        public KeyFileSpecs(SecretKey secretKey, IvParameterSpec ivParameterSpec) {
-            this.secretKey = secretKey;
-            this.ivParameterSpec = ivParameterSpec;
-        }
-
-        public SecretKey getSecretKey() {
-            return secretKey;
-        }
-
-        public IvParameterSpec getIvParameterSpec() {
-            return ivParameterSpec;
-        }
     }
 }

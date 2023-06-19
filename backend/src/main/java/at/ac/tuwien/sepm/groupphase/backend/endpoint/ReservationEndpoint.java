@@ -115,7 +115,12 @@ public class ReservationEndpoint {
             return ResponseEntity.internalServerError().body("Request could not be resolved!");
         }
 
-        this.service.deleteReservation(reservationNr, userId);
+        try {
+            this.service.deleteReservation(reservationNr, userId);
+        } catch (NotFoundException e) {
+            return ResponseEntity.noContent().build();
+        }
+
         return ResponseEntity.noContent().build();
     }
 
@@ -131,7 +136,9 @@ public class ReservationEndpoint {
             return ResponseEntity.internalServerError().body("Request could not be resolved!");
         }
 
-        purchaseService.purchaseReservationOfUser(reservationNr, purchaseCreationDto, userId);
+        if (!purchaseService.purchaseReservationOfUser(reservationNr, purchaseCreationDto, userId)) {
+            return ResponseEntity.badRequest().body("Unable to purchase Reservation");
+        }
         return ResponseEntity.ok().build();
     }
 

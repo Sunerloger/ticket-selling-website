@@ -3,22 +3,20 @@ import * as QRCode from 'qrcode';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import * as htmlToPdfMake from 'html-to-pdfmake';
+
 import { TicketSeat } from 'src/app/dtos/ticket';
-import { TicketValidatorService } from 'src/app/services/ticketvalidator.service';
-import { TicketPayload } from 'src/app/dtos/ticketPayload';
-import { Observable } from 'rxjs';
-import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-ticket-pdf-print',
   templateUrl: './ticket-pdf-print.component.html',
   styleUrls: ['./ticket-pdf-print.component.scss']
 })
-export class TicketPdfPrintComponent implements OnInit {
+export class TicketPdfPrintComponent implements AfterViewInit, OnInit {
   @ViewChild('pdfContent') pdfContent: ElementRef;
+
   @Input()
   ticket: TicketSeat;
-  payload: string;
+
   fonts = {
       // eslint-disable-next-line
       Roboto: {
@@ -34,26 +32,19 @@ export class TicketPdfPrintComponent implements OnInit {
     };
   showPdfContent = false;
   url = '';
-  constructor(private ticketService: TicketValidatorService, private notification: ToastrService) {
-
-    }
-
 
 
 
   ngOnInit() {
-    const observable: Observable<TicketPayload> = this.ticketService.getTicketPayload(this.ticket);
-    observable.subscribe({
-      next: data => {
-        this.payload = data.message;
-        QRCode.toDataURL(`http://localhost:4200/#/ticket-validator/validate?payload=${this.payload}`, (err, url) => {
-        console.log(url);
-        this.url = url;
+     QRCode.toDataURL('website.com', (err, url) => {
+      console.log(url);
+      this.url = url;
     });
-      }, error: error => {
-        //this.notification.error(`Something went wrong... please try again!`);
-      }
-    });
+
+  }
+
+  ngAfterViewInit() {
+    //this.generateTicketPdf();
   }
 
   public generateTicketPdf() {
@@ -109,9 +100,9 @@ export class TicketPdfPrintComponent implements OnInit {
         console.log(image);
         pdfContent.push(image);
       };
-    }
+}
       );
-    const documentDefinition = htmlToPdfMake(pdfContent);
+      const documentDefinition = htmlToPdfMake(pdfContent);
     const doc = { content: [documentDefinition, {
       image: `${this.url}`
     } ]

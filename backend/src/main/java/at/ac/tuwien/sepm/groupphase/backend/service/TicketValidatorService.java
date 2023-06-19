@@ -15,7 +15,4 @@ public interface TicketValidatorService {
 
     TicketPayloadDto getTicketPayload(TicketDto ticketDto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException,
         ValidationException;
-
-    TicketPayloadDto validatePayload(TicketPayloadDto payloadDto) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException,
-        ValidationException;
 }

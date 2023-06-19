@@ -9,6 +9,7 @@
   </div>
   <app-customerhallplandisplay [hallplanId]="this.hallplanId"
                                (selectionChangeEvent)="handleEvent($event)"></app-customerhallplandisplay>
+  <app-section-color-legend [hallplanId]="this.hallplanId"></app-section-color-legend>
   <div class="component-seperator"></div>
   <app-roomplan-cart [items]="selectedSeats" [event]="performance.id"></app-roomplan-cart>
 
