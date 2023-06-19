@@ -62,6 +62,7 @@ import { HallplanCreateComponent } from './components/hallplan-create/hallplan-c
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 import { EventChartComponent } from './components/event-chart/event-chart.component';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
+import { SectionColorLegendComponent } from './components/section-color-legend/section-color-legend.component';
 
 @NgModule({
   declarations: [
@@ -111,6 +112,7 @@ import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
     HallplanCreateComponent,
     AutocompleteComponent,
     EventChartComponent,
+    SectionColorLegendComponent,
   ],
   imports: [
     BrowserModule,

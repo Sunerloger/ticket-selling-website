@@ -80,6 +80,9 @@
   <div class="infobox">
     <h4>Item Overview</h4>
 
+    <p>Select the Tickets you want to purchase. <br>
+     <b>Please note that all non Selected tickets will not stay reserved.</b> </p>
+
     <div *ngIf="item !== undefined">
       <div *ngFor="let reservation of item.reservedSeats; let i = index">
         <div class="item-list">

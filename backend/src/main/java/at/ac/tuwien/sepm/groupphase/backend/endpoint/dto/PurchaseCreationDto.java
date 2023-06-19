@@ -1,12 +1,17 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
 public class PurchaseCreationDto {
+    @NotNull
     private boolean useUserAddress;
     private String address;
     private Long areaCode;
     private String city;
+    @NotEmpty
     private List<SeatDto> seats;
 
     public PurchaseCreationDto() {

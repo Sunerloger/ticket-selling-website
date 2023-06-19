@@ -20,7 +20,12 @@ public interface TestData {
     String BASE_URI = "/api/v1";
     String MESSAGE_BASE_URI = BASE_URI + "/messages";
     String NEWS_BASE_URI = BASE_URI + "/news";
-
+    String CART_BASE_URI = BASE_URI + "/cart";
+    String RESERVATION_BASE_URI = BASE_URI + "/reservation";
+    String PURCHASE_BASE_URI = BASE_URI + "/purchase";
+    String PURCHASE_ADDR = "ADDRESS";
+    String PURCHASE_CITY = "CITY";
+    Long PURCHASE_AREA_CODE = 1234L;
     String ADMIN_USER = "adminTest@email.com";
     List<String> ADMIN_ROLES = new ArrayList<>() {
         {
