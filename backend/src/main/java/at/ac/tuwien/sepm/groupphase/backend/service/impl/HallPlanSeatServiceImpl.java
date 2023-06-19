@@ -9,7 +9,6 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSeatRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRowRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanSeatService;
-import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatStatus;
 import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatType;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.LockModeType;
@@ -22,6 +21,7 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -50,7 +50,6 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
         if (seatRow.isEmpty()) {
             throw new EntityNotFoundException("Seat row not found with id: " + seatDto.getSeatrowId());
         }
-        //seatRow = seatRowRepository.findByIdAndHallPlanId(seatDto.getSeatrowId(), seatDto.getHallPlanId());
         if (seatDto.getId() != null) {
             seatDto.setId(null);
         }
@@ -66,11 +65,6 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
         return seat.map(seatMapper::toDto).orElse(null);
     }
 
-    @Override
-    public List<HallPlanSeatDto> getAllSeatsBySeatRow(Long hallPlanId, Long seatRowId) {
-        LOGGER.debug("Get all seats by seat row");
-        return null;
-    }
 
     @Override
     public HallPlanSeatDto updateSeat(HallPlanSeatDto seatDto) throws ValidationException {
@@ -123,10 +117,7 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
             return false;
         }
         HallPlanSeat seat = optionalHallPlanSeat.get();
-        if (HallPlanSeatType.VACANT_SEAT.equals(seat.getType())) {
-            return false;
-        }
-        return true;
+        return !HallPlanSeatType.VACANT_SEAT.equals(seat.getType());
     }
 
     @Override

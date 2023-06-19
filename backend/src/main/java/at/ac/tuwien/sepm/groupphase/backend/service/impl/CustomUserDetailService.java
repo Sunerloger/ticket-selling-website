@@ -61,12 +61,12 @@ public class CustomUserDetailService implements UserService {
             ApplicationUser applicationUser = findApplicationUserByEmail(email);
 
             List<GrantedAuthority> grantedAuthorities;
-            if (applicationUser.getAdmin()) {
+            if (Boolean.TRUE.equals(applicationUser.getAdmin())) {
                 grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_ADMIN", "ROLE_USER");
             } else {
                 grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_USER");
             }
-            if (applicationUser.getLocked()) {
+            if (Boolean.TRUE.equals(applicationUser.getLocked())) {
                 return new User(applicationUser.getEmail(), applicationUser.getPassword(), true, true, true, false, grantedAuthorities);
             } else {
                 return new User(applicationUser.getEmail(), applicationUser.getPassword(), grantedAuthorities);
