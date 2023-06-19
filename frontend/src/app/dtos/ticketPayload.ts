@@ -1,3 +1,3 @@
 export interface TicketPayload {
-    message: string
+    message: string;
 }

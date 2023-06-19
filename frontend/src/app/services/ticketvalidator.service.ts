@@ -20,7 +20,7 @@ export class TicketValidatorService {
     }
 
    getTicketPayload(ticket: TicketSeat): Observable<TicketPayload> {
-    
+
         return this.http.post<TicketPayload>(
             `${this.baseUrl}`, ticket
         );

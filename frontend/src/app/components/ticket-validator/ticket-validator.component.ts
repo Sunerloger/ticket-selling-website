@@ -12,20 +12,20 @@ import { TicketValidatorService } from 'src/app/services/ticketvalidator.service
 })
 export class TicketValidatorComponent implements OnInit {
   parameterValue: string;
-  validationResult: string = '';
+  validationResult = '';
   constructor(private route: ActivatedRoute, private ticketService: TicketValidatorService, private notification: ToastrService) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
-      this.parameterValue = params['payload']; 
-      console.log("Validating");
+      this.parameterValue = params['payload'];
+      console.log('Validating');
       const observable: Observable<TicketPayload> = this.ticketService.validatePayload(this.parameterValue);
       observable.subscribe({
       next: data => {
        this.validationResult = data.message;
       }, error: error => {
         this.notification.error(`Something went wrong... please try again!`);
-        this.validationResult = "invalid";
+        this.validationResult = 'invalid';
       }
     });
     });

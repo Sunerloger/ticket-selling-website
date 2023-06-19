@@ -16,10 +16,6 @@ import {ToastrService} from 'ngx-toastr';
 })
 export class TicketPdfPrintComponent implements OnInit {
   @ViewChild('pdfContent') pdfContent: ElementRef;
-
-  constructor(private ticketService: TicketValidatorService, private notification: ToastrService) {
- 
-    }
   @Input()
   ticket: TicketSeat;
   payload: string;
@@ -38,6 +34,10 @@ export class TicketPdfPrintComponent implements OnInit {
     };
   showPdfContent = false;
   url = '';
+  constructor(private ticketService: TicketValidatorService, private notification: ToastrService) {
+
+    }
+
 
 
 
@@ -109,7 +109,7 @@ export class TicketPdfPrintComponent implements OnInit {
         console.log(image);
         pdfContent.push(image);
       };
-    }   
+    }
       );
     const documentDefinition = htmlToPdfMake(pdfContent);
     const doc = { content: [documentDefinition, {
