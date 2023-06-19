@@ -17,9 +17,20 @@ export interface BlockUser {
   isLocked: boolean;
 }
 
+export interface DeleteUser{
+  id?: number;
+  email: string;
+  password: string;
+}
+
 export class BlockUser {
   constructor(public email: string,
               public isLocked: boolean) {
   }
+}
 
+export interface ResetPasswordUser{
+  email: string;
+  newPassword: string;
+  token: string;
 }

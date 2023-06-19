@@ -10,7 +10,7 @@
     <div class="event">
       <h5> Event: {{ item.event.title }} </h5>
       <div class="event-info">
-        <span> Date: <b> {{ item.event.eventDatesLocation[0].date }} </b> </span>
+        <span> Date: <b> {{ item.event.eventDatesLocation[0].date | date:'dd.MM.yy' }} </b> </span>
         <span> Starting-Time: <b> {{ formatTime(item.event.eventDatesLocation[0].startingTime) | date:'HH:mm' }} </b> </span>
       </div>
     </div>

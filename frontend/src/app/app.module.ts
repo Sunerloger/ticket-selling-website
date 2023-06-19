@@ -55,8 +55,13 @@ import { TicketPdfPrintComponent } from './components/ticket-pdf-print/ticket-pd
 import { EventDetailComponent } from './components/event-detail/event-detail.component';
 import { AdminManagerComponent } from './components/admin-manager/admin-manager.component';
 import { PerformanceTicketSelctionComponent } from './components/performance-ticket-selction/performance-ticket-selction.component';
+import { AdminPasswordResetComponent } from './components/admin-password-reset/admin-password-reset.component';
+import { PasswordResetComponent } from './components/password-reset/password-reset.component';
+import { UserPasswordResetComponent } from './components/user-password-reset/user-password-reset.component';
 import { HallplanCreateComponent } from './components/hallplan-create/hallplan-create.component';
 import { TicketValidatorComponent } from './components/ticket-validator/ticket-validator.component';
+import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
+
 
 @NgModule({
   declarations: [
@@ -100,8 +105,12 @@ import { TicketValidatorComponent } from './components/ticket-validator/ticket-v
     EventDetailComponent,
     AdminManagerComponent,
     PerformanceTicketSelctionComponent,
+    AdminPasswordResetComponent,
+    PasswordResetComponent,
+    UserPasswordResetComponent,
     HallplanCreateComponent,
     TicketValidatorComponent,
+    AutocompleteComponent,
   ],
   imports: [
     BrowserModule,

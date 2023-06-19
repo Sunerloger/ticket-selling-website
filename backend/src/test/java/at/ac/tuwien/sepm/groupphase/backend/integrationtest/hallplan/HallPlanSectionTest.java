@@ -81,7 +81,7 @@ public class HallPlanSectionTest {
         HallPlanSection section = new HallPlanSection();
         section.setName("Test Hall Plan");
         section.setColor("Red");
-        section.setPrice(100L);
+        section.setPrice(100D);
         section.setHallPlanId(-1L);
         HallPlanSection sectionEntity = hallPlanSectionRepository.save(section);
 
@@ -161,7 +161,7 @@ public class HallPlanSectionTest {
         insertDto.setHallPlanId(-1L);
         insertDto.setColor("red");
         insertDto.setName("VIP Plus");
-        insertDto.setPrice(100L);
+        insertDto.setPrice(100D);
         String body = objectMapper.writeValueAsString(insertDto);
 
         // Send a GET request to the endpoint sections with id
@@ -193,7 +193,7 @@ public class HallPlanSectionTest {
         updateDto.setHallPlanId(-1L);
         updateDto.setColor("red");
         updateDto.setName("VIP Plus");
-        updateDto.setPrice(100L);
+        updateDto.setPrice(100D);
         String body = objectMapper.writeValueAsString(updateDto);
 
         // Send a GET request to the endpoint sections with id

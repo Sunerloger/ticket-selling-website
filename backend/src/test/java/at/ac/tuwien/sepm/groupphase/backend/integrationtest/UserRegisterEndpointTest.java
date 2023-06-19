@@ -27,10 +27,15 @@ import java.time.LocalDate;
 
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_ROLES;
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_USER;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -60,7 +65,8 @@ public class UserRegisterEndpointTest {
 
 
     private final ApplicationUser applicationUser =
-        new ApplicationUser("martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure", false, false);
+        new ApplicationUser("martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure", false,
+            false);
 
 
     @Transactional
@@ -82,5 +88,91 @@ public class UserRegisterEndpointTest {
         assertAll(
             () -> assertEquals(HttpStatus.CREATED.value(), response.getStatus())
         );
+    }
+
+    @Transactional
+    @Test
+    public void givenValidUserRegisterDto_whenRegisterUser_UserIsCreated() throws Exception {
+        UserRegisterDto userRegisterDto =
+            new UserRegisterDto(-1000L, "john@example.com", "John", "Doe", LocalDate.parse("1988-12-12"), "Teststreet", 1010L, "Vienna", "password", false,
+                false);
+        String requestBody = objectMapper.writeValueAsString(userRegisterDto);
+        mockMvc.perform(post(BASE_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andExpect(status().isCreated());
+
+
+        ApplicationUser registeredUser = applicationUserRepository.findUserByEmail("john@example.com");
+        assertNotNull(registeredUser);
+        assertEquals("John", registeredUser.getFirstName());
+        assertEquals("Doe", registeredUser.getLastName());
+        assertEquals(LocalDate.parse("1988-12-12"), registeredUser.getBirthdate());
+    }
+
+    @Transactional
+    @Test
+    public void givenUserRegisterDtoWithInvalidFirstName_whenRegisterUser_ValidationFails() throws Exception {
+        UserRegisterDto userRegisterDto = new UserRegisterDto(
+            -1000L, "john@example.com", "John123", "Doe", LocalDate.parse("1990-01-01"),
+            "Teststreet", 1010L, "Vienna", "password", false, false
+        );
+        String requestBody = objectMapper.writeValueAsString(userRegisterDto);
+
+        mockMvc.perform(post(BASE_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andExpect(status().isUnprocessableEntity())
+            .andExpect(jsonPath("$.errors[0].message").value("First name must contain only letters"));
+    }
+
+    @Transactional
+    @Test
+    public void givenUserRegisterDtoWithInvalidLastName_whenRegisterUser_ValidationFails() throws Exception {
+        UserRegisterDto userRegisterDto = new UserRegisterDto(
+            -1000L, "john@example.com", "John", "Doe123", LocalDate.parse("1990-01-01"),
+            "Teststreet", 1010L, "Vienna", "password", false, false
+        );
+        String requestBody = objectMapper.writeValueAsString(userRegisterDto);
+
+        mockMvc.perform(post(BASE_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andExpect(status().isUnprocessableEntity())
+            .andExpect(jsonPath("$.errors[0].message").value("Last name must contain only letters"));
+    }
+
+    @Transactional
+    @Test
+    public void givenUserRegisterDtoWithInvalidBirthdate_whenRegisterUser_ValidationFails() throws Exception {
+        LocalDate futureDate = LocalDate.now().plusYears(1);
+        UserRegisterDto userRegisterDto = new UserRegisterDto(
+            -1000L, "john@example.com", "John", "Example", futureDate,
+            "Teststreet", 1010L, "Vienna", "password", false, false
+        );
+        String requestBody = objectMapper.writeValueAsString(userRegisterDto);
+
+        mockMvc.perform(post("/api/v1/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andExpect(status().isUnprocessableEntity())
+            .andExpect(jsonPath("$.errors[0].message").value("Birthdate must be in the past"));
+    }
+
+    @Transactional
+    @Test
+    public void givenUserRegisterDtoWithMultipleInvalidFields_whenRegisterUser_ValidationFails() throws Exception {
+        UserRegisterDto userRegisterDto = new UserRegisterDto(
+            -1000L, "john@example.com", "John123", "Example123", LocalDate.parse("1988-12-12"),
+            "Teststreet", 1010L, "Vienna", "password", false, false
+        );
+        String requestBody = objectMapper.writeValueAsString(userRegisterDto);
+
+        mockMvc.perform(post("/api/v1/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andExpect(status().isUnprocessableEntity())
+            .andExpect(jsonPath("$.errors[*].message",
+                containsInAnyOrder("First name must contain only letters", "Last name must contain only letters")));
     }
 }

@@ -81,4 +81,9 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
      * @return the user with the id or null of no such user exists
      */
     ApplicationUser getApplicationUserById(Long id);
+
+    @Transactional
+    @Modifying
+    @Query("update ApplicationUser u set u.password = :newPassword where u.email = :email")
+    void updatePassword(@Param(value = "email") String email, @Param(value = "newPassword") String newPassword);
 }

@@ -22,6 +22,7 @@ export class ReservationCheckoutComponent implements OnInit {
   withoutTaxes = 0;
   taxes = 0;
   user: User;
+  noItemChecked = false;
 
   constructor(private route: ActivatedRoute,
               private service: ReservationService,
@@ -52,8 +53,6 @@ export class ReservationCheckoutComponent implements OnInit {
     observable.subscribe({
       next: data => {
         this.item = data;
-        console.log(data);
-        console.log(this.item);
         this.checkboxList = Array(this.item.reservedSeats.length).fill(true);
       }, error: error => {
         this.router.navigate(['']);
@@ -75,6 +74,11 @@ export class ReservationCheckoutComponent implements OnInit {
     this.taxes = sum * 0.2;
     this.withoutTaxes = this.total - this.taxes;
     return this.total;
+  }
+
+  noItemsChecked(): boolean {
+    const allFalse: boolean = this.checkboxList.every((value: boolean) => value === false);
+    return allFalse;
   }
 
   purchase(): void {

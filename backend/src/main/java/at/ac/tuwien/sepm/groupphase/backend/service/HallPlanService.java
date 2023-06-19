@@ -138,8 +138,9 @@ public interface HallPlanService {
      * Retrieves a page containing 5 Hallplans.
      *
      * @param pageIndex index of the page
+     * @param search term to be searched for
      * @return a list of hallplans
      */
-    Page<HallPlan> findPageOfHallplans(int pageIndex);
+    Page<HallPlan> findPageOfHallplans(int pageIndex, String search);
 
 }

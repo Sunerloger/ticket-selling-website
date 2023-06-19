@@ -128,10 +128,10 @@ public class HallPlanEndpoint {
     @Secured("ROLE_USER")
     @GetMapping("/search")
     @Operation(summary = "Get list of events without details", security = @SecurityRequirement(name = "apiKey"))
-    public List<AbbreviatedHallPlanDto> searchHallPlanPages(@RequestParam(defaultValue = "0") int pageIndex) {
+    public List<AbbreviatedHallPlanDto> searchHallPlanPages(@RequestParam(defaultValue = "0") int pageIndex, @RequestParam(required = false) String search) {
         LOGGER.info("GET {}/hallplansForSearch");
         LOGGER.info("called without param");
-        return hallPlanService.findPageOfHallplans(pageIndex)
+        return hallPlanService.findPageOfHallplans(pageIndex, search)
             .map(hallPlanMapper::hallPlanToAbbreviatedHallPlanDto)
             .toList();
     }

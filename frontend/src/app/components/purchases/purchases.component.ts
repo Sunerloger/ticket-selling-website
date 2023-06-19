@@ -27,6 +27,11 @@ items: Purchase[] = [];
       next: data => {
         this.items = data;
       }, error: error => {
+        const errorMessage = error.status === 0
+          ? 'Server not reachable'
+          : error.message.message;
+        this.notification.error(errorMessage, 'Error:');
+        console.error(error);
         this.router.navigate(['']);
       }
     });
