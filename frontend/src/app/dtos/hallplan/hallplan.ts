@@ -52,7 +52,7 @@ export interface PersistedSeat extends Seat {
 }
 
 export interface PersistedSeatWithRowNr extends PersistedSeat {
-    rowNr: number
+    rowNr: number;
 }
 
 /*

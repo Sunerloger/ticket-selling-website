@@ -36,7 +36,7 @@ export class CustomerhallplandisplayComponent implements OnInit {
    * @param payload
    */
   handleSeatSelectionEvent(payload: SeatSelectionPayload) {
-    console.log(payload)
+    console.log(payload);
     const clonedSelectedSeats = new Map(this.selectedSeats);
     const { id } = payload.seat;
 
