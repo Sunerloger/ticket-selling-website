@@ -1,5 +1,6 @@
 <fieldset>
-<input type="text" id="input" autocomplete="off" role="combobox" list="" id="input" name="browsers" placeholder="Select Hallplan"
+<input type="text" id="input" autocomplete="off" role="combobox" list="" name="browsers"
+       [placeholder]="placeholder"
        [attr.list]="dataListId"
        [ngClass]="textInputClass"
        [(ngModel)]="inputText"

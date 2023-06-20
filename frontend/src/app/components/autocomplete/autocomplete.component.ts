@@ -31,6 +31,8 @@ export class AutocompleteComponent<T> implements OnInit, ControlValueAccessor {
   textInputClass: string | string[] | Set<string> | { [klass: string]: any } = [];
   @Input()
   datalistClass: string | string[] | Set<string> | { [klass: string]: any } = [];
+  @Input()
+  placeholder = 'Select object';
 
   dataListId: string;
   inputText = '';

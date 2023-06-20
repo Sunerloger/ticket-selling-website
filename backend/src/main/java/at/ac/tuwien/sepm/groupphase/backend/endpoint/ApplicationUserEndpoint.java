@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +30,7 @@ import java.lang.invoke.MethodHandles;
 @RequestMapping(value = ApplicationUserEndpoint.BASE_PATH)
 public class ApplicationUserEndpoint {
 
-    static final String BASE_PATH = "/api/v1/user";
+    public static final String BASE_PATH = "/api/v1/user";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService;

@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {Event} from 'src/app/dtos/event';
 import {EventService} from '../../services/event.service';
@@ -6,7 +6,7 @@ import {ToastrService} from 'ngx-toastr';
 import {EventDate} from 'src/app/dtos/eventDate';
 import {AbbreviatedHallplan} from '../../dtos/hallplan/abbreviatedHallplan';
 import {HallplanService} from '../../services/hallplan/hallplan.service';
-import {Observable, of} from 'rxjs';
+import {of} from 'rxjs';
 import {PersistedHallplan} from '../../dtos/hallplan/hallplan';
 import {Router} from '@angular/router';
 

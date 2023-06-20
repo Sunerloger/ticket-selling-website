@@ -2,8 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ResetPasswordUser;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserCreateDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PasswordResetToken;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ApplicationUserRepository;

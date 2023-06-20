@@ -35,6 +35,7 @@
           [(ngModel)]="event.eventDatesLocation[i].room"
           [formatModel]="formatHallPlanName"
           [suggestions]="observableRoomplans"
+          [placeholder]="'Select Hallplan'"
         ></app-autocomplete>
         <div *ngIf="eventForm.submitted && eventForm.controls['room'].invalid" class="text-danger">Room is required.</div>
         <button *ngIf="i !== 0" type="button" class="btn btn-danger custom-button-margin" (click)="deleteEntry(i)">

@@ -2,10 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, NgForm} from '@angular/forms';
 import {NewsService} from '../../../services/news/news.service';
 import {News} from '../../../dtos/news';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {EventService} from '../../../services/event.service';
+import {Event} from '../../../dtos/event';
 
 
 @Component({
@@ -21,8 +22,10 @@ export class NewsCreateComponent implements OnInit {
     fullText: '',
     coverImage: null,
     images: [],
+    eventId: null
   };
   selectedFiles: File[];
+  selectedEvent?: Event;
 
   constructor(private fb: FormBuilder,
               private service: NewsService,
@@ -64,6 +67,13 @@ export class NewsCreateComponent implements OnInit {
    * @param form The form with the data of the news entry
    */
   public onSubmit(form: NgForm): void {
+
+    if (this.selectedEvent) {
+      this.news.eventId = this.selectedEvent.id;
+    } else {
+      this.news.eventId = null;
+    }
+
     console.log('is form valid?', form.valid, this.news);
 
     if (form.valid) {
@@ -120,7 +130,7 @@ export class NewsCreateComponent implements OnInit {
     }
   }
 
-  /*public formatEventTitle(event: Event | null | undefined): string {
+  public formatEventTitle(event: Event | null | undefined): string {
     return (event == null)
       ? ''
       : `${event.title}`;
@@ -128,7 +138,7 @@ export class NewsCreateComponent implements OnInit {
 
   eventSuggestions = (input: string): Observable<string[]> => (input === '')
     ? of([])
-    : this.eventService.searchEventByName(input, 5);*/
+    : this.eventService.searchEventByName(input, 5);
 
   private convertToBase64AndAddToImages(file: File) {
     const reader = new FileReader();
