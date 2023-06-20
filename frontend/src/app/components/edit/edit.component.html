@@ -150,20 +150,12 @@
 
         <div class="action-buttons">
           <div class="row">
-            <div class="col-md-6" *ngIf="mode === 0">
-              <div class="d-grid gap-2 mb-2">
-                <button type="submit" class="btn btn-primary">Edit</button>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="d-grid gap-2">
-                <button class="btn btn-danger" *ngIf="mode === 1">Delete</button>
-              </div>
+            <div class="d-grid gap-2 mb-2">
+              <button type="submit" class="btn btn-primary" *ngIf="mode === 0">Edit</button>
+              <button class="btn btn-danger" *ngIf="mode === 1">Delete</button>
             </div>
           </div>
         </div>
-
-
       </div>
     </form>
   </div>
