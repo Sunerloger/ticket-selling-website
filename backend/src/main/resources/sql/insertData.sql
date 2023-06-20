@@ -36,10 +36,10 @@ VALUES
     (-2, 'FREE', 'SEAT', 1, 2, 2, -1, -1, 0, 0),
     (-3, 'FREE', 'SEAT', 1, 3, 3, -1, -2, 0, 0),
     (-4, 'OCCUPIED', 'SEAT', 1, 4, 4, -1, -2, 0, 0),
-    (-5, 'FREE', 'VACANT_SEAT', 1, 1, 1, -2, -3, 0, 0),
+    (-5, 'FREE', 'VACANT_SEAT', 1, -1, 1, -2, -3, 0, 0),
     (-6, 'FREE', 'STANDING_SEAT', 1, 1, 1, -3, -4, 0, 0),
     (-7, 'RESERVED', 'SEAT', 2, 2, 2, -1, -1, 0, 0),
-    (-8, 'FREE', 'SEAT', 1, 3, 3, -2, -3, 0, 0);
+    (-8, 'FREE', 'SEAT', 1, 1, 3, -2, -3, 0, 0);
 
 
 DELETE FROM Event_Date;

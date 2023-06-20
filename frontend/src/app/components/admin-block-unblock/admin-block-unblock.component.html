@@ -1,4 +1,4 @@
-<div class="pt-5">
+<div>
   <div class="row">
     <div class="col-md-6 mx-auto">
       <span class="anchor" id="blockForm"></span>
@@ -12,16 +12,13 @@
           <form [formGroup]="blockForm">
             <label for="email">Searching for email</label>
             <div class="search-field">
-              <input type="email" class="form-control" formControlName="email"
-                     id="email" name="email" [(ngModel)]="user.email"
-                     pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$">
+              <input type="email" class="form-control" formControlName="email" id="email" name="email"
+                [(ngModel)]="user.email" pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$">
               <button class="btn btn-warning" (click)="resetBlockForm()">Reset</button>
             </div>
 
-            <div infinite-scroll
-                 [infiniteScrollDistance]="distance"
-                 [infiniteScrollThrottle]="throttle"
-                 (scrolled)="onScroll()">
+            <div infinite-scroll [infiniteScrollDistance]="distance" [infiniteScrollThrottle]="throttle"
+              (scrolled)="onScroll()">
 
               <div id="user-overview">
                 <div *ngIf="mode === 1">
@@ -51,4 +48,3 @@
     </div>
   </div>
 </div>
-
