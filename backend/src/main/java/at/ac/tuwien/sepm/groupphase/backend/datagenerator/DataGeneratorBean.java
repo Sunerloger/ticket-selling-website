@@ -74,7 +74,6 @@ public class DataGeneratorBean {
         LOGGER.info("Finished generating admin and user without error.");
     }
 
-    //TODO: Fix for final version
     private void executeInsertUsersScript(Connection connection) {
         try {
             Resource scriptResource = new ClassPathResource("sql/insertUsers.sql");
