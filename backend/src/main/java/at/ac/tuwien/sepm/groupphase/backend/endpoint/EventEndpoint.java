@@ -117,4 +117,16 @@ public class EventEndpoint {
             throw new NotFoundException(e);
         }
     }
+    @GetMapping("/search")
+    @Operation(summary = "Get list of events without details by event title", security = @SecurityRequirement(name = "apiKey"))
+    public List<AbbreviatedEventDto> findByName(
+        @RequestParam(required = false) String searchString,
+        @RequestParam(defaultValue = "5") int number
+    ) {
+        LOG.info("GET /api/v1/events/search");
+
+        return eventService.findPageByTitleSubstring(searchString, number)
+            .map(eventMapper::eventToAbbreviatedEventDto)
+
+    }
 }

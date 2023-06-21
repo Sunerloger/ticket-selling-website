@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ResetPasswordUser;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -25,7 +24,7 @@ import java.lang.invoke.MethodHandles;
 @RequestMapping(value = RegisterEndpoint.BASE_PATH)
 public class RegisterEndpoint {
 
-    static final String BASE_PATH = "/api/v1/register";
+    public static final String BASE_PATH = "/api/v1/register";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService;

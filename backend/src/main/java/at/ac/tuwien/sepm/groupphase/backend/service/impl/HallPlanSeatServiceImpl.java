@@ -9,7 +9,6 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSeatRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRowRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanSeatService;
-import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatStatus;
 import at.ac.tuwien.sepm.groupphase.backend.type.HallPlanSeatType;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.LockModeType;

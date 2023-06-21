@@ -20,6 +20,7 @@ public interface TestData {
     String BASE_URI = "/api/v1";
     String MESSAGE_BASE_URI = BASE_URI + "/messages";
     String NEWS_BASE_URI = BASE_URI + "/news";
+    String EVENTS_BASE_URI = BASE_URI + "/events";
     String CART_BASE_URI = BASE_URI + "/cart";
     String RESERVATION_BASE_URI = BASE_URI + "/reservation";
     String PURCHASE_BASE_URI = BASE_URI + "/purchase";

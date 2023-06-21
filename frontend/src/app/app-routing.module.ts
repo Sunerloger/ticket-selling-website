@@ -22,7 +22,6 @@ import {EventOverviewComponent} from './components/event-overview/event-overview
 import {HallplanManagerComponent} from './components/hallplan-manager/hallplan-manager.component';
 import {NewsResolver} from './components/news/news.resolver';
 import {EventDetailComponent} from './components/event-detail/event-detail.component';
-import {AdminManagerComponent} from './components/admin-manager/admin-manager.component';
 import {AdminPasswordResetComponent} from './components/admin-password-reset/admin-password-reset.component';
 import {PasswordResetComponent} from './components/password-reset/password-reset.component';
 import {UserPasswordResetComponent} from './components/user-password-reset/user-password-reset.component';
@@ -46,7 +45,6 @@ const routes: Routes = [
 
   {
     path: 'admin', canActivate: [AdminRouteGuard], children: [
-      {path: '', component: AdminManagerComponent},
       {path: 'block', canActivate: [AdminRouteGuard], component: AdminBlockUnblockComponent},
       {path: 'register', canActivate: [AdminRouteGuard], component: RegisterComponent},
       {path: 'password-reset', canActivate: [AdminRouteGuard], component: AdminPasswordResetComponent}

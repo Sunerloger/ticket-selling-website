@@ -4,8 +4,8 @@
   <div class="card-border">
     <div class="card-header">
       <h3 class="card-headline">{{heading}}</h3>
-      <button class="btn btn-danger" *ngIf="mode === 0" (click)="changeMode()">Navigate To Delete</button>
-      <button class="btn btn-primary" *ngIf="mode === 1" (click)="changeMode()">Navigate To Edit</button>
+      <button class="btn btn-danger" *ngIf="mode === 0" (click)="changeMode()">Delete</button>
+      <button class="btn btn-primary" *ngIf="mode === 1" (click)="changeMode()">Edit</button>
     </div>
     <form (ngSubmit)="confirmSubmit()" #editForm="ngForm">
       <div id="input">
@@ -150,20 +150,12 @@
 
         <div class="action-buttons">
           <div class="row">
-            <div class="col-md-6" *ngIf="mode === 0">
-              <div class="d-grid gap-2 mb-2">
-                <button type="submit" class="btn btn-primary">Edit</button>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="d-grid gap-2">
-                <button class="btn btn-danger" *ngIf="mode === 1">Delete</button>
-              </div>
+            <div class="d-grid gap-2 mb-2">
+              <button type="submit" class="btn btn-primary" *ngIf="mode === 0">Edit</button>
+              <button class="btn btn-danger" *ngIf="mode === 1">Delete</button>
             </div>
           </div>
         </div>
-
-
       </div>
     </form>
   </div>

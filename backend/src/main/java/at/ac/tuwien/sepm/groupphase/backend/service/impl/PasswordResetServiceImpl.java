@@ -5,10 +5,13 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.PasswordResetToken;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ApplicationUserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TokenRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.PasswordResetService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -18,6 +21,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     @Autowired
     private ApplicationUserRepository applicationUserRepository;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     private EmailServiceImpl emailService;
@@ -26,7 +30,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     private TokenRepository tokenRepository;
 
     public void initiatePasswordReset(String email) {
-
+        LOGGER.trace("initiatePasswordReset({})", email);
         //When a user with the email does not exist
         ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(email);
         if (applicationUser == null) {
@@ -55,6 +59,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 
 
     private String generateToken() {
+        LOGGER.trace("generateToken()");
         return UUID.randomUUID().toString();
     }
 }

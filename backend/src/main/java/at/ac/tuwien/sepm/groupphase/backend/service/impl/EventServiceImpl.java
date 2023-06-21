@@ -30,7 +30,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -161,6 +160,20 @@ public class EventServiceImpl implements EventService {
         EventDate eventDate = eventDateRepository.getEventDateByRoom(hallplanId);
         Event event = eventRepository.getEventById(eventDate.getEvent());
         return new PerformanceDto(event, eventDate);
+    }
+
+    @Override
+    public Page<Event> findPageByTitleSubstring(String searchString, int number) {
+
+        Pageable pageable = PageRequest.of(0, number, Sort.by("title").ascending());
+        Specification<Event> specification = (root, query, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.isNotNull(root.get("id"));
+            if (searchString != null) {
+                predicate = criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), "%" + searchString.toLowerCase() + "%");
+            }
+            return predicate;
+        };
+        return eventRepository.findAll(specification, pageable);
     }
 
     @Override
