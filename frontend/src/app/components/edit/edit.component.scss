@@ -3,7 +3,6 @@
 }
 
 .card-header {
-  margin-top: 1.5rem;
   display: flex;
   justify-content: space-between;
   flex-direction: row;
@@ -34,6 +33,7 @@
 }
 
 .card-border {
+  margin-top: 1.5rem;
   color: black;
   border-color: transparent;
 }
