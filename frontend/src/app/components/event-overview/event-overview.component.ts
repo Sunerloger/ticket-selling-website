@@ -18,6 +18,9 @@ export class EventOverviewComponent implements OnInit{
   toDate = '';
   artist = '';
   location = '';
+  titleCategory = '';
+  startTime = null;
+  duration = null;
 
   constructor(private service: EventService,
               private notification: ToastrService,
@@ -29,7 +32,8 @@ export class EventOverviewComponent implements OnInit{
 
   getEntities(): void {
     this.pageIndex = 0;
-    const observable = this.service.getPage(this.pageIndex, this.fromDate, this.toDate, this.artist, this.location);
+    const observable = this.service.getPage(this.pageIndex, this.fromDate, this.toDate, this.artist, this.location,
+      this.titleCategory, this.startTime, this.duration);
     observable.subscribe((data: AbbreviatedEvent[]) => {
         console.log(data);
         this.events = data;
@@ -43,11 +47,16 @@ export class EventOverviewComponent implements OnInit{
     this.toDate = '';
     this.artist = '';
     this.location = '';
+    this.titleCategory = '';
+    this.startTime = null;
+    this.duration = null;
     this.getEntities();
   }
 
   onScroll(): void {
-    this.service.getPage(++this.pageIndex, this.fromDate, this.toDate, this.artist, this.location).subscribe((news: AbbreviatedEvent[]) => {
+    this.service.getPage(++this.pageIndex, this.fromDate, this.toDate, this.artist, this.location, this.titleCategory,
+      this.startTime, this.duration)
+      .subscribe((news: AbbreviatedEvent[]) => {
       console.log('GET page ' + this.pageIndex);
       this.events.push(...news);
     });

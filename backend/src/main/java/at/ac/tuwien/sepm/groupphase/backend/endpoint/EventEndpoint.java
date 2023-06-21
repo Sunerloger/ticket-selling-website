@@ -26,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -69,13 +70,18 @@ public class EventEndpoint {
         @RequestParam(required = false) String artist,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate untilDate,
-        @RequestParam(required = false) String location
+        @RequestParam(required = false) String location,
+        @RequestParam(required = false) String titleCategory,
+        @RequestParam(required = false)LocalTime startTime,
+        @RequestParam(required = false)LocalTime duration
     ) {
         LOG.info("GET {}/events", "/api/v1/events");
 
-        if (artist != null || fromDate != null || untilDate != null || location != null) {
+        if (artist != null || fromDate != null || untilDate != null || location != null || titleCategory != null
+            || startTime != null || duration != null) {
             LOG.info("called with param");
-            return eventService.findAllPagesByDateAndAuthorAndLocation(pageIndex, fromDate, untilDate, artist, location)
+            return eventService.findAllPagesByDateAndAuthorAndLocation(pageIndex, fromDate, untilDate, artist, location,
+                    titleCategory, startTime, duration)
                 .map(eventMapper::eventToAbbreviatedEventDto)
                 .toList();
         } else {
@@ -100,6 +106,19 @@ public class EventEndpoint {
     }
 
     @Secured("ROLE_USER")
+    @GetMapping("/topEvents")
+    @Operation(summary = "Get the 10 most sold out", security = @SecurityRequirement(name = "apiKey"))
+    public List<EventDetailDto> findTopEvents() {
+        try {
+            return eventService.getTopEvent()
+                .map(eventMapper::eventToEventDetailDto)
+                .toList();
+        } catch (NotFoundException e) {
+            throw new NotFoundException(e);
+        }
+    }
+
+    @Secured("ROLE_USER")
     @GetMapping("/search")
     @Operation(summary = "Get list of events without details by event title", security = @SecurityRequirement(name = "apiKey"))
     public List<AbbreviatedEventDto> findByName(
@@ -111,5 +130,6 @@ public class EventEndpoint {
         return eventService.findPageByTitleSubstring(searchString, number)
             .map(eventMapper::eventToAbbreviatedEventDto)
             .toList();
+
     }
 }
