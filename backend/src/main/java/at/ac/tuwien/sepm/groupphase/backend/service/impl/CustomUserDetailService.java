@@ -56,7 +56,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        LOGGER.debug("Load all user by email");
+        LOGGER.trace("loadUserByUsername({})", email);
         try {
             ApplicationUser applicationUser = findApplicationUserByEmail(email);
 
@@ -80,7 +80,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public ApplicationUser findApplicationUserByEmail(String email) {
-        LOGGER.debug("Find application user by email");
+        LOGGER.trace("findApplicationUserByEmail({})", email);
         ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(email);
         if (applicationUser != null) {
             return applicationUser;
@@ -90,7 +90,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public void checkForExistingUserByEmail(String email) throws ValidationException {
-        LOGGER.debug("Check application user by email");
+        LOGGER.trace("checkForExistingUserByEmail({})", email);
         ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(email);
         if (applicationUser != null) {
             throw new ValidationException("Email already in use!");
@@ -100,6 +100,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public String login(UserLoginDto userLoginDto) {
+        LOGGER.trace("login({})", userLoginDto);
         try {
             UserDetails userDetails = loadUserByUsername(userLoginDto.getEmail());
             ApplicationUser applicationUser = applicationUserRepository.findUserByEmail(userLoginDto.getEmail());
@@ -143,6 +144,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public ApplicationUser register(ApplicationUser applicationUser) throws ValidationException {
+        LOGGER.trace("register({})", applicationUser);
         if (!isValidPassword(applicationUser.getPassword())) {
             throw new ValidationException("Invalid Password!");
         }
@@ -159,6 +161,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public ApplicationUser edit(ApplicationUser applicationUser, String token) {
+        LOGGER.trace("edit({})", applicationUser);
         UserDetails currentUser = loadUserByUsername(applicationUser.getEmail());
         if (passwordEncoder.matches(applicationUser.getPassword(), currentUser.getPassword())) {
             String encodedPassword = passwordEncoder.encode(applicationUser.getPassword());
@@ -170,12 +173,14 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public ApplicationUser getUser(String token) {
+        LOGGER.trace("getUser({})", token);
         String email = jwtAuthorizationFilter.getUsernameFromToken(token);
         return applicationUserRepository.findUserByEmail(email);
     }
 
     @Override
     public void delete(ApplicationUser applicationUser) {
+        LOGGER.trace("delete({})", applicationUser);
         UserDetails userDetails = loadUserByUsername(applicationUser.getEmail());
         if (!passwordEncoder.matches(applicationUser.getPassword(), userDetails.getPassword())) {
             throw new BadCredentialsException("Password is incorrect");
@@ -185,11 +190,13 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public void block(ApplicationUser applicationUser) {
+        LOGGER.trace("block({})", applicationUser);
         applicationUserRepository.updateIsLocked(applicationUser.getEmail(), applicationUser.getLocked());
     }
 
     @Override
     public List<ApplicationUser> getBlockedUsers(ApplicationUser applicationUser, String token, int pageIndex) {
+        LOGGER.trace("getBlockedUsers({})", applicationUser);
         ApplicationUser admin = getUser(token);
         Pageable pageable = PageRequest.of(pageIndex, 20, Sort.by("email").ascending());
         if (applicationUser.getLocked().equals(Boolean.TRUE)) {
@@ -202,17 +209,20 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public Long getUserIdFromToken(String token) {
+        LOGGER.trace("getUserIdFromToken({})", token);
         ApplicationUser user = this.getUser(token);
         return user == null ? null : user.getId();
     }
 
     @Override
     public ApplicationUser getUserById(Long id) {
+        LOGGER.trace("getUserById({})", id);
         return applicationUserRepository.getApplicationUserById(id);
     }
 
     @Override
     public void resetPassword(ResetPasswordUser user) {
+        LOGGER.trace("resetPassword({})", user);
         PasswordResetToken actualToken = tokenRepository.getTokenByEmail(user.email());
 
         //Check if the token which was received through email is the same as the one saved in the database

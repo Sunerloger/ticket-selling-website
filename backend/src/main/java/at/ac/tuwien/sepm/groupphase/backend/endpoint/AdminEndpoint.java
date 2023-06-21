@@ -53,10 +53,11 @@ public class AdminEndpoint {
     @Secured({"ROLE_ADMIN"})
     @Operation(summary = "Create a new user", security = @SecurityRequirement(name = "apiKey"))
     public UserCreateDto post(@Valid @RequestBody UserCreateDto userCreateDto) {
-        LOGGER.info("POST: {}", userCreateDto);
+        LOGGER.info("POST: " + BASE_PATH + "USER: {}", userCreateDto);
         try {
             return userMapper.entityToUserCreateDto(userService.register(userMapper.userCreateDtoToEntity(userCreateDto)));
         } catch (ValidationException e) {
+            LOGGER.error("User could not be validated", e);
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
@@ -65,7 +66,7 @@ public class AdminEndpoint {
     @Secured({"ROLE_ADMIN"})
     @PostMapping("send-reset-mail")
     public void resetPassword(@RequestBody String email) {
-        LOGGER.info("RESETING PASSWORD: {}", email);
+        LOGGER.info("SEND RESET MAIL: " + BASE_PATH + "MAIL: {}", email);
         passwordResetService.initiatePasswordReset(email);
     }
 
@@ -74,7 +75,7 @@ public class AdminEndpoint {
     @Secured("ROLE_ADMIN")
     @Operation(summary = "Block/Unblock a user", security = @SecurityRequirement(name = "apiKey"))
     public void put(@Valid @RequestBody UserUnBlockDto userUnBlockDto) {
-        LOGGER.info("Block user " + BASE_PATH + "user: {}", userUnBlockDto.email());
+        LOGGER.info("BLOCK|UNBLOCK USER " + BASE_PATH + "USER: {}", userUnBlockDto.email());
         userService.block(userMapper.userUnBlockDtoToEntity(userUnBlockDto));
     }
 
@@ -82,7 +83,7 @@ public class AdminEndpoint {
     @Secured("ROLE_ADMIN")
     public List<UserUnBlockDto> getBlockedUsers(UserUnBlockDto userUnBlockDto, @RequestParam(defaultValue = "0") int pageIndex,
                                                 @RequestHeader("Authorization") String token) {
-        LOGGER.info("Get blocked users " + BASE_PATH);
+        LOGGER.info("GET BLOCKED USERS " + BASE_PATH);
         return userMapper.entityToStreamUserUnBlockDto(userService.getBlockedUsers(userMapper.userUnBlockDtoToEntity(userUnBlockDto), token, pageIndex));
     }
 

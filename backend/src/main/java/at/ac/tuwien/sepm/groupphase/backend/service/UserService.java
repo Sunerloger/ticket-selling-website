@@ -104,5 +104,10 @@ public interface UserService extends UserDetailsService {
 
     ApplicationUser getUserById(Long id);
 
+    /**
+     * Reset the password for a user.
+     *
+     * @param user holds the information needed to reset the password
+     */
     void resetPassword(ResetPasswordUser user);
 }

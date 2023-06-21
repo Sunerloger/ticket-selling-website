@@ -48,7 +48,7 @@ public class ApplicationUserEndpoint {
     @PermitAll
     @ResponseStatus(HttpStatus.OK)
     public void delete(@RequestBody UserDeleteDto userDeleteDto) {
-        LOGGER.info("DELETE " + BASE_PATH);
+        LOGGER.info("DELETE :" + BASE_PATH + "USER: {}", userDeleteDto);
         userService.delete(userMapper.userDeleteDtoToEntity(userDeleteDto));
     }
 
@@ -57,14 +57,14 @@ public class ApplicationUserEndpoint {
     @PermitAll
     @Operation(summary = "Edit a user")
     public UserDetailDto update(@Valid @RequestBody UserDetailDto userDetailDto, @RequestHeader("Authorization") String token) {
-        LOGGER.info("EDIT USER " + BASE_PATH + "with TOKEN " + token, userDetailDto);
+        LOGGER.info("EDIT : " + BASE_PATH + "USER: {}", userDetailDto);
         return userMapper.entityToUserDetailDto(userService.edit(userMapper.userDetailDtoToEntity(userDetailDto), token));
     }
 
     @GetMapping
     @PermitAll
     public UserDetailDto getUser(@RequestHeader("Authorization") String token) {
-        LOGGER.info("GET USER " + BASE_PATH + "with TOKEN" + token);
+        LOGGER.info("GET USER :" + BASE_PATH);
         return userMapper.entityToUserDetailDto(userService.getUser(token));
     }
 
@@ -73,7 +73,7 @@ public class ApplicationUserEndpoint {
     @PermitAll
     @PostMapping("/reset-password")
     public void resetPassword(@RequestBody ResetPasswordUser user) {
-        LOGGER.info("Reseting password for user {}", user);
+        LOGGER.info("RESET PASSWORD: " + BASE_PATH + "USER: {}", user);
         userService.resetPassword(user);
     }
 
@@ -81,7 +81,7 @@ public class ApplicationUserEndpoint {
     @PermitAll
     @PostMapping("send-reset-mail")
     public void sendResetMail(@RequestBody String email) {
-        LOGGER.info("Sending Reset Mail for user {}", email);
+        LOGGER.info("SEND RESET MAIL: " + BASE_PATH + "EMAIL: {}", email);
         passwordResetService.initiatePasswordReset(email);
     }
 }
