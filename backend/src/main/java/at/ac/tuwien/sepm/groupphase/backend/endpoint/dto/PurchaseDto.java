@@ -15,6 +15,9 @@ public class PurchaseDto {
     private String billCityName;
     private List<TicketDto> ticketList;
     private Boolean canceled;
+    private Long creditCardNr;
+    private String expiration;
+    private Long securityCode;
 
     public PurchaseDto() {
     }
@@ -27,6 +30,9 @@ public class PurchaseDto {
         this.billCityName = purchase.getBillCityName();
         this.ticketList = ticketList;
         this.canceled = purchase.isCanceled();
+        this.creditCardNr = purchase.getCreditCardNr();
+        this.expiration = purchase.getExpiration();
+        this.securityCode = purchase.getSecurityCode();
     }
 
 
@@ -84,5 +90,29 @@ public class PurchaseDto {
 
     public void setCanceled(Boolean canceled) {
         this.canceled = canceled;
+    }
+
+    public Long getCreditCardNr() {
+        return creditCardNr;
+    }
+
+    public void setCreditCardNr(Long creditCardNr) {
+        this.creditCardNr = creditCardNr;
+    }
+
+    public String getExpiration() {
+        return expiration;
+    }
+
+    public void setExpiration(String expiration) {
+        this.expiration = expiration;
+    }
+
+    public Long getSecurityCode() {
+        return securityCode;
+    }
+
+    public void setSecurityCode(Long securityCode) {
+        this.securityCode = securityCode;
     }
 }

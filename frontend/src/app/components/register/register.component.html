@@ -31,7 +31,7 @@
           <input type="text" class="form-control" id="firstName" name="firstName" pattern="[A-Za-zäöüÄÖÜ]*"
                  [(ngModel)]="user.firstName"
                  #firstName="ngModel" required placeholder="Enter First Name">
-          <div *ngIf="registerForm.submitted &&registerForm.controls['firstName'].invalid" class="text-danger">
+          <div *ngIf="registerForm.submitted && registerForm.controls['firstName'].invalid" class="text-danger">
                      <span class="validation-info"
                            *ngIf="firstName.errors?.required">
                 First Name is required!
@@ -41,7 +41,6 @@
                 First Name is invalid!
               </span>
           </div>
-
         </div>
 
         <div class="form-group"

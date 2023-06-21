@@ -7,7 +7,9 @@ export interface CreatePurchase {
   city?: string;
   seats: SeatDetail[];
   useUserAddress: boolean;
-
+  creditCardNr: number;
+  expiration: string;
+  securityCode: number;
 }
 
 
@@ -19,5 +21,7 @@ export interface Purchase {
   billAreaCode: number;
   ticketList: TicketSeat[];
   canceled: boolean;
-
+  creditCardNr: number;
+  expiration: string;
+  securityCode: number;
 }

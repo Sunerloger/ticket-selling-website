@@ -154,6 +154,11 @@ public class PurchaseServiceImpl implements PurchaseService {
             purchase.setBillAreaCode(purchaseCreationDto.getAreaCode());
             purchase.setBillCityName(purchaseCreationDto.getCity());
         }
+
+        purchase.setExpiration(purchaseCreationDto.getExpiration());
+        purchase.setSecurityCode(purchaseCreationDto.getSecurityCode());
+        purchase.setCreditCardNr(purchaseCreationDto.getCreditCardNr());
+
         purchase.setTicketList(ticketList);
         if (!purchase.getTicketList().isEmpty()) {
             repository.save(purchase);
