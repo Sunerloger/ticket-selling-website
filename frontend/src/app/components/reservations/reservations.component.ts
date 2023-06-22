@@ -34,13 +34,15 @@ export class ReservationsComponent implements OnInit{
   }
 
   cancelReservation(reservation: Reservation){
+    const confirmed = window.confirm('Are you sure you want to cancel this reservation? (this action cannot be undone)');
+    if (confirmed === false) {
+      return;
+    }
     const observable: Observable<HttpResponse<any>> = this.service.deleteReservation(reservation.reservationNr);
     observable.subscribe({
       next: data => {
-        //TODO:error message
         this.getItems();
       }, error: error => {
-        //TODO:error message
       }
     });
   }
