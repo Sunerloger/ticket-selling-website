@@ -51,6 +51,10 @@ export interface PersistedSeat extends Seat {
     section: PersistedSection;
 }
 
+export interface PersistedSeatWithRowNr extends PersistedSeat {
+    rowNr: number;
+}
+
 /*
     Enum
 */

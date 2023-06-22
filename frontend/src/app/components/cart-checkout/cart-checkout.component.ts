@@ -8,6 +8,7 @@ import {CreatePurchase} from '../../dtos/purchases';
 import {SeatDetail} from '../../dtos/seatDetail';
 import {User} from '../../dtos/user';
 import {UserService} from '../../services/user.service';
+import {FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-cart-checkout',
@@ -15,13 +16,15 @@ import {UserService} from '../../services/user.service';
   styleUrls: ['./cart-checkout.component.scss']
 })
 export class CartCheckoutComponent implements OnInit {
-
+  registerForm: FormGroup;
   items: CartItem[] = [];
   creationItem: CreatePurchase = {} as CreatePurchase;
   total = 0;
   withoutTaxes = 0;
   taxes = 0;
   user: User;
+  error = false;
+
   constructor(private service: CartService,
               private userService: UserService,
               private notification: ToastrService,
@@ -33,7 +36,7 @@ export class CartCheckoutComponent implements OnInit {
       this.user = data;
     });
     this.getItems();
-    this.creationItem.useUserAddress = false;
+    this.creationItem.useUserAddress = true;
     this.creationItem.address = '';
     this.creationItem.city = '';
   }

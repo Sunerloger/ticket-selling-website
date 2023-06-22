@@ -53,11 +53,17 @@ import { CustomerhallplandisplayComponent } from './components/customerhallpland
 import { ImmutableseatComponent } from './components/roomplaneditor/seatrow/immutableseat/immutableseat.component';
 import { TicketPdfPrintComponent } from './components/ticket-pdf-print/ticket-pdf-print.component';
 import { EventDetailComponent } from './components/event-detail/event-detail.component';
-import { AdminManagerComponent } from './components/admin-manager/admin-manager.component';
 import { PerformanceTicketSelctionComponent } from './components/performance-ticket-selction/performance-ticket-selction.component';
+import { AdminPasswordResetComponent } from './components/admin-password-reset/admin-password-reset.component';
+import { PasswordResetComponent } from './components/password-reset/password-reset.component';
+import { UserPasswordResetComponent } from './components/user-password-reset/user-password-reset.component';
 import { HallplanCreateComponent } from './components/hallplan-create/hallplan-create.component';
 import {TicketReversalInvoicePdfPrintComponent}
   from './components/ticket-reversal-invoice-pdf-print/ticket-reversal-invoice-pdf-print.component';
+import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
+import { EventChartComponent } from './components/event-chart/event-chart.component';
+import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
+import { SectionColorLegendComponent } from './components/section-color-legend/section-color-legend.component';
 
 @NgModule({
   declarations: [
@@ -99,10 +105,15 @@ import {TicketReversalInvoicePdfPrintComponent}
     ImmutableseatComponent,
     TicketPdfPrintComponent,
     EventDetailComponent,
-    AdminManagerComponent,
     PerformanceTicketSelctionComponent,
+    AdminPasswordResetComponent,
+    PasswordResetComponent,
+    UserPasswordResetComponent,
     HallplanCreateComponent,
     TicketReversalInvoicePdfPrintComponent,
+    AutocompleteComponent,
+    EventChartComponent,
+    SectionColorLegendComponent,
   ],
   imports: [
     BrowserModule,
@@ -119,6 +130,7 @@ import {TicketReversalInvoicePdfPrintComponent}
     MatPaginatorModule,
     InfiniteScrollModule,
     NgbModule,
+    CanvasJSAngularChartsModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

@@ -10,12 +10,21 @@
   margin-left: 10px;
 }
 
+.row{
+  margin-top: 1.5rem;
+}
 .card-header {
-  padding-bottom: 5px;
   display: flex;
   align-items: baseline;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.card-headline {
+  color: black;
+  font-size: 36px;
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .btn-primary {
@@ -40,4 +49,3 @@
   align-items: baseline;
   flex-direction: row;
 }
-

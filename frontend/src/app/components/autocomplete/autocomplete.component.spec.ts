@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AdminManagerComponent } from './admin-manager.component';
+import { AutocompleteComponent } from './autocomplete.component';
 
-describe('AdminManagerComponent', () => {
-  let component: AdminManagerComponent;
-  let fixture: ComponentFixture<AdminManagerComponent>;
+describe('AutocompleteComponent', () => {
+  let component: AutocompleteComponent<any>;
+  let fixture: ComponentFixture<AutocompleteComponent<any>>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AdminManagerComponent ]
+      declarations: [ AutocompleteComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AdminManagerComponent);
+    fixture = TestBed.createComponent(AutocompleteComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

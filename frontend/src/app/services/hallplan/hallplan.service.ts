@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Globals } from '../../global/globals';
 import { Hallplan, PersistedHallplan, PersistedSeat, PersistedSeatRow, Seat, SeatRow } from 'src/app/dtos/hallplan/hallplan';
-import { PersistedSection, Section } from 'src/app/dtos/hallplan/section';
+import {DetailedPersistedSection, PersistedSection, Section} from 'src/app/dtos/hallplan/section';
 import { Observable } from 'rxjs';
 import { AbbreviatedHallplan } from '../../dtos/hallplan/abbreviatedHallplan';
 
@@ -104,6 +104,12 @@ export class HallplanService {
         );
     }
 
+  getAllSectionsWithCounts(hallplanId: number) {
+    return this.http.get<DetailedPersistedSection[]>(
+      `${this.baseUrl}/${hallplanId}/sections`,
+    );
+  }
+
     createSection(hallplanId: number, section: Section) {
         return this.http.post<PersistedSection>(
             `${this.baseUrl}/${hallplanId}/sections`,
@@ -137,25 +143,44 @@ export class HallplanService {
         );
     }
 
-    /**
-     * Get Roomplans by pages.
-     *
-     * @param pageIndex index of the searched for page
-     */
-    getRoomplans(pageIndex: number): Observable<AbbreviatedHallplan[]> {
-        let params: HttpParams = new HttpParams();
-        params = params.set('pageIndex', pageIndex);
-        return this.http.get<AbbreviatedHallplan[]>(this.baseUrl + '/search', { params });
-    }
+  /**
+   * Get Roomplans by pages.
+   *
+   * @param pageIndex index of the searched for page
+   * @param search the string that should be matched
+   */
+  getRoomplans(pageIndex: number, search: string): Observable<AbbreviatedHallplan[]> {
+    let params: HttpParams = new HttpParams();
+    params = params.set('pageIndex', pageIndex);
+    params = params.set('search', search);
+    return this.http.get<AbbreviatedHallplan[]>(this.baseUrl+'/search', {params});
+  }
 
-    /**
-     * Get a AbbreviatedHallplan by its id.
-     *
-     * @param id the id of the needed hallplan
-     */
-    getByIdAbbreviated(id: number): Observable<AbbreviatedHallplan> {
-        let params: HttpParams = new HttpParams();
-        params = params.set('id', id);
-        return this.http.get<AbbreviatedHallplan>(this.baseUrl + '/byId', { params });
-    }
+  /**
+   * Get a AbbreviatedHallplan by its id.
+   *
+   * @param id the id of the needed hallplan
+   */
+  getByIdAbbreviated(id: number): Observable<AbbreviatedHallplan> {
+    let params: HttpParams = new HttpParams();
+    params = params.set('id', id);
+    return this.http.get<AbbreviatedHallplan>(this.baseUrl+'/byId', {params});
+  }
+
+  /**
+   * Create a snapshot of the hallplan with given id.
+   *
+   * @param id the id of the needed hallplan
+   */
+  createHallplanSnapshot(id: number) {
+    const url = `${this.baseUrl}/${id}/snapshot`;
+    const body = JSON.stringify({ isTemplate: false });
+
+    return this.http.post<PersistedHallplan>(url, body, {
+      headers: {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        'Content-Type': 'application/json',
+      },
+    });
+  }
 }

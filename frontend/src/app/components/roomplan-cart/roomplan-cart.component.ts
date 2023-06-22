@@ -3,7 +3,7 @@ import {CartService} from '../../services/cart.service';
 import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';
 import {ReservationService} from '../../services/reservation.service';
-import {PersistedSeat} from '../../dtos/hallplan/hallplan';
+import {PurchaseSeat} from '../../dtos/purchases';
 
 @Component({
   selector: 'app-roomplan-cart',
@@ -12,8 +12,9 @@ import {PersistedSeat} from '../../dtos/hallplan/hallplan';
 })
 
 export class RoomplanCartComponent {
-  @Input() items?: PersistedSeat[] = [];
+  @Input() items?: PurchaseSeat[] = [];
   @Input() event?: number;
+
   constructor(private cartService: CartService,
               private reservationService: ReservationService,
               private notification: ToastrService,
@@ -26,7 +27,9 @@ export class RoomplanCartComponent {
       : this.items.length.toString();
   }
 
-  addToCart(seatList: PersistedSeat[]) {
+  addToCart(seatList: PurchaseSeat[]) {
+    this.expandList();
+
     this.cartService.addToCart(seatList).subscribe(
       (response) => {
         console.log('Status:', response.status);
@@ -44,7 +47,21 @@ export class RoomplanCartComponent {
     );
   }
 
-  reserveSeats(seatList: PersistedSeat[]) {
+  maxAmount(item: PurchaseSeat): number {
+    return item.capacity - item.boughtNr - item.reservedNr;
+  }
+  clipValue(item: PurchaseSeat){
+    const max = this.maxAmount(item);
+    if (item.amount < 1) {
+      item.amount = 1;
+    } else if ( item.amount > max ) {
+      item.amount = max;
+    }
+  }
+
+  reserveSeats(seatList: PurchaseSeat[]) {
+    this.expandList();
+
     this.reservationService.createReservation(seatList).subscribe(
       (response) => {
         console.log('Status:', response.status);
@@ -60,6 +77,19 @@ export class RoomplanCartComponent {
         this.router.navigate(['/reservations']);
       }
     );
+  }
+
+  expandList(){
+    this.items.forEach((currItem: PurchaseSeat) => {
+      if (currItem.type === 'STANDING_SEAT'){
+        let amount = currItem.amount;
+        currItem.amount = 1;
+        while (amount > 1){
+          amount--;
+          this.items.push(currItem);
+        }
+      }
+    });
   }
 
 }

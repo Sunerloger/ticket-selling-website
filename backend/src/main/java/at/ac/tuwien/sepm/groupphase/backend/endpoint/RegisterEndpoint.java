@@ -24,7 +24,7 @@ import java.lang.invoke.MethodHandles;
 @RequestMapping(value = RegisterEndpoint.BASE_PATH)
 public class RegisterEndpoint {
 
-    static final String BASE_PATH = "/api/v1/register";
+    public static final String BASE_PATH = "/api/v1/register";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService;
@@ -48,4 +48,5 @@ public class RegisterEndpoint {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
+
 }

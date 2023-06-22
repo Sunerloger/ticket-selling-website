@@ -26,7 +26,17 @@
         <input type="text" class="form-control" id="address" name="address" [(ngModel)]="event.eventDatesLocation[i].address" required>
         <div *ngIf="eventForm.submitted && eventForm.controls['address'].invalid" class="text-danger">Address is required.</div>
         <label for="room">Room: <span class="text-danger">*</span></label>
-        <input type="number" class="form-control" id="room" name="room" [(ngModel)]="event.eventDatesLocation[i].room" required>
+        <app-autocomplete
+          id="room"
+          name="room"
+          class="col-md-10 col-lg-8"
+          textInputClass="form-control"
+          valueNeedsToMatchSuggestion="true"
+          [(ngModel)]="event.eventDatesLocation[i].room"
+          [formatModel]="formatHallPlanName"
+          [suggestions]="observableRoomplans"
+          [placeholder]="'Select Hallplan'"
+        ></app-autocomplete>
         <div *ngIf="eventForm.submitted && eventForm.controls['room'].invalid" class="text-danger">Room is required.</div>
         <button *ngIf="i !== 0" type="button" class="btn btn-danger custom-button-margin" (click)="deleteEntry(i)">
           <i class="bi bi-trash"></i> Delete
@@ -58,5 +68,5 @@
     <label for="image">Image:</label>
     <input type="file" class="form-control" id="image" (change)="onFileSelected($event)">
   </div>
-  <button type="submit" class="btn btn-primary custom-button-margin ">Create</button>
+  <button type="submit" class="btn btn-primary custom-button-margin " >Create</button>
 </form>

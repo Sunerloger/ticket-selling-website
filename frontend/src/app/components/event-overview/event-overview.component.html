@@ -1,5 +1,9 @@
-<div>
+<div class="col-md-12 mx-auto">
   <div class="row mb-3">
+    <div class="col-md-3">
+      <label for="eventTitle" class="form-label">Event Search:</label>
+      <input type="text" class="form-control" id="eventTitle" [(ngModel)]="titleCategory" (ngModelChange)="getEntities()">
+    </div>
     <div class="col-md-3">
       <label for="fromDateInput" class="form-label">From Date:</label>
       <input type="date" class="form-control" id="fromDateInput" [(ngModel)]="fromDate" (ngModelChange)="getEntities()">
@@ -9,7 +13,15 @@
       <input type="date" class="form-control" id="toDateInput" [(ngModel)]="toDate" (ngModelChange)="getEntities()">
     </div>
     <div class="col-md-3">
-      <label for="authorInput" class="form-label">Author:</label>
+      <label for="startingTime" class="form-label">Starting Time:</label>
+      <input type="time" class="form-control" id="startingTime" [(ngModel)]="startTime" (ngModelChange)="getEntities()">
+    </div>
+    <div class="col-md-3">
+      <label for="duration" class="form-label">Duration:</label>
+      <input type="time" class="form-control" id="duration" [(ngModel)]="duration" (ngModelChange)="getEntities()">
+    </div>
+    <div class="col-md-3">
+      <label for="authorInput" class="form-label">Artist:</label>
       <input type="text" class="form-control" id="authorInput" [(ngModel)]="artist" (ngModelChange)="getEntities()">
     </div>
     <div class="col-md-3">
@@ -17,7 +29,8 @@
       <input type="text" class="form-control" id="locationInput" [(ngModel)]="location" (ngModelChange)="getEntities()">
     </div>
   </div>
-  <button class="btn btn-secondary" (click)="resetFilters()">Reset Filters</button>
+  <button class="btn btn-secondary custom-button-margin" (click)="resetFilters()">Reset Filters</button>
+  <button class="btn btn-secondary custom-button-margin" [routerLink]="['../topEvents']">Top Events</button>
 
   <div infinite-scroll
        [infiniteScrollDistance]="distance"

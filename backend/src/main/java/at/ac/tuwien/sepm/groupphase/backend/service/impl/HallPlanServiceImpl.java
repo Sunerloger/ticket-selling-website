@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatRowDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.DetailedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatDto;
@@ -9,6 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSectio
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanSectionMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SeatRowMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSection;
@@ -20,7 +20,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSectionRepository
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRowRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.xml.bind.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +28,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -103,10 +104,14 @@ public class HallPlanServiceImpl implements HallPlanService {
 
         HallPlan baseHallplan = optBaseHallplan.get();
 
+        if (newHallplan.getDescription() == null) {
+            newHallplan.setDescription(baseHallplan.getDescription());
+        }
+        if (newHallplan.getName() == null) {
+            newHallplan.setName(baseHallplan.getName());
+        }
+
         if (baseHallplan.getIsTemplate()) {
-            if (!newHallplan.getIsTemplate()) {
-                throw new ValidationException("Only hallplans where isTemplate = true, can be used to create snapshots on");
-            }
             //create new hallplan
             HallPlan persitedHallplan = hallPlanRepository.save(hallPlanMapper.hallPlanDtoToHallPlan(newHallplan));
 
@@ -348,9 +353,17 @@ public class HallPlanServiceImpl implements HallPlanService {
     }
 
     @Override
-    public Page<HallPlan> findPageOfHallplans(int pageIndex) {
+    public Page<HallPlan> findPageOfHallplans(int pageIndex, String search) {
         Pageable pageable = PageRequest.of(pageIndex, 5, Sort.by("name").ascending());
-        return hallPlanRepository.findAll(pageable);
+        Specification<Event> specification = (root, query, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.isTrue(root.get("id"));
+            if (search != null) {
+                predicate = criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + search.toLowerCase() + "%");
+            }
+            predicate = criteriaBuilder.isTrue(root.get("isTemplate"));
+            return predicate;
+        };
+        return hallPlanRepository.findAll(specification, pageable);
     }
 
     @Override

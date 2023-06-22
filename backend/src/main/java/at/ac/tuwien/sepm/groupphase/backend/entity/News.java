@@ -20,6 +20,7 @@ import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -63,7 +64,7 @@ public class News {
     private Event event;
 
     @ManyToMany(cascade = CascadeType.MERGE, mappedBy = "readNews")
-    Set<ApplicationUser> readByUsers;
+    Set<ApplicationUser> readByUsers = new HashSet<>();
 
     public Long getId() {
         return id;

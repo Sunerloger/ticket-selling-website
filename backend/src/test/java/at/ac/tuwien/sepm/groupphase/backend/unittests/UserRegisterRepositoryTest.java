@@ -29,7 +29,7 @@ public class UserRegisterRepositoryTest {
     @Test
     public void givenAUser_whenSaveUser_thenFindUser() {
         ApplicationUser applicationUser =
-            new ApplicationUser("martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "passwordIsSecure",
+            new ApplicationUser("martin@email.com", "Martin", "Gerdenich", LocalDate.parse("1999-12-12"), "Teststraße", 1010L, "Vienna", "Password123%",
                 false, false);
         applicationUserRepository.save(applicationUser);
 
@@ -44,7 +44,7 @@ public class UserRegisterRepositoryTest {
             () -> assertEquals("Teststraße", testApplicationUser.get().getAddress()),
             () -> assertEquals(1010L, testApplicationUser.get().getAreaCode()),
             () -> assertEquals("Vienna", testApplicationUser.get().getCityName()),
-            () -> assertEquals("passwordIsSecure", testApplicationUser.get().getPassword())
+            () -> assertEquals("Password123%", testApplicationUser.get().getPassword())
         );
     }
 }

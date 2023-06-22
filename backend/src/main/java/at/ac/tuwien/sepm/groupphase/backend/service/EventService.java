@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.Lock;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public interface EventService {
     /**
@@ -43,9 +44,13 @@ public interface EventService {
      * @param toDate    the latest data that is searched
      * @param author    the author of given event
      * @param location  the location that is searched for
+     * @param titleCategory  the title or category that is searched for
+     * @param startingTime  the start time that is searched for
+     * @param duration  the duration that is searched for
      * @return page of max 20 events sorted by date
      */
-    Page<Event> findAllPagesByDateAndAuthorAndLocation(int pageIndex, LocalDate fromDate, LocalDate toDate, String author, String location);
+    Page<Event> findAllPagesByDateAndAuthorAndLocation(int pageIndex, LocalDate fromDate, LocalDate toDate, String author,
+                                                       String location, String titleCategory, LocalTime startingTime, LocalTime duration);
 
 
     /**
@@ -56,10 +61,28 @@ public interface EventService {
      */
     EventDetailDto getEventFromHallplanId(Long hallplanId);
 
+    /**
+     * Finds the top 10 sold out events.
+     *
+     * @return page of max 10 events sorted by date
+     */
+    Page<Event> getTopEvent();
+
     PerformanceDto getPerformanceFromHallplanId(Long hallplanId);
+
+    /**
+     * Finds a pages of events by a substring of the title.
+     *
+     * @param searchString the partial string that should be matched in the title of the event
+     * @param number the maximum number of returned events
+     * @return page of max {@code number} events sorted alphabetically ascending
+     */
+    Page<Event> findPageByTitleSubstring(String searchString, int number);
 
     void incrementSoldTickets(Long hallplanId);
 
     @Lock(LockModeType.OPTIMISTIC)
     void decrementSoldTickets(Long hallplanId);
+
+
 }
