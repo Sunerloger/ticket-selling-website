@@ -2,10 +2,10 @@
 
 <div *ngIf="showPdfContent" #pdfContent>
   <b style="font-size: 36px; color: #23a6d5">Ticketline</b>
-  <b>------------------------------------------------------</b>
+  <hr>
   <h2>Invoice</h2>
   <p>
-    <strong>Recipient:</strong> {{this.user.firstName + this.user.lastName}} |
+    <strong>Recipient:</strong> {{ this.user.firstName + this.user.lastName }} |
     <strong>Invoice Number:</strong> {{ purchase.purchaseNr }} |
     <strong>Invoice Date:</strong> {{ purchase.purchaseDate }} |
     <strong>Area Code:</strong> {{ purchase.billAreaCode }} |
@@ -17,13 +17,13 @@
   <p>
     The payment will be conducted from the payment information you provided during the purchase:
     <br>
-    Payment Method: {{getPaymentMethod}}
+    Payment Method: {{ getPaymentMethod }}
     <br>
-    Card Number: **** **** ****  0000
+    Card Number: **** **** ****  {{ purchase.creditCardNr.toString().slice(-4) }}
     <br>
-    Expiry Date: 13.06.2030
+    Expiry Date: {{ purchase.expiration }}
     <br>
-    Cardholder Name: {{this.user.firstName + this.user.lastName}}
+    Cardholder Name: {{ this.user.firstName + this.user.lastName }}
   </p>
 
 

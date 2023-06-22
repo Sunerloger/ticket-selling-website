@@ -64,8 +64,9 @@ export class TicketReversalInvoicePdfPrintComponent implements AfterViewInit, On
       .map(
         ticket => `
             <p style="margin-bottom: 5px">
-              <strong>TicketNr:</strong> ${ticket.ticketNr} |
-              <strong>Seat:</strong> ${ticket.seat.seatNr}
+              <strong>TicketNr:</strong> ${ ticket.ticketNr } |
+              <strong>Seat:</strong> ${ ticket.seat.seatNr } |
+              <strong>Price:</strong> ${ ticket.seat.price.toFixed(2).replace('.', ',') } €
             </p>
           `
       )
