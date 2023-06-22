@@ -1,5 +1,6 @@
 import {SeatDetail} from './seatDetail';
 import {TicketSeat} from './ticket';
+import {PersistedSeat} from './hallplan/hallplan';
 
 export interface CreatePurchase {
   address?: string;
@@ -24,4 +25,8 @@ export interface Purchase {
   creditCardNr: number;
   expiration: string;
   securityCode: number;
+}
+
+export interface PurchaseSeat extends PersistedSeat {
+  amount:  number;
 }
