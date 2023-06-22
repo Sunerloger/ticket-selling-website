@@ -39,7 +39,7 @@
 
     <div class="mt-5 mb-5 card-deck maxWidth d-flex justify-content-center flex-wrap">
       <div class="event-entry" *ngFor="let entry of events">
-        <div class="card card-button" [routerLink]="['../event', entry.id]">
+        <div class="card card-button" [routerLink]="['../events', entry.id]">
           <div *ngIf="entry.image; else standardImage" class="image-container d-flex justify-content-center">
             <img class="card-img-top image-fit" [src]="entry.image" alt="The image could not be loaded">
           </div>
