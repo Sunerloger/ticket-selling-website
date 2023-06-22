@@ -1,15 +1,15 @@
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {HallplanService} from '../../services/hallplan/hallplan.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {ToastrService} from 'ngx-toastr';
-import {DetailedPersistedSection} from '../../dtos/hallplan/section';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { HallplanService } from '../../services/hallplan/hallplan.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { DetailedPersistedSection } from '../../dtos/hallplan/section';
 
 @Component({
   selector: 'app-section-color-legend',
   templateUrl: './section-color-legend.component.html',
   styleUrls: ['./section-color-legend.component.scss']
 })
-export class SectionColorLegendComponent implements OnInit, OnChanges {
+export class SectionColorLegendComponent implements OnInit {
   @Input() hallplanId: number;
 
   sections: DetailedPersistedSection[] = [];
@@ -24,10 +24,6 @@ export class SectionColorLegendComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.initByHallplanId();
-  }
-
-  ngOnChanges(): void {
-    this.fetchAllSections(this.hallplanId);
   }
 
   fetchAllSections(hallplanId: number) {
@@ -52,12 +48,12 @@ export class SectionColorLegendComponent implements OnInit, OnChanges {
         this.fetchAllSections(Number(hallplanId));
       } else {
         this.router.navigate(['/events']);
-        this.notification.error('Could not fetch hallplan', 'Hallplan with id "'+ hallplanId +'" does not exist');
+        this.notification.error('Could not fetch hallplan', 'Hallplan with id "' + hallplanId + '" does not exist');
       }
     });
   }
 
   formatPrice(price: number) {
-    return price.toFixed(2).replace('.',',');
+    return price.toFixed(2).replace('.', ',');
   }
 }

@@ -229,7 +229,7 @@ public class HallPlanEndpoint {
     //*******************************************************
     //*                   Section Mappings                  *
     //*******************************************************
-    @Secured("ROLE_ADMIN")
+    @Secured("ROLE_USER")
     @GetMapping("{hallplanId}/sections")
     @Operation(summary = "Get all sections in hallplan", security = @SecurityRequirement(name = "apiKey"))
     public List<HallPlanSectionDto> findAllSectionsByHallPlanId(@PathVariable Long hallplanId) {
