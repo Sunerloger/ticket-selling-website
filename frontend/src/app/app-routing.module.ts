@@ -34,7 +34,7 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
 
   { path: 'events', canActivate: [AuthGuard], component: EventOverviewComponent },
-  { path: 'event/:id', canActivate: [AuthGuard], component: EventDetailComponent },
+  { path: 'events/:id', canActivate: [AuthGuard], component: EventDetailComponent },
   { path: 'createevent', canActivate: [AdminRouteGuard], component: EventsComponent },
   { path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent },
   { path: 'events/create', canActivate: [AdminRouteGuard], component: EventsComponent },
