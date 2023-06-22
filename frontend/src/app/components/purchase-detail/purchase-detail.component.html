@@ -9,7 +9,7 @@
     </div>
 
     <div class="billing-info">
-      <h4>Bill number: {{item.purchaseNr}} </h4>
+      <h4>Bill number: {{ item.purchaseNr }} </h4>
     </div>
 
     <div class="infobox">
@@ -18,9 +18,9 @@
     </div>
     <div class="infobox">
       <h4>Billing Information </h4>
-      <span> {{user.firstName}}, {{user.lastName}}</span><br>
-      <span>{{item.billAddress}}</span><br>
-      <span>{{item.billCityName}}, {{item.billAreaCode}}</span><br>
+      <span> {{ user.firstName }}, {{ user.lastName }}</span><br>
+      <span> {{ item.billAddress }}</span><br>
+      <span> {{ item.billCityName }}, {{ item.billAreaCode }}</span><br>
     </div>
 
     <div class="item-overview infobox">
@@ -37,15 +37,22 @@
           </div>
         </div>
       </div>
+    </div>
+
+
+    <div style="display: flex; justify-content: space-between">
+      <button type="button" class="btn btn-secondary" [routerLink]="['/purchases']">back</button>
       <div *ngIf="item.canceled">
-        <app-ticket-reversal-invoice-pdf-print [purchase]="item" [user]="user"></app-ticket-reversal-invoice-pdf-print>
+        <app-ticket-reversal-invoice-pdf-print [purchase]="item"
+                                               [user]="user"></app-ticket-reversal-invoice-pdf-print>
+      </div>
+      <div *ngIf="!item.canceled">
+        <button type="button" class="btn btn-primary" (click)="deletePurchase(item.purchaseNr)">Refund Purchase
+        </button>
       </div>
     </div>
-    <div *ngIf="!item.canceled">
-      <button type="button" class="btn btn-secondary"
-              (click)="deletePurchase(item.purchaseNr)">Refund Purchase
-      </button>
-    </div>
+
+
   </div>
 
 </div>

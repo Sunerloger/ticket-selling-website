@@ -36,9 +36,12 @@
 </div>
 
 <div class="shopping-cart-item">
-  <button class="btn btn-primary" style="flex-grow: 1;" *ngIf="purchasePresent()" (click)="generateReversalInvoicePdf()">
+  <button class="btn btn-primary" *ngIf="purchasePresent()" (click)="generateReversalInvoicePdf()">
+    <div style="display: flex">
     <span class="material-symbols-outlined">
       download
     </span>
+    <span>Download reversal invoice</span>
+    </div>
   </button>
 </div>
