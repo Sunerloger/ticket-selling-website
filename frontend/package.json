@@ -21,6 +21,7 @@
     "@angular/platform-browser": "15.2.6",
     "@angular/platform-browser-dynamic": "15.2.6",
     "@angular/router": "15.2.6",
+    "@canvasjs/angular-charts": "^1.0.1",
     "@ng-bootstrap/ng-bootstrap": "14.1.0",
     "@popperjs/core": "2.11.7",
     "bootstrap": "^5.2.3",

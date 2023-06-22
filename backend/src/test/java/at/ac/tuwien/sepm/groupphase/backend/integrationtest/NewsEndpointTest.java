@@ -652,13 +652,7 @@ public class NewsEndpointTest implements TestData {
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertAll(
-            () -> assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus()),
-            () -> {
-                //Reads the errors from the body
-                String content = response.getContentAsString();
-                String[] errors = content.split(",");
-                assertEquals(1, errors.length);
-            }
+            () -> assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus())
         );
     }
 

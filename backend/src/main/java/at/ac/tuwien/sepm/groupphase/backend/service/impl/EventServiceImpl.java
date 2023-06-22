@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -77,7 +78,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Page<Event> findAllPagesByDateAndAuthorAndLocation(int pageIndex, LocalDate fromDate, LocalDate toDate, String artist, String location) {
+    public Page<Event> findAllPagesByDateAndAuthorAndLocation(int pageIndex, LocalDate fromDate, LocalDate toDate, String artist, String location, String titleCategory, LocalTime startingTime, LocalTime duration) {
         Pageable pageable = PageRequest.of(pageIndex, 20, Sort.by("title").ascending());
         String eventDatesLocation = "eventDatesLocation";
         Specification<Event> specification = (root, query, criteriaBuilder) -> {
@@ -101,9 +102,35 @@ public class EventServiceImpl implements EventService {
                 predicate = criteriaBuilder.and(predicate, inner);
             }
 
+            if (titleCategory != null) {
+                Predicate inner = criteriaBuilder.or(criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), "%" + titleCategory.toLowerCase() + "%"),
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("category")), "%" + titleCategory.toLowerCase() + "%"));
+                predicate = criteriaBuilder.and(predicate, inner);
+            }
+
+            if (startingTime != null) {
+                LocalTime upper = startingTime.plusMinutes(30);
+                LocalTime lower = startingTime.minusMinutes(30);
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.greaterThanOrEqualTo(root.join(eventDatesLocation).get("startingTime"), lower));
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.lessThanOrEqualTo(root.join(eventDatesLocation).get("startingTime"), upper));
+            }
+
+            if (duration != null) {
+                LocalTime upper = duration.plusMinutes(30);
+                LocalTime lower = duration.minusMinutes(30);
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.greaterThanOrEqualTo(root.get("duration"), lower));
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.lessThanOrEqualTo(root.get("duration"), upper));
+            }
+
             return predicate;
         };
         return eventRepository.findAll(specification, pageable);
+    }
+
+    @Override
+    public Page<Event> getTopEvent() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("soldTickets").descending());
+        return eventRepository.findAll(pageable);
     }
 
     @Override

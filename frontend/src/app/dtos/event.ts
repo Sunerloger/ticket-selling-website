@@ -9,6 +9,7 @@ export interface Event {
   artist: string;
   description?: string;
   image?: string;
+  soldTickets?: number;
 }
 
 export interface Performance {
