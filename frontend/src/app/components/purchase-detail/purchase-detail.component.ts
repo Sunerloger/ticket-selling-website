@@ -47,7 +47,11 @@ export class PurchaseDetailComponent implements OnInit {
   }
 
   deletePurchase(purchaseNr: number) {
-    //Todo: something with response
+
+    const confirmed = window.confirm('Are you sure you want to refund this purchase? (this action cannot be undone)');
+    if (confirmed === false) {
+      return;
+    }
     this.service.refundPurchase(purchaseNr).subscribe(
       (response) => {
         console.log('Status:', response.status);

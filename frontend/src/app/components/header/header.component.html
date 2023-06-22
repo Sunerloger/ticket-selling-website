@@ -22,19 +22,18 @@
          routerLinkActive="active">News
       </a>
 
-      <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()" routerLink="/cart"
-         routerLinkActive="active">Cart
-      </a>
+
     </div>
     <div class="navbar-subcontainer">
-      <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()" routerLink="/edit"
-         routerLinkActive="active">Account</a>
+      <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()" routerLink="/cart"
+         routerLinkActive="active">Cart</a>
+
       <a class="nav-link animated-text-custom" *ngIf="!authService.isLoggedIn()" routerLink="/register"
          routerLinkActive="active">Register</a>
       <a class="nav-link animated-text-custom" *ngIf="!authService.isLoggedIn()" routerLink="/login"
          routerLinkActive="active">Login</a>
 
-      <div class="dropdown">
+      <div class="dropdown" *ngIf="authService.getUserRole() === 'ADMIN'">
         <a class="dropdown-toggle dropdown-toggle-no-caret nav-link animated-text-custom remove-dropdown-caret w-100"
            type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false"
            *ngIf="authService.getUserRole() === 'ADMIN'">Administration</a>
@@ -50,9 +49,17 @@
         </div>
       </div>
 
-
-      <a class="nav-link animated-text-custom" *ngIf="authService.isLoggedIn()" routerLink="/"
-         (click)="authService.logoutUser()">Logout</a>
+      <div class="dropdown" *ngIf="authService.isLoggedIn()">
+        <a class="dropdown-toggle dropdown-toggle-no-caret nav-link animated-text-custom remove-dropdown-caret w-auto"
+           type="button" id="AccountDropdown" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">Account</a>
+        <div class="dropdown-menu dropdown_menu dropdown-menu-right remove-dropdown-corners w-auto dropdown-acc"
+             aria-labelledby="AccountDropdown">
+          <a class="dropdown-item" routerLink="/edit">Edit Account</a>
+          <a class="dropdown-item" routerLink="/reservations">Reservations</a>
+          <a class="dropdown-item" routerLink="/purchases">Purchases</a>
+          <a class="dropdown-item" (click)="authService.logoutUser()" routerLink="/">Logout</a>
+        </div>
+      </div>
 
     </div>
 

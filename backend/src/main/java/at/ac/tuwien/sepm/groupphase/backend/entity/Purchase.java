@@ -27,6 +27,9 @@ public class Purchase {
     private String billCityName;
     @Column(columnDefinition = "boolean default false")
     private boolean canceled;
+    private Long creditCardNr;
+    private String expiration;
+    private Long securityCode;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "purchaseNr")
@@ -90,5 +93,29 @@ public class Purchase {
 
     public void setCanceled(boolean canceled) {
         this.canceled = canceled;
+    }
+
+    public String getExpiration() {
+        return expiration;
+    }
+
+    public void setExpiration(String expiration) {
+        this.expiration = expiration;
+    }
+
+    public Long getCreditCardNr() {
+        return creditCardNr;
+    }
+
+    public void setCreditCardNr(Long creditCardNr) {
+        this.creditCardNr = creditCardNr;
+    }
+
+    public Long getSecurityCode() {
+        return securityCode;
+    }
+
+    public void setSecurityCode(Long securityCode) {
+        this.securityCode = securityCode;
     }
 }
