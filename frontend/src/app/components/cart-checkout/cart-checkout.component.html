@@ -17,19 +17,19 @@
       </div>
 
       <div class="form-group">
-        <label for="cityName">City <span *ngIf="this.creationItem.useUserAddress" class="text-danger">*</span></label>
+        <label for="cityName">City: <span *ngIf="this.creationItem.useUserAddress" class="text-danger">*</span></label>
         <input type="text" class="form-control" id="cityName" name="cityName" required [(ngModel)]="creationItem.city">
       </div>
 
       <div class="form-group">
-        <label for="areaCode">Area code <span *ngIf="this.creationItem.useUserAddress"
+        <label for="areaCode">Area code: <span *ngIf="this.creationItem.useUserAddress"
                                               class="text-danger">*</span></label>
         <input type="number" class="form-control" id="areaCode" name="areaCode" required
                [(ngModel)]="creationItem.areaCode">
       </div>
 
       <div class="form-group">
-        <label for="address">Address <span *ngIf="this.creationItem.useUserAddress" class="text-danger">*</span></label>
+        <label for="address">Address: <span *ngIf="this.creationItem.useUserAddress" class="text-danger">*</span></label>
         <input type="text" class="form-control" id="address" name="address" required [(ngModel)]="creationItem.address">
       </div>
       <div class="infobox">
@@ -37,7 +37,7 @@
         <h4>Payment Information</h4>
 
         <div class="form-group">
-          <label for="cardNum">Card number <span class="text-danger">*</span></label>
+          <label for="cardNum">Credit card number: <span class="text-danger">*</span></label>
           <input type="number" class="form-control" id="cardNum" name="cardNum" required
           [(ngModel)]="creationItem.creditCardNr">
         </div>
@@ -49,10 +49,11 @@
         </div>
 
         <div class="form-group">
-          <label for="securityCode">Security Code <span class="text-danger">*</span></label>
+          <label for="securityCode">Security Code: <span class="text-danger">*</span></label>
           <input type="number" class="form-control" id="securityCode" name="securityCode"
                  required [(ngModel)]="creationItem.securityCode">
         </div>
+
       </div>
 
     </div>
