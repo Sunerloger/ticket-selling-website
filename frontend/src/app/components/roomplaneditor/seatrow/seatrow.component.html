@@ -1,5 +1,5 @@
 <div class="seat_row">
-    <span *ngIf="this.showRowNr">{{this.seatRow.rowNr}}</span>
+    <span *ngIf="this.showRowNr || this.renderAsImmutable" class="row_nr">{{this.seatRow.rowNr}}</span>
     <!-- (Optional) Delete Row Button -->
     <button *ngIf="showDeleteRowBtn === true" class="delete_row" (click)="handleSeatRowDeletion()">
         Delete Row
