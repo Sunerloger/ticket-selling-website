@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { PersistedHallplan, PersistedSeat } from 'src/app/dtos/hallplan/hallplan';
+import { PersistedHallplan, PersistedSeat, PersistedSeatWithRowNr } from 'src/app/dtos/hallplan/hallplan';
 import { HallplanService } from 'src/app/services/hallplan/hallplan.service';
 import { SeatSelectionPayload } from '../roomplaneditor/seatrow/immutableseat/immutableseat.component';
 
@@ -9,9 +9,10 @@ import { SeatSelectionPayload } from '../roomplaneditor/seatrow/immutableseat/im
   templateUrl: './customerhallplandisplay.component.html',
   styleUrls: ['./customerhallplandisplay.component.scss']
 })
+
 export class CustomerhallplandisplayComponent implements OnInit {
   @Input() hallplanId: number;
-  @Output() selectionChangeEvent = new EventEmitter<PersistedSeat[]>();
+  @Output() selectionChangeEvent = new EventEmitter<PersistedSeatWithRowNr[]>();
 
   roomplan: PersistedHallplan = {
     id: 0,
@@ -20,7 +21,7 @@ export class CustomerhallplandisplayComponent implements OnInit {
     description: '',
     isTemplate: true
   };
-  selectedSeats: Map<PersistedSeat['id'], PersistedSeat> = new Map();
+  selectedSeats: Map<PersistedSeat['id'], PersistedSeatWithRowNr> = new Map();
 
   constructor(
     private service: HallplanService,
@@ -35,17 +36,20 @@ export class CustomerhallplandisplayComponent implements OnInit {
    * @param payload
    */
   handleSeatSelectionEvent(payload: SeatSelectionPayload) {
+    console.log(payload);
     const clonedSelectedSeats = new Map(this.selectedSeats);
-    const seat = payload.seat;
-    const { id } = seat;
+    const { id } = payload.seat;
 
     if (payload.isSelected) {
-      clonedSelectedSeats.set(id, seat);
+      clonedSelectedSeats.set(id, {
+        ...payload.seat,
+        rowNr: payload.rowNr
+      });
     } else {
       clonedSelectedSeats.delete(id);
     }
     this.selectedSeats = clonedSelectedSeats;
-    this.selectionChangeEvent.emit(Array.from(this.selectedSeats.values()));
+    this.selectionChangeEvent.emit(Array.from(clonedSelectedSeats.values()));
   }
 
   ngOnInit(): void {

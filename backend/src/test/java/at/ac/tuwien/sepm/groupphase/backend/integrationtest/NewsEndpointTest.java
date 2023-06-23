@@ -26,7 +26,9 @@ import java.time.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -34,7 +36,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -75,10 +79,10 @@ public class NewsEndpointTest implements TestData {
 
     @BeforeEach
     public void beforeEach() {
+        userRepository.deleteAll();
         newsRepository.deleteAll();
         newsImageRepository.deleteAll();
         eventRepository.deleteAll();
-        userRepository.deleteAll();
 
         event.setCategory("Rock");
         event.setArtist("Queen");
@@ -97,7 +101,7 @@ public class NewsEndpointTest implements TestData {
         NewsImage img1 = NewsImage.NewsImageBuilder.aNewsImage().withNews(news).withImageData(TEST_NEWS_IMAGE_DATA_LIST.get(0)).build();
         NewsImage img2 = NewsImage.NewsImageBuilder.aNewsImage().withNews(news).withImageData(TEST_NEWS_IMAGE_DATA_LIST.get(1)).build();
         NewsImage img3 = NewsImage.NewsImageBuilder.aNewsImage().withNews(news).withImageData(TEST_NEWS_IMAGE_DATA_LIST.get(2)).build();
-        List<NewsImage> testImageList = new LinkedList<>(Arrays.asList(img1,img2,img3));
+        List<NewsImage> testImageList = new LinkedList<>(Arrays.asList(img1, img2, img3));
 
         news.setImages(testImageList);
 
@@ -118,7 +122,7 @@ public class NewsEndpointTest implements TestData {
         // default pageIndex is 0
         MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
-                .param("loadAlreadyRead","false"))
+                .param("loadAlreadyRead", "false"))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -142,7 +146,7 @@ public class NewsEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
-            .param("loadAlreadyRead","false"))
+                .param("loadAlreadyRead", "false"))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -170,12 +174,12 @@ public class NewsEndpointTest implements TestData {
             news.setId((long) -i);
             newsRepository.save(news);
         }
-        assertEquals(newsRepository.findAll().size(),21);
+        assertEquals(newsRepository.findAll().size(), 21);
 
         // default pageIndex is 0
         MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
-            .param("loadAlreadyRead","false"))
+                .param("loadAlreadyRead", "false"))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -190,7 +194,7 @@ public class NewsEndpointTest implements TestData {
 
         mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI).param("pageIndex", "1")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
-            .param("loadAlreadyRead","false"))
+                .param("loadAlreadyRead", "false"))
             .andDo(print())
             .andReturn();
         response = mvcResult.getResponse();
@@ -202,6 +206,141 @@ public class NewsEndpointTest implements TestData {
             AbbreviatedNewsDto[].class));
 
         assertEquals(1, abbreviatedNewsDtos.size());
+    }
+
+    @Test
+    public void given3NewsOneRead_whenFindAllReadAndFindAllNotRead_thenListWithSize1AndListWithSize2()
+        throws Exception {
+
+        News news1 = News.NewsBuilder.aNews()
+            .withTitle(TEST_NEWS_TITLE)
+            .withShortText(TEST_NEWS_SUMMARY)
+            .withFullText("")
+            .build();
+
+        News news2 = News.NewsBuilder.aNews()
+            .withTitle(TEST_NEWS_TITLE)
+            .withShortText(TEST_NEWS_SUMMARY)
+            .withFullText("")
+            .build();
+
+        News news3 = News.NewsBuilder.aNews()
+            .withTitle(TEST_NEWS_TITLE)
+            .withShortText(TEST_NEWS_SUMMARY)
+            .withFullText("")
+            .build();
+
+        newsRepository.save(news1);
+        newsRepository.save(news2);
+        newsRepository.save(news3);
+
+        assertEquals(newsRepository.findAll().size(),3);
+
+        MvcResult mvcResultPut = this.mockMvc.perform(put(NEWS_BASE_URI + "/" + news3.getId())
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse responsePut = mvcResultPut.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), responsePut.getStatus());
+
+        // default pageIndex is 0
+        MvcResult mvcResultLoad = this.mockMvc.perform(get(NEWS_BASE_URI)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+                .param("loadAlreadyRead","false"))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse responseLoad = mvcResultLoad.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), responseLoad.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, responseLoad.getContentType());
+
+        List<AbbreviatedNewsDto> abbreviatedNewsDtos = Arrays.asList(objectMapper.readValue(responseLoad.getContentAsString(),
+            AbbreviatedNewsDto[].class));
+
+        assertEquals(2, abbreviatedNewsDtos.size());
+
+        mvcResultLoad = this.mockMvc.perform(get(NEWS_BASE_URI).param("pageIndex", "0")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+                .param("loadAlreadyRead","true"))
+            .andDo(print())
+            .andReturn();
+        responseLoad = mvcResultLoad.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), responseLoad.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, responseLoad.getContentType());
+
+        abbreviatedNewsDtos = Arrays.asList(objectMapper.readValue(responseLoad.getContentAsString(),
+            AbbreviatedNewsDto[].class));
+
+        assertEquals(1, abbreviatedNewsDtos.size());
+    }
+
+    @Test
+    public void given1News_whenPutNewsReadRelationAndAgainNewsReadRelation_then201And200()
+        throws Exception {
+
+        News news = News.NewsBuilder.aNews()
+            .withTitle(TEST_NEWS_TITLE)
+            .withShortText(TEST_NEWS_SUMMARY)
+            .withFullText("")
+            .build();
+
+        newsRepository.save(news);
+
+        assertEquals(newsRepository.findAll().size(),1);
+
+        MvcResult mvcResultPut1 = this.mockMvc.perform(put(NEWS_BASE_URI + "/" + news.getId())
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse responsePut1 = mvcResultPut1.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), responsePut1.getStatus());
+
+        MvcResult mvcResultPut2 = this.mockMvc.perform(put(NEWS_BASE_URI + "/" + news.getId())
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse responsePut2 = mvcResultPut2.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), responsePut2.getStatus());
+    }
+
+    @Test
+    public void given1News_whenPutNewsReadRelationUserNotFound_then404()
+        throws Exception {
+
+        News news = News.NewsBuilder.aNews()
+            .withTitle(TEST_NEWS_TITLE)
+            .withShortText(TEST_NEWS_SUMMARY)
+            .withFullText("")
+            .build();
+
+        newsRepository.save(news);
+
+        assertEquals(newsRepository.findAll().size(),1);
+
+        MvcResult mvcResultPut = this.mockMvc.perform(put(NEWS_BASE_URI + "/" + news.getId())
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("invalid@email.com", ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse responsePut = mvcResultPut.getResponse();
+
+        assertEquals(HttpStatus.NOT_FOUND.value(), responsePut.getStatus());
+    }
+
+    @Test
+    public void givenNothing_whenPutNewsReadRelation_then404()
+        throws Exception {
+
+        MvcResult mvcResultPut = this.mockMvc.perform(put(NEWS_BASE_URI + "/" + -1000)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse responsePut = mvcResultPut.getResponse();
+
+        assertEquals(HttpStatus.NOT_FOUND.value(), responsePut.getStatus());
     }
 
     @Test
@@ -253,7 +392,7 @@ public class NewsEndpointTest implements TestData {
         // default pageIndex is 0
         mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
-            .param("loadAlreadyRead","false"))
+                .param("loadAlreadyRead", "false"))
             .andDo(print())
             .andReturn();
         response = mvcResult.getResponse();
@@ -264,6 +403,110 @@ public class NewsEndpointTest implements TestData {
 
         // map json string to list:
         List<AbbreviatedNewsDto> abbreviatedNewsDtos = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
+            AbbreviatedNewsDto[].class));
+
+        assertEquals(0, abbreviatedNewsDtos.size());
+    }
+
+    @Test
+    public void givenOneNewsWithNewsRead_whenDeleteById_thenGetAllLengthIs0And200() throws Exception {
+        newsRepository.save(news);
+
+        MvcResult mvcResultAdmin = this.mockMvc.perform(put(NEWS_BASE_URI + "/{id}", news.getId())
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse responseAdmin = mvcResultAdmin.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), responseAdmin.getStatus());
+
+        MvcResult mvcResultUser = this.mockMvc.perform(put(NEWS_BASE_URI + "/{id}", news.getId())
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse responseUser = mvcResultUser.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), responseUser.getStatus());
+
+        MvcResult mvcResult = this.mockMvc.perform(delete(NEWS_BASE_URI + "/{id}", news.getId())
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        final MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertAll(
+            () -> assertEquals(HttpStatus.OK.value(), response.getStatus()),
+            () -> assertEquals(userRepository.findAll().size(), 2)
+        );
+
+        // default pageIndex is 0
+        mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+                .param("loadAlreadyRead","false"))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response2 = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response2.getStatus());
+        // response in json format:
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response2.getContentType());
+
+        // map json string to list:
+        List<AbbreviatedNewsDto> abbreviatedNewsDtos = Arrays.asList(objectMapper.readValue(response2.getContentAsString(),
+            AbbreviatedNewsDto[].class));
+
+        assertEquals(0, abbreviatedNewsDtos.size());
+
+        // default pageIndex is 0
+        mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+                .param("loadAlreadyRead","true"))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response3 = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response3.getStatus());
+        // response in json format:
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response3.getContentType());
+
+        // map json string to list:
+        abbreviatedNewsDtos = Arrays.asList(objectMapper.readValue(response3.getContentAsString(),
+            AbbreviatedNewsDto[].class));
+
+        assertEquals(0, abbreviatedNewsDtos.size());
+
+        // default pageIndex is 0
+        mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES))
+                .param("loadAlreadyRead","false"))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response4 = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response4.getStatus());
+        // response in json format:
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response4.getContentType());
+
+        // map json string to list:
+        abbreviatedNewsDtos = Arrays.asList(objectMapper.readValue(response4.getContentAsString(),
+            AbbreviatedNewsDto[].class));
+
+        assertEquals(0, abbreviatedNewsDtos.size());
+
+        // default pageIndex is 0
+        mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES))
+                .param("loadAlreadyRead","true"))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response5 = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response5.getStatus());
+        // response in json format:
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response5.getContentType());
+
+        // map json string to list:
+        abbreviatedNewsDtos = Arrays.asList(objectMapper.readValue(response5.getContentAsString(),
             AbbreviatedNewsDto[].class));
 
         assertEquals(0, abbreviatedNewsDtos.size());
@@ -317,24 +560,13 @@ public class NewsEndpointTest implements TestData {
         NewsInquiryDto newsInquiryDto = newsMapper.newsToNewsInquiryDto(news);
         String body = objectMapper.writeValueAsString(newsInquiryDto);
 
-        MvcResult mvcResult = this.mockMvc.perform(post(NEWS_BASE_URI)
+        this.mockMvc.perform(post(NEWS_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
+            .andExpect(jsonPath("$.errors[0].message").value("Title must not be blank"))
             .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        assertAll(
-            () -> assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus()),
-            () -> {
-                //Reads the errors from the body
-                String content = response.getContentAsString();
-                content = content.substring(content.indexOf('[') + 1, content.indexOf(']'));
-                String[] errors = content.split(",");
-                assertEquals(1, errors.length);
-            }
-        );
     }
 
     @Test
@@ -343,24 +575,13 @@ public class NewsEndpointTest implements TestData {
         NewsInquiryDto newsInquiryDto = newsMapper.newsToNewsInquiryDto(news);
         String body = objectMapper.writeValueAsString(newsInquiryDto);
 
-        MvcResult mvcResult = this.mockMvc.perform(post(NEWS_BASE_URI)
+        this.mockMvc.perform(post(NEWS_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
+            .andExpect(jsonPath("$.errors[0].message").value("Short Text must not be blank"))
             .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        assertAll(
-            () -> assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus()),
-            () -> {
-                //Reads the errors from the body
-                String content = response.getContentAsString();
-                content = content.substring(content.indexOf('[') + 1, content.indexOf(']'));
-                String[] errors = content.split(",");
-                assertEquals(1, errors.length);
-            }
-        );
     }
 
     @Test
@@ -372,26 +593,15 @@ public class NewsEndpointTest implements TestData {
         NewsInquiryDto newsInquiryDto = newsMapper.newsToNewsInquiryDto(news);
         String body = objectMapper.writeValueAsString(newsInquiryDto);
 
-        MvcResult mvcResult = this.mockMvc.perform(post(NEWS_BASE_URI)
+        this.mockMvc.perform(post(NEWS_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
+            .andExpect(jsonPath("$.errors[*].message", containsInAnyOrder("Title must not be null",
+                "Title must not be blank", "Short Text must not be null", "Short Text must not be blank",
+                "Full Text must not be null", "Cover Image is not a valid base64 picture")))
             .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        assertAll(
-            () -> assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus()),
-            () -> {
-                //Reads the errors from the body
-                String content = response.getContentAsString();
-                content = content.substring(content.indexOf('[') + 1, content.indexOf(']'));
-                String[] errors = content.split(",");
-                // check if title is not null and not blank, short description not null and not blank,
-                // fullText not null and cover image valid => 6 errors
-                assertEquals(6, errors.length);
-            }
-        );
     }
 
     @Test
@@ -400,24 +610,13 @@ public class NewsEndpointTest implements TestData {
         NewsInquiryDto newsInquiryDto = newsMapper.newsToNewsInquiryDto(news);
         String body = objectMapper.writeValueAsString(newsInquiryDto);
 
-        MvcResult mvcResult = this.mockMvc.perform(post(NEWS_BASE_URI)
+        this.mockMvc.perform(post(NEWS_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
+            .andExpect(jsonPath("$.errors[0].message").value("Cover Image is not a valid base64 picture"))
             .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        assertAll(
-            () -> assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus()),
-            () -> {
-                //Reads the errors from the body
-                String content = response.getContentAsString();
-                content = content.substring(content.indexOf('[') + 1, content.indexOf(']'));
-                String[] errors = content.split(",");
-                assertEquals(1, errors.length);
-            }
-        );
     }
 
     @Test
@@ -426,24 +625,16 @@ public class NewsEndpointTest implements TestData {
         newsInquiryDto.setImages(Arrays.asList("I_AM_IMAGE_ONE", "I_AM_IMAGE_TWO", "I_AM_IMAGE_THREE"));
         String body = objectMapper.writeValueAsString(newsInquiryDto);
 
-        MvcResult mvcResult = this.mockMvc.perform(post(NEWS_BASE_URI)
+        this.mockMvc.perform(post(NEWS_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
+            .andExpect(jsonPath("$.errors", containsInAnyOrder(
+                Map.of("field", "images[0]", "message", "An additional image is not a valid base64 picture"),
+                Map.of("field", "images[1]", "message", "An additional image is not a valid base64 picture"),
+                Map.of("field", "images[2]", "message", "An additional image is not a valid base64 picture"))))
             .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        assertAll(
-            () -> assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus()),
-            () -> {
-                //Reads the errors from the body
-                String content = response.getContentAsString();
-                content = content.substring(content.indexOf('[') + 1, content.indexOf(']'));
-                String[] errors = content.split(",");
-                assertEquals(1, errors.length);
-            }
-        );
     }
 
     @Test
@@ -461,13 +652,7 @@ public class NewsEndpointTest implements TestData {
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertAll(
-            () -> assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus()),
-            () -> {
-                //Reads the errors from the body
-                String content = response.getContentAsString();
-                String[] errors = content.split(",");
-                assertEquals(1, errors.length);
-            }
+            () -> assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus())
         );
     }
 
@@ -479,24 +664,16 @@ public class NewsEndpointTest implements TestData {
         NewsInquiryDto newsInquiryDto = newsMapper.newsToNewsInquiryDto(news);
         String body = objectMapper.writeValueAsString(newsInquiryDto);
 
-        MvcResult mvcResult = this.mockMvc.perform(post(NEWS_BASE_URI)
+        this.mockMvc.perform(post(NEWS_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
+            .andExpect(jsonPath("$.errors", containsInAnyOrder(
+                Map.of("field", "title", "message", "size must be between 0 and 50"),
+                Map.of("field", "shortText", "message", "size must be between 0 and 100"),
+                Map.of("field", "fullText", "message", "size must be between 0 and 10000"))))
             .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        assertAll(
-            () -> assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus()),
-            () -> {
-                //Reads the errors from the body
-                String content = response.getContentAsString();
-                content = content.substring(content.indexOf('[') + 1, content.indexOf(']'));
-                String[] errors = content.split(",");
-                assertEquals(3, errors.length);
-            }
-        );
     }
 
     // bad if test is run between two hours
@@ -505,5 +682,4 @@ public class NewsEndpointTest implements TestData {
         return date.getYear() == today.getYear() && date.getDayOfYear() == today.getDayOfYear() &&
             date.getHour() == today.getHour();
     }
-
 }

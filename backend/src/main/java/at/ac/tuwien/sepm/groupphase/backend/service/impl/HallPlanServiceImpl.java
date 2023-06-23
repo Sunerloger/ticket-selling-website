@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatRowDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.DetailedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatDto;
@@ -21,7 +20,6 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.HallPlanSectionRepository
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRowRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallPlanService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.xml.bind.ValidationException;
 import org.slf4j.Logger;
@@ -32,12 +30,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -106,10 +104,14 @@ public class HallPlanServiceImpl implements HallPlanService {
 
         HallPlan baseHallplan = optBaseHallplan.get();
 
+        if (newHallplan.getDescription() == null) {
+            newHallplan.setDescription(baseHallplan.getDescription());
+        }
+        if (newHallplan.getName() == null) {
+            newHallplan.setName(baseHallplan.getName());
+        }
+
         if (baseHallplan.getIsTemplate()) {
-            if (!newHallplan.getIsTemplate()) {
-                throw new ValidationException("Only hallplans where isTemplate = true, can be used to create snapshots on");
-            }
             //create new hallplan
             HallPlan persitedHallplan = hallPlanRepository.save(hallPlanMapper.hallPlanDtoToHallPlan(newHallplan));
 
@@ -358,6 +360,7 @@ public class HallPlanServiceImpl implements HallPlanService {
             if (search != null) {
                 predicate = criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + search.toLowerCase() + "%");
             }
+            predicate = criteriaBuilder.and(predicate, criteriaBuilder.isTrue(root.get("isTemplate")));
             return predicate;
         };
         return hallPlanRepository.findAll(specification, pageable);

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AdminManagerComponent } from './admin-manager.component';
+import { EventChartComponent } from './event-chart.component';
 
-describe('AdminManagerComponent', () => {
-  let component: AdminManagerComponent;
-  let fixture: ComponentFixture<AdminManagerComponent>;
+describe('EventChartComponent', () => {
+  let component: EventChartComponent;
+  let fixture: ComponentFixture<EventChartComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AdminManagerComponent ]
+      declarations: [ EventChartComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AdminManagerComponent);
+    fixture = TestBed.createComponent(EventChartComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

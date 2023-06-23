@@ -5,5 +5,6 @@ export class EventDate {
   areaCode: string;
   address: string;
   room?: number;
+  roomName?: string;
   startingTime: string;
 }

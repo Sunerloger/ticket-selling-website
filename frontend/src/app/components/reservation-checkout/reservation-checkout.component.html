@@ -13,7 +13,7 @@
       <div class="form-group custom-billing">
         <input type="checkbox" class="checkbox" id="billing-info" name="admin"
                [(ngModel)]="creationItem.useUserAddress">
-        <label for="billing-info">Use different billing Adress</label>
+        <label for="billing-info">Use different billing address</label>
       </div>
 
       <div class="form-group">
@@ -22,7 +22,7 @@
       </div>
 
       <div class="form-group">
-        <label for="areaCode">Area Code <span *ngIf="this.creationItem.useUserAddress"
+        <label for="areaCode">Area code <span *ngIf="this.creationItem.useUserAddress"
                                               class="text-danger">*</span></label>
         <input type="text" class="form-control" id="areaCode" name="cityName" required>
       </div>
@@ -37,17 +37,20 @@
 
         <div class="form-group">
           <label for="cardNum">Card number <span class="text-danger">*</span></label>
-          <input type="number" class="form-control" id="cardNum" name="cityName" required>
+          <input type="number" class="form-control" id="cardNum" name="cardNum" required
+                 [(ngModel)]="creationItem.creditCardNr">
         </div>
 
         <div class="form-group">
           <label for="expirationDate">Exopiration date: (MM/YY) <span class="text-danger">*</span></label>
-          <input type="date" class="form-control" id="expirationDate" name="cityName" required>
+          <input type="text" class="form-control" id="expirationDate" name="expirationDate"
+                 pattern="^[0-9][0-9]/[0-9][0-9]$" required [(ngModel)]="creationItem.expiration">
         </div>
 
         <div class="form-group">
           <label for="securityCode">Security Code <span class="text-danger">*</span></label>
-          <input type="number" class="form-control" id="securityCode" name="cityName" required>
+          <input type="number" class="form-control" id="securityCode" name="securityCode"
+                 required [(ngModel)]="creationItem.securityCode">
         </div>
       </div>
 
@@ -80,6 +83,9 @@
   <div class="infobox">
     <h4>Item Overview</h4>
 
+    <p>Select the Tickets you want to purchase. <br>
+      <b>Please note that all non Selected tickets will not stay reserved.</b></p>
+
     <div *ngIf="item !== undefined">
       <div *ngFor="let reservation of item.reservedSeats; let i = index">
         <div class="item-list">
@@ -95,6 +101,9 @@
     <div class="Total-Price">
       <h4>Total: {{ (sumOfCheckedItems()| number:'1.2-2').replace('.', ',') }} €</h4>
     </div>
-    <button id="checkout" type="button" class="btn btn-primary" [disabled]="noItemsChecked()" (click)="purchase()">&nbsp;Buy Now&nbsp;</button>
+  </div>
+  <div class="button-container">
+    <button id="back" type="button" class="btn btn-secondary" [routerLink]="['/reservations']">Cancel</button>
+    <button id="checkout" type="button" class="btn btn-primary" (click)="purchase()">&nbsp;Buy Now&nbsp;</button>
   </div>
 </div>

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface NewsRepository extends JpaRepository<News, Long> {
 
     /**
-     * Find all news entries specified by {@code pageable}.
+     * Find all news entries specified by {@code pageable} that the user with the id {@code id} has already read.
      *
      * @param userId   specifies the user who read the news entries
      * @param pageable specifies parameters and index of page
@@ -23,7 +23,7 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     Page<News> findNewsByReadByUsersId(@NonNull Long userId, @NonNull Pageable pageable);
 
     /**
-     * Find all news entries specified by {@code pageable}.
+     * Find all news entries specified by {@code pageable} that the user with the id {@code id} hasn't already read.
      *
      * @param userId   specifies the user who has not seen the news entries
      * @param pageable specifies parameters and index of page

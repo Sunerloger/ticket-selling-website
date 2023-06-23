@@ -35,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @ExtendWith(SpringExtension.class)
@@ -71,9 +72,10 @@ public class NewsSecurityTest implements TestData {
 
     @BeforeEach
     public void beforeEach() {
+        userRepository.deleteAll();
         newsRepository.deleteAll();
         newsImageRepository.deleteAll();
-        userRepository.deleteAll();
+
         news = News.NewsBuilder.aNews()
             .withTitle(TEST_NEWS_TITLE)
             .withShortText(TEST_NEWS_SUMMARY)
@@ -90,12 +92,12 @@ public class NewsSecurityTest implements TestData {
         news.setImages(testImageList);
 
         ApplicationUser user = new ApplicationUser();
-        user.setEmail(ADMIN_USER);
-        user.setAdmin(true);
+        user.setEmail(DEFAULT_USER);
+        user.setAdmin(false);
 
         ApplicationUser admin = new ApplicationUser();
-        admin.setEmail(DEFAULT_USER);
-        admin.setAdmin(false);
+        admin.setEmail(ADMIN_USER);
+        admin.setAdmin(true);
 
         userRepository.save(user);
         userRepository.save(admin);
@@ -247,6 +249,37 @@ public class NewsSecurityTest implements TestData {
 
         assertAll(
             () -> assertEquals(HttpStatus.OK.value(), response.getStatus())
+        );
+    }
+
+    @Test
+    public void givenNoOneLoggedInAndNewsWithIdInDatabase_whenPutOneById_then403() throws Exception {
+        newsRepository.save(news);
+        Long id = news.getId();
+
+        MvcResult mvcResult = this.mockMvc.perform(put(NEWS_BASE_URI + '/' + id))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertAll(
+            () -> assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus())
+        );
+    }
+
+    @Test
+    public void givenUserLoggedInAndNewsWithIdInDatabaseAndUserInDatabase_whenPutOneById_then201() throws Exception {
+        newsRepository.save(news);
+        Long id = news.getId();
+
+        MvcResult mvcResult = this.mockMvc.perform(put(NEWS_BASE_URI + '/' + id)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertAll(
+            () -> assertEquals(HttpStatus.CREATED.value(), response.getStatus())
         );
     }
 }

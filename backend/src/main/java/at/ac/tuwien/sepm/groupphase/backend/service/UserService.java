@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ResetPasswordUser;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import jakarta.xml.bind.ValidationException;
@@ -78,11 +79,9 @@ public interface UserService extends UserDetailsService {
     /**
      * Delete a user.
      *
-     * @param id       the user which should be deleted
-     * @param email    which is used to check if the user exists in database
-     * @param password to check if the password matches with the one in database
+     * @param applicationUser the user which should be deleted from database
      */
-    void delete(Long id, String email, String password);
+    void delete(ApplicationUser applicationUser);
 
     /**
      * Block|Unblock a user in the system.
@@ -104,4 +103,11 @@ public interface UserService extends UserDetailsService {
     Long getUserIdFromToken(String token);
 
     ApplicationUser getUserById(Long id);
+
+    /**
+     * Reset the password for a user.
+     *
+     * @param user holds the information needed to reset the password
+     */
+    void resetPassword(ResetPasswordUser user);
 }

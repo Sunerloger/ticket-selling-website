@@ -127,7 +127,7 @@ public class HallPlanEndpoint {
 
     @Secured("ROLE_USER")
     @GetMapping("/search")
-    @Operation(summary = "Get list of events without details", security = @SecurityRequirement(name = "apiKey"))
+    @Operation(summary = "Get list of hallplans without details", security = @SecurityRequirement(name = "apiKey"))
     public List<AbbreviatedHallPlanDto> searchHallPlanPages(@RequestParam(defaultValue = "0") int pageIndex, @RequestParam(required = false) String search) {
         LOGGER.info("GET {}/hallplansForSearch");
         LOGGER.info("called without param");
@@ -138,7 +138,7 @@ public class HallPlanEndpoint {
 
     @Secured("ROLE_USER")
     @GetMapping("/byId")
-    @Operation(summary = "Get list of events without details", security = @SecurityRequirement(name = "apiKey"))
+    @Operation(summary = "Get a hallplans without details by id", security = @SecurityRequirement(name = "apiKey"))
     public AbbreviatedHallPlanDto getAbbreviatedHallPlanById(@RequestParam(required = true) Long id) {
         LOGGER.info("GET {}/getByIdAbbreviatedHallPlan", id);
         LOGGER.info("called without param");
@@ -229,7 +229,7 @@ public class HallPlanEndpoint {
     //*******************************************************
     //*                   Section Mappings                  *
     //*******************************************************
-    @Secured("ROLE_ADMIN")
+    @Secured("ROLE_USER")
     @GetMapping("{hallplanId}/sections")
     @Operation(summary = "Get all sections in hallplan", security = @SecurityRequirement(name = "apiKey"))
     public List<HallPlanSectionDto> findAllSectionsByHallPlanId(@PathVariable Long hallplanId) {

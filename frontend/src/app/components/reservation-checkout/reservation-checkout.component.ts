@@ -22,8 +22,7 @@ export class ReservationCheckoutComponent implements OnInit {
   withoutTaxes = 0;
   taxes = 0;
   user: User;
-  noItemChecked = false;
-
+  error = false;
   constructor(private route: ActivatedRoute,
               private service: ReservationService,
               private userService: UserService,

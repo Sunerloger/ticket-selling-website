@@ -3,9 +3,10 @@
 }
 
 .card-header {
-  padding-bottom: 5px;
-
-
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: baseline;
 }
 
 .btn-primary {
@@ -14,7 +15,17 @@
   margin-top: 10px;
 }
 
+
+.action-buttons {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: baseline;
+
+}
+
 .card-border {
+  margin-top: 1.5rem;
   color: black;
   border-color: transparent;
 }
@@ -27,11 +38,12 @@
 .card-headline {
   color: black;
   font-size: 36px;
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
 }
 
-.checkbox{
+.checkbox {
   color: #63A5B6;
   margin-left: 10px;
   margin-top: 15px;
 }
-

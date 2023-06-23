@@ -11,9 +11,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.ValidationException;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -36,8 +39,12 @@ public class ApplicationUser {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthdate;
 
+
+    @Pattern(regexp = "[ÄÖÜäöüßA-Za-z0-9\\s/-]*")
     private String address;
 
+
+    @Positive
     private Long areaCode;
 
     @Pattern(regexp = "[ÄÖÜA-Zäöüa-z]*")
@@ -48,6 +55,8 @@ public class ApplicationUser {
     private Boolean admin = false;
 
     private Boolean isLocked = false;
+
+    private int failedLoginAttempts;
 
     @Override
     public boolean equals(Object o) {
@@ -72,7 +81,7 @@ public class ApplicationUser {
         joinColumns = @JoinColumn(name = "applicationuser_id"),
         inverseJoinColumns = @JoinColumn(name = "news_id")
     )
-    Set<News> readNews;
+    Set<News> readNews = new HashSet<>();
 
     public ApplicationUser() {
     }
@@ -84,19 +93,18 @@ public class ApplicationUser {
         this.admin = admin;
     }
 
-
     public ApplicationUser(String email, String firstName, String lastName, LocalDate birthdate, String address, Long areaCode, String cityName,
-                           String password, Boolean admin, Boolean isLocked) {
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthdate = birthdate;
-        this.address = address;
-        this.areaCode = areaCode;
-        this.cityName = cityName;
-        this.password = password;
-        this.admin = admin;
-        this.isLocked = isLocked;
+                           String password, Boolean admin, Boolean isLocked) throws ValidationException {
+        setEmail(email);
+        setFirstName(firstName);
+        setLastName(lastName);
+        setBirthdate(birthdate);
+        setAddress(address);
+        setAreaCode(areaCode);
+        setCityName(cityName);
+        setPassword(password);
+        setAdmin(admin);
+        setLocked(isLocked);
     }
 
     public ApplicationUser(String email, Boolean isLocked) {
@@ -202,5 +210,13 @@ public class ApplicationUser {
 
     public void remove(News news) {
         this.readNews.remove(news);
+    }
+
+    public int getFailedLoginAttempts() {
+        return failedLoginAttempts;
+    }
+
+    public void setFailedLoginAttempts(int failedLoginAttempts) {
+        this.failedLoginAttempts = failedLoginAttempts;
     }
 }

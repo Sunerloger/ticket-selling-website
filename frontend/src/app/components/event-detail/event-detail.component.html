@@ -1,13 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-</head>
-
 <body>
 <div class="container-fluid">
   <div class="row">
@@ -27,7 +17,7 @@
             <div class="container custom-sub-form">
               <h6>Date: <span class="text-muted">{{eventDate.date}}</span></h6>
               <h6>Commencement : <span class="text-muted">{{transformTime(eventDate.startingTime)}}</span></h6>
-              <h6>Venue: <span class="text-muted"></span>{{eventDate.room}}</h6>
+              <h6>Venue: <span class="text-muted"></span>{{eventDate.roomName}}</h6>
               <h6>Location: <span class="text-muted"></span>{{eventDate.address}}, {{eventDate.areaCode}}
                 {{eventDate.city}}</h6>
               <div class="ticket-btn" [routerLink]="['../../performance-tickets', eventDate.room]">
@@ -46,5 +36,3 @@
   </div>
 </ng-template>
 </body>
-
-</html>

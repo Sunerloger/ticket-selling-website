@@ -52,9 +52,9 @@ export class EditComponent implements OnInit {
   public get heading(): string {
     switch (this.mode) {
       case EditDeleteMode.edit:
-        return 'Editing';
+        return 'Edit Account Details';
       case EditDeleteMode.delete:
-        return 'Deleting';
+        return 'Delete Account';
       default:
         return '?';
     }
@@ -62,11 +62,9 @@ export class EditComponent implements OnInit {
 
 
   ngOnInit(): void {
-    console.log(this.user);
     this.userService.getUser(this.authService.getToken()).subscribe(user => {
       this.user = user;
       this.user.password = '';
-      console.log('User ', user);
     });
     this.editForm = this.formBuilder.group({
       admin: [''],
@@ -90,10 +88,9 @@ export class EditComponent implements OnInit {
     this.editForm.controls['address'].setValue(this.user.address);
     this.editForm.controls['areaCode'].setValue(this.user.areaCode);
     this.editForm.controls['cityName'].setValue(this.user.cityName);
-    this.editForm.controls['password'].setValue(this.user.password);
-    console.log(this.editForm);
+    this.editForm.controls['password'].setValue(this.user.password.trim());
 
-    if (this.editForm.valid && this.user.password.match(this.passwordVerify)) {
+    if (this.editForm.valid && this.user.password === this.passwordVerify.trim()) {
       let observable: Observable<any>;
       switch (this.mode) {
         case EditDeleteMode.edit:
@@ -133,5 +130,27 @@ export class EditComponent implements OnInit {
       this.notification.error(`Passwords do not match!`);
       this.editForm.markAllAsTouched();
     }
+  }
+
+  confirmSubmit() {
+    if (confirm('Are you sure you want to submit?')) {
+      // User confirmed, submit the form
+      this.editUser();
+    } else {
+      // User cancelled, do nothing
+    }
+  }
+
+  changeMode(): void {
+    if (this.mode === 0) {
+      this.mode = 1;
+    } else {
+      this.mode = 0;
+    }
+
+    // Reset Password forms when changing to delete mode
+    this.user.password = '';
+    this.passwordVerify = '';
+
   }
 }
