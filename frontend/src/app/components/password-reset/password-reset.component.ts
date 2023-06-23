@@ -51,7 +51,7 @@ export class PasswordResetComponent {
           this.router.navigate(['login']);
         },
         error: err => {
-          this.notification.error('Failed to reset password.');
+          this.notification.error('Token invalid. Request a new reset mail!');
         }
       }
     );
