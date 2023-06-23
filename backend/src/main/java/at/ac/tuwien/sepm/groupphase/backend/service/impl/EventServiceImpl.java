@@ -104,7 +104,7 @@ public class EventServiceImpl implements EventService {
 
             if (titleCategory != null) {
                 Predicate inner = criteriaBuilder.or(criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), "%" + titleCategory.toLowerCase() + "%"),
-                        criteriaBuilder.like(criteriaBuilder.lower(root.get("category")), "%" + titleCategory.toLowerCase() + "%"));
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("category")), "%" + titleCategory.toLowerCase() + "%"));
                 predicate = criteriaBuilder.and(predicate, inner);
             }
 
