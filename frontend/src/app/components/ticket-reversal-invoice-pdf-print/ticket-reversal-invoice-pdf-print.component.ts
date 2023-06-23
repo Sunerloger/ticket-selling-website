@@ -64,9 +64,9 @@ export class TicketReversalInvoicePdfPrintComponent implements AfterViewInit, On
       .map(
         ticket => `
             <p style="margin-bottom: 5px">
-              <strong>TicketNr:</strong> ${ ticket.ticketNr } |
-              <strong>Seat:</strong> ${ ticket.seat.seatNr } |
-              <strong>Price:</strong> ${ ticket.seat.price.toFixed(2).replace('.', ',') } €
+              <strong>TicketNr:</strong> ${ticket.ticketNr} |
+              <strong>Seat:</strong> ${ticket.seat.seatNr} |
+              <strong>Price:</strong> ${ticket.seat.price.toFixed(2).replace('.', ',')} €
             </p>
           `
       )
@@ -75,7 +75,11 @@ export class TicketReversalInvoicePdfPrintComponent implements AfterViewInit, On
 
       <h3>Reversal Info</h3>
       <p>
-     The refund will be conducted to the payment information you provided during the purchase.
+     The refund will be conducted to the payment information you provided during the purchase:
+     <p style ="margin-bottom: 5px">
+     <strong>Credit Card Nr:</strong> ${this.purchase.creditCardNr} |
+     <strong>Expiration Date:</strong> ${this.purchase.expiration} |
+     <strong>Security Code:</strong> ${this.purchase.securityCode}
       </p>
 
       <h3>Legal Statements</h3>
