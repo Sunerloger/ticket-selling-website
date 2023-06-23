@@ -39,14 +39,14 @@ public interface EventService {
     /**
      * Finds all pages of events with the filters given.
      *
-     * @param pageIndex index of page to load
-     * @param fromDate  the earliest date that is searched
-     * @param toDate    the latest data that is searched
-     * @param author    the author of given event
-     * @param location  the location that is searched for
-     * @param titleCategory  the title or category that is searched for
+     * @param pageIndex     index of page to load
+     * @param fromDate      the earliest date that is searched
+     * @param toDate        the latest data that is searched
+     * @param author        the author of given event
+     * @param location      the location that is searched for
+     * @param titleCategory the title or category that is searched for
      * @param startingTime  the start time that is searched for
-     * @param duration  the duration that is searched for
+     * @param duration      the duration that is searched for
      * @return page of max 20 events sorted by date
      */
     Page<Event> findAllPagesByDateAndAuthorAndLocation(int pageIndex, LocalDate fromDate, LocalDate toDate, String author,
@@ -74,7 +74,7 @@ public interface EventService {
      * Finds a pages of events by a substring of the title.
      *
      * @param searchString the partial string that should be matched in the title of the event
-     * @param number the maximum number of returned events
+     * @param number       the maximum number of returned events
      * @return page of max {@code number} events sorted alphabetically ascending
      */
     Page<Event> findPageByTitleSubstring(String searchString, int number);
