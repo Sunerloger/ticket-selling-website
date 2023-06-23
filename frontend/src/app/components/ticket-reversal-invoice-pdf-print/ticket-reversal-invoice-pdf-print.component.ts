@@ -43,7 +43,7 @@ export class TicketReversalInvoicePdfPrintComponent implements AfterViewInit, On
     const pdfContent: any = `
     <div #pdfContent>
       <b style="font-size: 36px; color: #23a6d5">Ticketline - Reversal Invoice</b>
-      <b>------------------------------------------------------</b>
+      <hr>
       <h3>Invoice Information</h3>
       <p>
         <strong>Invoice Number:</strong> ${this.purchase.purchaseNr}
