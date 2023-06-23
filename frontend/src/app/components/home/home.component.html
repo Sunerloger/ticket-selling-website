@@ -1,31 +1,6 @@
-<div class="jumbotron mt-5" *ngIf="!authService.isLoggedIn()">
-  <h1 class="display-4">Welcome to Ticketline!</h1>
-  <hr class="my-4">
-  <a *ngIf="!authService.isLoggedIn()" class="btn btn-primary btn-lg"
-    routerLink="/login" role="button">Login</a>
-  <div *ngIf="authService.isLoggedIn()">
-    <p>Get ready to experience the thrill of live events like never before! <br>
-      We
-      are thrilled to have you here, where passion and excitement collide to
-      create unforgettable memories. <br>Whether you're a die-hard sports fan, a
-      music enthusiast craving the hottest concerts, or a theater lover seeking
-      captivating performances, we've got you covered.</p>
-    <div class="flex-container"
-      style="display: flex;">
-      <div class="lead">
-        <a class="btn btn-primary btn-lg mt-3 mr-2" routerLink="/login"
-          role="button">Login</a>
-
-      </div>
-      <div style="margin-left: 1rem">
-        <a class="btn btn-primary btn-lg mt-3" routerLink="/register"
-          role="button">Register</a>
-      </div>
-    </div>
-
-  </div>
-</div>
 <div *ngIf="authService.isLoggedIn()">
   <app-news></app-news>
+</div>
+<div *ngIf="!authService.isLoggedIn()">
 </div>
 <app-ticket-pdf-print></app-ticket-pdf-print>
