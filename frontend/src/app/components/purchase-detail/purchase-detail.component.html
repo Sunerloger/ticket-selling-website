@@ -1,6 +1,6 @@
 <div class="component">
   <div *ngIf="item">
-
+    <button type="button" class="btn btn-secondary" [routerLink]="['/purchases']">back to purchases</button>
     <div class="card-header">
       <h1>
         Purchase from: {{ item.purchaseDate | date:'dd.MM.yy'}}
