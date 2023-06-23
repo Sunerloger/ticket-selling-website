@@ -44,7 +44,6 @@ export class ReservationCheckoutComponent implements OnInit {
     this.getItem(reservationNr);
     this.creationItem.useUserAddress = false;
     this.creationItem.address = '';
-    this.creationItem.areaCode = 0;
     this.creationItem.city = '';
   }
 

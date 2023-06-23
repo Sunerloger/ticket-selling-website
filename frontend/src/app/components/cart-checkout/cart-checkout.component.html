@@ -24,7 +24,7 @@
       <div class="form-group">
         <label for="areaCode">Area code <span *ngIf="this.creationItem.useUserAddress"
                                               class="text-danger">*</span></label>
-        <input type="text" class="form-control" id="areaCode" name="areaCode" required
+        <input type="number" class="form-control" id="areaCode" name="areaCode" required
                [(ngModel)]="creationItem.areaCode">
       </div>
 
