@@ -72,8 +72,8 @@ public class EventEndpoint {
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate untilDate,
         @RequestParam(required = false) String location,
         @RequestParam(required = false) String titleCategory,
-        @RequestParam(required = false)LocalTime startTime,
-        @RequestParam(required = false)LocalTime duration
+        @RequestParam(required = false) LocalTime startTime,
+        @RequestParam(required = false) LocalTime duration
     ) {
         LOG.info("GET {}/events", "/api/v1/events");
 

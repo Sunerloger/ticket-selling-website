@@ -34,11 +34,18 @@ export class EventOverviewComponent implements OnInit{
     this.pageIndex = 0;
     const observable = this.service.getPage(this.pageIndex, this.fromDate, this.toDate, this.artist, this.location,
       this.titleCategory, this.startTime, this.duration);
-    observable.subscribe((data: AbbreviatedEvent[]) => {
-        console.log(data);
+    observable.subscribe( {
+      next: (data: AbbreviatedEvent[]) => {
         this.events = data;
-        console.log(this.events);
-      });
+      },
+      error: error => {
+      console.error('Error fetching event entries', error);
+      const errorMessage = error.status === 0
+        ? 'No connection to server'
+        : error.message.message;
+      this.notification.error(errorMessage, 'Could not fetch event entries');
+    },
+  });
   }
 
   resetFilters(): void {
@@ -56,9 +63,18 @@ export class EventOverviewComponent implements OnInit{
   onScroll(): void {
     this.service.getPage(++this.pageIndex, this.fromDate, this.toDate, this.artist, this.location, this.titleCategory,
       this.startTime, this.duration)
-      .subscribe((news: AbbreviatedEvent[]) => {
-      console.log('GET page ' + this.pageIndex);
-      this.events.push(...news);
-    });
+      .subscribe({
+        next: (data: AbbreviatedEvent[]) => {
+          console.log('GET page ' + this.pageIndex);
+          this.events.push(...data);
+        },
+        error: error => {
+          console.error('Error fetching event entries', error);
+          const errorMessage = error.status === 0
+            ? 'No connection to server'
+            : error.message.message;
+          this.notification.error(errorMessage, 'Could not fetch event entries');
+        },
+      });
   }
 }

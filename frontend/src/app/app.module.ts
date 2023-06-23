@@ -67,6 +67,7 @@ import { EventChartComponent } from './components/event-chart/event-chart.compon
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { SectionColorLegendComponent } from './components/section-color-legend/section-color-legend.component';
 import { TicketValidatorComponent } from './components/ticket-validator/ticket-validator.component';
+import { TopEventsComponent } from './components/top-events/top-events.component';
 
 @NgModule({
   declarations: [
@@ -120,6 +121,7 @@ import { TicketValidatorComponent } from './components/ticket-validator/ticket-v
     EventChartComponent,
     SectionColorLegendComponent,
     TicketValidatorComponent,
+    TopEventsComponent,
   ],
   imports: [
     BrowserModule,

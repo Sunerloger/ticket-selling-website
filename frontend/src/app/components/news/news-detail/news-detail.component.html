@@ -2,28 +2,34 @@
 
   <div class="card-body">
     <div class="row d-flex justify-content-center">
-      <div tabindex="1" class="col-auto side-panel" *ngIf="news.images.length > 1" (click)="previousImage()">
+      <div tabindex="1" class="col-auto side-panel"
+        *ngIf="news.images.length > 1" (click)="previousImage()">
         <div class="prev-image">
           <i class="fa fa-angle-left" aria-hidden="true"></i>
         </div>
       </div>
       <div class="col-auto" *ngIf="news.images.length > 0"
-           [ngClass]="[news.images.length > 1 ? 'carousel-image-box' : 'carousel-image-box-without-arrows']">
-        <img class="image-fit" [src]="news.images[selectedIndex]" alt="The image could not be loaded"/>
+        [ngClass]="[news.images.length > 1 ? 'carousel-image-box' : 'carousel-image-box-without-arrows']">
+        <img class="image-fit" [src]="news.images[selectedIndex]"
+          alt="The image could not be loaded" />
       </div>
-      <div class="col-auto carousel-image-box-without-arrows" *ngIf="news.images.length === 0">
+      <div class="col-auto carousel-image-box-without-arrows"
+        *ngIf="news.images.length === 0">
         <img class="image-fit" [src]="'../../assets/default-cover-image.png'"
-             alt="The standard cover image could not be loaded"/>
+          alt="The standard cover image could not be loaded" />
       </div>
-      <div tabindex="2" class="col-auto side-panel" *ngIf="news.images.length > 1" (click)="nextImage()">
+      <div tabindex="2" class="col-auto side-panel"
+        *ngIf="news.images.length > 1" (click)="nextImage()">
         <div class="next-image">
           <i class="fa fa-angle-right" aria-hidden="true"></i>
         </div>
       </div>
-      <div class="mt-2 row d-flex justify-content-center indicators" *ngIf="news.images.length > 1">
+      <div class="mt-2 row d-flex justify-content-center indicators"
+        *ngIf="news.images.length > 1">
         <div class="col-auto" *ngFor="let image of news.images; let i = index;">
           <div (click)="setImage(i)"
-               [ngClass]="{'active' : i===selectedIndex}"><i class="fa fa-solid fa-circle indicator-circle"></i></div>
+            [ngClass]="{'active' : i===selectedIndex}"><i
+              class="fa fa-solid fa-circle indicator-circle"></i></div>
         </div>
       </div>
     </div>
@@ -32,15 +38,17 @@
         {{news.title}}
       </div>
     </div>
-    <div *ngIf="isAdmin() || news.eventId" class="row d-flex flex-row justify-content-start w-auto mb-4">
+    <div *ngIf="isAdmin() || news.eventId"
+      class="row d-flex flex-row justify-content-start w-auto mb-4">
       <div class="col-auto pt-2" *ngIf="news.eventId">
         <button type="button" class="btn btn-secondary event-button"
-                [routerLink]="['/event', news.eventId]">
+          [routerLink]="['/events', news.eventId]">
           Show Event
         </button>
       </div>
       <div class="col-auto pt-2" *ngIf="isAdmin()">
-        <button type="button" class="btn btn-danger delete-button" data-toggle="modal" data-target="#deleteModal">
+        <button type="button" class="btn btn-danger delete-button"
+          data-toggle="modal" data-target="#deleteModal">
           Delete
         </button>
       </div>
@@ -60,12 +68,14 @@
 
 </div>
 
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Really delete this news?</h5>
-        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="btn-close" data-dismiss="modal"
+          aria-label="Close">
         </button>
       </div>
       <div class="modal-body">
@@ -73,7 +83,8 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="onDelete()">Delete News</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"
+          (click)="onDelete()">Delete News</button>
       </div>
     </div>
   </div>
