@@ -28,6 +28,7 @@ import { UserPasswordResetComponent } from './components/user-password-reset/use
 import { PerformanceTicketSelctionComponent } from './components/performance-ticket-selction/performance-ticket-selction.component';
 import { HallplanCreateComponent } from './components/hallplan-create/hallplan-create.component';
 import { EventChartComponent } from './components/event-chart/event-chart.component';
+import { TicketValidatorComponent } from './components/ticket-validator/ticket-validator.component';
 
 
 const routes: Routes = [
@@ -39,6 +40,7 @@ const routes: Routes = [
   { path: 'events-overview', canActivate: [AuthGuard], component: EventOverviewComponent },
   { path: 'events/create', canActivate: [AdminRouteGuard], component: EventsComponent },
   { path: 'topEvents', canActivate: [AuthGuard], component: EventChartComponent },
+  { path: 'ticket-validator/validate', canActivate: [AuthGuard], component: TicketValidatorComponent },
 
   { path: 'cart', canActivate: [AuthGuard], component: ShoppingCartComponent },
   { path: 'cart/checkout', canActivate: [AuthGuard], component: CartCheckoutComponent },
