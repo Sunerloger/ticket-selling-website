@@ -144,7 +144,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchase.setDate(LocalDate.now());
         purchase.setUserId(userId);
 
-        if (purchaseCreationDto.getUseUserAddress()) {
+        if (!purchaseCreationDto.getUseUserAddress()) {
             ApplicationUser user = customUserDetailService.getUserById(userId);
             purchase.setBillAddress(user.getAddress());
             purchase.setBillAreaCode(user.getAreaCode());
@@ -218,6 +218,11 @@ public class PurchaseServiceImpl implements PurchaseService {
             purchase.setBillAreaCode(purchaseCreationDto.getAreaCode());
             purchase.setBillCityName(purchaseCreationDto.getCity());
         }
+
+        purchase.setExpiration(purchaseCreationDto.getExpiration());
+        purchase.setSecurityCode(purchaseCreationDto.getSecurityCode());
+        purchase.setCreditCardNr(purchaseCreationDto.getCreditCardNr());
+
         purchase.setTicketList(purchasedTicketList);
         repository.save(purchase);
         return true;
