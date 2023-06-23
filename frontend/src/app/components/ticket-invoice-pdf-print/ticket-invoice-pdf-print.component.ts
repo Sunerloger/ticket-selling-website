@@ -52,7 +52,7 @@ export class TicketInvoicePdfPrintComponent implements OnInit, AfterViewInit {
       <br>
       <strong>Invoice Date:</strong> ${this.purchase.purchaseDate}
       <br>
-      <strong>Recipient:</strong> ${this.user.firstName + this.user.lastName}
+      <strong>Recipient:</strong> ${this.user.firstName} ${this.user.lastName}
       <br>
       <strong>Address:</strong> ${this.purchase.billAddress}
       <br>
@@ -78,7 +78,7 @@ export class TicketInvoicePdfPrintComponent implements OnInit, AfterViewInit {
     <h3>Payment Details</h3>
      The refund will be conducted to the payment information you provided during the purchase:
      <p style ="margin-bottom: 5px">
-     <strong>Card Holder:</strong> ${this.user.firstName + this.user.lastName}
+     <strong>Card Holder:</strong> ${this.user.firstName} ${this.user.lastName}
       <br>
      <strong>Credit Card Nr:</strong> ${this.maskCreditCardNumber(this.purchase.creditCardNr.toString())}
       <br>
