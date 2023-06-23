@@ -32,6 +32,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -226,8 +227,8 @@ public class CustomUserDetailService implements UserService {
         PasswordResetToken actualToken = tokenRepository.getTokenByEmail(user.email());
 
         //Check if the token which was received through email is the same as the one saved in the database
-        if (!actualToken.getToken().equals(user.token())) {
-            throw new InsufficientAuthenticationException("Token are not equal");
+        if (!actualToken.getToken().equals(user.token()) || actualToken.getExpirationTime().isBefore(LocalDateTime.now())) {
+            throw new InsufficientAuthenticationException("Token is invalid");
         }
 
         //Update user with new encoded password
