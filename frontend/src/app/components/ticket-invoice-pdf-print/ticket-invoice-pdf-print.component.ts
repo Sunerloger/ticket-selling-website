@@ -75,18 +75,14 @@ export class TicketInvoicePdfPrintComponent implements OnInit, AfterViewInit {
     <h3>Total Price: ${this.sumOfItems(this.purchase)}€<span style="font-size: 14px;">(including 20% Austrian VAT)</span></h3>
 
     <h3>Payment Details</h3>
-    <p>
-      The payment will be conducted from the payment information you provided during the purchase:
+     The refund will be conducted to the payment information you provided during the purchase:
+     <p style ="margin-bottom: 5px">
+     <strong>Card Holder:</strong> ${this.user.firstName + this.user.lastName}
       <br>
-      Payment Method: ${paymentMethod}
+     <strong>Credit Card Nr:</strong> ${this.maskCreditCardNumber(this.purchase.creditCardNr.toString())}
       <br>
-      Card Number: **** **** **** 0000
-      <br>
-      Expiry Date: 13.06.2030
-      <br>
-      Cardholder Name: Max Mustermann
-    </p>
-
+     <strong>Expiration Date:</strong> ${this.purchase.expiration}
+     </p>
     <h3>Legal Statements</h3>
     <p>
       This is an official invoice for the purchase. Payment is due within 7 days from the invoice date.
@@ -121,6 +117,10 @@ export class TicketInvoicePdfPrintComponent implements OnInit, AfterViewInit {
 
   getPaymentMethod(): string {
     return 'Credit Card';
+  }
+
+  maskCreditCardNumber(creditCardNumber: string): string {
+    return creditCardNumber.replace(/.(?=.{4})/g, '*');
   }
 
 

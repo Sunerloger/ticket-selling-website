@@ -114,7 +114,7 @@ import { SectionColorLegendComponent } from './components/section-color-legend/s
     HallplanCreateComponent,
     TicketReversalInvoicePdfPrintComponent,
     AutocompleteComponent,
-    TicketInvoicePdfPrintComponent
+    TicketInvoicePdfPrintComponent,
 
     EventChartComponent,
     SectionColorLegendComponent,
