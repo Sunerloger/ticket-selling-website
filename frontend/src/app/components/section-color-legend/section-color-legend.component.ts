@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { HallplanService } from '../../services/hallplan/hallplan.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -30,7 +30,7 @@ export class SectionColorLegendComponent implements OnInit {
     this.service.getAllSectionsWithCounts(hallplanId).subscribe({
       next: data => {
         // filter out unused sections:
-        this.sections = data.filter(sec => sec.count !== 0);
+        this.sections = data.filter(sec => sec.count !== 0 && sec.name !== 'Unassigned');
       },
       error: error => {
         const errorMessage = error.status === 0
