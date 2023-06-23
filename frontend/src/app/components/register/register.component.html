@@ -8,7 +8,7 @@
     </div>
     <form (ngSubmit)="registerUser()" #registerForm="ngForm">
       <div id="input">
-        <div class="form-group">
+        <div class="form-group mt-3">
           <label for="email">Email: <span class="text-danger">*</span></label>
           <input type="email" class="form-control"
                  id="email" name="email" [(ngModel)]="user.email" #email="ngModel" required
@@ -25,7 +25,7 @@
           </div>
         </div>
 
-        <div class="form-group"
+        <div class="form-group mt-3"
              [class.has-error]="firstName.invalid && firstName.touched">
           <label for="firstName" class="control-label">First Name: <span class="text-danger">*</span></label>
           <input type="text" class="form-control" id="firstName" name="firstName" pattern="[A-Za-zäöüÄÖÜ]*"
@@ -43,7 +43,7 @@
           </div>
         </div>
 
-        <div class="form-group"
+        <div class="form-group mt-3"
              [class.has-error]="lastName.invalid && lastName.touched">
           <label for="lastName">Last Name: <span class="text-danger">*</span></label>
           <input type="text" class="form-control" id="lastName" name="lastName" pattern="[A-Za-zäöüÄÖÜ]*"
@@ -62,7 +62,7 @@
 
         </div>
 
-        <div class="form-group"
+        <div class="form-group mt-3"
              [class.has-error]="birthDate.invalid && birthDate.touched">
           <label for="birthDate">Birthdate: <span class="text-danger">*</span></label>
           <input type="date" class="form-control" id="birthDate" name="birthDate" [(ngModel)]="user.birthdate"
@@ -73,7 +73,7 @@
           </div>
         </div>
 
-        <div class="form-group"
+        <div class="form-group mt-3"
              [class.has-error]="address.invalid && address.touched">
           <label for="address">Address: <span class="text-danger">*</span></label>
           <input type="text" class="form-control" id="address" name="address"
@@ -86,7 +86,7 @@
           </div>
         </div>
 
-        <div class="form-group"
+        <div class="form-group mt-3"
              [class.has-error]="areaCode.invalid && areaCode.touched">
           <label for="areaCode">AreaCode: <span class="text-danger">*</span></label>
           <input type="text" class="form-control" id="areaCode" name="areaCode" pattern="[0-9]+"
@@ -104,7 +104,7 @@
           </div>
         </div>
 
-        <div class="form-group"
+        <div class="form-group mt-3"
              [class.has-error]="cityName.invalid && cityName.touched">
           <label for="cityName">CityName: <span class="text-danger">*</span></label>
           <input type="text" class="form-control" id="cityName" name="cityName" pattern="[A-Za-zäöüÄÖÜ]+"
@@ -122,7 +122,7 @@
           </div>
         </div>
 
-        <div class="form-group"
+        <div class="form-group mt-3"
              [class.has-error]="password.invalid && password.touched">
           <label for="password">Password: <span class="text-danger">*</span></label>
           <input type="password" class="form-control" id="password" name="password" [(ngModel)]="user.password"
@@ -145,7 +145,7 @@
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group mt-3">
           <label for="passwordVerify">Verify Password: <span class="text-danger">*</span></label>
           <input type="password" class="form-control" id="passwordVerify" name="passwordVerify"
                  [(ngModel)]="passwordVerify" required

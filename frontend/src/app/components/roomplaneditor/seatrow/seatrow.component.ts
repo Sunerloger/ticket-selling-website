@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PersistedSeat, PersistedSeatRow, SeatType } from 'src/app/dtos/hallplan/hallplan';
+import { PersistedSeatRow, SeatType } from 'src/app/dtos/hallplan/hallplan';
 import { SeatCreationEventPayload } from './contextmenu/contextmenu.component';
 import { SeatSelectionPayload } from './immutableseat/immutableseat.component';
 
@@ -20,7 +20,7 @@ export interface SeatCreationEvent {
   rowNr: number;
 }
 
-export interface SeatRowDeletionEventPayload{
+export interface SeatRowDeletionEventPayload {
   rowNr: number;
   rowId: number;
 }
@@ -51,7 +51,7 @@ export class SeatrowComponent {
   showCreationMenuRight = false;
   showCreationMenuLeft = false;
 
-  handleSeatRowDeletion(){
+  handleSeatRowDeletion() {
     this.seatRowDeletion.emit({
       rowNr: this.seatRow.rowNr,
       rowId: this.seatRow.id

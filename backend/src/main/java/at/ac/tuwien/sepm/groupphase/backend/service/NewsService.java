@@ -46,7 +46,7 @@ public interface NewsService {
     /**
      * Set relation "newsRead" between the {@code user} and the news with the id {@code id} if it hasn't already existed.
      *
-     * @param id of the news
+     * @param id   of the news
      * @param user that has read the news
      */
     ResponseEntity<Void> putRelation(Long id, ApplicationUser user);

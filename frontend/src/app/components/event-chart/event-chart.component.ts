@@ -12,7 +12,7 @@ import {Router} from '@angular/router';
 export class EventChartComponent implements OnInit{
   chart: any;
   goToEvent= (e) =>  {
-    this.router.navigateByUrl('/event/'+e.dataPoint.id);
+    this.router.navigateByUrl('/events/'+e.dataPoint.id);
   };
   // eslint-disable-next-line @typescript-eslint/member-ordering
   chartOptions = {
