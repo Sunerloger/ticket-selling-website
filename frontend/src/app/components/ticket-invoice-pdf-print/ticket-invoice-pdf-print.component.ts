@@ -45,7 +45,7 @@ export class TicketInvoicePdfPrintComponent implements OnInit, AfterViewInit {
     const pdfContent: any = `
   <div #pdfContent>
     <b style="font-size: 36px; color: #23a6d5">Ticketline - Invoice</b>
-    <b>------------------------------------------------------</b>
+    <hr>
     <h3>Invoice Information</h3>
     <p>
       <strong>Invoice Number:</strong> ${this.purchase.purchaseNr}
@@ -67,7 +67,7 @@ export class TicketInvoicePdfPrintComponent implements OnInit, AfterViewInit {
         ticket => `
           <p style="margin-bottom: 5px">
             <strong>TicketNr:</strong> ${ticket.ticketNr} |
-            <strong>Seat:</strong> ${ticket.seat.seatNr}
+            <strong>Seat:</strong> ${ticket.seat.seatNr} |
              <strong>Price:</strong> ${ticket.seat.price.toFixed(2).replace('.', ',')} €
           </p>
         `
