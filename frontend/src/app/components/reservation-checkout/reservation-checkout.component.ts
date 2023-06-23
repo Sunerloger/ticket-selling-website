@@ -23,6 +23,7 @@ export class ReservationCheckoutComponent implements OnInit {
   taxes = 0;
   user: User;
   error = false;
+
   constructor(private route: ActivatedRoute,
               private service: ReservationService,
               private userService: UserService,
@@ -78,6 +79,37 @@ export class ReservationCheckoutComponent implements OnInit {
   noItemsChecked(): boolean {
     const allFalse: boolean = this.checkboxList.every((value: boolean) => value === false);
     return allFalse;
+  }
+
+  canPurchase(): boolean {
+    if (this.noItemsChecked()) {
+      return false;
+    }
+
+    if (this.creationItem.useUserAddress === true){
+      if (this.creationItem.address === ''){
+        return false;
+      }
+      if (this.creationItem.city === ''){
+        return false;
+      }
+      if (this.creationItem.areaCode === 0 || this.creationItem.areaCode === undefined){
+        return false;
+      }
+    }
+
+    if (this.creationItem.creditCardNr === 0 || this.creationItem.securityCode === undefined){
+      return false;
+    }
+    const pattern = /^\d{2}\/\d{2}$/;
+    if (pattern.test(this.creationItem.expiration) === false ){
+      return false;
+    }
+    if (this.creationItem.securityCode === 0 || this.creationItem.securityCode === undefined){
+      return false;
+    }
+
+    return true;
   }
 
   purchase(): void {
