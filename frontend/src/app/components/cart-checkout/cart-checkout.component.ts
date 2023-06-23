@@ -36,7 +36,7 @@ export class CartCheckoutComponent implements OnInit {
       this.user = data;
     });
     this.getItems();
-    this.creationItem.useUserAddress = true;
+    this.creationItem.useUserAddress = false;
     this.creationItem.address = '';
     this.creationItem.city = '';
   }
@@ -72,6 +72,33 @@ export class CartCheckoutComponent implements OnInit {
     this.taxes = sum * 0.2;
     this.withoutTaxes = this.total - this.taxes;
     return this.total;
+  }
+
+  canPurchase(): boolean {
+    if (this.creationItem.useUserAddress === true){
+      if (this.creationItem.address === ''){
+        return false;
+      }
+      if (this.creationItem.city === ''){
+        return false;
+      }
+      if (this.creationItem.areaCode === 0 || this.creationItem.areaCode === undefined){
+        return false;
+      }
+    }
+
+    if (this.creationItem.creditCardNr === 0 || this.creationItem.securityCode === undefined){
+      return false;
+    }
+    const pattern = /^\d{2}\/\d{2}$/;
+    if (pattern.test(this.creationItem.expiration) === false ){
+      return false;
+    }
+    if (this.creationItem.securityCode === 0 || this.creationItem.securityCode === undefined){
+      return false;
+    }
+
+    return true;
   }
 
   purchase(): void {
