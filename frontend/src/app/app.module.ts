@@ -66,6 +66,7 @@ import { TicketInvoicePdfPrintComponent } from './components/ticket-invoice-pdf-
 import { EventChartComponent } from './components/event-chart/event-chart.component';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { SectionColorLegendComponent } from './components/section-color-legend/section-color-legend.component';
+import { TicketValidatorComponent } from './components/ticket-validator/ticket-validator.component';
 
 @NgModule({
   declarations: [
@@ -118,6 +119,7 @@ import { SectionColorLegendComponent } from './components/section-color-legend/s
 
     EventChartComponent,
     SectionColorLegendComponent,
+    TicketValidatorComponent,
   ],
   imports: [
     BrowserModule,
