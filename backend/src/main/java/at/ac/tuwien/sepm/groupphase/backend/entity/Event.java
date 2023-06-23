@@ -44,6 +44,7 @@ public class Event {
     @NotBlank
     private String category;
 
+    @Column(length = 10000)
     private String description;
 
     @Column(columnDefinition = "Long default 0")
