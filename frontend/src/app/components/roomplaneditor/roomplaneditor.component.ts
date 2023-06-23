@@ -284,7 +284,7 @@ export class RoomplaneditorComponent implements OnInit {
 
         let seatNrOfOldSeat = amountSeat + 1;
         for (const seat of this.roomplan.seatRows[rowNr - 1].seats) {
-          updateSeats.push({ ...seat, seatNr: seatNrOfOldSeat });
+          updateSeats.push({ ...seat, seatNr: seatNrOfOldSeat, orderNr: seatNrOfOldSeat });
           seatNrOfOldSeat++;
         }
         console.log(updateSeats);

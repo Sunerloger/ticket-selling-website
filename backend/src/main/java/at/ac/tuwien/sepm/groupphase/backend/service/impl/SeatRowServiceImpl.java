@@ -83,11 +83,6 @@ public class SeatRowServiceImpl implements SeatRowService {
         LOGGER.debug("Updating seat row with id: {}", id);
         Optional<SeatRow> seatRowEntityOptional = seatRowRepository.findById(id);
 
-        Optional<SeatRow> existingSeatRow = seatRowRepository.findByRowNrAndHallPlanId(seatRowDto.getRowNr(), seatRowDto.getHallPlanId());
-        if (existingSeatRow.isPresent()) {
-            throw new ValidationException("SeatRow with rowNr " + seatRowDto.getRowNr() + " and hallPlanId " + seatRowDto.getHallPlanId() + " already exists");
-        }
-
         if (seatRowEntityOptional.isPresent()) {
             SeatRow seatRowEntity = seatRowMapper.toEntity(seatRowDto);
             SeatRow updatedSeatRow = seatRowRepository.save(seatRowEntity);
