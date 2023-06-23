@@ -77,7 +77,7 @@ export class TicketReversalInvoicePdfPrintComponent implements AfterViewInit, On
       <p>
      The refund will be conducted to the payment information you provided during the purchase:
      <p style ="margin-bottom: 5px">
-     <strong>Card Holder:</strong> ${this.user.firstName + this.user.lastName}
+     <strong>Card Holder:</strong> ${this.user.firstName} ${this.user.lastName}
      <br>
      <strong>Credit Card Nr:</strong> ${this.maskCreditCardNumber(this.purchase.creditCardNr.toString())}
      <br>
