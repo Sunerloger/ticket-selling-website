@@ -77,9 +77,11 @@ export class TicketReversalInvoicePdfPrintComponent implements AfterViewInit, On
       <p>
      The refund will be conducted to the payment information you provided during the purchase:
      <p style ="margin-bottom: 5px">
-     <strong>Credit Card Nr:</strong> ${this.purchase.creditCardNr} |
-     <strong>Expiration Date:</strong> ${this.purchase.expiration} |
-     <strong>Security Code:</strong> ${this.purchase.securityCode}
+     <strong>Card Holder:</strong> ${this.user.firstName + this.user.lastName}
+     <br>
+     <strong>Credit Card Nr:</strong> ${this.maskCreditCardNumber(this.purchase.creditCardNr.toString())}
+     <br>
+     <strong>Expiration Date:</strong> ${this.purchase.expiration}
       </p>
 
       <h3>Legal Statements</h3>
@@ -116,5 +118,9 @@ export class TicketReversalInvoicePdfPrintComponent implements AfterViewInit, On
 
   getPaymentMethod(): string {
     return 'Credit Card';
+  }
+
+  maskCreditCardNumber(creditCardNumber: string): string {
+    return creditCardNumber.replace(/.(?=.{4})/g, '*');
   }
 }
