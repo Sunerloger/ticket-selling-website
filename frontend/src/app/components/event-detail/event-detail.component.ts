@@ -87,6 +87,13 @@ export class EventDetailComponent implements OnInit{
 
   transformTime(timeString: string): string {
     const [hours, minutes] = timeString.split(':');
-    return `${parseInt(hours, 10)}:${parseInt(minutes, 10)} (CET)`;
+    const formattedHours = parseInt(hours, 10).toString().padStart(2, '0');
+    const formattedMinutes = parseInt(minutes, 10).toString().padStart(2, '0');
+    return `${formattedHours}:${formattedMinutes} (CET)`;
+  }
+
+  transformDateFormat(dateString: string): string {
+    const [year, month, day] = dateString.split('-');
+    return `${day}.${month}.${year}`;
   }
 }
