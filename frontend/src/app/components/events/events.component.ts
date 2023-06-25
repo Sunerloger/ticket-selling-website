@@ -56,7 +56,7 @@ export class EventsComponent implements OnInit {
   ngOnInit(): void {
     this.eventForm = this.fb.group({
       title: ['', Validators.required],
-      dateLocation: [new EventDate(), Validators.required],
+      dateLocation: [EventDate, Validators.required],
       duration: ['', Validators.required],
       category: ['', Validators.required],
       artist: ['', Validators.required],
