@@ -42,16 +42,19 @@
 
     <div style="display: flex; justify-content: space-between">
       <div *ngIf="!item.canceled">
-        <button type="button" class="btn btn-primary" (click)="deletePurchase(item.purchaseNr)">Refund Purchase
+        <button type="button" class="btn btn-secondary" (click)="deletePurchase(item.purchaseNr)">Refund Purchase
         </button>
       </div>
+      <div *ngIf="!item.canceled">
+        <app-ticket-invoice-pdf-print [purchase]="item" [user]="user"></app-ticket-invoice-pdf-print>
+      </div>
+
       <div *ngIf="item.canceled"></div>
       <div *ngIf="item.canceled">
         <app-ticket-reversal-invoice-pdf-print [purchase]="item"
                                                [user]="user"></app-ticket-reversal-invoice-pdf-print>
-      <div *ngIf="!item.canceled">
-        <app-ticket-invoice-pdf-print [purchase]="item" [user]="user"></app-ticket-invoice-pdf-print>
       </div>
+
 
     </div>
 
