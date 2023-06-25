@@ -10,6 +10,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 import org.mapstruct.Mapping;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.LinkedList;
 
@@ -19,7 +20,7 @@ public interface NewsMapper {
     @Named("stringListToNewsImageList")
     static List<NewsImage> toNewsImageList(List<String> images) {
         if (images == null) {
-            return null;
+            return Collections.emptyList();
         }
         List<NewsImage> entityImages = new LinkedList<>();
         for (String str : images) {
@@ -31,7 +32,7 @@ public interface NewsMapper {
     @Named("newsImageListToStringList")
     static List<String> toStringList(List<NewsImage> images) {
         if (images == null) {
-            return null;
+            return Collections.emptyList();
         }
         List<String> stringImages = new LinkedList<>();
         for (NewsImage img : images) {

@@ -51,7 +51,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class SecurityTest implements TestData {
+class SecurityTest implements TestData {
 
     private static final List<Class<?>> mappingAnnotations = Lists.list(
         RequestMapping.class,
@@ -116,7 +116,7 @@ public class SecurityTest implements TestData {
      * Feel free to remove / disable / adapt if you do not use Method Security (e.g. if you prefer Web Security to define who may perform which actions) or want to use Method Security on the service layer.
      */
     @Test
-    public void ensureSecurityAnnotationPresentForEveryEndpoint() {
+    void ensureSecurityAnnotationPresentForEveryEndpoint() {
         List<ImmutablePair<Class<?>, Method>> notSecured = components.stream()
             .map(AopUtils::getTargetClass) // beans may be proxies, get the target class instead
             .filter(clazz -> clazz.getCanonicalName() != null && clazz.getCanonicalName().startsWith(BackendApplication.class.getPackageName())) // limit to our package
@@ -134,7 +134,7 @@ public class SecurityTest implements TestData {
     }
 
     @Test
-    public void givenUserLoggedIn_whenFindAll_then200() throws Exception {
+    void givenUserLoggedIn_whenFindAll_then200() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get(MESSAGE_BASE_URI)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
             .andDo(print())
@@ -148,7 +148,7 @@ public class SecurityTest implements TestData {
     }
 
     @Test
-    public void givenNoOneLoggedIn_whenFindAll_then401() throws Exception {
+    void givenNoOneLoggedIn_whenFindAll_then401() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get(MESSAGE_BASE_URI))
             .andDo(print())
             .andReturn();
@@ -158,7 +158,7 @@ public class SecurityTest implements TestData {
     }
 
     @Test
-    public void givenAdminLoggedIn_whenPost_then201() throws Exception {
+    void givenAdminLoggedIn_whenPost_then201() throws Exception {
         MessageInquiryDto messageInquiryDto = messageMapper.messageToMessageInquiryDto(message);
         String body = objectMapper.writeValueAsString(messageInquiryDto);
 
@@ -174,7 +174,7 @@ public class SecurityTest implements TestData {
     }
 
     @Test
-    public void givenNoOneLoggedIn_whenPost_then403() throws Exception {
+    void givenNoOneLoggedIn_whenPost_then403() throws Exception {
         message.setPublishedAt(null);
         MessageInquiryDto messageInquiryDto = messageMapper.messageToMessageInquiryDto(message);
         String body = objectMapper.writeValueAsString(messageInquiryDto);
@@ -190,7 +190,7 @@ public class SecurityTest implements TestData {
     }
 
     @Test
-    public void givenUserLoggedIn_whenPost_then403() throws Exception {
+    void givenUserLoggedIn_whenPost_then403() throws Exception {
         message.setPublishedAt(null);
         MessageInquiryDto messageInquiryDto = messageMapper.messageToMessageInquiryDto(message);
         String body = objectMapper.writeValueAsString(messageInquiryDto);

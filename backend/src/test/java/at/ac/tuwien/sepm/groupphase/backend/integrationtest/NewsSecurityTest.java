@@ -42,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class NewsSecurityTest implements TestData {
+class NewsSecurityTest implements TestData {
 
     @Autowired
     private MockMvc mockMvc;
@@ -104,7 +104,7 @@ public class NewsSecurityTest implements TestData {
     }
 
     @Test
-    public void givenUserLoggedIn_whenFindAll_then200() throws Exception {
+    void givenUserLoggedIn_whenFindAll_then200() throws Exception {
         // default pageIndex is 0
         MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES))
@@ -120,7 +120,7 @@ public class NewsSecurityTest implements TestData {
     }
 
     @Test
-    public void givenNoOneLoggedIn_whenFindAll_then403() throws Exception {
+    void givenNoOneLoggedIn_whenFindAll_then403() throws Exception {
         // default pageIndex is 0
         MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI).param("loadAlreadyRead", "true"))
             .andDo(print())
@@ -131,7 +131,7 @@ public class NewsSecurityTest implements TestData {
     }
 
     @Test
-    public void givenAdminLoggedIn_whenPost_then201() throws Exception {
+    void givenAdminLoggedIn_whenPost_then201() throws Exception {
         NewsInquiryDto newsInquiryDto = newsMapper.newsToNewsInquiryDto(news);
         String body = objectMapper.writeValueAsString(newsInquiryDto);
 
@@ -147,7 +147,7 @@ public class NewsSecurityTest implements TestData {
     }
 
     @Test
-    public void givenNoOneLoggedIn_whenPost_then403() throws Exception {
+    void givenNoOneLoggedIn_whenPost_then403() throws Exception {
         news.setCreatedAt(null);
         NewsInquiryDto newsInquiryDto = newsMapper.newsToNewsInquiryDto(news);
         String body = objectMapper.writeValueAsString(newsInquiryDto);
@@ -163,7 +163,7 @@ public class NewsSecurityTest implements TestData {
     }
 
     @Test
-    public void givenUserLoggedIn_whenPost_then403() throws Exception {
+    void givenUserLoggedIn_whenPost_then403() throws Exception {
         news.setCreatedAt(null);
         NewsInquiryDto newsInquiryDto = newsMapper.newsToNewsInquiryDto(news);
         String body = objectMapper.writeValueAsString(newsInquiryDto);
@@ -180,7 +180,7 @@ public class NewsSecurityTest implements TestData {
     }
 
     @Test
-    public void givenNoOneLoggedIn_whenFindOneById_then403() throws Exception {
+    void givenNoOneLoggedIn_whenFindOneById_then403() throws Exception {
         newsRepository.save(news);
         Long id = news.getId();
 
@@ -193,7 +193,7 @@ public class NewsSecurityTest implements TestData {
     }
 
     @Test
-    public void givenUserLoggedInAndNewsWithIdInDatabase_whenFindOneById_then200() throws Exception {
+    void givenUserLoggedInAndNewsWithIdInDatabase_whenFindOneById_then200() throws Exception {
         newsRepository.save(news);
         Long id = news.getId();
 
@@ -210,7 +210,7 @@ public class NewsSecurityTest implements TestData {
     }
 
     @Test
-    public void givenNoOneLoggedIn_whenDeleteOneById_then403() throws Exception {
+    void givenNoOneLoggedIn_whenDeleteOneById_then403() throws Exception {
         newsRepository.save(news);
         Long id = news.getId();
 
@@ -223,7 +223,7 @@ public class NewsSecurityTest implements TestData {
     }
 
     @Test
-    public void givenUserLoggedInAndNewsWithIdInDatabase_whenDeleteOneById_then403() throws Exception {
+    void givenUserLoggedInAndNewsWithIdInDatabase_whenDeleteOneById_then403() throws Exception {
         newsRepository.save(news);
         Long id = news.getId();
 
@@ -237,7 +237,7 @@ public class NewsSecurityTest implements TestData {
     }
 
     @Test
-    public void givenAdminLoggedInAndNewsWithIdInDatabase_whenDeleteOneById_then200() throws Exception {
+    void givenAdminLoggedInAndNewsWithIdInDatabase_whenDeleteOneById_then200() throws Exception {
         newsRepository.save(news);
         Long id = news.getId();
 
@@ -253,7 +253,7 @@ public class NewsSecurityTest implements TestData {
     }
 
     @Test
-    public void givenNoOneLoggedInAndNewsWithIdInDatabase_whenPutOneById_then403() throws Exception {
+    void givenNoOneLoggedInAndNewsWithIdInDatabase_whenPutOneById_then403() throws Exception {
         newsRepository.save(news);
         Long id = news.getId();
 
@@ -268,7 +268,7 @@ public class NewsSecurityTest implements TestData {
     }
 
     @Test
-    public void givenUserLoggedInAndNewsWithIdInDatabaseAndUserInDatabase_whenPutOneById_then201() throws Exception {
+    void givenUserLoggedInAndNewsWithIdInDatabaseAndUserInDatabase_whenPutOneById_then201() throws Exception {
         newsRepository.save(news);
         Long id = news.getId();
 

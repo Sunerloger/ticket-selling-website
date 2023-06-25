@@ -29,7 +29,7 @@ import java.util.Set;
 @Table(name = "news")
 public class News {
 
-    private static final String base64Pattern = "^data:image/(gif|png|jpeg|webp|svg\\+xml);base64,.*={0,2}$";
+    private static final String BASE64PATTERN = "^data:image/(gif|png|jpeg|webp|svg\\+xml);base64,.*={0,2}$";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,7 +52,7 @@ public class News {
     private LocalDateTime createdAt;
 
     @Lob
-    @Pattern(regexp = base64Pattern)
+    @Pattern(regexp = BASE64PATTERN)
     @Column(name = "cover_image", columnDefinition = "BLOB")
     private String coverImage;
 

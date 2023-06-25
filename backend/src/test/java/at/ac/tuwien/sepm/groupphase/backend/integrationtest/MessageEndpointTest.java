@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class MessageEndpointTest implements TestData {
+class MessageEndpointTest implements TestData {
 
     @Autowired
     private MockMvc mockMvc;
@@ -78,7 +78,7 @@ public class MessageEndpointTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenFindAll_thenEmptyList() throws Exception {
+    void givenNothing_whenFindAll_thenEmptyList() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get(MESSAGE_BASE_URI)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
@@ -95,7 +95,7 @@ public class MessageEndpointTest implements TestData {
     }
 
     @Test
-    public void givenOneMessage_whenFindAll_thenListWithSizeOneAndMessageWithAllPropertiesExceptSummary()
+    void givenOneMessage_whenFindAll_thenListWithSizeOneAndMessageWithAllPropertiesExceptSummary()
         throws Exception {
         messageRepository.save(message);
 
@@ -122,7 +122,7 @@ public class MessageEndpointTest implements TestData {
     }
 
     @Test
-    public void givenOneMessage_whenFindById_thenMessageWithAllProperties() throws Exception {
+    void givenOneMessage_whenFindById_thenMessageWithAllProperties() throws Exception {
         messageRepository.save(message);
 
         MvcResult mvcResult = this.mockMvc.perform(get(MESSAGE_BASE_URI + "/{id}", message.getId())
@@ -143,7 +143,7 @@ public class MessageEndpointTest implements TestData {
     }
 
     @Test
-    public void givenOneMessage_whenFindByNonExistingId_then404() throws Exception {
+    void givenOneMessage_whenFindByNonExistingId_then404() throws Exception {
         messageRepository.save(message);
 
         MvcResult mvcResult = this.mockMvc.perform(get(MESSAGE_BASE_URI + "/{id}", -1)
@@ -155,7 +155,7 @@ public class MessageEndpointTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenPost_thenMessageWithAllSetPropertiesPlusIdAndPublishedDate() throws Exception {
+    void givenNothing_whenPost_thenMessageWithAllSetPropertiesPlusIdAndPublishedDate() throws Exception {
         message.setPublishedAt(null);
         MessageInquiryDto messageInquiryDto = messageMapper.messageToMessageInquiryDto(message);
         String body = objectMapper.writeValueAsString(messageInquiryDto);
@@ -184,7 +184,7 @@ public class MessageEndpointTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenPostInvalid_then422() throws Exception {
+    void givenNothing_whenPostInvalid_then422() throws Exception {
         message.setTitle(null);
         message.setSummary(null);
         message.setText(null);
