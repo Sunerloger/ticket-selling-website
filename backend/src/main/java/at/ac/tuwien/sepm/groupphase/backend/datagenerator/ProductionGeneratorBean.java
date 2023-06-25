@@ -73,13 +73,16 @@ public class ProductionGeneratorBean {
         List<HallPlanSeatDto> seats;
         HallPlanSeatDto seatDto;
         //Outer loop determines row count
+        for(int g = 1; g < 8; g++) {
+
+
         for (int i = 1; i < 11; i++) {
             SeatRowDto seatRowDto = new SeatRowDto();
-            seatRowDto.setHallPlanId(-1L);
+            seatRowDto.setHallPlanId((long) -g);
             seatRowDto.setRowNr((long) i);
             //Generate seats
             seats = new ArrayList<>();
-            for (int z = 1; z < 31; z++) {
+            for (int z = 1; z < 30; z++) {
                 seatDto = new HallPlanSeatDto();
                 seatDto.setReservedNr(0L);
                 seatDto.setBoughtNr(0L);
@@ -117,27 +120,29 @@ public class ProductionGeneratorBean {
                     seatDto.setStatus(HallPlanSeatStatus.FREE);
                     seatDto.setType(HallPlanSeatType.STANDING_SEAT);
                     seats.add(seatDto);
+                    if(p != 3) {
+                        for (int u = 1; u < 8; u++) {
+                            seatDto = new HallPlanSeatDto();
+                            seatDto.setReservedNr(0L);
+                            seatDto.setBoughtNr(0L);
+                            seatDto.setSection(hallPlanSectionDto.get(i % 6));
 
-                    for (int u = 1; u < 8; u++) {
-                        seatDto = new HallPlanSeatDto();
-                        seatDto.setReservedNr(0L);
-                        seatDto.setBoughtNr(0L);
-                        seatDto.setSection(hallPlanSectionDto.get(i % 6));
-
-                        //Set individual seat parameter
-                        int addIncr = 0;
-                        if (p == 1) {
-                            addIncr = 1;
-                        } else {
-                            addIncr = 0;
+                            //Set individual seat parameter
+                            int addIncr = 0;
+                            if (p == 1) {
+                                addIncr = 1;
+                            } else {
+                                addIncr = 0;
+                            }
+                            seatDto.setOrderNr((long) u + (p - 1) * 7 + p);
+                            seatDto.setSeatNr((long) -1);
+                            seatDto.setCapacity(50L);
+                            seatDto.setStatus(HallPlanSeatStatus.FREE);
+                            seatDto.setType(HallPlanSeatType.VACANT_SEAT);
+                            seats.add(seatDto);
                         }
-                        seatDto.setOrderNr((long) u + (p - 1) * 7 + p);
-                        seatDto.setSeatNr((long) -1);
-                        seatDto.setCapacity(50L);
-                        seatDto.setStatus(HallPlanSeatStatus.FREE);
-                        seatDto.setType(HallPlanSeatType.VACANT_SEAT);
-                        seats.add(seatDto);
                     }
+
 
                 }
                 seatRowDto.setSeats(seats);
@@ -152,6 +157,7 @@ public class ProductionGeneratorBean {
                 continue;
             }
             this.seatRowService.createSeatRow(seatRowDto);
+        }
         }
 
     }
