@@ -1,6 +1,6 @@
 <div class="component">
   <div *ngIf="item">
-
+    <button type="button" class="btn btn-secondary" [routerLink]="['/purchases']">back to purchases</button>
     <div class="card-header">
       <h1>
         Purchase from: {{ item.purchaseDate | date:'dd.MM.yy'}}
@@ -36,8 +36,14 @@
             <app-ticket-pdf-print [ticket]="ticket"></app-ticket-pdf-print>
           </div>
         </div>
-
       </div>
+      <div *ngIf="item.canceled">
+        <app-ticket-reversal-invoice-pdf-print [purchase]="item"></app-ticket-reversal-invoice-pdf-print>
+      </div>
+      <div *ngIf="!item.canceled">
+        <app-ticket-invoice-pdf-print [purchase]="item" [user]="user"></app-ticket-invoice-pdf-print>
+      </div>
+
     </div>
     <div *ngIf="!item.canceled">
       <button type="button" class="btn btn-secondary"
