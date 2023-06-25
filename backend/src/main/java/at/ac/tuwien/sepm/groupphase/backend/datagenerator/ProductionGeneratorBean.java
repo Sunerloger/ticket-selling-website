@@ -73,91 +73,91 @@ public class ProductionGeneratorBean {
         List<HallPlanSeatDto> seats;
         HallPlanSeatDto seatDto;
         //Outer loop determines row count
-        for(int g = 1; g < 8; g++) {
+        for (int g = 1; g < 8; g++) {
 
 
-        for (int i = 1; i < 11; i++) {
-            SeatRowDto seatRowDto = new SeatRowDto();
-            seatRowDto.setHallPlanId((long) -g);
-            seatRowDto.setRowNr((long) i);
-            //Generate seats
-            seats = new ArrayList<>();
-            for (int z = 1; z < 30; z++) {
-                seatDto = new HallPlanSeatDto();
-                seatDto.setReservedNr(0L);
-                seatDto.setBoughtNr(0L);
-                List<HallPlanSectionDto> hallPlanSectionDto = this.hallPlanService.findAllSectionsByHallPlanIdWithCounts(-1L);
-                seatDto.setSection(hallPlanSectionDto.get(i % 6));
-                if (i > 5) {
-                    seatDto.setSection(hallPlanSectionDto.get(7));
-                }
-
-                //Set individual seat parameter
-                seatDto.setOrderNr((long) z);
-                seatDto.setSeatNr((long) z);
-                seatDto.setCapacity(50L);
-                seatDto.setStatus(HallPlanSeatStatus.FREE);
-                seatDto.setType(HallPlanSeatType.SEAT);
-                seats.add(seatDto);
-            }
-            seatRowDto.setSeats(seats);
-            if (i % 5 == 0) {
+            for (int i = 1; i < 11; i++) {
+                SeatRowDto seatRowDto = new SeatRowDto();
+                seatRowDto.setHallPlanId((long) -g);
+                seatRowDto.setRowNr((long) i);
+                //Generate seats
                 seats = new ArrayList<>();
-                for (int p = 1; p < 4; p++) {
+                for (int z = 1; z < 30; z++) {
                     seatDto = new HallPlanSeatDto();
                     seatDto.setReservedNr(0L);
                     seatDto.setBoughtNr(0L);
                     List<HallPlanSectionDto> hallPlanSectionDto = this.hallPlanService.findAllSectionsByHallPlanIdWithCounts(-1L);
-                    seatDto.setSection(hallPlanSectionDto.get(i % 2));
+                    seatDto.setSection(hallPlanSectionDto.get(i % 6));
+                    if (i > 5) {
+                        seatDto.setSection(hallPlanSectionDto.get(7));
+                    }
 
                     //Set individual seat parameter
-                    seatDto.setOrderNr((long) p + ((p - 1) * 7));
-                    seatDto.setSeatNr((long) p);
-                    seatDto.setCapacity(100L + (p * 50));
-                    if (p == 3) {
-                        seatDto.setCapacity(150L);
-                    }
+                    seatDto.setOrderNr((long) z);
+                    seatDto.setSeatNr((long) z);
+                    seatDto.setCapacity(50L);
                     seatDto.setStatus(HallPlanSeatStatus.FREE);
-                    seatDto.setType(HallPlanSeatType.STANDING_SEAT);
+                    seatDto.setType(HallPlanSeatType.SEAT);
                     seats.add(seatDto);
-                    if(p != 3) {
-                        for (int u = 1; u < 8; u++) {
-                            seatDto = new HallPlanSeatDto();
-                            seatDto.setReservedNr(0L);
-                            seatDto.setBoughtNr(0L);
-                            seatDto.setSection(hallPlanSectionDto.get(i % 6));
-
-                            //Set individual seat parameter
-                            int addIncr = 0;
-                            if (p == 1) {
-                                addIncr = 1;
-                            } else {
-                                addIncr = 0;
-                            }
-                            seatDto.setOrderNr((long) u + (p - 1) * 7 + p);
-                            seatDto.setSeatNr((long) -1);
-                            seatDto.setCapacity(50L);
-                            seatDto.setStatus(HallPlanSeatStatus.FREE);
-                            seatDto.setType(HallPlanSeatType.VACANT_SEAT);
-                            seats.add(seatDto);
-                        }
-                    }
-
-
                 }
                 seatRowDto.setSeats(seats);
-            }
+                if (i % 5 == 0) {
+                    seats = new ArrayList<>();
+                    for (int p = 1; p < 4; p++) {
+                        seatDto = new HallPlanSeatDto();
+                        seatDto.setReservedNr(0L);
+                        seatDto.setBoughtNr(0L);
+                        List<HallPlanSectionDto> hallPlanSectionDto = this.hallPlanService.findAllSectionsByHallPlanIdWithCounts(-1L);
+                        seatDto.setSection(hallPlanSectionDto.get(i % 2));
 
-            LOGGER.info("Generated seatRow");
-            if (i == 1) {
-                //Update first row instance
-                seatRowDto.setId(-1L);
-                seatRowDto.setRowNr(1L);
-                this.seatRowService.updateSeatRow(seatRowDto);
-                continue;
+                        //Set individual seat parameter
+                        seatDto.setOrderNr((long) p + ((p - 1) * 7));
+                        seatDto.setSeatNr((long) p);
+                        seatDto.setCapacity(100L + (p * 50));
+                        if (p == 3) {
+                            seatDto.setCapacity(150L);
+                        }
+                        seatDto.setStatus(HallPlanSeatStatus.FREE);
+                        seatDto.setType(HallPlanSeatType.STANDING_SEAT);
+                        seats.add(seatDto);
+                        if (p != 3) {
+                            for (int u = 1; u < 8; u++) {
+                                seatDto = new HallPlanSeatDto();
+                                seatDto.setReservedNr(0L);
+                                seatDto.setBoughtNr(0L);
+                                seatDto.setSection(hallPlanSectionDto.get(i % 6));
+
+                                //Set individual seat parameter
+                                int addIncr = 0;
+                                if (p == 1) {
+                                    addIncr = 1;
+                                } else {
+                                    addIncr = 0;
+                                }
+                                seatDto.setOrderNr((long) u + (p - 1) * 7 + p);
+                                seatDto.setSeatNr((long) -1);
+                                seatDto.setCapacity(50L);
+                                seatDto.setStatus(HallPlanSeatStatus.FREE);
+                                seatDto.setType(HallPlanSeatType.VACANT_SEAT);
+                                seats.add(seatDto);
+                            }
+                        }
+
+
+                    }
+                    seatRowDto.setSeats(seats);
+                }
+
+                LOGGER.info("Generated seatRow");
+                if (i == 1) {
+                    //Update first row instance
+                    seatRowDto.setId(-1L);
+                    seatRowDto.setRowNr(1L);
+                    this.seatRowService.updateSeatRow(seatRowDto);
+                    continue;
+                }
+                this.seatRowService.createSeatRow(seatRowDto);
             }
-            this.seatRowService.createSeatRow(seatRowDto);
-        }
         }
 
     }
