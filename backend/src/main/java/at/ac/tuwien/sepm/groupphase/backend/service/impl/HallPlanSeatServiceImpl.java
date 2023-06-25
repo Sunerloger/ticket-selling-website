@@ -49,7 +49,6 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
         if (seatRow.isEmpty()) {
             throw new EntityNotFoundException("Seat row not found with id: " + seatDto.getSeatrowId());
         }
-        //seatRow = seatRowRepository.findByIdAndHallPlanId(seatDto.getSeatrowId(), seatDto.getHallPlanId());
         if (seatDto.getId() != null) {
             seatDto.setId(null);
         }
@@ -65,11 +64,6 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
         return seat.map(seatMapper::toDto).orElse(null);
     }
 
-    @Override
-    public List<HallPlanSeatDto> getAllSeatsBySeatRow(Long hallPlanId, Long seatRowId) {
-        LOGGER.debug("Get all seats by seat row");
-        return null;
-    }
 
     @Override
     public HallPlanSeatDto updateSeat(HallPlanSeatDto seatDto) throws ValidationException {
@@ -122,10 +116,7 @@ public class HallPlanSeatServiceImpl implements HallPlanSeatService {
             return false;
         }
         HallPlanSeat seat = optionalHallPlanSeat.get();
-        if (HallPlanSeatType.VACANT_SEAT.equals(seat.getType())) {
-            return false;
-        }
-        return true;
+        return !HallPlanSeatType.VACANT_SEAT.equals(seat.getType());
     }
 
     @Override

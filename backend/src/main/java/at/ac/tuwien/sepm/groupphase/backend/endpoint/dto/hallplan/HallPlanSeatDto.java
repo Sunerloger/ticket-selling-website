@@ -135,7 +135,6 @@ public class HallPlanSeatDto {
         private Long capacity;
         private Long seatNr;
         private Long orderNr;
-        private Long sectionId;
 
         private SeatDtoBuilder() {
         }
@@ -174,10 +173,6 @@ public class HallPlanSeatDto {
             return this;
         }
 
-        public SeatDtoBuilder withSectionId(Long sectionId) {
-            this.sectionId = sectionId;
-            return this;
-        }
 
         public HallPlanSeatDto build() {
             HallPlanSeatDto seatDto = new HallPlanSeatDto();

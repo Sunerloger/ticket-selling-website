@@ -81,7 +81,6 @@ public class HallPlanSectionDto {
         private String name;
         private String color;
         private Double price;
-        private Long hallplanId;
 
         private HallPlanSectionDtoBuilder() {
 
@@ -108,11 +107,6 @@ public class HallPlanSectionDto {
 
         public HallPlanSectionDtoBuilder withPrice(Double price) {
             this.price = price;
-            return this;
-        }
-
-        public HallPlanSectionDtoBuilder withHallPlanId(Long hallplanId) {
-            this.hallplanId = hallplanId;
             return this;
         }
 

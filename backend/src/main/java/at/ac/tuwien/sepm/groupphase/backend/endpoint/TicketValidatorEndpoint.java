@@ -54,4 +54,12 @@ public class TicketValidatorEndpoint {
         LOGGER.info("GET /api/v1/ticket-validator/validate");
         return ticketValidatorService.validatePayload(payloadDto);
     }
+
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/keys")
+    @Operation(summary = "Generate new access keys", security = @SecurityRequirement(name = "apiKey"))
+    public void generateNewAccessKey() {
+        LOGGER.info("GET /api/v1/ticket-validator");
+        ticketValidatorService.writeNewAccessKeys();
+    }
 }
