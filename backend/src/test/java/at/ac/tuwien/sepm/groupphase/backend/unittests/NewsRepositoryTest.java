@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 // the entire application context
 @DataJpaTest
 @ActiveProfiles("test")
-public class NewsRepositoryTest implements TestData {
+class NewsRepositoryTest implements TestData {
 
     @Autowired
     private NewsRepository newsRepository;
@@ -56,7 +56,7 @@ public class NewsRepositoryTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenSaveNewsWithoutImages_thenFindListWithOneElementAndFindNewsByIdAndFindNoImagesInNewsImageRepository() {
+    void givenNothing_whenSaveNewsWithoutImages_thenFindListWithOneElementAndFindNewsByIdAndFindNoImagesInNewsImageRepository() {
         News news = News.NewsBuilder.aNews()
             .withTitle(TEST_NEWS_TITLE)
             .withShortText(TEST_NEWS_SUMMARY)
@@ -78,14 +78,14 @@ public class NewsRepositoryTest implements TestData {
             () -> assertNull(newsRepository.findById(news.getId()).get().getCoverImage()),
             () -> assertNull(newsRepository.findById(news.getId()).get().getEvent()),
             () -> assertTrue(newsRepository.findById(news.getId()).get().getImages().isEmpty()),
-            () -> assertEquals(newsRepository.findById(news.getId()).get().getTitle(), TEST_NEWS_TITLE),
-            () -> assertEquals(newsRepository.findById(news.getId()).get().getShortText(), TEST_NEWS_SUMMARY),
-            () -> assertEquals(newsRepository.findById(news.getId()).get().getFullText(), TEST_NEWS_TEXT)
+            () -> assertEquals(TEST_NEWS_TITLE, newsRepository.findById(news.getId()).get().getTitle()),
+            () -> assertEquals(TEST_NEWS_SUMMARY, newsRepository.findById(news.getId()).get().getShortText()),
+            () -> assertEquals(TEST_NEWS_TEXT, newsRepository.findById(news.getId()).get().getFullText())
         );
     }
 
     @Test
-    public void givenNothing_whenSaveNewsWithCoverImageAndAdditionalImages_thenFindListWithOneElementAndFindNewsByIdAndFindImagesInNewsImageRepository() {
+    void givenNothing_whenSaveNewsWithCoverImageAndAdditionalImages_thenFindListWithOneElementAndFindNewsByIdAndFindImagesInNewsImageRepository() {
         News news = News.NewsBuilder.aNews()
             .withTitle(TEST_NEWS_TITLE)
             .withShortText(TEST_NEWS_SUMMARY)
@@ -112,17 +112,17 @@ public class NewsRepositoryTest implements TestData {
         // test properties of news if present
             () -> assertNotNull(newsRepository.findById(news.getId()).get().getCreatedAt()),
             () -> assertNotNull(newsRepository.findById(news.getId()).get().getCoverImage()),
-            () -> assertEquals(newsRepository.findById(news.getId()).get().getCoverImage(), TEST_COVER_IMAGE),
+            () -> assertEquals(TEST_COVER_IMAGE, newsRepository.findById(news.getId()).get().getCoverImage()),
             () -> assertEquals(3, newsRepository.findById(news.getId()).get().getImages().size()),
-            () -> assertEquals(newsRepository.findById(news.getId()).get().getTitle(), TEST_NEWS_TITLE),
-            () -> assertEquals(newsRepository.findById(news.getId()).get().getShortText(), TEST_NEWS_SUMMARY),
-            () -> assertEquals(newsRepository.findById(news.getId()).get().getFullText(), TEST_NEWS_TEXT),
-            () -> assertEquals(newsRepository.findById(news.getId()).get().getEvent(), event)
+            () -> assertEquals(TEST_NEWS_TITLE, newsRepository.findById(news.getId()).get().getTitle()),
+            () -> assertEquals(TEST_NEWS_SUMMARY, newsRepository.findById(news.getId()).get().getShortText()),
+            () -> assertEquals(TEST_NEWS_TEXT, newsRepository.findById(news.getId()).get().getFullText()),
+            () -> assertEquals(event, newsRepository.findById(news.getId()).get().getEvent())
         );
     }
 
     @Test
-    public void givenNothing_whenSave3NewsOneRead_thenFindListWithTwoElementsAndFindTwoNews() {
+    void givenNothing_whenSave3NewsOneRead_thenFindListWithTwoElementsAndFindTwoNews() {
 
         News news1 = News.NewsBuilder.aNews()
             .withTitle(TEST_NEWS_TITLE)
@@ -172,7 +172,7 @@ public class NewsRepositoryTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenSaveNewsWithBlankTitle_thenThrowException() {
+    void givenNothing_whenSaveNewsWithBlankTitle_thenThrowException() {
         News news = News.NewsBuilder.aNews()
             .withTitle("       ")
             .withShortText(TEST_NEWS_SUMMARY)
@@ -191,7 +191,7 @@ public class NewsRepositoryTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenSaveNewsWithBlankSummary_thenThrowException() {
+    void givenNothing_whenSaveNewsWithBlankSummary_thenThrowException() {
         News news = News.NewsBuilder.aNews()
             .withTitle(TEST_NEWS_TITLE)
             .withShortText("       ")

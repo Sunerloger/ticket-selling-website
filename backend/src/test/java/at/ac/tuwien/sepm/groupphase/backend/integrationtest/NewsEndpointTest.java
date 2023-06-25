@@ -44,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class NewsEndpointTest implements TestData {
+class NewsEndpointTest implements TestData {
 
     @Autowired
     private MockMvc mockMvc;
@@ -118,7 +118,7 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenFindAll_thenEmptyList() throws Exception {
+    void givenNothing_whenFindAll_thenEmptyList() throws Exception {
         // default pageIndex is 0
         MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
@@ -139,7 +139,7 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
-    public void givenOneNews_whenFindAll_thenListWithSizeOneAndNewsWithAllPropertiesExceptFullTextAndImages()
+    void givenOneNews_whenFindAll_thenListWithSizeOneAndNewsWithAllPropertiesExceptFullTextAndImages()
         throws Exception {
         // default pageIndex is 0
         newsRepository.save(news);
@@ -168,13 +168,13 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
-    public void given21News_whenFindAllPage0AndPage1_thenListWithSize20AndListWithSize1()
+    void given21News_whenFindAllPage0AndPage1_thenListWithSize20AndListWithSize1()
         throws Exception {
         for (int i = 0; i < 21; i++) {
             news.setId((long) -i);
             newsRepository.save(news);
         }
-        assertEquals(newsRepository.findAll().size(), 21);
+        assertEquals(21, newsRepository.findAll().size());
 
         // default pageIndex is 0
         MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
@@ -209,7 +209,7 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
-    public void given3NewsOneRead_whenFindAllReadAndFindAllNotRead_thenListWithSize1AndListWithSize2()
+    void given3NewsOneRead_whenFindAllReadAndFindAllNotRead_thenListWithSize1AndListWithSize2()
         throws Exception {
 
         News news1 = News.NewsBuilder.aNews()
@@ -234,7 +234,7 @@ public class NewsEndpointTest implements TestData {
         newsRepository.save(news2);
         newsRepository.save(news3);
 
-        assertEquals(newsRepository.findAll().size(),3);
+        assertEquals(3, newsRepository.findAll().size());
 
         MvcResult mvcResultPut = this.mockMvc.perform(put(NEWS_BASE_URI + "/" + news3.getId())
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
@@ -277,7 +277,7 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
-    public void given1News_whenPutNewsReadRelationAndAgainNewsReadRelation_then201And200()
+    void given1News_whenPutNewsReadRelationAndAgainNewsReadRelation_then201And200()
         throws Exception {
 
         News news = News.NewsBuilder.aNews()
@@ -288,7 +288,7 @@ public class NewsEndpointTest implements TestData {
 
         newsRepository.save(news);
 
-        assertEquals(newsRepository.findAll().size(),1);
+        assertEquals(1, newsRepository.findAll().size());
 
         MvcResult mvcResultPut1 = this.mockMvc.perform(put(NEWS_BASE_URI + "/" + news.getId())
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
@@ -308,7 +308,7 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
-    public void given1News_whenPutNewsReadRelationUserNotFound_then404()
+    void given1News_whenPutNewsReadRelationUserNotFound_then404()
         throws Exception {
 
         News news = News.NewsBuilder.aNews()
@@ -319,7 +319,7 @@ public class NewsEndpointTest implements TestData {
 
         newsRepository.save(news);
 
-        assertEquals(newsRepository.findAll().size(),1);
+        assertEquals(1, newsRepository.findAll().size());
 
         MvcResult mvcResultPut = this.mockMvc.perform(put(NEWS_BASE_URI + "/" + news.getId())
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("invalid@email.com", ADMIN_ROLES)))
@@ -331,7 +331,7 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenPutNewsReadRelation_then404()
+    void givenNothing_whenPutNewsReadRelation_then404()
         throws Exception {
 
         MvcResult mvcResultPut = this.mockMvc.perform(put(NEWS_BASE_URI + "/" + -1000)
@@ -344,7 +344,7 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
-    public void givenOneNews_whenFindById_thenNewsWithAllPropertiesExceptShortText() throws Exception {
+    void givenOneNews_whenFindById_thenNewsWithAllPropertiesExceptShortText() throws Exception {
         newsRepository.save(news);
 
         MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI + "/{id}", news.getId())
@@ -368,7 +368,7 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenFindByNonExistingId_then404() throws Exception {
+    void givenNothing_whenFindByNonExistingId_then404() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI + "/{id}", -1)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
@@ -378,7 +378,7 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
-    public void givenOneNews_whenDeleteById_thenGetAllLengthIs0And200() throws Exception {
+    void givenOneNews_whenDeleteById_thenGetAllLengthIs0And200() throws Exception {
         newsRepository.save(news);
 
         MvcResult mvcResult = this.mockMvc.perform(delete(NEWS_BASE_URI + "/{id}", news.getId())
@@ -409,7 +409,7 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
-    public void givenOneNewsWithNewsRead_whenDeleteById_thenGetAllLengthIs0And200() throws Exception {
+    void givenOneNewsWithNewsRead_whenDeleteById_thenGetAllLengthIs0And200() throws Exception {
         newsRepository.save(news);
 
         MvcResult mvcResultAdmin = this.mockMvc.perform(put(NEWS_BASE_URI + "/{id}", news.getId())
@@ -436,7 +436,7 @@ public class NewsEndpointTest implements TestData {
 
         assertAll(
             () -> assertEquals(HttpStatus.OK.value(), response.getStatus()),
-            () -> assertEquals(userRepository.findAll().size(), 2)
+            () -> assertEquals(2, userRepository.findAll().size())
         );
 
         // default pageIndex is 0
@@ -513,7 +513,7 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenDeleteByNonExistingId_then404() throws Exception {
+    void givenNothing_whenDeleteByNonExistingId_then404() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(delete(NEWS_BASE_URI + "/{id}", -1)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
@@ -523,7 +523,7 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenPost_thenNewsWithAllSetPropertiesPlusIdAndPublishedDate() throws Exception {
+    void givenNothing_whenPost_thenNewsWithAllSetPropertiesPlusIdAndPublishedDate() throws Exception {
         NewsInquiryDto newsInquiryDto = newsMapper.newsToNewsInquiryDto(news);
         String body = objectMapper.writeValueAsString(newsInquiryDto);
 
@@ -555,7 +555,7 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenPostNewsAndTitleBlank_then422() throws Exception {
+    void givenNothing_whenPostNewsAndTitleBlank_then422() throws Exception {
         news.setTitle("        ");
         NewsInquiryDto newsInquiryDto = newsMapper.newsToNewsInquiryDto(news);
         String body = objectMapper.writeValueAsString(newsInquiryDto);
@@ -570,7 +570,7 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenPostNewsAndShortDescriptionBlank_then422() throws Exception {
+    void givenNothing_whenPostNewsAndShortDescriptionBlank_then422() throws Exception {
         news.setShortText("        ");
         NewsInquiryDto newsInquiryDto = newsMapper.newsToNewsInquiryDto(news);
         String body = objectMapper.writeValueAsString(newsInquiryDto);
@@ -585,7 +585,7 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenPostInvalid_then422() throws Exception {
+    void givenNothing_whenPostInvalid_then422() throws Exception {
         news.setTitle(null);
         news.setShortText(null);
         news.setFullText(null);
@@ -605,7 +605,7 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenPostInvalidCoverImage_then422() throws Exception {
+    void givenNothing_whenPostInvalidCoverImage_then422() throws Exception {
         news.setCoverImage("I_AM_A_COVER_IMAGE");
         NewsInquiryDto newsInquiryDto = newsMapper.newsToNewsInquiryDto(news);
         String body = objectMapper.writeValueAsString(newsInquiryDto);
@@ -620,7 +620,7 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenPostInvalidImages_then422() throws Exception {
+    void givenNothing_whenPostInvalidImages_then422() throws Exception {
         NewsInquiryDto newsInquiryDto = newsMapper.newsToNewsInquiryDto(news);
         newsInquiryDto.setImages(Arrays.asList("I_AM_IMAGE_ONE", "I_AM_IMAGE_TWO", "I_AM_IMAGE_THREE"));
         String body = objectMapper.writeValueAsString(newsInquiryDto);
@@ -638,7 +638,7 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenPostInvalidEventId_then404() throws Exception {
+    void givenNothing_whenPostInvalidEventId_then404() throws Exception {
         NewsInquiryDto newsInquiryDto = newsMapper.newsToNewsInquiryDto(news);
         newsInquiryDto.setEventId(-420L);
         String body = objectMapper.writeValueAsString(newsInquiryDto);
@@ -657,7 +657,7 @@ public class NewsEndpointTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenPostStringsTooLong_then422() throws Exception {
+    void givenNothing_whenPostStringsTooLong_then422() throws Exception {
         news.setTitle("a".repeat(51));
         news.setShortText("a".repeat(101));
         news.setFullText("a".repeat(10001));

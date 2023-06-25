@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class NewsInquiryDto {
 
-    private static final String base64Pattern = "^data:image/(gif|png|jpeg|webp|svg\\+xml);base64,.*={0,2}$";
+    private static final String BASE64PATTERN = "^data:image/(gif|png|jpeg|webp|svg\\+xml);base64,.*={0,2}$";
 
     @NotNull(message = "Title must not be null")
     @NotBlank(message = "Title must not be blank")
@@ -27,11 +27,11 @@ public class NewsInquiryDto {
     @Size(max = 10000)
     private String fullText;
 
-    @Pattern(regexp = base64Pattern, message = "Cover Image is not a valid base64 picture")
+    @Pattern(regexp = BASE64PATTERN, message = "Cover Image is not a valid base64 picture")
     private String coverImage;
 
     @NotNull
-    private List<@Pattern(regexp = base64Pattern, message = "An additional image is not a valid base64 picture")
+    private List<@Pattern(regexp = BASE64PATTERN, message = "An additional image is not a valid base64 picture")
         String> images = new LinkedList<>();
 
     private Long eventId;

@@ -64,7 +64,7 @@ public class NewsMappingTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenMapNewsToDetailedNewsDto_thenDtoHasAllPropertiesExceptAbbreviatedText() {
+    void givenNothing_whenMapNewsToDetailedNewsDto_thenDtoHasAllPropertiesExceptAbbreviatedText() {
         DetailedNewsDto detailedNewsDto = newsMapper.newsToDetailedNewsDto(news);
         assertAll(
             () -> assertEquals(ID, detailedNewsDto.getId()),
@@ -79,7 +79,7 @@ public class NewsMappingTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenMapListWithTwoNewsEntitiesToAbbreviatedNewsDto_thenGetDtoListWithSizeTwoAndAllPropertiesExceptFullTextAndImages() {
+    void givenNothing_whenMapListWithTwoNewsEntitiesToAbbreviatedNewsDto_thenGetDtoListWithSizeTwoAndAllPropertiesExceptFullTextAndImages() {
         List<News> newsList = new ArrayList<>();
         newsList.add(news);
         newsList.add(news);
@@ -97,7 +97,7 @@ public class NewsMappingTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenMapNewsInquiryDtoToNewsEntity_thenEntityHasAllPropertiesExceptIdCreatedAtAndEventAndImagesAreStoredInNewsImageEntities() {
+    void givenNothing_whenMapNewsInquiryDtoToNewsEntity_thenEntityHasAllPropertiesExceptIdCreatedAtAndEventAndImagesAreStoredInNewsImageEntities() {
         News newsEntity = newsMapper.newsInquiryDtoWithImagesToNewsWithoutEvent(newsInquiryDto);
 
         // entity not yet persisted in db
@@ -115,7 +115,7 @@ public class NewsMappingTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenMapNewsEntityToNewsInquiryDto_thenEntityHasAllProperties() {
+    void givenNothing_whenMapNewsEntityToNewsInquiryDto_thenEntityHasAllProperties() {
         NewsInquiryDto newsInquiryDto = newsMapper.newsToNewsInquiryDto(news);
 
         // entity not yet persisted in db

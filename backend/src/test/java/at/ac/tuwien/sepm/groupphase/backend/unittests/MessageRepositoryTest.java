@@ -17,13 +17,13 @@ import static org.junit.jupiter.api.Assertions.*;
 // the entire application context
 @DataJpaTest
 @ActiveProfiles("test")
-public class MessageRepositoryTest implements TestData {
+class MessageRepositoryTest implements TestData {
 
     @Autowired
     private MessageRepository messageRepository;
 
     @Test
-    public void givenNothing_whenSaveMessage_thenFindListWithOneElementAndFindMessageById() {
+    void givenNothing_whenSaveMessage_thenFindListWithOneElementAndFindMessageById() {
         Message message = Message.MessageBuilder.aMessage()
             .withTitle(TEST_NEWS_TITLE)
             .withSummary(TEST_NEWS_SUMMARY)
