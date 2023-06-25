@@ -43,7 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest
 @ActiveProfiles({"checkout-test-data"})
 @AutoConfigureMockMvc
-public class ReservationEndpointTest implements TestData {
+class ReservationEndpointTest implements TestData {
 
     @Autowired
     private MockMvc mockMvc;
@@ -97,7 +97,7 @@ public class ReservationEndpointTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenGetReservations_thenEmptyList() throws Exception {
+    void givenNothing_whenGetReservations_thenEmptyList() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get(RESERVATION_BASE_URI)
             .header(securityProperties.getAuthHeader(), jwtTokenizer
                 .getAuthToken(DEFAULT_USER, USER_ROLES))).andReturn();
@@ -114,7 +114,7 @@ public class ReservationEndpointTest implements TestData {
     }
 
     @Test
-    public void getNonExistingReservation() throws Exception {
+    void getNonExistingReservation() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get(RESERVATION_BASE_URI + "/{id}", -1L)
             .header(securityProperties.getAuthHeader(), jwtTokenizer
                 .getAuthToken(DEFAULT_USER, USER_ROLES))).andReturn();
@@ -124,7 +124,7 @@ public class ReservationEndpointTest implements TestData {
     }
 
     @Test
-    public void given1ReservationItem_whenGetReservations_then1ItemList() throws Exception {
+    void given1ReservationItem_whenGetReservations_then1ItemList() throws Exception {
         Reservation reservation = new Reservation();
         reservation.setDate(LocalDate.now());
         reservation.setUserId(userId);
@@ -149,7 +149,7 @@ public class ReservationEndpointTest implements TestData {
     }
 
     @Test
-    public void given1ReservationItem_whenGetReservation_then1Item() throws Exception {
+    void given1ReservationItem_whenGetReservation_then1Item() throws Exception {
         Reservation reservation = new Reservation();
         reservation.setDate(LocalDate.now());
         reservation.setUserId(userId);
@@ -177,7 +177,7 @@ public class ReservationEndpointTest implements TestData {
     }
 
     @Test
-    public void tryReserveNonExistingItem() throws Exception {
+    void tryReserveNonExistingItem() throws Exception {
         List<SeatDto> seatDtoList = new ArrayList<>();
         SeatDto seatDto = new SeatDto();
         seatDto.setId(1L);
@@ -196,7 +196,7 @@ public class ReservationEndpointTest implements TestData {
     }
 
     @Test
-    public void reserveSeat() throws Exception {
+    void reserveSeat() throws Exception {
         List<SeatDto> seatDtoList = new ArrayList<>();
         SeatDto seatDto = new SeatDto();
         seatDto.setId(-1L);
@@ -217,7 +217,7 @@ public class ReservationEndpointTest implements TestData {
     }
 
     @Test
-    public void reserveTwoSeats() throws Exception {
+    void reserveTwoSeats() throws Exception {
         List<SeatDto> seatDtoList = new ArrayList<>();
         SeatDto seatDto = new SeatDto();
         seatDto.setId(-1L);
@@ -242,7 +242,7 @@ public class ReservationEndpointTest implements TestData {
     }
 
     @Test
-    public void tryReserveSeatAndNonExistingSeat() throws Exception {
+    void tryReserveSeatAndNonExistingSeat() throws Exception {
         List<SeatDto> seatDtoList = new ArrayList<>();
         SeatDto seatDto = new SeatDto();
         seatDto.setId(-1L);
@@ -265,7 +265,7 @@ public class ReservationEndpointTest implements TestData {
     }
 
     @Test
-    public void deleteReservation() throws Exception {
+    void deleteReservation() throws Exception {
         Reservation reservation = new Reservation();
         reservation.setDate(LocalDate.now());
         reservation.setUserId(userId);
@@ -288,7 +288,7 @@ public class ReservationEndpointTest implements TestData {
     }
 
     @Test
-    public void tryReserveReservedSeat() throws Exception {
+    void tryReserveReservedSeat() throws Exception {
         Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
         HallPlanSeat seat = optSeat.get();
         seat.setReservedNr(1L);
@@ -315,7 +315,7 @@ public class ReservationEndpointTest implements TestData {
     }
 
     @Test
-    public void deleteReservationOfDifferentUser() throws Exception {
+    void deleteReservationOfDifferentUser() throws Exception {
         Reservation reservation = new Reservation();
         reservation.setDate(LocalDate.now());
         reservation.setUserId(userId + 1);
@@ -339,7 +339,7 @@ public class ReservationEndpointTest implements TestData {
 
 
     @Test
-    public void deleteNonExistingReservation() throws Exception {
+    void deleteNonExistingReservation() throws Exception {
         Long reservationNr = 1L;
 
         MvcResult mvcResult = this.mockMvc.perform(delete(RESERVATION_BASE_URI + "/{id}", reservationNr)
@@ -352,7 +352,7 @@ public class ReservationEndpointTest implements TestData {
     }
 
     @Test
-    public void fetchReservationOfDifferentUser() throws Exception {
+    void fetchReservationOfDifferentUser() throws Exception {
         Reservation reservation = new Reservation();
         reservation.setDate(LocalDate.now());
         reservation.setUserId(userId + 1);
@@ -373,7 +373,7 @@ public class ReservationEndpointTest implements TestData {
     }
 
     @Test
-    public void purchaseReservation() throws Exception {
+    void purchaseReservation() throws Exception {
         Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
         HallPlanSeat seat = optSeat.get();
         seat.setReservedNr(1L);
@@ -415,7 +415,7 @@ public class ReservationEndpointTest implements TestData {
     }
 
     @Test
-    public void purchaseReservationPartially() throws Exception {
+    void purchaseReservationPartially() throws Exception {
         Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
         HallPlanSeat seat = optSeat.get();
         seat.setReservedNr(1L);
@@ -464,7 +464,7 @@ public class ReservationEndpointTest implements TestData {
     }
 
     @Test
-    public void emtpyPartialPurchaseReservation() throws Exception {
+    void emtpyPartialPurchaseReservation() throws Exception {
         Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
         HallPlanSeat seat = optSeat.get();
         seat.setReservedNr(1L);
@@ -511,7 +511,7 @@ public class ReservationEndpointTest implements TestData {
     }
 
     @Test
-    public void purchaseReservationPartiallyAndGiveNonExistingSeat() throws Exception {
+    void purchaseReservationPartiallyAndGiveNonExistingSeat() throws Exception {
         Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
         HallPlanSeat seat = optSeat.get();
         seat.setReservedNr(1L);
@@ -553,7 +553,7 @@ public class ReservationEndpointTest implements TestData {
     }
 
     @Test
-    public void purchaseReservationPartiallyAndGiveNonReservedSeat() throws Exception {
+    void purchaseReservationPartiallyAndGiveNonReservedSeat() throws Exception {
         Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
         HallPlanSeat seat = optSeat.get();
         seat.setReservedNr(1L);

@@ -44,4 +44,6 @@ public interface ReservationService {
      * @param userId      the id of the user tries to delete the reservation
      */
     void addReservation(List<SeatDto> itemDtoList, Long userId);
+
+    boolean checkReservationList(List<SeatDto> itemDtoList, Long userId);
 }

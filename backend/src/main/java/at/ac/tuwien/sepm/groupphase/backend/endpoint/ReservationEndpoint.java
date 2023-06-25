@@ -29,6 +29,8 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api/v1/reservation")
 public class ReservationEndpoint {
+    private static final String USER_CANT_BE_RESOLVED = "User with ROLE_USER could not be resolved";
+    private static final String REQUEST_CANT_BE_RESOLVED = "Request could not be resolved!";
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ReservationService service;
     private final PurchaseService purchaseService;
@@ -49,8 +51,8 @@ public class ReservationEndpoint {
 
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            LOGGER.error("User with ROLE_USER could not be resolved");
-            return ResponseEntity.internalServerError().body("Request couldn't be resolved!");
+            LOGGER.error(USER_CANT_BE_RESOLVED);
+            return ResponseEntity.internalServerError().body(REQUEST_CANT_BE_RESOLVED);
         }
 
         return ResponseEntity.ok(service.getReservationsOfUser(userId));
@@ -64,8 +66,8 @@ public class ReservationEndpoint {
 
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            LOGGER.error("User with ROLE_USER could not be resolved");
-            return ResponseEntity.internalServerError().body("Request could not be resolved!");
+            LOGGER.error(USER_CANT_BE_RESOLVED);
+            return ResponseEntity.internalServerError().body(REQUEST_CANT_BE_RESOLVED);
         }
         ReservationDto reservation;
         try {
@@ -91,8 +93,8 @@ public class ReservationEndpoint {
 
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            LOGGER.error("User with ROLE_USER could not be resolved");
-            return ResponseEntity.internalServerError().body("Request could not be resolved!");
+            LOGGER.error(USER_CANT_BE_RESOLVED);
+            return ResponseEntity.internalServerError().body(REQUEST_CANT_BE_RESOLVED);
         }
 
         try {
@@ -111,8 +113,8 @@ public class ReservationEndpoint {
 
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            LOGGER.error("User with ROLE_USER could not be resolved");
-            return ResponseEntity.internalServerError().body("Request could not be resolved!");
+            LOGGER.error(USER_CANT_BE_RESOLVED);
+            return ResponseEntity.internalServerError().body(REQUEST_CANT_BE_RESOLVED);
         }
 
         try {
@@ -132,8 +134,8 @@ public class ReservationEndpoint {
 
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            LOGGER.error("User with ROLE_USER could not be resolved");
-            return ResponseEntity.internalServerError().body("Request could not be resolved!");
+            LOGGER.error(USER_CANT_BE_RESOLVED);
+            return ResponseEntity.internalServerError().body(REQUEST_CANT_BE_RESOLVED);
         }
 
         if (!purchaseService.purchaseReservationOfUser(reservationNr, purchaseCreationDto, userId)) {

@@ -23,7 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/api/v1/purchase")
 public class PurchaseEndpoint {
-
+    private static final String USER_CANT_BE_RESOLVED = "User with ROLE_USER could not be resolved";
+    private static final String REQUEST_CANT_BE_RESOLVED = "Request could not be resolved!";
     private static final Logger LOGGER = LoggerFactory.getLogger(
         MethodHandles.lookup().lookupClass()
     );
@@ -51,8 +52,8 @@ public class PurchaseEndpoint {
         LOGGER.info("GET /api/v1/purchase");
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            LOGGER.error("User with ROLE_USER could not be resolved");
-            return ResponseEntity.internalServerError().body("Request could not be resolved!");
+            LOGGER.error(USER_CANT_BE_RESOLVED);
+            return ResponseEntity.internalServerError().body(REQUEST_CANT_BE_RESOLVED);
         }
 
         return ResponseEntity.ok(service.getPurchasesOfUser(userId));
@@ -72,8 +73,8 @@ public class PurchaseEndpoint {
 
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            LOGGER.error("User with ROLE_USER could not be resolved");
-            return ResponseEntity.internalServerError().body("Request could not be resolved!");
+            LOGGER.error(USER_CANT_BE_RESOLVED);
+            return ResponseEntity.internalServerError().body(REQUEST_CANT_BE_RESOLVED);
         }
         try {
             return ResponseEntity.ok(service.getPurchaseByPurchaseNr(purchaseNr, userId));
@@ -97,8 +98,8 @@ public class PurchaseEndpoint {
 
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            LOGGER.error("User with ROLE_USER could not be resolved");
-            return ResponseEntity.internalServerError().body("Request could not be resolved!");
+            LOGGER.error(USER_CANT_BE_RESOLVED);
+            return ResponseEntity.internalServerError().body(REQUEST_CANT_BE_RESOLVED);
         }
 
         service.deletePurchase(purchaseNr, userId);

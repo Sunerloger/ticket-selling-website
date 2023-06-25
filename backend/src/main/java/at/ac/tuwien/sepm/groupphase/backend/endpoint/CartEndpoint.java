@@ -30,10 +30,12 @@ import java.util.List;
 @RequestMapping(value = "/api/v1/cart")
 public class CartEndpoint {
 
+    private static final String USER_CANT_BE_RESOLVED = "User with ROLE_USER could not be resolved";
+    private static final String REQUEST_CANT_BE_RESOLVED = "Request could not be resolved!";
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private CartService service;
-    private PurchaseService purchaseService;
-    private CustomUserDetailService userService;
+    private final CartService service;
+    private final PurchaseService purchaseService;
+    private final CustomUserDetailService userService;
 
     @Autowired
     public CartEndpoint(CartService cartService, PurchaseService purchaseService, CustomUserDetailService userService) {
@@ -50,8 +52,8 @@ public class CartEndpoint {
 
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            LOGGER.error("User with ROLE_USER could not be resolved");
-            return ResponseEntity.internalServerError().body("User could not be resolved!");
+            LOGGER.error(USER_CANT_BE_RESOLVED);
+            return ResponseEntity.internalServerError().body(REQUEST_CANT_BE_RESOLVED);
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(service.getItems(userId));
@@ -65,8 +67,8 @@ public class CartEndpoint {
 
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            LOGGER.error("User with ROLE_USER could not be resolved");
-            return ResponseEntity.internalServerError().body("User could not be resolved!");
+            LOGGER.error(USER_CANT_BE_RESOLVED);
+            return ResponseEntity.internalServerError().body(REQUEST_CANT_BE_RESOLVED);
         }
 
         try {
@@ -85,8 +87,8 @@ public class CartEndpoint {
 
         Long userId = userService.getUserIdFromToken(token);
         if (userId == null) {
-            LOGGER.error("User with ROLE_USER could not be resolved");
-            return ResponseEntity.internalServerError().body("User could not be resolved!");
+            LOGGER.error(USER_CANT_BE_RESOLVED);
+            return ResponseEntity.internalServerError().body(REQUEST_CANT_BE_RESOLVED);
         }
 
         this.service.deleteItem(id, userId, true);
@@ -102,8 +104,8 @@ public class CartEndpoint {
         Long userId = userService.getUserIdFromToken(token);
 
         if (userId == null) {
-            LOGGER.error("User with ROLE_USER could not be resolved");
-            return ResponseEntity.internalServerError().body("User could not be resolved!");
+            LOGGER.error(USER_CANT_BE_RESOLVED);
+            return ResponseEntity.internalServerError().body(REQUEST_CANT_BE_RESOLVED);
         }
 
         if (purchaseService.purchaseCartOfUser(userId, purchaseCreationDto)) {

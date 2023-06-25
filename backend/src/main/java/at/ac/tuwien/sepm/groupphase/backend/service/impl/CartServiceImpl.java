@@ -55,8 +55,6 @@ public class CartServiceImpl implements CartService {
             if (seatService.tryReserveSeat(seatDto.getId())) {
                 Cart cart = new Cart(userId, seatDto.getId());
                 cartRepository.save(cart);
-            } else {
-                //TODO: Prepare answer to show user not all items were added
             }
         }
     }
@@ -89,10 +87,8 @@ public class CartServiceImpl implements CartService {
         if (!cart.getUserId().equals(userId)) {
             return;
         }
-        if (freeSeat) {
-            if (!seatService.cancelReservation(itemId)) {
-                LOGGER.error("unable to free a seat that was reserved");
-            }
+        if (freeSeat && (!seatService.cancelReservation(itemId))) {
+            LOGGER.error("unable to free a seat that was reserved");
         }
         cartRepository.deleteCartById(cart.getId());
     }
@@ -105,10 +101,7 @@ public class CartServiceImpl implements CartService {
         if (cart == null) {
             return false;
         }
-        if (!cart.getUserId().equals(userId)) {
-            return false;
-        }
-        return true;
+        return cart.getUserId().equals(userId);
     }
 
 }

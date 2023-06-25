@@ -5,7 +5,6 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ReservationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatRowDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDetailDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Reservation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ReservationSeat;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
@@ -89,7 +88,7 @@ public class ReservationServiceImpl implements ReservationService {
         reservationDto.setReservedSeats(seatDtoList);
 
         if (rowDto == null) {
-            throw new RuntimeException();
+            throw new NotFoundException();
         }
 
         EventDetailDto event = eventService.getEventFromHallplanId(rowDto.getHallPlanId());
@@ -127,33 +126,9 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void addReservation(List<SeatDto> itemDtoList, Long userId) {
         LOGGER.debug("Add a new reservation with a List of Seats");
-        if (itemDtoList.isEmpty()) {
-            return;
-        }
-        for (SeatDto item : itemDtoList) {
-            if (!seatService.doesSeatExist(item.getId())) {
-                throw new NotFoundException();
-            }
-        }
-        EventDetailDto prevEventDetailDto = null;
-        List<HallPlanSeat> checkedSeatDtos = new ArrayList<>();
-        for (SeatDto item : itemDtoList) {
-            if (seatService.doesSeatExist(item.getId())) {
-                HallPlanSeatDto hallPlanSeatDto = seatService.getSeatById(item.getId());
-                SeatRowDto rowDto = rowService.getSeatRowById(hallPlanSeatDto.getSeatrowId());
-                EventDetailDto eventDetailDto = eventService.getEventFromHallplanId(rowDto.getHallPlanId());
-                if (prevEventDetailDto == null) {
-                    prevEventDetailDto = eventDetailDto;
-                } else {
-                    if (!eventDetailDto.getId().equals(prevEventDetailDto.getId())) {
-                        LOGGER.warn("Tickets were not part of the same event");
-                        return;
-                    }
-                }
-            } else {
-                throw new NotFoundException();
-            }
 
+        if (!checkReservationList(itemDtoList, userId)) {
+            throw new NotFoundException();
         }
 
         Reservation reservation = new Reservation();
@@ -165,7 +140,6 @@ public class ReservationServiceImpl implements ReservationService {
         for (SeatDto item : itemDtoList) {
             if (seatService.tryReserveSeat(item.getId())) {
                 reservationSeatList.add(new ReservationSeat(item.getId()));
-                // Inform user that not all seats were Reserved
             }
         }
 
@@ -178,5 +152,40 @@ public class ReservationServiceImpl implements ReservationService {
         }
     }
 
+    @Override
+    public boolean checkReservationList(List<SeatDto> itemDtoList, Long userId) {
+        if (itemDtoList.isEmpty()) {
+            return false;
+        }
+
+        for (SeatDto item : itemDtoList) {
+            if (!seatService.doesSeatExist(item.getId())) {
+                return false;
+            }
+        }
+
+        HallPlanSeatDto initialHallPlanSeatDto = seatService.getSeatById(itemDtoList.get(0).getId());
+        SeatRowDto initialRowDto = rowService.getSeatRowById(initialHallPlanSeatDto.getSeatrowId());
+        EventDetailDto prevEventDetailDto = eventService.getEventFromHallplanId(initialRowDto.getHallPlanId());
+
+        for (SeatDto item : itemDtoList) {
+            if (seatService.doesSeatExist(item.getId())) {
+                HallPlanSeatDto hallPlanSeatDto = seatService.getSeatById(item.getId());
+                SeatRowDto rowDto = rowService.getSeatRowById(hallPlanSeatDto.getSeatrowId());
+                EventDetailDto eventDetailDto = eventService.getEventFromHallplanId(rowDto.getHallPlanId());
+
+                if (!eventDetailDto.getId().equals(prevEventDetailDto.getId())) {
+                    LOGGER.warn("Tickets were not part of the same event");
+                    return false;
+                }
+
+            } else {
+                return false;
+            }
+
+        }
+        return true;
+
+    }
 
 }
