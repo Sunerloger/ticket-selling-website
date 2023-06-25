@@ -4,6 +4,7 @@ import {ToastrService} from 'ngx-toastr';
 import {PersistedSeat} from '../../dtos/hallplan/hallplan';
 import {EventService} from '../../services/event.service';
 import {Performance} from '../../dtos/event';
+import {PurchaseSeat} from '../../dtos/purchases';
 
 @Component({
   selector: 'app-performance-ticket-selction',
@@ -12,7 +13,7 @@ import {Performance} from '../../dtos/event';
 })
 export class PerformanceTicketSelctionComponent implements OnInit{
   hallplanId: number;
-  selectedSeats: PersistedSeat[] = [];
+  selectedSeats: PurchaseSeat[] = [];
   performance: Performance = {} as Performance;
   constructor(private route: ActivatedRoute,
               private notification: ToastrService,
@@ -43,7 +44,13 @@ getPerformance(hallplanId: number): void{
 }
 
   handleEvent(selectedSeats: PersistedSeat[]): void {
-    this.selectedSeats = selectedSeats;
+    const initializedSeats: PurchaseSeat[] = [];
+    selectedSeats.forEach((currItem: PersistedSeat) => {
+      const newItem: PurchaseSeat = currItem as PurchaseSeat;
+      newItem.amount = 1;
+      initializedSeats.push(newItem);
+    });
+    this.selectedSeats = initializedSeats;
   }
 
   formatTime(time: string): Date {

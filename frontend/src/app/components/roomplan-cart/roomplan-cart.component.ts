@@ -29,7 +29,6 @@ export class RoomplanCartComponent {
 
   addToCart(seatList: PurchaseSeat[]) {
     this.expandList();
-
     this.cartService.addToCart(seatList).subscribe(
       (response) => {
         console.log('Status:', response.status);
