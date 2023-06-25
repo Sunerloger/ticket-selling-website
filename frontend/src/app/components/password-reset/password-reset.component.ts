@@ -15,6 +15,8 @@ export class PasswordResetComponent {
   passwordResetForm: FormGroup;
   error: string;
   success: string;
+  submitted = false;
+  passwordPattern = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/);
 
   constructor(
     private formBuilder: FormBuilder,
@@ -24,37 +26,34 @@ export class PasswordResetComponent {
   ) {
     this.passwordResetForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      newPassword: ['', Validators.required],
+      newPassword: ['', [Validators.minLength(8), Validators.pattern(this.passwordPattern)]],
       confirmPassword: ['', Validators.required]
     });
   }
 
   onSubmit() {
-    if (this.passwordResetForm.invalid) {
-      return;
-    }
-
-    if (this.passwordResetForm.value.confirmPassword !== this.passwordResetForm.value.newPassword) {
-      this.error = 'The passwords do not match!';
-      return;
-    }
+    this.submitted = true;
     const user: ResetPasswordUser = {
       email: this.passwordResetForm.controls.email.value,
       newPassword: this.passwordResetForm.controls.newPassword.value,
       token: this.getTokenFromUrl()
     };
-
-    const observable = this.userService.resetPassword(user);
-    observable.subscribe({
-        next: () => {
-          this.notification.success('Password successfully reset!');
-          this.router.navigate(['login']);
-        },
-        error: err => {
-          this.notification.error('Token invalid. Request a new reset mail!');
+    if (this.passwordResetForm.valid && this.passwordResetForm.value.confirmPassword === this.passwordResetForm.value.newPassword) {
+      const observable = this.userService.resetPassword(user);
+      observable.subscribe({
+          next: () => {
+            this.notification.success('Password successfully reset!');
+            this.router.navigate(['login']);
+          },
+          error: () => {
+            this.notification.error('Token invalid. Request a new reset mail!');
+          }
         }
-      }
-    );
+      );
+    } else {
+      this.notification.error('Error reseting Password!');
+      this.passwordResetForm.markAllAsTouched();
+    }
 
   }
 
