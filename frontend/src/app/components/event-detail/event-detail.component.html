@@ -15,7 +15,7 @@
           <h6 class="card-text">All available Dates:</h6>
           <div *ngFor="let eventDate of event.eventDatesLocation" class="eventDates mb-4">
             <div class="container custom-sub-form">
-              <h6>Date: <span class="text-muted">{{eventDate.date}}</span></h6>
+              <h6>Date: <span class="text-muted">{{transformDateFormat(eventDate.date.toString())}}</span></h6>
               <h6>Commencement : <span class="text-muted">{{transformTime(eventDate.startingTime)}}</span></h6>
               <h6>Venue: <span class="text-muted"></span>{{eventDate.roomName}}</h6>
               <h6>Location: <span class="text-muted"></span>{{eventDate.address}}, {{eventDate.areaCode}}
