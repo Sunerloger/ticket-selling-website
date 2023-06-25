@@ -61,6 +61,8 @@ import { HallplanCreateComponent } from './components/hallplan-create/hallplan-c
 import {TicketReversalInvoicePdfPrintComponent}
   from './components/ticket-reversal-invoice-pdf-print/ticket-reversal-invoice-pdf-print.component';
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
+
+import { TicketInvoicePdfPrintComponent } from './components/ticket-invoice-pdf-print/ticket-invoice-pdf-print.component';
 import { EventChartComponent } from './components/event-chart/event-chart.component';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { SectionColorLegendComponent } from './components/section-color-legend/section-color-legend.component';
@@ -114,6 +116,8 @@ import { TopEventsComponent } from './components/top-events/top-events.component
     HallplanCreateComponent,
     TicketReversalInvoicePdfPrintComponent,
     AutocompleteComponent,
+    TicketInvoicePdfPrintComponent,
+
     EventChartComponent,
     SectionColorLegendComponent,
     TicketValidatorComponent,
