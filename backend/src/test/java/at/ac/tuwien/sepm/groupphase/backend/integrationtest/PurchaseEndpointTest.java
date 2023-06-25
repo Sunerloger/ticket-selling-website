@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest
 @ActiveProfiles({"checkout-test-data"})
 @AutoConfigureMockMvc
-public class PurchaseEndpointTest implements TestData {
+class PurchaseEndpointTest implements TestData {
     @Autowired
     private WebApplicationContext webAppContext;
 
@@ -104,7 +104,7 @@ public class PurchaseEndpointTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenGetPurchases_thenEmptyList() throws Exception {
+    void givenNothing_whenGetPurchases_thenEmptyList() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get(PURCHASE_BASE_URI)
             .header(securityProperties.getAuthHeader(), jwtTokenizer
                 .getAuthToken(DEFAULT_USER, USER_ROLES))).andReturn();
@@ -121,7 +121,7 @@ public class PurchaseEndpointTest implements TestData {
     }
 
     @Test
-    public void getNonExistingPurchase() throws Exception {
+    void getNonExistingPurchase() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get(PURCHASE_BASE_URI + "/{id}", -1L)
             .header(securityProperties.getAuthHeader(), jwtTokenizer
                 .getAuthToken(DEFAULT_USER, USER_ROLES))).andReturn();
@@ -131,7 +131,7 @@ public class PurchaseEndpointTest implements TestData {
     }
 
     @Test
-    public void given1PurchaseItem_whenGetPurchases_then1ItemList() throws Exception {
+    void given1PurchaseItem_whenGetPurchases_then1ItemList() throws Exception {
         List<Ticket> ticketList = new ArrayList<>();
         ticketList.add(new Ticket(-1L));
 
@@ -166,7 +166,7 @@ public class PurchaseEndpointTest implements TestData {
     }
 
     @Test
-    public void given1PurchaseItem_whenGetPurchase_then1Item() throws Exception {
+    void given1PurchaseItem_whenGetPurchase_then1Item() throws Exception {
         List<Ticket> ticketList = new ArrayList<>();
         ticketList.add(new Ticket(-1L));
 
@@ -204,7 +204,7 @@ public class PurchaseEndpointTest implements TestData {
     }
 
     @Test
-    public void cancelPurchase() throws Exception {
+    void cancelPurchase() throws Exception {
         List<Ticket> ticketList = new ArrayList<>();
         ticketList.add(new Ticket(-1L));
 
@@ -237,7 +237,7 @@ public class PurchaseEndpointTest implements TestData {
     }
 
     @Test
-    public void cancelNonExistingPurchase() throws Exception {
+    void cancelNonExistingPurchase() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(delete(PURCHASE_BASE_URI + "/{id}", 1L)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
             .andDo(print())
@@ -248,7 +248,7 @@ public class PurchaseEndpointTest implements TestData {
     }
 
     @Test
-    public void fetchPurchaseFromDifferentUser() throws Exception {
+    void fetchPurchaseFromDifferentUser() throws Exception {
         List<Ticket> ticketList = new ArrayList<>();
         ticketList.add(new Ticket(-1L));
 
@@ -279,7 +279,7 @@ public class PurchaseEndpointTest implements TestData {
     }
 
     @Test
-    public void cancelPurchaseFromDifferentUser() throws Exception {
+    void cancelPurchaseFromDifferentUser() throws Exception {
         List<Ticket> ticketList = new ArrayList<>();
         ticketList.add(new Ticket(-1L));
 

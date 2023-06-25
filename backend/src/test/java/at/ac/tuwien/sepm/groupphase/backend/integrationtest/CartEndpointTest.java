@@ -42,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest
 @ActiveProfiles({"checkout-test-data"})
 @AutoConfigureMockMvc
-public class CartEndpointTest implements TestData {
+class CartEndpointTest implements TestData {
     @Autowired
     private WebApplicationContext webAppContext;
 
@@ -97,7 +97,7 @@ public class CartEndpointTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenGetCart_thenEmptyList() throws Exception {
+    void givenNothing_whenGetCart_thenEmptyList() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get(CART_BASE_URI)
             .header(securityProperties.getAuthHeader(), jwtTokenizer
                 .getAuthToken(DEFAULT_USER, USER_ROLES))).andReturn();
@@ -114,7 +114,7 @@ public class CartEndpointTest implements TestData {
     }
 
     @Test
-    public void given1CartItem_whenGetCart_then1ItemList() throws Exception {
+    void given1CartItem_whenGetCart_then1ItemList() throws Exception {
         Cart cart = new Cart(userRepository.findUserByEmail(DEFAULT_USER).getId(), -1L);
         cartRepository.save(cart);
         MvcResult mvcResult = this.mockMvc.perform(get(CART_BASE_URI)
@@ -133,7 +133,7 @@ public class CartEndpointTest implements TestData {
     }
 
     @Test
-    public void tryAddNonExistingItemToCart() throws Exception {
+    void tryAddNonExistingItemToCart() throws Exception {
         List<SeatDto> seatDtoList = new ArrayList<>();
         SeatDto seatDto = new SeatDto();
         seatDto.setId(1L);
@@ -152,7 +152,7 @@ public class CartEndpointTest implements TestData {
     }
 
     @Test
-    public void addExistingSeatToCart() throws Exception {
+    void addExistingSeatToCart() throws Exception {
         List<SeatDto> seatDtoList = new ArrayList<>();
         SeatDto seatDto = new SeatDto();
         seatDto.setId(-1L);
@@ -173,7 +173,7 @@ public class CartEndpointTest implements TestData {
     }
 
     @Test
-    public void addTwoExistingSeatsToCart() throws Exception {
+    void addTwoExistingSeatsToCart() throws Exception {
         List<SeatDto> seatDtoList = new ArrayList<>();
         SeatDto seatDto = new SeatDto();
         seatDto.setId(-1L);
@@ -197,7 +197,7 @@ public class CartEndpointTest implements TestData {
     }
 
     @Test
-    public void addOneExistingAndOneNoneExistingSeatToCart() throws Exception {
+    void addOneExistingAndOneNoneExistingSeatToCart() throws Exception {
         List<SeatDto> seatDtoList = new ArrayList<>();
         SeatDto seatDto = new SeatDto();
         seatDto.setId(-1L);
@@ -216,11 +216,11 @@ public class CartEndpointTest implements TestData {
 
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
-        assertEquals(cartRepository.findByUserId(userId).size(), 0);
+        assertEquals( 0, cartRepository.findByUserId(userId).size());
     }
 
     @Test
-    public void deleteCartItem() throws Exception {
+    void deleteCartItem() throws Exception {
         cartRepository.save(new Cart(userId, -1L));
 
         MvcResult mvcResult = this.mockMvc.perform(delete(CART_BASE_URI + "/{id}", -1L)
@@ -234,7 +234,7 @@ public class CartEndpointTest implements TestData {
     }
 
     @Test
-    public void addReservedSeatToCart() throws Exception {
+    void addReservedSeatToCart() throws Exception {
         Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
         HallPlanSeat seat = optSeat.get();
         seat.setReservedNr(1L);
@@ -261,7 +261,7 @@ public class CartEndpointTest implements TestData {
     }
 
     @Test
-    public void deleteCartItemOfDifferentUser() throws Exception {
+    void deleteCartItemOfDifferentUser() throws Exception {
         cartRepository.save(new Cart(userId + 1L, -1L));
 
         MvcResult mvcResult = this.mockMvc.perform(delete(CART_BASE_URI + "/{id}", -1L)
@@ -275,7 +275,7 @@ public class CartEndpointTest implements TestData {
     }
 
     @Test
-    public void deleteNonExistingItem() throws Exception {
+    void deleteNonExistingItem() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(delete(CART_BASE_URI + "/{id}", -1L)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
             .andDo(print())
@@ -286,7 +286,7 @@ public class CartEndpointTest implements TestData {
     }
 
     @Test
-    public void purchaseCart() throws Exception {
+    void purchaseCart() throws Exception {
         Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
         HallPlanSeat seat = optSeat.get();
         seat.setReservedNr(1L);
@@ -319,7 +319,7 @@ public class CartEndpointTest implements TestData {
     }
 
     @Test
-    public void purchaseCartWithNonExistingItem() throws Exception {
+    void purchaseCartWithNonExistingItem() throws Exception {
         List<SeatDto> seatDtoList = new ArrayList<>();
         SeatDto seatDto = new SeatDto();
         seatDto.setId(1L);
@@ -344,7 +344,7 @@ public class CartEndpointTest implements TestData {
     }
 
     @Test
-    public void purchaseCartWithNonReservedItem() throws Exception {
+    void purchaseCartWithNonReservedItem() throws Exception {
         Optional<HallPlanSeat> optSeat = seatRepository.getSeatById(-1L);
         HallPlanSeat seat = optSeat.get();
         seat.setReservedNr(0L);

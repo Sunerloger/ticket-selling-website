@@ -71,7 +71,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Override
     @Transactional
     public void deletePurchase(Long purchaseNr, Long userId) {
-        LOGGER.debug("Purchase cart of user {}", userId);
+        LOGGER.debug("Delete cart of user {}", userId);
         Purchase purchase = repository.findPurchasesByPurchaseNr(purchaseNr);
 
         if (purchase == null) {
@@ -169,7 +169,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public boolean purchaseReservationOfUser(Long reservationNr, PurchaseCreationDto purchaseCreationDto, Long userId) {
-        LOGGER.debug("Purchase cart of user {}", userId);
+        LOGGER.debug("Purchase reservation of user {}", userId);
 
         if (purchaseCreationDto.getSeats() == null || purchaseCreationDto.getSeats().isEmpty()) {
             return false;
