@@ -62,7 +62,7 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
     }
 
     // ! Only call to set initial key values !
-    private void writeKeysToFile(ArrayList<SecretKey> secretKeys) {
+    private void writeKeysToFile() {
         LOGGER.info("Writing keys to file: {}", FILEPATH);
         // Generate a random initialization vector (IV)
         byte[] iv = new byte[16];
@@ -83,7 +83,7 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
             LOGGER.info("Keys written successfully to file: {}", FILEPATH);
         } catch (IOException e) {
             LOGGER.error("Error writing keys to file: {}", FILEPATH);
-            throw new RuntimeException(e);
+            throw new jakarta.validation.ValidationException("Unable to write keys to file", e);
         }
     }
 
@@ -137,6 +137,12 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
         return newPayload;
     }
 
+    @Override
+    public void writeNewAccessKeys() {
+        LOGGER.info("Generate new access key sets");
+        writeKeysToFile();
+    }
+
     private TicketPayloadDto generatePayload(TicketDto ticketDto)
         throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
 
@@ -182,7 +188,7 @@ public class TicketValidatorServiceImpl implements TicketValidatorService {
             keyBytes = reader.readLine();
             ivBytes = reader.readLine();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new jakarta.validation.ValidationException("Could not read filespecs!", e);
         }
 
         // Create a SecretKey object using the provided key bytes

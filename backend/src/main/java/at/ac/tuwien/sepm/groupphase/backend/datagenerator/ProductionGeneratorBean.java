@@ -2,12 +2,9 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatRowDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.DetailedHallPlanDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
 import at.ac.tuwien.sepm.groupphase.backend.service.SeatRowService;
 import at.ac.tuwien.sepm.groupphase.backend.service.impl.CustomUserDetailService;
 import at.ac.tuwien.sepm.groupphase.backend.service.impl.HallPlanServiceImpl;
@@ -22,10 +19,10 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.sql.DataSource;
 import java.io.IOException;

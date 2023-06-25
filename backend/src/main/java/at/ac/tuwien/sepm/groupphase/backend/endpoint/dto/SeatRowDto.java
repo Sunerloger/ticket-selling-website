@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatDto;
 import jakarta.validation.constraints.NotNull;
 
@@ -54,7 +53,6 @@ public class SeatRowDto {
 
         private Long id;
         private Long rowNr;
-        private HallPlanDto hallPlan;
 
         private SeatRowDtoBuilder() {
         }
@@ -70,11 +68,6 @@ public class SeatRowDto {
 
         public SeatRowDtoBuilder withRowNr(Long rowNr) {
             this.rowNr = rowNr;
-            return this;
-        }
-
-        public SeatRowDtoBuilder withHallPlanId(HallPlanDto hallPlan) {
-            this.hallPlan = hallPlan;
             return this;
         }
 

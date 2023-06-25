@@ -2,12 +2,11 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.DetailedHallPlanDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSeatDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.hallplan.HallPlanSectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallPlanSectionMapper;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SeatRowMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlan;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallPlanSeat;
@@ -33,6 +32,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,18 +51,17 @@ public class HallPlanServiceImpl implements HallPlanService {
     private final HallPlanSectionRepository hallPlanSectionRepository;
     private final SeatRowRepository seatRowRepository;
     private final HallPlanSeatRepository hallPlanSeatRepository;
-    private final SeatRowMapper seatRowMapper;
+
     private final HallPlanSeatRepository seatRepository;
 
     public HallPlanServiceImpl(HallPlanRepository hallPlanRepository, HallPlanMapper hallPlanMapper, HallPlanSectionMapper hallPlanSectionMapper,
                                HallPlanSectionRepository hallPlanSectionRepository, SeatRowRepository seatRowRepository,
-                               SeatRowMapper seatRowMapper, HallPlanSeatRepository seatRepository) {
+                               HallPlanSeatRepository seatRepository) {
         this.hallPlanRepository = hallPlanRepository;
         this.hallPlanMapper = hallPlanMapper;
         this.hallPlanSectionMapper = hallPlanSectionMapper;
         this.hallPlanSectionRepository = hallPlanSectionRepository;
         this.seatRowRepository = seatRowRepository;
-        this.seatRowMapper = seatRowMapper;
         this.hallPlanSeatRepository = seatRepository;
         this.seatRepository = seatRepository;
     }
@@ -226,9 +225,7 @@ public class HallPlanServiceImpl implements HallPlanService {
         } else {
             throw new NotFoundException("Hall Plan with id " + id + " was not found in the system");
         }
-        DetailedHallPlanDto detailed = hallPlanEntityWithoutSeats.map(hallPlanMapper::mapToDetailedHallPlanDto).orElse(null);
-        return detailed;
-        //return hallPlanEntityWithoutSeats.map(hallPlanMapper::mapToDetailedHallPlanDto).orElse(null);
+        return hallPlanEntityWithoutSeats.map(hallPlanMapper::mapToDetailedHallPlanDto).orElse(null);
     }
 
     @Override
@@ -318,14 +315,14 @@ public class HallPlanServiceImpl implements HallPlanService {
     @Override
     public List<HallPlanSection> findAllByHallPlanId(Long id) {
         LOGGER.debug("Find all hall plan sections by hall plan id: {}", id);
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
     public List<HallPlanSectionDto> findAllSectionsByHallPlanIdWithCounts(Long hallplanId) {
         List<Object[]> counts = hallPlanRepository.findAllSectionsByHallPlanIdCounts(hallplanId);
         List<Object[]> zeroCounts = hallPlanRepository.findHallPlanCountsById(hallplanId);
-        List<HallPlanSection> sections = new ArrayList<HallPlanSection>();
+        List<HallPlanSection> sections = new ArrayList<>();
         List<Long> existIdList = new ArrayList<>();
         for (Object[] count : counts) {
             HallPlanSection section = (HallPlanSection) count[0];
@@ -348,8 +345,7 @@ public class HallPlanServiceImpl implements HallPlanService {
             }
 
         }
-        List<HallPlanSectionDto> list = hallPlanSectionMapper.toDto(sections);
-        return list;
+        return hallPlanSectionMapper.toDto(sections);
     }
 
     @Override

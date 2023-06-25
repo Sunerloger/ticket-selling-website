@@ -38,7 +38,7 @@ public class HallPlanSection {
     public HallPlanSection() {
     }
 
-    public HallPlanSection(String name, String color, Double price, Long hallPlanId) {
+    public HallPlanSection(String name, String color, Double price) {
         this.name = name;
         this.color = color;
         this.price = price;

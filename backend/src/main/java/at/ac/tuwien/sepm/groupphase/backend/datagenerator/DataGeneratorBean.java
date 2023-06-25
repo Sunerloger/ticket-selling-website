@@ -12,10 +12,10 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.sql.DataSource;
 import java.io.IOException;

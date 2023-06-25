@@ -68,6 +68,9 @@ export class TicketPdfPrintComponent implements OnInit {
         break;
 
     }
+    let startingTime = this.ticket.event.eventDatesLocation[0].startingTime.toString();
+    let durationTime = this.ticket.event.duration.toString();
+
     const pdfContent: any = `<div #pdfContent >
     <i style="font-size:48px; color:#23a6d5">Ticketline </i>
     <b> ------------------------------------------------------</b>
@@ -80,8 +83,8 @@ export class TicketPdfPrintComponent implements OnInit {
         <strong>Room:</strong> ${this.ticket.event.eventDatesLocation[0].room}
     </p>
     <p>
-      <strong>Starting Time:</strong> ${this.ticket.event.eventDatesLocation[0].startingTime} |
-      <strong>Duration:</strong> ${this.ticket.event.duration} |
+      <strong>Starting Time:</strong> ${this.convertTimeString(startingTime)} |
+      <strong>Duration:</strong> ${this.convertTimeString(durationTime)} |
       <strong>Category:</strong> ${this.ticket.event.category}
     </p>
     <p><strong>Artist:</strong> ${this.ticket.event.artist}</p>
@@ -126,6 +129,14 @@ export class TicketPdfPrintComponent implements OnInit {
   ticketPresent(): boolean {
     return this.ticket ? true : false;
   }
+
+  convertTimeString(time: string): string {
+  const parts = time.split(":");
+  const hours = parts[0];
+  const minutes = parts[1];
+  
+  return `${hours}:${minutes}`;
+}
 }
 
 
