@@ -69,7 +69,6 @@ public class ProductionGeneratorBean {
             ScriptUtils.executeSqlScript(connection, new ClassPathResource("sql/insertNewsEntries.sql"));
             LOGGER.info("Finished generating data without error.");
         }
-        //generateHallPlanData();
         List<HallPlanSeatDto> seats;
         HallPlanSeatDto seatDto;
         //Outer loop determines row count
@@ -151,7 +150,7 @@ public class ProductionGeneratorBean {
                 LOGGER.info("Generated seatRow");
                 if (i == 1) {
                     //Update first row instance
-                    seatRowDto.setId(-1L);
+                    seatRowDto.setId((long) -g);
                     seatRowDto.setRowNr(1L);
                     this.seatRowService.updateSeatRow(seatRowDto);
                     continue;

@@ -9,7 +9,14 @@ VALUES (-1, 'Hall A', 'Large concert hall', true),
        (-8, 'Hall H', 'Museum exhibition space', true);
 
 INSERT INTO seatrow (id, row_nr, hallplan_id)
-VALUES (-1, 1, -1);
+VALUES (-1, 1, -1),
+       (-2, 1, -2),
+       (-3, 1, -3),
+       (-4, 1, -4),
+       (-5, 1, -5),
+       (-6, 1, -6),
+       (-7, 1, -7),
+       (-8, 1, -8);
 
 INSERT INTO section (id, name, color, price, hallplan_id)
 VALUES (-1, 'VIP', 'gold', 100, -1),
