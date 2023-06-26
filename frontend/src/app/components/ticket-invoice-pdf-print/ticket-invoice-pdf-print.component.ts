@@ -76,7 +76,7 @@ export class TicketInvoicePdfPrintComponent implements OnInit, AfterViewInit {
     <h3>Total Price: ${this.sumOfItems(this.purchase)}€<span style="font-size: 14px;">(including 20% Austrian VAT)</span></h3>
 
     <h3>Payment Details</h3>
-     The refund will be conducted to the payment information you provided during the purchase:
+   Payment will be conducted using the payment details provided at the time of purchase:
      <p style ="margin-bottom: 5px">
      <strong>Card Holder:</strong> ${this.user.firstName} ${this.user.lastName}
       <br>
